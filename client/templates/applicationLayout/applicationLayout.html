@@ -1,0 +1,38 @@
+<template name="ApplicationLayout">
+    {{>hiddenTemplate}}
+    <div class="container">
+        <div class="row">{{>topMenu}}</div>
+        <div class="row">{{>colorBarOriginal}}</div>
+        <div class="row">{{>yield}}</div>
+    </div>
+</template>
+
+
+<template name="hiddenTemplate">
+    {{>megaMenu}}
+    {{>mouseOverPicture}}
+</template>
+
+<template name="header">
+    <div class="headerStatic">
+        <div class="row">
+            {{>topMenuStatic}}
+            <!--<div class="header-title" style="background-color: {{siteColor}}; border-bottom-color: {{siteColorBorder}} ">-->
+            <!--<div class="header-title">-->
+            <!--<h1 class="visible-xs">fffExtra Small</h1>-->
+            <!--<h1 class="visible-sm">fffSmall</h1>-->
+            <!--<h1 class="visible-md">fffMedian</h1>-->
+            <!--<h1 class="visible-lg">fffLarge</h1>-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+</template>
+
+
+<template name="mouseOverPicture">
+    <div id="imgPreviewWithStyles">
+        <img id="floatingImage"/>
+    </div>
+</template>

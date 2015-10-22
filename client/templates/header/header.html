@@ -1,0 +1,240 @@
+<template name="colorBarOriginal">
+    <div class="col-xs-12">
+
+        <div class="row colorBarOriginal" style="background-color: {{siteColor}}; border-bottom-color: {{siteColorBorder}}">
+            <div class="col-xs-3 menu_COL">
+                {{>menu_COL}}
+            </div>
+            <div class="col-xs-6 logo_COL">
+                {{>logo_COL}}
+            </div>
+            <div class="col-xs-3 search_COL">
+                {{>search_COL}}
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="menu_COL">
+    <div  id="danger" class="menu-area">
+            <div class="hamburger">
+                <b></b>
+                <b></b>
+                <b></b>
+            </div>
+            <span class="menu-label">MENU</span>
+        <!--<span class="separador "></span>-->
+        <!--<div class="symbolArea">-->
+            <!--<div class="magicSymbol"></div>-->
+        <!--</div>-->
+    </div>
+</template>
+
+<template name="logo_COL">
+    <div class="logo-area">
+        <a href="#">
+            {{siteName}}
+        </a>
+    </div>
+</template>
+
+<template name="search_COL">
+        <div class="rightMenu">
+            <!--<fieldset>-->
+            <!--<input class="searchArea" type="text" placeholder="search">-->
+            <!--<div class="lupa" for="searchArea"></div>-->
+            <!--</fieldset>-->
+            <div class="visible-xs">XS</div>
+            <div class="visible-sm">SM</div>
+            <div class="visible-md">MD</div>
+            <div class="visible-lg">LG</div>
+        </div>
+</template>
+
+<template name="topMenu">
+    <div class="headerVisible">
+        <nav class="navbar navbar-default nav-fixed-top" >
+                  <div class="navbar-header">
+                      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                      </button>
+                  </div>
+                  <div class="collapse navbar-collapse">
+                      <ul class="nav navbar-nav">
+                          <li><a id="mainLink" href="{{pathFor 'main'}}">meta</a></li>
+                          <li><a id="deckLink" href="{{pathFor 'decks' _eventID = "kfalskdfsldf" _deckID = "L38dKFFtxzGX6K9FZ"}}">Deck</a></li>
+                          <li><a id="metaLink" href="{{pathFor 'meta' }}">META</a></li>
+                          <li><a id="deckCardNameDeck" href="{{pathFor 'IRONdeckNaming' options = "deckFormList"}}">Deck Naming</a></li>
+                          <li><a id="deckCardNameDeck" href="{{pathFor 'event'}}">Event</a></li>
+                          <li><a id="testingLink" href="{{pathFor 'testing'}}">INFO</a></li>
+                          <li><a id="bootStrapTestingLink" href="{{pathFor 'bootStrapTesting'}}">bootStrapTesting</a></li>
+                      </ul>
+                  </div>
+          </nav>
+    </div>
+</template>
+
+<template name="topMenuStatic">
+
+    <nav class="navbar navbar-default nav-fixed-top" >
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a id="mainLink" href="{{pathFor 'main'}}">meta</a></li>
+                <li><a id="deckLink" href="{{pathFor 'decks' _eventID = "kfalskdfsldf" _deckID = "L38dKFFtxzGX6K9FZ"}}">Deck</a></li>
+                <li><a id="metaLink" href="{{pathFor 'meta' }}">META</a></li>
+                <li><a id="deckCardNameDeck" href="{{pathFor 'IRONdeckNaming' options = "deckFormList"}}">primes</a></li>
+                <li><a id="testingLink" href="{{pathFor 'testing'}}">INFO</a></li>
+                <li><a id="bootStrapTestingLink" href="{{pathFor 'bootStrapTesting'}}">bootStrapTesting</a></li>
+            </ul>
+        </div>
+    </nav>
+
+</template>
+
+<template name="dropDownMenu">
+        <div class="dropdownPop">
+            <ul class="list-group">
+                <li class="list-group-item" data-submenu-id="submenu-patas">
+                    <a href="#">AQUIIII</a>
+                    <div id="submenu-patas" class="popover2">
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-snub-nosed">
+                    <a href="#">Golden Snub-Nosed</a>
+                    <div id="submenu-snub-nosed" class="popover2">
+
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-duoc-langur">
+                    <a href="#">Duoc Langur</a>
+                    <div id="submenu-duoc-langur" class="popover2">
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-pygmy">
+                    <a href="#">Baby Pygmy Marmoset</a>
+                    <div id="submenu-pygmy" class="popover2">
+
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-tamarin">
+                    <a href="#">Black Lion Tamarin</a>
+                    <div id="submenu-tamarin" class="popover2">
+
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-monk">
+                    <a href="#">Monk Saki</a>
+                    <div id="submenu-monk" class="popover2">
+
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-gabon">
+                    <a href="#">Gabon Talapoin</a>
+                    <div id="submenu-gabon" class="popover2">
+
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-grivet">
+                    <a href="#">Grivet</a>
+                    <div id="submenu-grivet" class="popover2">
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-red-leaf">
+                    <a href="#">Red Leaf</a>
+                    <div id="submenu-red-leaf" class="popover2">
+                    </div>
+                </li>
+                <li class="list-group-item" data-submenu-id="submenu-king-colobus">
+                    <a href="#">King Colobus</a>
+                    <div id="submenu-king-colobus" class="popover2">
+                    </div>
+                </li>
+            </ul>
+        </div>
+</template>
+
+
+
+<template name="megaMenu">
+    <div id="pop1" class="popbox">
+        {{>yield "popUpMenu"}}
+    </div>
+</template>
+
+
+<template name="testMenu">
+    <style type="text/css">
+        .is-active > a, .is-hovered > a {
+            border-left: 3px solid {{siteColor}} !important;
+            background-color: #f5f5f5 !important;
+        }
+    </style>
+        <div class="superMenu">
+            <div class="left">
+                <ul class="one">
+                    <li class="level0 oneRow">
+                        <a><span>Principios Editorais</span></a>
+                    </li>
+                    <li class="level0 oneRow"><a><span>grupo globo</span></a></li>
+                    <li class="level0 oneRow parent">
+                        <a><span>futebol</span></a>
+                        <ul class="two">
+                            <li class="level1 twoRow parent">
+                                <a class="">C1</a>
+                                <ul class="three">
+                                    <li class="threeRow"><a>C12</a></li>
+                                    <li class="threeRow"><a>C22</a></li>
+                                    <li class="threeRow"><a>C32</a></li>
+                                    <li class="threeRow"><a>C42</a></li>
+                                    <li class="threeRow"><a>C52</a></li>
+                                </ul>
+                            </li>
+                            <li class="level1 twoRow"><a>C2</a></li>
+                            <li class="level1 twoRow"><a>C3</a></li>
+                            <li class="level1 twoRow"><a>C4</a></li>
+                            <li class="level1 twoRow"><a>C5</a></li>
+                        </ul>
+                    </li>
+                    <li class="level0 oneRow parent">
+                        <a href="#">
+                            <span>cartola fc</span>
+                        </a>
+                        <ul class="two">
+                            <li class="level1 twoRow"><a><span>D1</span></a></li>
+                            <li class="level1 twoRow"><a><span>D2</span></a></li>
+                            <li class="level1 twoRow"><a><span>D3</span></a></li>
+                            <li class="level1 twoRow"><a><span>D4</span></a></li>
+                            <li class="level1 twoRow parent">
+                                <a>D1</a>
+                                <ul class="three">
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="level0 oneRow"> <a><span>mma</span></a></li>
+                    <li class="level0 oneRow"> <a><span>f1</span></a></li>
+                    <li class="level0 oneRow"> <a><span>eu atleta</span></a></li>
+                </ul>
+
+            </div>
+            <div class="right">
+                AAAafffffffffffffffff
+            </div>
+        </div>
+</template>
+

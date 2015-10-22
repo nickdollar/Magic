@@ -1,0 +1,200 @@
+<template name="deckFormList">
+    <div class="col-xs-12">
+        <div class="row">
+            <h1>Deck List Name</h1>
+        </div>
+        <div class="row">
+            <button type="submit" class="inline btn btn-default createOneMoreDeck">Add A Deck</button>
+        </div>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="row">
+                    {{>formats}}
+                </div>
+                <div class="row">
+                    {{>nameTable_COL}}
+                </div>
+            </div>
+            <div class="col-xs-5">
+                {{>deckInfo_COL}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="nameTable_COL">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Format</th>
+            <th>Color</th>
+            <th>Type</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each deckNames}}
+        <tr>
+            <td class="col-xs-4" >{{name}}</td>
+            <td class="col-xs-2" >{{choosenFormat}}</td>
+            <td class="col-xs-2" >{{choosenColors}}</td>
+            <td class="col-xs-2" >{{choosenType}}</td>
+            <td class="col-xs-1" >
+                <button type="submit" class=" inline btn btn-default btn-xs removeDeckID">
+                    <span class="glyphicon glyphicon-trash "></span>&nbsp;
+                </button>
+            </td>
+            <td class="col-xs-1">
+                <button type="submit" class="inline btn btn-default btn-xs selectDeck">
+                    <span class="glyphicon glyphicon-ok"></span>&nbsp;
+                </button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="deckInfo_COL">
+    {{#if isDeckSelected}}
+    <div class="row">
+        {{>deckInfoForm_COL}}
+    </div>
+    <div class="row">
+        {{>cards}}
+    </div>
+    {{else}}
+        No deck Selected
+    {{/if}}
+</template>
+
+<template name="deckInfoForm_COL">
+    <div class="col-xs-12">
+        <form class="form-horizontal">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-xs-2 control-label">Name</label>
+                <div class="col-xs-7">
+                    <input type="text" class="form-control" id="inputDeckName" value={{name}}>
+                </div>
+            </div>
+
+            <!-- Select Basic -->
+            <div class="form-group row">
+                <label class="control-label col-xs-2" for="selectbasic">Format</label>
+                <div class="col-xs-7">
+                    <select id="selectbasic" name="selectbasic" class="form-control">
+                        <option value="vintage" {{format "vintage"}}>vintage</option>
+                        <option value="legacy" {{format "legacy"}}>legacy</option>
+                        <option value="modern" {{format "modern"}}>modern</option>
+                        <option value="standard" {{format "standard"}}>standard</option>
+                        <option value="draft" {{format "draft"}}>draft</option>
+                        <option value="commander" {{format "commander"}}>commander</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Multiple Checkboxes -->
+            <div class="form-group row">
+                <label class="control-label col-xs-2">Colors</label>
+                <div class="col-xs-7">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="W" {{checked "W"}}>
+                            White
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="U" {{checked "U"}}>
+                             Blue
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="B" {{checked "B"}}>
+                            Black
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="R" {{checked "R"}}>
+                            Red
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="G" {{checked "G"}}>
+                            Green
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select Basic -->
+            <div class="control-group row">
+                <label class="control-label col-xs-2" for="selectbasic">Type</label>
+                <div class="controls col-xs-7">
+                    <select class="form-control">
+                        <option value="control" {{type "control"}}>Control</option>
+                        <option value="combo"   {{type "combo"}}>Combo</option>
+                        <option value="aggro"   {{type "aggro"}}>Aggro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary pull-right deckUpdate">Update</button>
+            </div>
+        </form>
+    </div>
+</template>
+
+<template name="cards">
+    <div class="areaCornerDiv">
+        <div class="rowThing">
+          {{>search}}
+        </div>
+        <div class="areaCornerDiv">
+          {{#each cardsList}}
+              <div class="rowThing">
+                {{>cardInfo}}
+                  <button type="submit" class="btn btn-default btn-xs removeCard ">
+                  <span class="glyphicon glyphicon-trash"></span>&nbsp;
+                  </button>
+              </div>
+          {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="search">
+    <div class="form-group">
+        <input class="form-control typeahead cardName"
+               name="search" type="text"
+               placeholder="Type to query"
+               autocomplete="off" spellcheck="off"
+               data-source="search"
+                />
+        <button type="submit" class="btn btn-default btn-xs addCard" >Add Card</button>
+    </div>
+</template>
+
+<template name="cardInfo">
+    {{name}}
+    {{#each getManaCss name}}
+        <span class="mana {{mana}}"></span>
+    {{/each}}
+</template>
+
+<template name="formats">
+        <!--<div class="col-xs-12 col-md-12 col-md-12 col-lg-12">-->
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">standard</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">modern</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">legacy</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">vintage</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">draft</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">nope</button>
+        <!--</div>-->
+</template>
+

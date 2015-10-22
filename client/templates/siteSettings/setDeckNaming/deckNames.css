@@ -1,0 +1,213 @@
+
+.divQuantity {
+    float: left;
+    width: 4%
+}
+
+.divName {
+    float:left;
+    width: 71%
+}
+
+.divMana {
+    float:right;
+    width: 25%
+}
+
+
+.cardColumnQuantity {
+    text-align: right;
+}
+
+.tableColumn {
+    valign: top;
+    width: 300px;
+}
+
+
+.fields {
+    width: 100%;
+}
+
+.rTable {
+    display: block;
+    width: 100%;
+}
+
+.rTableRow {
+    clear: both;
+}
+
+
+.rowThing {
+    min-height: 25px;
+    width: 100%;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rowThing > h1 {
+    margin:auto;
+    text-align: center;
+
+}
+
+.deckName {
+    float:left;
+}
+
+.rowButton {
+    float : right;
+    position: relative;
+}
+
+.deckID {
+    height : 100%;
+    width: 10%;
+    float:left;
+}
+
+.dropdownDeckNames {
+    float:left;
+}
+
+.dropdownDeckType {
+    float:right;
+}
+
+
+.dropDowns {
+    width: 81%;
+    float:left;
+}
+
+
+.selectDeckButton {
+    width: auto;
+    float: left;
+}
+
+.deckNameButtons {
+    float: right;
+    width: 19%;
+}
+
+.inline {
+    display:inline-block;
+}
+
+.areaCornerDiv {
+    border: 1px solid saddlebrown;
+    margin: 2px;
+    position: relative;
+}
+
+.floatLeft{
+    float : left;
+}
+
+/* basic typeahead styles */
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    width: 250px;
+    padding: 8px 12px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    outline: none;
+}
+
+.typeahead {
+    background-color: #fff;
+}
+
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999
+}
+
+.tt-menu {
+    width: 200px;
+    margin: 4px 0;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 12px;
+    line-height: 24px;
+    cursor: default;
+}
+
+.tt-suggestion:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+
+.decktableRow tr {
+
+}
+
+.deckTable > tr > td {
+    font-size: 10px;
+    vertical-align: top;
+}
+
+.deckTable {
+    width: 100%;
+}
+
+.deckTable {
+
+}
+.matchPositive {
+    /*background-color: #FDF5E6;*/
+    color: inherit;
+}
+
+.matchNegative {
+    background-color: #FFB2B2;
+    color: inherit;
+}
+

@@ -1,0 +1,113 @@
+.LISTdeckwithoutname {
+    border: 1px solid blanchedalmond;
+    /*padding: 10px;*/
+}
+
+.LISTdeckwithoutname > div {
+    height: 35px;
+    clear: both;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid darkcyan;
+}
+
+.newDeckColumn {
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+}
+
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+
+}
+
+.sideboardColumn {
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+
+}
+
+
+
+
+
+.typeBlock {
+    width: 100%;
+    padding: 2px;
+}
+
+
+
+.WRAPList {
+    padding: 0;
+    margin: 0px
+}
+.cardRow {
+    /*display: block;*/
+    /*width: 100%;*/
+    /*font-size: 14px;*/
+    /*font-family: "Verdana";*/
+    /*line-height: 1.4;*/
+    /*letter-spacing: -0.045em;*/
+    /*-webkit-column-break-inside: avoid;*/
+    /*page-break-inside: avoid;*/
+    /*break-inside: avoid;*/
+}
+
+.typeHeader {
+
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.typeHeader .cardRow {
+
+}
+
+.playerNamesSideMenu {
+    width: 130px;
+}
+
+.LISTdeckwithoutname .playerName {
+    height: 40px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.LISTdeckwithoutname .active {
+    background-color: rgb(241, 237, 245);
+}
+
+.playerName .noNameDeckType {
+
+}
+
+.playerName .noNameDeckName {
+    text-align: right;
+    display: block;
+    height: auto;
+    border: 1px solid darkcyan;
+    font-size: 10px;
+}
+
+.sideboard {
+
+}
+
+.deckPicture {
+}

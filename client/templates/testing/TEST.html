@@ -1,0 +1,49 @@
+<template name="testing">
+            <div class="row">
+                <div class="col-lg-8 col-md-7 col-sm-6 col-xs-5" style="background-color: #777777">
+                    {{#each deckNamesModern}}
+                        {{>deckPhotoTemplate}}
+                    {{/each}}
+                </div>
+            </div>
+</template>
+
+<template name="deckBoxHorizontal">
+    <div class="deckBox">
+        {{>deckPhoto}}
+        <div class="deckData">
+            <div class="deckName">
+                {{name}}
+            </div>
+            <div class="colors">
+                <span class="mana mana-r }"></span>
+                <span class="mana mana-u }"></span>
+            </div>
+            <div class="percentage">
+                {{percentage}}%
+            </div>
+            <div class="positionChange">
+                ---
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="deckPhoto">
+    <div class="photoFrame">
+        <div class="bigPicture" style="background-image: url('{{convertToLink mainPicture}}')">
+        </div>
+        <div class="smallPictures">
+            <div class="smallPicture1" style="background-image: url('{{convertToLink smallPicture1}}')">
+            </div>
+            <div class="smallPicture2" style="background-image: url('{{convertToLink smallPicture2}}')"></div>
+        </div>
+    </div>
+</template>
+
+<template name="deckPhoto2">
+    <div class="photoFrame">
+        <div class="bigPicture" style="background-image: url('{{convertToLink mainPicture}}')">
+        </div>
+    </div>
+</template>

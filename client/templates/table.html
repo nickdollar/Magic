@@ -1,0 +1,34 @@
+<template name="table">
+<table>
+<tr>
+    {{#each deckCards}}
+    <td>
+        <table>
+            {{>row}}
+        </table>
+    </td>
+    {{/each}}
+</tr>
+</table>
+
+</template>
+
+<template name="row">
+    {{#each rowtd}}
+        <tr>
+            <td>{{name}} </td>
+            <td>{{quantity}} </td>
+            <td>{{sideboard}} </td>
+        </tr>
+    {{/each}}
+</template>
+
+<template name="tag">
+
+</template>
+
+<template name="card">
+
+
+
+</template>

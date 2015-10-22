@@ -1,0 +1,267 @@
+<template name="deckPopOutOption">
+    <div class="modal show" id="addEmployee">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <h4 class="modal-title">{{deckName.id}}</h4>
+                </div>
+                <button type="submit" class="btn btn-default closeModal" style="display: inline;">Close Modal</button>
+                <div class="modal-body">
+                    <table class="deckTable">
+                        <tr>
+                            {{#each deckName.results}}
+                                <td>
+                                    <table class="decktableRow">
+                                        <tr><td><a href="#" class="btn btn-xs btn-default">{{this.deckName}}: {{value}}%</a></td></tr>
+                                        {{#each matches.positive}}
+                                            <tr><td><a class="matchPositive">{{this}}</a></td></tr>
+                                        {{/each}}
+                                        {{#each matches.negative}}
+                                            <tr><td><a class="matchNegative">{{this}}</a></td></tr>
+                                        {{/each}}
+                                    </table>
+                                </td>
+                            {{/each}}
+                        </tr>
+                    </table>
+                    <div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>
+
+
+<!--<template name="deckPopOut">-->
+<!--<div class="modal show" id="addEmployee">-->
+<!--<div class="modal-dialog">-->
+<!--<div class="modal-content">-->
+<!--<div class="modal-header">-->
+<!--&lt;!&ndash;<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>&ndash;&gt;-->
+<!--<h4 class="modal-title">{{deckName}}</h4>-->
+<!--</div>-->
+        <!--{{#if badDeckChoose}}-->
+<!--<div class="rowThing">-->
+<!--<input type="text" name="" class="deckname">-->
+<!--<button type="submit" class="btn btn-default btn-xs addName">Add Name</button>-->
+<!--</div>-->
+        <!--{{else}}-->
+<!--<button type="submit" class="btn btn-default confirmDeckName" style="display: inline;">Confirm Name</button>-->
+        <!--{{/if}}-->
+<!--<button type="submit" class="btn btn-default closeModal" style="display: inline;">Close Modal</button>-->
+
+<!--<div class="modal-body">-->
+        <!--{{#if Template.subscriptionsReady}}-->
+<!--{{>cardMatches}}-->
+        <!--{{/if}}-->
+<!--<div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
+<!--</template>-->
+
+<!--<template name="cards">-->
+    <!--<div class="areaCornerDiv">-->
+        <!--<div class="rowThing">-->
+            <!--{{>search}}-->
+        <!--</div>-->
+        <!--<div class="areaCornerDiv">-->
+            <!--{{#each cards}}-->
+                <!--<div class="rowThing">-->
+                    <!--{{>cardInfo}}-->
+
+                    <!--<button type="submit" class="btn btn-default btn-xs smallPicture1Remove ">-->
+                        <!--<span class="glyphicon glyphicon-remove"></span>&nbsp;-->
+                    <!--</button>-->
+
+                    <!--&lt;!&ndash;<div class="rowButton">&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if mainPictureOption1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCardRemove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if mainPictureOption2}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCard disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCard ">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{#if smallPicture1Option1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPicture1Remove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if smallPicture1Option2}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPic1">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{#if smallPicture2Option1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPicture2Remove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if smallPicture2Option2}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPic2 ">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs removeCard ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-trash"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</div>-->
+            <!--{{/each}}-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
+
+<!--<template name="deckNameColors">-->
+    <!--<div class="inline">-->
+        <!--<button class="btn btn-default btn-xs dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{choosenColors}}-->
+            <!--<span class="caret"></span>-->
+        <!--</button>-->
+        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">0</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">R</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">U</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">G</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">W</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BRG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GUB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">URG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WBR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UBR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RGWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BRGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UBRG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GWUB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WUBRG</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</template>-->
+<!--<div class="row">-->
+<!--<div class="newDeckColumn bottom-separator">-->
+        <!--{{#if creatureQuantity _id}}-->
+<!--<div class="typeBlock creature">-->
+<!--<div class="row typeHeader">Creature ({{creatureQuantity _id}})</div>-->
+        <!--{{#each creature _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--<span class="name">aaaa</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if artifactQuantity _id}}-->
+<!--<div class="typeBlock artifact">-->
+<!--<span class="typeHeader">Artifact ({{artifactQuantity _id}})</span>-->
+        <!--{{#each artifact _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if planeswalkerQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">planeswalker ({{planeswalkerQuantity _id}})</span>-->
+        <!--{{#each planeswalker _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--<span class="name">{{mana}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if enchantmentQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Enchantment ({{enchantmentQuantity _id}})</span>-->
+        <!--{{#each enchantment _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if sorceryQuantity _id}}-->
+<!--<div class="typeBlock sorcery">-->
+<!--<span class="typeHeader">Sorcery ({{sorceryQuantity _id}})</span>-->
+        <!--{{#each sorcery _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if instantQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Instant ({{instantQuantity _id}})</span>-->
+        <!--{{#each instant _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if landQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Land ({{landQuantity _id}})</span>-->
+        <!--{{#each land _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+<!--</div>-->
+<!--</div>-->

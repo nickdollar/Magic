@@ -1,0 +1,111 @@
+<template name="IRONdeckNaming">
+    {{#if Template.subscriptionsReady}}
+          {{>yield "base"}}
+    {{/if}}
+</template>
+
+<template name="nameSimpleCards">
+    {{#each deck}}
+        {{#if getTypeQuantity cards}}
+            {{>nameCardTypeRows}}
+        {{/if}}
+    {{/each}}
+</template>
+
+
+<template name="deckNames">
+    <div class="panel panel-default" id="panel1">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-target="#collapseOne"
+                   href="#collapseOne" class="collapsed">
+                    Deck Names
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="rowThing">
+                    <input type="text" name="" class="deckname">
+                    <button type="submit" class="btn btn-default btn-xs addName">Add Name</button>
+                </div>
+                <div class="areaCornerDiv">
+                    {{#each names}}
+                        <div class="rowThing">
+                            <div class="deckName">
+                                <span class="editESPAN" style="display:block;">{{name}}</span>
+                                <input class="editINPUT" style="display:none;" type="text"/>
+                            </div>
+                            <div class="rowButton">
+                                <!--<button type="submit" class="btn btwn-default editName">edit</button>-->
+                                <button type="submit" class="btn btn-default removeName btn-xs">  <span class="glyphicon glyphicon-trash"></span>&nbsp;</button>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template name="cardsTop">
+    <div class="panel panel-default" id="panel3">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-target="#collapseThree"
+                   href="#collapseThree" class="collapsed">
+                    Cards
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+            {{>cards}}
+        </div>
+    </div>
+</template>
+
+<template name="nameDeck">
+    <div>
+        {{#each goodDecks}}
+            {{>deckBlock}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="deckBlock">
+    <div class="areaCornerDiv">
+        <div class="rowThing">
+            <div class="nomeDoDeck">
+                {{name}}
+            </div>
+        </div>
+        {{#each decksResults}}
+            <div class="rowThing">
+                <div class="paddingLeft">
+                    <div class="noNameDeck">
+                        {{decknameID}}
+                        {{percentage}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</template>
+
+<template name="nameCardTypeRows">
+    <div class="cardRow"> {{type}} ({{getTypeQuantity cards}})</div>
+    {{#each cards}}
+        <div class="cardRow">
+            <div class="divQuantity">
+                {{quantity}}
+            </div>
+            <div class="divName">
+                <a href="{{getLinkAddress name}}" class="awp">{{name}}</a>
+            </div>
+            <div class="divMana">
+                {{#each getManaCss cardData.manacost}}
+                    <span class="mana {{mana}}"></span>
+                {{/each}}
+            </div>
+        </div>
+    {{/each}}
+</template>

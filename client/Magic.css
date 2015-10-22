@@ -1,0 +1,191 @@
+#eventHeader {
+    height: 50px;
+    width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    border-width: 0px;
+    border-style: solid;
+}
+#eventDeckOptions {
+    height: 100px;
+    width: 550px;
+    margin-right: auto;
+    margin-left: auto;
+    border-width: 0px;
+    border-style: solid;
+    float: right;
+}
+#deckInfo {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 600px;
+    width: 200px;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-width: 1px;
+    border-style: solid;
+    float: left;
+}
+#deckOptions {
+    float: right;
+    height: 100px;
+    width: 600px;
+    border-width: 1px;
+    border-style: solid;
+    margin: auto;
+}
+
+.cardTable {
+    -webkit-column-width: 150px;
+    -moz-column-width: 150px;
+    column-width: 150px;
+}
+
+.cardColumn {
+}
+
+.typeRow {
+    font-weight: bold;
+}
+
+
+.deckTable td
+{
+
+}
+
+
+
+.manaCostColumn {
+    text-align: right;
+}
+
+.mana {
+    display: inline-block;
+    background: url('/img/mana.png') no-repeat;
+    color: transparent;
+    width: 15px;
+    height: 15px;
+}
+
+
+.mana-x { background-position: -90px -90px  }
+.mana-0 { background-position: -75px -105px }
+.mana-1 { background-position: -15px -120px }
+.mana-2 { background-position: -90px -15px  }
+.mana-3 { background-position: -75px -30px  }
+.mana-4 { background-position: -45px -120px }
+.mana-5 { background-position: -15px -45px  }
+.mana-6 { background-position: -30px -15px  }
+.mana-7 { background-position: -75px -90px  }
+.mana-8 { background-position: -0px -30px   }
+.mana-9 { background-position: -15px -105px }
+.mana-10 { background-position: -30px -105px}
+.mana-11 { background-position: -90px -45px }
+.mana-12 { background-position: -75px -75px }
+.mana-13 { background-position: -45px -75px }
+.mana-14 { background-position: -60px -105px}
+.mana-15 { background-position: -30px -120px}
+.mana-16 { background-position: -30px -45px }
+.mana-17 { background-position: -75px -45px }
+.mana-18 { background-position: -0px -120px }
+.mana-19 { background-position: -30px -75px }
+.mana-20 { background-position: -45px -105px}
+
+.mana-b { background-position: -45px -60px}
+.mana-g { background-position: -60px -75px}
+.mana-r { background-position: -30px -0px }
+.mana-u { background-position: -0px -75px }
+.mana-w { background-position: -0px -90px }
+
+.mana-2b { background-position: -0px -0px  }
+.mana-2g { background-position: -0px -45px }
+.mana-2r { background-position: -60px -0px }
+.mana-2u { background-position: -0px -60px }
+.mana-2w { background-position: -75px -0px }
+
+
+.mana-bg { background-position: -45px -90px }
+.mana-br { background-position: -15px -0px  }
+.mana-bu { background-position: -60px -15px }
+.mana-bw { background-position: -30px -90px }
+
+
+.mana-gb { background-position: -90px -30px }
+.mana-gr { background-position: -45px -15px }
+.mana-gu { background-position: -75px -60px }
+.mana-gw { background-position: -45px -0px  }
+
+.mana-rb { background-position: -90px -0px  }
+.mana-rg { background-position: -0px -15px  }
+.mana-rw { background-position: -0px -105px }
+.mana-ru { background-position: -30px -30px }
+
+.mana-ub { background-position: -90px -60px }
+.mana-ug { background-position: -15px -60px }
+.mana-ur { background-position: -60px -90px }
+.mana-uw { background-position: -60px -30px }
+
+.mana-wb { background-position: -15px -15px }
+.mana-wg { background-position: -30px -60px }
+.mana-wr { background-position: -90px -75px }
+.mana-wu { background-position: -15px -30px }
+
+.mana-bp { background-position: -45px -45px  }
+.mana-cp { background-position: -45px -30px  }
+.mana-gp { background-position: -15px -90px  }
+.mana-rp { background-position: -15px -75px  }
+.mana-up { background-position: -60px -60px  }
+.mana-wp { background-position: -90px -105px }
+
+.mana-s { background-position: -75px -15px }
+
+.mana-y { background-position: -60px -45px }
+
+
+
+a{
+    text-decoration:none;
+}
+
+
+#screenshot{
+    position:absolute;
+    border:1px solid #ccc;
+    background:#333;
+    padding:5px;
+    display:none;
+    color:#fff;
+}
+
+.columns {
+    position : relative ;
+    column-width: 27em;
+    -moz-column-width: 27em;
+    -webkit-column-width: 27em;
+    column-rule: 2px solid red;
+    -webkit-column-rule: 2px solid red;
+    -moz-column-rule: 2px solid red;
+    column-gap: 12px;
+    -webkit-column-gap: 12px;
+    -moz-column-gap: 12px;
+}
+
+div.tl1, div.tl2, div.tl3 {
+    display : block ;
+    float : left ;
+    width : 32.5%;
+    height : 15px ;
+    border : 2px solid red ;
+    border-left : 0px solid red ;
+    border-top : 0px solid red ;
+}
+
+div.tl1 {
+    border : 2px solid red ;
+    border-top : 0px ;
+}
+
+
+
+
