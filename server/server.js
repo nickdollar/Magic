@@ -108,7 +108,7 @@ function insertANewVideo(youtubeLink){
 }
 
 function saveFile(url) {
-    // Get file name from url.
+     //Get file name from url.
     var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
