@@ -96,15 +96,19 @@ function insertANewVideo(youtubeLink){
     information.thumbnail = snippet.thumbnails.medium.url;
 
 
-    Images.insert(information.thumbnail, function (err, fileObj) {
-        // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
-    });
+    console.log(information.thumbnail);
+    console.log(information.thumbnail.shift());
+
+    //
+    //var fileObj = new FS.file(information.thumbnail);
+    //
+    //console.log(fileObj);
+
+    //Images.insert(fileObj, function (err, fileObj) {
+    //    // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
+    //});
 
     console.log(information);
-
-
-
-
 }
 
 function saveFile(url) {
