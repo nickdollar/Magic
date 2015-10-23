@@ -1,8 +1,8 @@
-Images.allow({
-    //'insert': function () {
-    //    // add custom authentication code here
-    //    return true;
-    //},
+_Images.allow({
+    'insert': function () {
+        // add custom authentication code here
+        return true;
+    },
     download: function(userId, fileObj) {
         return true
     },
@@ -15,5 +15,5 @@ Images.allow({
 });
 
 Meteor.publish('images', function(){
-    return Images.find({});
+    return _Images.find({});
 });

@@ -56,6 +56,11 @@ Meteor.publish('lastDeckByName', function(name){
     return _Deck.find({name : name}, {limit : 3});
 });
 
+Meteor.publish('deckplaylist', function(){
+    return _DeckPlayList.find({});
+});
+
+
 
 
 Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {

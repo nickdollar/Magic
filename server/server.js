@@ -42,8 +42,20 @@ Meteor.methods({
     findOneDeckWithoutName : function(_deckWithoutNameID, format){
         return getOneDeckRank(_deckWithoutNameID, format);
     },
-    insertNewVideo : function(youtubelink){
-        insertANewVideo(youtubelink);
+    insertNewPlayList : function(youtubelink, deckName){
+        var playListInformation = getPlayListInformation(youtubelink);
+        var file = _Images.insert(playListInformation.thumbnail, function (err, fileObj) {
+        });
+
+        _DeckPlayList.insert({
+            _deckName : deckName,
+            _cfsImagesID : file._id,
+            date : playListInformation.date,
+            title : playListInformation.title,
+            channel : playListInformation.channel,
+            link : playListInformation.link,
+            information : playListInformation.videosQuantity
+        });
     },
     getEvents : function(){
         getVideoInfo();
@@ -81,8 +93,80 @@ Meteor.methods({
 //https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=zOYW7FO9rzA,zOYW7FO9rzA,-vH2eZAM30s&key={Your API KEY}
 //    var searchResult = HTTP.get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=BdXdaAjbWEA&key=AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk");
 
+function getPlayListInformation(youtubeLink){
+    var _playlistIDRegex = new RegExp('^.*(youtu.be\/|list=)([^#\&\?]*).*', 'i');
+    var _playlistID = youtubeLink.match(_playlistIDRegex)[2];
+
+    var playListQuantity = APIRequestPlayListItems(_playlistID).pageInfo.totalResults;
+    var snippetPlayListInfo = APIRequestPlayListItems(_playlistID).items[0].snippet;
+
+    var information = {};
+    information.date = new Date(snippetPlayListInfo.publishedAt);
+    information.title = snippetPlayListInfo.title;
+    information.channel = snippetPlayListInfo.channelTitle;
+    information.link = youtubeLink;
+    information.thumbnail = snippetPlayListInfo.thumbnails.medium.url;
+    information.videosQuantity =  playListQuantity;
+
+    return information;
+
+}
+
+
+function APIRequestPlayListItems(_playlistID){
+    var key = "AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk";
+    var url = "https://www.googleapis.com/youtube/v3/playlistItems";
+    var options = {
+        'params': {
+            key : key,
+            playlistId : _playlistID,
+            part: 'snippet'
+        }
+    };
+
+    Future = Npm.require('fibers/future');
+
+    var myFuture = new Future();
+
+    HTTP.get(url, options, function(error, response){
+        if ( error ) {
+            myFuture.throw(error);
+        } else {
+            myFuture.return(response.data);
+        }
+    });
+
+    return myFuture.wait();
+}
+
+function getPlayListInfo(id){
+    var key = "AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk";
+    var url = "https://www.googleapis.com/youtube/v3/playlists";
+    var options = {
+        'params': {
+            key : key,
+            id : id,
+            part: 'snippet'
+        }
+    };
+
+    Future = Npm.require('fibers/future');
+
+    var myFuture = new Future();
+
+    HTTP.get(url, options, function(error, response){
+        if ( error ) {
+            myFuture.throw(error);
+        } else {
+            myFuture.return(response.data);
+        }
+    });
+
+    return myFuture.wait();
+}
+
+
 function insertANewVideo(youtubeLink){
-    var playlist = new RegExp('^.*(youtu.be\/|list=)([^#\&\?]*).*', 'i');
     var idRegex = new RegExp('(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})', 'i');
     var id = youtubeLink.match(idRegex)[1];
 
@@ -95,39 +179,12 @@ function insertANewVideo(youtubeLink){
     information.link = youtubeLink;
     information.thumbnail = snippet.thumbnails.medium.url;
 
-
-    console.log(information.thumbnail);
-    console.log(information.thumbnail.shift());
-
-    //
-    //var fileObj = new FS.file(information.thumbnail);
-    //
-    //console.log(fileObj);
-
-    //Images.insert(fileObj, function (err, fileObj) {
-    //    // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
-    //});
-
-    console.log(information);
+    _Images.insert(information.thumbnail, function (err, fileObj) {
+        // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
+    });
 }
 
-function saveFile(url) {
-     //Get file name from url.
-    var filename = url.substring(url.lastIndexOf("/") + 1).split("?")[0];
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'blob';
-    xhr.onload = function() {
-        var a = document.createElement('a');
-        a.href = window.URL.createObjectURL(xhr.response); // xhr.response is a blob
-        a.download = filename; // Set the file name.
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        delete a;
-    };
-    xhr.open('GET', url);
-    xhr.send();
-}
+
 
 function getVideoInfo(id) {
     var key = "AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk";
@@ -169,13 +226,9 @@ function getOneDeckRank(_deckWithoutNameID){
             cardDeckNames.push(card.name);
         });
 
-
-
         var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
         var value = formatNum((matches.positive.length)/cardDeckNames.length);
         var name = _DeckNames.findOne({_id : _deckNameID}).name;
-
-
 
         if(value!==0){
             results.push({

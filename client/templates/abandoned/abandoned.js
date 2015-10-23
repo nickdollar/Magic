@@ -613,3 +613,12 @@
 //    }
 //    return results;
 //},
+
+
+//var meteor_root = Npm.require('fs').realpathSync( process.cwd() + '/../' );
+//var application_root = Npm.require('fs').realpathSync( meteor_root + '/../' );
+//
+//// if running on dev mode
+//if( Npm.require('path').basename( Npm.require('fs').realpathSync( meteor_root + '/../../../' ) ) == '.meteor' ){
+//    application_root =  Npm.require('fs').realpathSync( meteor_root + '/../../../../' );
+//}

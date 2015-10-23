@@ -1,9 +1,5 @@
-Session.set("selectedDeck", "Soul Sisters");
-Session.set("_choosenDeckID1", null);
-Session.set("_choosenDeckID2", null);
-Session.set("_choosenDeckID3", null);
-
-
+SV_selectedDeckName = "selectedDeckName";
+Session.set(SV_selectedDeckName, "Soul Sisters");
 
 Template.examples_ROW.helpers({
     lastDecks : function(){
@@ -11,29 +7,28 @@ Template.examples_ROW.helpers({
     }
 });
 
-
 Template.examples_ROW.events({
 
 });
+
 Template.examples_ROW.onRendered(function(){
 
 });
+
 Template.examples_ROW.onCreated(function(){
     var instance = this;
     this.autorun(function(){
         instance.subscribe('joinExampleCards');
         instance.subscribe('event');
         instance.subscribe('images');
+        instance.subscribe('deckplaylist');
     });
 });
-
-
 
 Template.exampleDeck_COL.helpers({
     cardType : function(_deckID){
         var blocks = ["artifact", "creature", "enchantment", "instant", "land", "planeswalker", "sorcery"];
         var types = [];
-
         for(var i = 0; i< blocks.length; i++){
             if(blocks[i]=="artifact"){
                 var options = {creature : false, artifact : true};
@@ -100,13 +95,18 @@ Template.exampleDeck_COL.helpers({
 Template.playList_ROW.events({
    "click .addAYoutubeVideo" : function(evt, tmp){
        var link = $(evt.target).prev().val();
-        Meteor.call('insertNewVideo', link);
+        Meteor.call('insertNewPlayList', link, Session.get(SV_selectedDeckName));
    }
 });
 
 Template.playList_ROW.helpers({
     images : function(){
+        var _ids = [];
+        _DeckPlayList.find({_deckName : Session.get(SV_selectedDeckName)}).forEach(function(playlist){
+            _ids.push(playlist._cfsImagesID);
+        });
 
-         return Images.find({});
+        console.log(_ids);
+        return _Images.find({_id : {$in : _ids}});
     }
 });
