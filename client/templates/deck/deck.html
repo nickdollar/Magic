@@ -6,9 +6,38 @@
         <div class="row" style="border-top: 2px solid black">
             {{>playList_ROW}}
         </div>
+        <div class="row" style="border-top: 2px solid black">
+            {{>cardsPercentage_ROW}}
+        </div>
     </div>
 </template>
 
+<template name="cardsPercentage_ROW">
+    <button type="submit" class="btn btn-default getDeckPercentage">getDeckPercentage</button>
+        <h2>Basic Table</h2>
+        <p>The .table class adds basic styling (light padding and only horizontal dividers) to a table:</p>
+        <table class="table">
+            <thead>
+
+            <tr>
+                <th>Name</th>
+                {{#each weekDates}}
+                    <th>{{this}}</th>
+                {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+            {{#each cards}}
+                <tr>
+                    <td>{{cardName}}</td>
+                    {{#each cardWeek cardName}}
+                        <td>{{this}}</td>
+                    {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+</template>
 
 <template name="examples_ROW">
     {{#if Template.subscriptionsReady}}
@@ -22,20 +51,37 @@
 
 
 <template name="playList_ROW">
-    {{#each images}}
-        <div>
-            <a href="{{this.url}}" target="_blank"><img src="{{this.url}}" alt="" class="thumbnail" /></a>
+    <div class="playlist">
+        <div class="col-xs-12">
+            <div class="row">
+                <input class="cardName"/>
+                <button type="submit" class="btn btn-default addAYoutubeVideo">add a Youtube Video or PlayList</button>
+            </div>
+
+            <div class="row">
+                {{#each playlist}}
+                    <div class="col-xs-3">
+                        <div class="thumbnail">
+                            <img src="
+                                {{#with image _cfsImagesID}}
+                            {{this.url}}
+                                {{/with}}
+                            " alt class="playListThumbnail" />
+                            <div class="caption">
+                                <div>
+                                    {{title}}
+                                </div>
+                                <div>
+                                    by {{channel}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
         </div>
-    {{/each}}
+    </div>
 
-
-    <h1>Hello collectionFS_test!</h1>
-    <input type="file" id="file">
-    <input type="submit" value="Upload">
-
-
-    <input class="cardName"/>
-    <button type="submit" class="btn btn-default addAYoutubeVideo">add a Youtube Video or PlayList</button>
 </template>
 
 <template name="exampleDeck_COL">
@@ -44,20 +90,72 @@
     </div>
     <div class="row">
         <div class="newDeckColumn bottom-separator">
+            <!--<div class="row no-gutters">-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>-->
+                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>-->
+            <!--</div>-->
             {{#each cardType _deckID}}
-                <div class="typeBlock creature">
-                <div class="typeHeader">{{name}} ({{quantity}})</div>
+                <div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>
                     {{#each cards ../_deckID options}}
-                        <div>
-                            <span class="quantity">{{quantity}}</span>
-                            <span class="name">{{name}}</span>
-                            <span class="name">aaaa</span>
+                        <div class="row no-gutters">
+                            <div class="quantity col-xs-1">{{quantity}}</div>
+                            <div class="name col-xs-8">{{name}}</div>
+                            <div class="col-xs-3">
+                                {{#each getManaCss name}}
+                                    <div class="mana {{mana}}"></div>
+                                {{/each}}
+                            </div>
                         </div>
                     {{/each}}
-                </div>
             {{/each}}
         </div>
     </div>
+    <!--<div class="row newDeckColumn" >-->
+            <!--<table class="table">-->
+                    <!--<tr>-->
+                        <!--<td colspan="3">-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>-->
+                                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--{{#each cardType _deckID}}-->
+                        <!--<tr>-->
+                            <!--<td colspan="3">{{name}} ({{quantity}})</td>-->
+                        <!--</tr>-->
+                        <!--{{#each cards ../_deckID options}}-->
+                            <!--<tr>-->
+                                <!--<td class="col-xs-1 no-gutters">{{quantity}}</td>-->
+                                <!--<td class="col-xs-7">{{name}}</td>-->
+                                <!--<td class="col-xs-4">-->
+                                    <!--{{#each getManaCss name}}-->
+                                        <!--<span class="mana {{mana}}"></span>-->
+                                    <!--{{/each}}-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                        <!--{{/each}}-->
+                    <!--{{/each}}-->
+            <!--</table>-->
+    <!--</div>-->
     <div class="row">
         <div class="verticalSideboard top-separator">
             {{#if sideboardQuantity _deckID}}

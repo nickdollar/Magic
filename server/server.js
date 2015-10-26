@@ -12,7 +12,6 @@ Meteor.methods({
         // TODO fix regexp to support multiple tokens
         var regex = new RegExp('^' + query, 'i');
         return _CardDatabase.find({name: {$regex:  regex}}).fetch();
-
     },
     removeDeck : function(_deckID) {
         _DeckNames.remove({_id : _deckID});
@@ -46,7 +45,6 @@ Meteor.methods({
         var playListInformation = getPlayListInformation(youtubelink);
         var file = _Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });
-
         _DeckPlayList.insert({
             _deckName : deckName,
             _cfsImagesID : file._id,
@@ -54,64 +52,81 @@ Meteor.methods({
             title : playListInformation.title,
             channel : playListInformation.channel,
             link : playListInformation.link,
-            information : playListInformation.videosQuantity
+            videosQuantity : playListInformation.videosQuantity
         });
     },
     getEvents : function(){
-        getVideoInfo();
-        //makeCardDatabase();
-        //setUpColorForDeckName("yjodm3c3bZ7t34piz");
-        //makeMeta();
-        //getLastEvents();
-        //_Event.find({}).forEach(function(event){
-        //    if(!event.hasOwnProperty('deckStored')){
-        //        console.log("Added Event");
-        //        getEventDeckInformation(event);
-        //        _Event.update({ _id : event._id},
-        //            {
-        //            $set : {
-        //                deckStored : true
-        //            }
-        //        });
-        //    } else{
-        //        console.log("Events Exists");
-        //    };
-        //});
-
-    },
-    downloadEventsAndDecks : function(){
-
+        downloadEvents();
     },
     updateDeckType : function(_id, name){
         _Deck.update({_id : _id},{
             $set : {name : name}
         });
+    },
+    cardsPercentage : function(deckName){
+        var date = getLastAndFirstDayOfWeekBefore();
+
+        var cards = cardsPercentage("RWg Burn");
+
+
+        //for(var i = 0 ; i < cards.length; i++){
+        //    var options = {deckName : "RWg Burn", name : cards[i].name};
+        //    if(_cardBreakDownCards.find(options, {limit : 1}).count() == 0){
+        //        _cardBreakDownCards.insert({deckName : "RWg Burn", name : cards[i].name});
+        //    }
+        //}
     }
 });
 
-//AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk
-//https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=zOYW7FO9rzA,zOYW7FO9rzA,-vH2eZAM30s&key={Your API KEY}
-//    var searchResult = HTTP.get("https://www.googleapis.com/youtube/v3/videos?part=snippet&id=BdXdaAjbWEA&key=AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk");
-
-function getPlayListInformation(youtubeLink){
-    var _playlistIDRegex = new RegExp('^.*(youtu.be\/|list=)([^#\&\?]*).*', 'i');
-    var _playlistID = youtubeLink.match(_playlistIDRegex)[2];
-
-    var playListQuantity = APIRequestPlayListItems(_playlistID).pageInfo.totalResults;
-    var snippetPlayListInfo = APIRequestPlayListItems(_playlistID).items[0].snippet;
-
-    var information = {};
-    information.date = new Date(snippetPlayListInfo.publishedAt);
-    information.title = snippetPlayListInfo.title;
-    information.channel = snippetPlayListInfo.channelTitle;
-    information.link = youtubeLink;
-    information.thumbnail = snippetPlayListInfo.thumbnails.medium.url;
-    information.videosQuantity =  playListQuantity;
-
-    return information;
+addCartsToDeckName = function(deckName){
 
 }
 
+cardsPercentage = function(deckName){
+    var lastWeekDate = getLastAndFirstDayOfWeekBefore();
+
+    var decks = _Deck.find({name : deckName}).fetch();
+    var cardValues = {};
+
+    console.log("length: " + decks.length);
+    for(var i = 0; i < decks.length; i++){
+        _DeckCards.find({_deckID : decks[i]._id, sideboard: false}).forEach(function(card){
+            if(!cardValues.hasOwnProperty(card.name)){
+                cardValues[card.name] = {total : 0};
+            }
+            cardValues[card.name].total += parseInt(card.quantity);
+        });
+
+    }
+    var date = getLastAndFirstDayOfWeekBefore();
+    for(var key in cardValues){
+        cardValues[key].total = prettifyDecimails((cardValues[key].total/decks.length),2);
+
+        _cardBreakDownCards.update({deckName : deckName, cardName : key},
+            {
+                $set : { weekTotal : cardValues[key].total},
+                $setOnInsert : {deckName : deckName, cardName : key}
+            },
+            {upsert: true}
+        );
+
+        _cardBreakDownDate.update({
+                    name : key,
+                    deckName : deckName,
+                    date : date.weekStart
+                    },
+                    {
+                        $set : {quantity : cardValues[key].total},
+                        $setOnInsert : {name : key,
+                                        deckName : deckName,
+                                        date : date.weekStart,
+                                        quantity : cardValues[key].total
+                        }
+                    },
+                    {upsert: true}
+                    );
+    }
+}
 
 function APIRequestPlayListItems(_playlistID){
     var key = "AIzaSyBqtEvO5BAMe3F4tQLwXiRuNvaflfKm3nk";
@@ -227,7 +242,7 @@ function getOneDeckRank(_deckWithoutNameID){
         });
 
         var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
-        var value = formatNum((matches.positive.length)/cardDeckNames.length);
+        var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length,2);
         var name = _DeckNames.findOne({_id : _deckNameID}).name;
 
         if(value!==0){
@@ -260,12 +275,9 @@ function getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID)
     return results;
 }
 
-
 function getFile(address){
     Future = Npm.require('fibers/future');
-
     var myFuture = new Future();
-
     HTTP.get(url, options, function(error, response){
         if ( error ) {
             myFuture.throw(error);
@@ -273,12 +285,47 @@ function getFile(address){
             myFuture.return(response);
         }
     });
-
     return myFuture.wait();
 }
 
 
 
+function getPlayListInformation(youtubeLink){
+    var _playlistIDRegex = new RegExp('^.*(youtu.be\/|list=)([^#\&\?]*).*', 'i');
+    var _playlistID = youtubeLink.match(_playlistIDRegex)[2];
+
+    var playListQuantity = APIRequestPlayListItems(_playlistID).pageInfo.totalResults;
+    var snippetPlayListInfo = APIRequestPlayListItems(_playlistID).items[0].snippet;
+
+    var information = {};
+    information.date = new Date(snippetPlayListInfo.publishedAt);
+    information.title = snippetPlayListInfo.title;
+    information.channel = snippetPlayListInfo.channelTitle;
+    information.link = youtubeLink;
+    information.thumbnail = snippetPlayListInfo.thumbnails.medium.url;
+    information.videosQuantity =  playListQuantity;
+
+    return information;
+}
 
 
 
+
+addCron = function(){
+    SyncedCron.add({
+        name: 'get new decks',
+        schedule: function(parser) {
+            // parser is a later.parse object
+            return parser.text('every 6 hours');
+        },
+        job: function() {
+
+        }
+    });
+}
+
+Meteor.startup(function() {
+    addCron();
+    SyncedCron.start();
+
+});

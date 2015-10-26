@@ -3,6 +3,8 @@ Session.set(SV_selectedDeckName, "Soul Sisters");
 
 Template.examples_ROW.helpers({
     lastDecks : function(){
+        console.log("AAAAAAAAAAA");
+        console.log(_Deck.find({}));
         return _Deck.find({}, {limit : 2});
     }
 });
@@ -22,6 +24,8 @@ Template.examples_ROW.onCreated(function(){
         instance.subscribe('event');
         instance.subscribe('images');
         instance.subscribe('deckplaylist');
+        instance.subscribe('cardbreakdowndate');
+        instance.subscribe('cardbreakdowncards');
     });
 });
 
@@ -88,7 +92,7 @@ Template.exampleDeck_COL.helpers({
         return _Event.findOne({_id: _eventID}).eventType;
     },
     manaCost : function(card){
-        return 'AAAAAA';
+        return '';
     }
 });
 
@@ -100,13 +104,58 @@ Template.playList_ROW.events({
 });
 
 Template.playList_ROW.helpers({
-    images : function(){
-        var _ids = [];
-        _DeckPlayList.find({_deckName : Session.get(SV_selectedDeckName)}).forEach(function(playlist){
-            _ids.push(playlist._cfsImagesID);
-        });
-
-        console.log(_ids);
-        return _Images.find({_id : {$in : _ids}});
+    playlist : function(){
+        return _DeckPlayList.find({_deckName : Session.get(SV_selectedDeckName)});
+    },
+    image : function(_imageID){
+        console.log(_Images.find({}));
+        return _Images.findOne({_id : _imageID});
     }
+});
+
+Template.cardsPercentage_ROW.helpers({
+    weekDates : function(){
+        var date = getLastAndFirstDayOfWeekBefore();
+        var weekQuantity = 8;
+        var week = 7;
+        var oldDate = new Date(date.weekStart);
+        var newDate = new Date(date.weekEnd);
+        oldDate.setDate(oldDate.getDate() - week*(weekQuantity-1));
+        newDate.setDate(newDate.getDate() - week*(weekQuantity-1));
+        var dates = [];
+        for(var i = 0; i< weekQuantity ;i++){
+            dates.push(oldDate.getMonth() + "/" + oldDate.getDate() + "-" + newDate.getMonth() + "/" + newDate.getDate());
+            oldDate.setDate(oldDate.getDate() + 6);
+            newDate.setDate(oldDate.getDate() + 6);
+        }
+        return dates;
+    },
+    cards : function(){
+        return _cardBreakDownCards.find({deckName : "RWg Burn"}, {sort : {weekTotal : -1}});
+    },
+    cardWeek : function(cardName){
+
+        var date = getLastAndFirstDayOfWeekBefore();
+        var weekQuantity = 8;
+        var week = 7;
+        var oldDate = new Date(date.weekStart);
+        oldDate.setDate(oldDate.getDate() - week*(weekQuantity-1));
+
+        var values = [];
+        for(var i = 0; i< weekQuantity ;i++){
+            if(_cardBreakDownDate.find({name : cardName, date :  oldDate}, {limit : 1}).count() == 0){
+                values.push(0);
+            }else{
+                values.push(_cardBreakDownDate.findOne({name : cardName, date : {$gte : oldDate}}).quantity);
+            }
+            oldDate.setDate(oldDate.getDate() + week);
+        }
+        return values;
+    }
+});
+
+Template.cardsPercentage_ROW.events({
+   'click .getDeckPercentage' : function(){
+        Meteor.call('cardsPercentage',Session.get(SV_selectedDeckName));
+   }
 });

@@ -25,7 +25,7 @@
 
     "badges"               : false,
     "jumbotron"            : false,
-    "thumbnails"           : false,
+    "thumbnails"           : true,
     "alerts"               : false,
     "progress-bars"        : false,
     "media"                : false,

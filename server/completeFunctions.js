@@ -1,5 +1,22 @@
-function getLastEvents(){
+downloadEvents = function(){
+    getLastEvents();
+    _Event.find({}).forEach(function(event){
+        if(!event.hasOwnProperty('deckStored')){
+            console.log("Added Event");
+            getEventDeckInformation(event);
+            _Event.update({ _id : event._id},
+                {
+                    $set : {
+                        deckStored : true
+                    }
+                });
+        } else{
+            console.log("Events Exists");
+        };
+    });
+}
 
+getLastEvents = function(){
     //request("http://magic.wizards.com/en/content/deck-lists-magic-online-products-game-info", Meteor.bindEnvironment(function(error, response, body) {
     //    if (!error && response.statusCode == 200) {
 
@@ -84,7 +101,7 @@ function makeMeta(){
             var name = names[i].name;
             var deckCount = _Deck.find({format : format, name : name}).count();
             metaInfo._MetaDateID = _MetaDateID;
-            metaInfo.percent = formatNum(deckCount/decksCount);
+            metaInfo.percent = prettifyDecimails(deckCount/decksCount,2);
             metaInfo.name = name;
             metaInfo.format = format;
 
@@ -93,12 +110,13 @@ function makeMeta(){
     }
 }
 
-function getEventsInformation(event, httpAddress, dateAndNumber){
+getEventsInformation = function(event, httpAddress, dateAndNumber){
+    console.log(event);
     //Patterns
     var _eventNumberPatt = /#[0-9]*/;
     var dataPatt = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/;
     var formatPatt = /standard|pauper|modern|legacy|vintage|sealed/i;
-    var eventTypePatt = /daily|ptq|judge open|champs|champs|premier/i;
+    var eventTypePatt = /daily|ptq|judge open|champs|champs|premier|mocs/i;
     var setPatt = /(?:\S+\s+){1}(\S+)/i;
 
     var eventInformation = {};
@@ -118,7 +136,7 @@ function getEventsInformation(event, httpAddress, dateAndNumber){
 
 }
 
-function getEventQunantityOfBooters(address, callback){
+getEventQunantityOfBooters = function(address, callback){
 
     var result = request.getSync(address, {
         encoding: null
@@ -133,21 +151,21 @@ function getEventQunantityOfBooters(address, callback){
     return quantity;
 }
 
-function formatNum(n) {
-    return Math.round(n * 1e4) / 1e2;
+
+prettifyDecimails = function(number, decimals){
+    return ((number.toFixed(decimals)) * Math.pow(10, decimals))/Math.pow(10, decimals);
 }
 
+getEventDeckInformation = function(event){
 
-function getEventDeckInformation(event){
-
-    if(event.eventType === "ptq"){
+    if(event.eventType === "ptq" | event.eventType === "premier" | event.eventType === "mocs"){
         getTop8(event);
     }else{
         getDaily(event);
     }
 }
 
-function getTop8(event){
+getTop8 = function(event){
     var result = request.getSync(event.httpAddress, {
         encoding: null
     });
@@ -215,7 +233,7 @@ function getTop8(event){
     }
 }
 
-function getTop8Table($, top8Table){
+getTop8Table = function($, top8Table){
     var quarterFinalsPlayers = {};
     var semiFinalsPlayers = {};
     var finalsPlayers = {};
@@ -272,7 +290,7 @@ function getTop8Table($, top8Table){
     return top8;
 }
 
-function getInfoFromPlayerTop8Loser(line){
+getInfoFromPlayerTop8Loser = function(line){
     var positionPatt = new RegExp(/\d/);
     var scoreWinPatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )(\d)/);
     var scoreLosePatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )\d-(\d)/);
@@ -283,7 +301,7 @@ function getInfoFromPlayerTop8Loser(line){
     return information;
 }
 
-function getInfoFromPlayerTop8Winner(line){
+getInfoFromPlayerTop8Winner = function(line){
     var scoreWinPatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )(\d)/);
     var scoreLosePatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )\d-(\d)/);
     var namePatt = new RegExp(/(?:\(\d\)\s)([^, ]+)(?:, )/);
@@ -297,7 +315,7 @@ function getInfoFromPlayerTop8Winner(line){
     return information;
 }
 
-function getDaily(event){
+getDaily = function(event){
 
     var result = request.getSync(event.httpAddress, {
         encoding: null
@@ -368,7 +386,7 @@ function getDaily(event){
 
 
 
-function getDeckInfoFromTop8(information){
+getDeckInfoFromTop8 = function(information){
     var playerPatt = /.+?(?= \()/;
     var positionPatt = /(?:.+\()(\d+?)(?=\D)/;
     var temp = {};
@@ -379,7 +397,7 @@ function getDeckInfoFromTop8(information){
 
 
 
-function getDeckInfo(information){
+getDeckInfo = function(information){
     console.log(information);
     var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
     var playerPatt = /([^\s]+)/;
@@ -401,7 +419,7 @@ function getDeckInfo(information){
     return temp;
 }
 
-function setUpColorForDeckName(_deckNameID){
+setUpColorForDeckName = function(_deckNameID){
     var manaRegex = new RegExp("\{([a-zA-Z])\}", 'g');
 
     var cards = _DeckNamesCards.find({_deckNameID : _deckNameID}).fetch();
@@ -435,7 +453,7 @@ function setUpColorForDeckName(_deckNameID){
     return colors;
 }
 
-function addDeckName(_selectedDeckID, name){
+addDeckName = function(_selectedDeckID, name){
 
     var format = _Deck.findOne({_id : _selectedDeckID}).format;
 
@@ -464,7 +482,7 @@ function addDeckName(_selectedDeckID, name){
     });
 }
 
-function makeCardDatabase(){
+makeCardDatabase = function(){
     myobject = JSON.parse(Assets.getText('AllCards.json'));
 
     for (var key in myobject) {
@@ -531,7 +549,7 @@ function makeCardDatabase(){
 };
 
 
-function getDeckRanks(){
+getDeckRanks = function(){
     var _deckNames = _DeckNames.find({}).fetch();
     var _deckWithoutNames = _Deck.find({$or : [{title: ""}, {title : null}]}).fetch();
     var finalResults = [];
@@ -549,7 +567,7 @@ function getDeckRanks(){
             });
 
             var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
-            var value = formatNum((matches.positive.length)/cardDeckNames.length);
+            var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length, 2);
             var deckName = _DeckNames.findOne({deckName_id : _deckNameID}).name;
             if(value!==0){
                 results.push({
@@ -568,7 +586,7 @@ function getDeckRanks(){
     return finalResults;
 }
 
-function getCardFromArrayWithoutLands(cardList){
+getCardFromArrayWithoutLands = function(cardList){
     var resultWithoutLands = [];
     _CardDatabase.find(
         {name : {$in : cardList},
@@ -580,7 +598,7 @@ function getCardFromArrayWithoutLands(cardList){
 }
 
 
-function getInfoFromEvent(information){
+getInfoFromEvent = function(information){
     var _eventNumberPatt = /#[0-9]*/;
     var dataPatt = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/;
     var eventInformation = {};
@@ -589,3 +607,7 @@ function getInfoFromEvent(information){
     return eventInformation;
 
 }
+
+
+
+

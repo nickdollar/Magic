@@ -36,3 +36,4 @@ http
 cfs:standard-packages
 cfs:gridfs
 cfs:filesystem
+percolate:synced-cron

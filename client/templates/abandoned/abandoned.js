@@ -101,7 +101,7 @@
 //                name: {$in : deckWithoutNameCards}
 //            }).fetch();
 //
-//            percentage = formatNum(result.length/deckWithoutNameCards.length);
+//            percentage = PrettifyFormatNum2Decimals(result.length/deckWithoutNameCards.length);
 //
 //            if(percentage > 50)
 //            {
@@ -446,7 +446,7 @@
 //            });
 //
 //            _Meta.find({}).forEach(function (deck) {
-//                var percentage = formatNum(deck.quantity / _Deck.find({}).count());
+//                var percentage = PrettifyFormatNum2Decimals(deck.quantity / _Deck.find({}).count());
 //                _Meta.update({_id: deck._id},
 //                    {
 //                        $set: {
@@ -588,7 +588,7 @@
 //                name : {$in : deckNameIDCardsWithoutLands}
 //            }).fetch();
 //
-//            var percentage = formatNum(result.length/deckNameIDCardsWithoutLands.length);
+//            var percentage = PrettifyFormatNum2Decimals(result.length/deckNameIDCardsWithoutLands.length);
 //
 //            if(percentage > 70)
 //            {

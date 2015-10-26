@@ -53,6 +53,7 @@ Meteor.publish('metaDate', function(){
 });
 
 Meteor.publish('lastDeckByName', function(name){
+    console.log(name);
     return _Deck.find({name : name}, {limit : 3});
 });
 
@@ -60,6 +61,17 @@ Meteor.publish('deckplaylist', function(){
     return _DeckPlayList.find({});
 });
 
+Meteor.publish('cardbreakdown', function(){
+    return _cardBreakDown.find({});
+});
+
+Meteor.publish('cardbreakdowndate', function(){
+    return _cardBreakDownDate.find({});
+});
+
+Meteor.publish('cardbreakdowncards', function(){
+    return _cardBreakDownCards.find({});
+});
 
 
 

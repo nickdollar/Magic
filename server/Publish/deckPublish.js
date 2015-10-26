@@ -28,7 +28,7 @@ Meteor.publishComposite("joinCards", function(selectedDeck){
 Meteor.publishComposite("joinExampleCards", function(){
     return {
         find: function () {
-            return _Deck.find({}, {limit : 3});
+            return _Deck.find({name : "RWg Burn"}, {limit : 3});
         },
         children: [
             {
