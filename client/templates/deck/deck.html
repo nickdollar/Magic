@@ -41,11 +41,11 @@
 
 <template name="examples_ROW">
     {{#if Template.subscriptionsReady}}
-        {{#each lastDecks}}
-            <div class="col-xs-6">
+        {{#with lastDecks}}
+            <div class="col-xs-8">
                 {{>exampleDeck_COL _deckID=_id}}
             </div>
-        {{/each}}
+        {{/with}}
     {{/if}}
 </template>
 
@@ -86,34 +86,39 @@
 
 <template name="exampleDeck_COL">
     <div class="row">
-        {{event _deckID}}
+        <button type="submit" class="btn btn-default getDeckPercentage">Daily</button>
+        <button type="submit" class="btn btn-default getDeckPercentage">SCG Open</button>
+        <button type="submit" class="btn btn-default getDeckPercentage">GP</button>
     </div>
     <div class="row">
         <div class="newDeckColumn bottom-separator">
-            <!--<div class="row no-gutters">-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>-->
-                <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>-->
-            <!--</div>-->
+            <div class="row no-gutters">
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>
+                <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>
+            </div>
             {{#each cardType _deckID}}
                 <div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>
                     {{#each cards ../_deckID options}}
                         <div class="row no-gutters">
-                            <div class="quantity col-xs-1">{{quantity}}</div>
-                            <div class="name col-xs-8">{{name}}</div>
+                            <!--<div class="quantity col-xs-1"></div>-->
+                            <div class="name col-xs-7">{{quantity}} {{name}}</div>
                             <div class="col-xs-3">
                                 {{#each getManaCss name}}
                                     <div class="mana {{mana}}"></div>
                                 {{/each}}
+                            </div>
+                            <div class="col-xs-2">
+                                $8.74
                             </div>
                         </div>
                     {{/each}}

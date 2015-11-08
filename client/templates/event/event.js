@@ -1,3 +1,7 @@
+SV_event_selectedEventID = '_selectedEventID';
+SV_event_selectedDeckID = '_selectedEventID';
+
+
 Session.set('_selectedEventID', null);
 Session.set('_selectedDeckID', null);
 
@@ -9,6 +13,7 @@ Template.event.helpers({
         return Session.get('_selectedDeckID');
     }
 });
+
 Template.event.events({
 
 });
@@ -18,49 +23,49 @@ Template.event.onRendered(function(){
 });
 
 Template.event.events({
-    'mouseenter .name' : function(evt,tmp){
-        var $container = $("#imgPreviewWithStyles").first();
-        var $img = $("#floatingImage").eq(0);
-        var $deckPicture = $(".deckPicture");
-        var $window = $(window);
-        var $card = $(evt.target);
-
-        if($container.find('img')[0]){
-            $container.find('img')[0].remove();
-        }
-
-        var name = $card.text();
-        console.log(name);
-        var linkAddress = makeLinkFromName(name);
-        $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress);
-        $container.append($img);
-        $container.show();
-        if ($window.width() < 980) {
-            $container.appendTo('body');
-            var offset = $card.offset();
-            $container.css({
-                top: offset.top - 30 + 'px',
-                left: offset.left + $card.width() + 10 + 'px'
-            });
-        } else{
-            $container.css({
-                top: 0,
-                left: 0
-            });
-            $container.appendTo($deckPicture);
-        }
-    },
-    'mouseleave .name' : function(evt,tmp){
-        var $container = $("#imgPreviewWithStyles").first();
-        $container.hide();
-    },
-    'mousemove .cardRow' : function(evt,tmp){
-        //var offset = $(".newdeckWrap").offset();
-        //$("#imgPreviewWithStyles").css({
-        //    top: (e.pageY - offset.top) + 10 + 'px',
-        //    left: (e.pageX - offset.left) + 10 + 'px'
-        //});
-    }
+    //'mouseenter .name' : function(evt,tmp){
+    //    var $container = $("#imgPreviewWithStyles").first();
+    //    //var $img = $("#floatingImage").eq(0);
+    //    var $deckPicture = $(".deckPicture");
+    //    var $window = $(window);
+    //    var $card = $(evt.target);
+    //
+    //    if($container.find('img')[0]){
+    //        $container.find('img')[0].remove();
+    //    }
+    //
+    //    var name = $card.text();
+    //    console.log(name);
+    //    var linkAddress = makeLinkFromName(name);
+    //    var $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress);
+    //    $container.append($img);
+    //    $container.show();
+    //    if ($window.width() < 980) {
+    //        $container.appendTo('body');
+    //        var offset = $card.offset();
+    //        $container.css({
+    //            top: offset.top - 30 + 'px',
+    //            left: offset.left + $card.width() + 10 + 'px'
+    //        });
+    //    } else{
+    //        $container.css({
+    //            top: 0,
+    //            left: 0
+    //        });
+    //        $container.appendTo($deckPicture);
+    //    }
+    //},
+    //'mouseleave .name' : function(evt,tmp){
+    //    var $container = $("#imgPreviewWithStyles").first();
+    //    $container.hide();
+    //},
+    //'mousemove .cardRow' : function(evt,tmp){
+    //    //var offset = $(".newdeckWrap").offset();
+    //    //$("#imgPreviewWithStyles").css({
+    //    //    top: (e.pageY - offset.top) + 10 + 'px',
+    //    //    left: (e.pageX - offset.left) + 10 + 'px'
+    //    //});
+    //}
 });
 
 Template.event.onCreated(function(){
@@ -185,74 +190,10 @@ Template.event_deckList_COL.helpers({
 //add a class where the object is hovered
 
 Template.event_deckList_COL.events({
-    //'mouseenter .cardRow' : function(evt,tmp){
-    //
-    //    if($(".deckPicture .cardImage")[0]){
-    //        $(".deckPicture .cardImage")[0].remove();
-    //    }
-    //    $(".hoveredPicture .image").attr("src", finalDirectory);
-    //    var cardName = $(evt.target).find(".name").text();
-    //    var finalDirectory = makeLinkFromName(cardName);
-    //    $img = $('<img>', {class : "cardImage img-responsive"}).attr("src", "http://69.195.122.106/nicholas/mtgpics/s/Spellskite.full.jpg");
-    //    $img.attr("src", finalDirectory);
-    //    $(".deckPicture").append($img);
-    //}
 
-    //'mouseenter .name' : function(evt,tmp){
-    //    var $container = $("#imgPreviewWithStyles").first();
-    //    var $img = $("#floatingImage").eq(0);
-    //    var $deckPicture = $(".deckPicture");
-    //    var $window = $(window);
-    //    var $card = $(evt.target);
-    //
-    //    if($container.find('img')[0]){
-    //        $container.find('img')[0].remove();
-    //    }
-    //
-    //    var name = $card.text();
-    //    console.log(name);
-    //    var linkAddress = makeLinkFromName(name);
-    //    $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress);
-    //    $container.append($img);
-    //    $container.show();
-    //    if ($window.width() < 980) {
-    //        $container.appendTo('body');
-    //        var offset = $card.offset();
-    //        $container.css({
-    //            top: offset.top - 30 + 'px',
-    //            left: offset.left + $card.width() + 10 + 'px'
-    //        });
-    //    } else{
-    //        $container.css({
-    //            top: 0,
-    //            left: 0
-    //        });
-    //        $container.appendTo($deckPicture);
-    //    }
-    //},
-    //'mouseleave .name' : function(evt,tmp){
-    //    var $container = $("#imgPreviewWithStyles").first();
-    //    $container.hide();
-    //},
-    //'mousemove .cardRow' : function(evt,tmp){
-    //    //var offset = $(".newdeckWrap").offset();
-    //    //$("#imgPreviewWithStyles").css({
-    //    //    top: (e.pageY - offset.top) + 10 + 'px',
-    //    //    left: (e.pageX - offset.left) + 10 + 'px'
-    //    //});
-    //}
 
 });
 
-
-function makeLinkFromName(cardName){
-    cardName = encodeURI(cardName);
-    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-    var linkBase = "http://69.195.122.106/nicholas/mtgpics/";
-    var folderLetter = cardName.charAt(0).toLocaleLowerCase();
-    var finalDirectory = linkBase+folderLetter+"/"+cardName+".full.jpg";
-    return finalDirectory;
-}
 
 Template.event_deckList_COL.onRendered(function(){
     //console.log($(".newDeckColumn"));

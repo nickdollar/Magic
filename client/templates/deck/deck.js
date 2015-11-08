@@ -1,11 +1,11 @@
-SV_selectedDeckName = "selectedDeckName";
-Session.set(SV_selectedDeckName, "Soul Sisters");
+SV_decksSelectedDeckName = "selectedDeckName";
+Session.set(SV_decksSelectedDeckName, "");
+SV_decksSelectedFormat = "selectedFormat";
+Session.set(SV_decksSelectedFormat, "");
 
 Template.examples_ROW.helpers({
     lastDecks : function(){
-        console.log("AAAAAAAAAAA");
-        console.log(_Deck.find({}));
-        return _Deck.find({}, {limit : 2});
+        return _Deck.findOne({});
     }
 });
 
@@ -20,7 +20,7 @@ Template.examples_ROW.onRendered(function(){
 Template.examples_ROW.onCreated(function(){
     var instance = this;
     this.autorun(function(){
-        instance.subscribe('joinExampleCards');
+        instance.subscribe('joinExampleCards', Session.get(SV_decksSelectedDeckName), Session.get(SV_decksSelectedFormat));
         instance.subscribe('event');
         instance.subscribe('images');
         instance.subscribe('deckplaylist');
@@ -31,7 +31,7 @@ Template.examples_ROW.onCreated(function(){
 
 Template.exampleDeck_COL.helpers({
     cardType : function(_deckID){
-        var blocks = ["artifact", "creature", "enchantment", "instant", "land", "planeswalker", "sorcery"];
+        var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
         var types = [];
         for(var i = 0; i< blocks.length; i++){
             if(blocks[i]=="artifact"){
@@ -51,7 +51,7 @@ Template.exampleDeck_COL.helpers({
                 var quantity = getQuantity2(options, false, _deckID);
                 if(quantity > 0){types.push({name : "Instant", quantity : quantity, options : options})};
             }else if(blocks[i]=="land"){
-                var options = {land : true, creature : false, artifact : false}
+                var options = {land : true, creature : false, artifact : false};
                 var quantity = getQuantity2(options, false, _deckID);
                 if(quantity > 0){types.push({name : "Land", quantity : quantity, options : options})};
             }else if(blocks[i]=="planeswalker"){
@@ -59,7 +59,7 @@ Template.exampleDeck_COL.helpers({
                     var quantity = getQuantity2(options, false, _deckID);
                     if(quantity > 0){types.push({name : "Planeswalker", quantity : quantity, options : options})};
             }else if(blocks[i]=="sorcery"){
-                var options = {sorcery : true}
+                var options = {sorcery : true};
                 var quantity = getQuantity2(options, false, _deckID);
                 if(quantity > 0){ types.push({name : "Sorcery", quantity : quantity, options : options})};
             }
@@ -99,13 +99,13 @@ Template.exampleDeck_COL.helpers({
 Template.playList_ROW.events({
    "click .addAYoutubeVideo" : function(evt, tmp){
        var link = $(evt.target).prev().val();
-        Meteor.call('insertNewPlayList', link, Session.get(SV_selectedDeckName));
+        Meteor.call('insertNewPlayList', link, Session.get(SV_decksSelectedDeckName));
    }
 });
 
 Template.playList_ROW.helpers({
     playlist : function(){
-        return _DeckPlayList.find({_deckName : Session.get(SV_selectedDeckName)});
+        return _DeckPlayList.find({_deckName : Session.get(SV_decksSelectedDeckName)});
     },
     image : function(_imageID){
         console.log(_Images.find({}));
@@ -156,6 +156,6 @@ Template.cardsPercentage_ROW.helpers({
 
 Template.cardsPercentage_ROW.events({
    'click .getDeckPercentage' : function(){
-        Meteor.call('cardsPercentage',Session.get(SV_selectedDeckName));
+        Meteor.call('cardsPercentage',Session.get(SV_decksSelectedDeckName));
    }
 });

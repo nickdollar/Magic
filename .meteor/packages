@@ -37,3 +37,4 @@ cfs:standard-packages
 cfs:gridfs
 cfs:filesystem
 percolate:synced-cron
+meteorhacks:fast-render

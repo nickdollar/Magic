@@ -8,10 +8,34 @@ Meteor.publish('event', function() {
 
 
 
-Meteor.publishComposite("joinCards", function(selectedDeck){
+Meteor.publishComposite("testing", function(format){
     return {
         find: function () {
-            return _DeckCards.find({_deckID:  selectedDeck});
+            return _Deck.find({format : format, $or : [{name : {$exists : false}}, {name : ""}]}, {limit : 8});
+        },
+        children: [
+            {
+                find: function (deck) {
+                    return _DeckCards.find({_deckID: deck._id});
+                },
+                children : [
+                    {
+                        //collectionName: "joinExampleCards",
+                        find: function (card) {
+                            return _CardDatabase.find({name: card.name});
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+});
+
+
+Meteor.publishComposite("joinCards", function(_deckID){
+    return {
+        find: function () {
+            return _DeckCards.find({_deckID:  _deckID});
         },
         children: [
             {
@@ -24,11 +48,10 @@ Meteor.publishComposite("joinCards", function(selectedDeck){
     }
 });
 
-
-Meteor.publishComposite("joinExampleCards", function(){
+Meteor.publishComposite("joinExampleCards", function(name, format){
     return {
         find: function () {
-            return _Deck.find({name : "RWg Burn"}, {limit : 3});
+            return _Deck.find({name : name, format : format});
         },
         children: [
             {

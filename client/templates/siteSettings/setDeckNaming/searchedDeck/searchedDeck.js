@@ -1,11 +1,11 @@
-Session.set('noNameSelectedDeck', null);
-
+SV_deckNamingFormat = "deckNamingFormat";
+Session.set(SV_deckNamingFormat, "");
 //++++++++++++++++++++++++
 //searchedDeck           +
 //++++++++++++++++++++++++
 Template.searchedDeck.helpers({
     selectedDeck : function(){
-        return Session.get('noNameSelectedDeck');
+        return Router.current().params.deckID;
     }
 });
 Template.searchedDeck.events({
@@ -27,26 +27,154 @@ Template.searchedDeck.events({
     }
 });
 
-Template.searchedDeck.onRendered(function(){
+Template.searchedDeck.destroyed = function(){
+    //Session.set('noNameSelectedDeck', null);
+    //Session.set("noNameDeckFormat", null);
+};
+
+//+++++++++++++++++++++++++++
+//deckPercentageOptions_COL +
+//+++++++++++++++++++++++++++
+
+Template.deckPercentageOptions_COL.helpers({
+    deckName : function(){
+        return Session.get("uniqueDeckPercentageOptions");
+    }
+});
+Template.deckPercentageOptions_COL.events({
+    "click .selectDeckType" : function(evt, tmp){
+        Meteor.call('addDeckName', Router.current().params.deckID, $(evt.target).attr("data-deck-name"), function(error, data){
+            var deckID = _Deck.findOne();
+            Meteor.defer(function () {
+                Router.go('IRONdeckNaming', {options: "searchedDeck", format: Session.get(SV_deckNamingFormat), deckID: deckID._id});
+            });
+        });
+    },
+    "click .addNewDeck" : function(evt, tmp){
+       var name = $(evt.target).prev().val();
+
+       //Meteor.call('findOneDeckWithoutName',Router.current().params.deckID, function (error, data) {
+       //    if (error) {
+       //        console.log(error);
+       //        return;
+       //    }
+       //    Session.set('uniqueDeckPercentageOptions', data);
+       //});
+        Meteor.call('addDeckName', Router.current().params.deckID, name, function(error,data) {
+            var deckID = _Deck.findOne();
+            Router.go('IRONdeckNaming', {options: "searchedDeck", format: Router.current().params.format, deckID: deckID._id})
+        });
+
+
+    }
+});
+Template.deckPercentageOptions_COL.onRendered(function(){
+
+});
+Template.deckPercentageOptions_COL.onCreated(function(){
 
 });
 
-Template.searchedDeck.events({
+//+++++++++++++++++++++++++
+//LISTdeckwithoutname_COL +
+//+++++++++++++++++++++++++
+
+Template.LISTdeckwithoutname_COL.helpers({
+    deckOptions : function(){
+        return _Deck.find({});
+    }, isActive : function(){
+        if(Router.current().params.deckID === this._id){
+            return true;
+        }
+    }
+});
+Template.LISTdeckwithoutname_COL.events({
+
+});
+Template.LISTdeckwithoutname_COL.onRendered(function(){
+
+});
+Template.LISTdeckwithoutname_COL.onCreated(function(){
+
+});
+
+//+++++++++++++++++++
+//deckList_COL
+//+++++++++++++++++++
+
+Template.deckList_COL.helpers({
+    cardType : function(){
+        var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
+        var types = [];
+        for(var i = 0; i< blocks.length; i++){
+            if(blocks[i]=="artifact"){
+                var options = {creature : false, artifact : true};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Artifact", quantity : quantity, options : options});}
+            }else if(blocks[i]=="creature"){
+                var options = { creature : true};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Creature", quantity : quantity, options : options})};
+            }else if(blocks[i]=="enchantment"){
+                var options = {enchantment : true, creature : false, artifact : false};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Enchantment", quantity : quantity, options : options})};
+            }else if(blocks[i]=="instant"){
+                var options = {instant : true};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Instant", quantity : quantity, options : options})};
+            }else if(blocks[i]=="land"){
+                var options = {land : true, creature : false, artifact : false};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Land", quantity : quantity, options : options})};
+            }else if(blocks[i]=="planeswalker"){
+                var options = {planeswalker : true};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){types.push({name : "Planeswalker", quantity : quantity, options : options})};
+            }else if(blocks[i]=="sorcery"){
+                var options = {sorcery : true};
+                var quantity = getQuantity(options, false);
+                if(quantity > 0){ types.push({name : "Sorcery", quantity : quantity, options : options})};
+            }
+        }
+        return types;
+    }
+    ,cards : function(options){
+        var names = _CardDatabase.find(options).map(function(p) { return p.name });
+        return _DeckCards.find({_deckID : Router.current().params.deckID, sideboard : false, name : {$in : names}});
+    }, sideboard : function(){
+        //var names = _CardDatabase.find({}).forEach(function(e){names.push(e.name);});
+        return _DeckCards.find({_deckID : Router.current().params.deckID, sideboard : true});
+    },
+    sideboardQuantity: function () {
+        var options = {};
+        return getQuantity(options, true);
+    },
+    manaCost : function(card){
+        return '';
+    }
+
+});
+
+//add a class where the object is hovered
+
+Template.deckList_COL.events({
     'mouseenter .name' : function(evt,tmp){
-        var $container = $("#imgPreviewWithStyles").first();
-        var $img = $("#floatingImage").eq(0);
+        if($('#imgPreviewWithStyles')[0]){
+            $('#imgPreviewWithStyles')[0].remove();
+        }
+
+        $container = $("<div>", {id: "imgPreviewWithStyles", class: "a"});
         var $deckPicture = $(".deckPicture");
+
         var $window = $(window);
         var $card = $(evt.target);
 
-        if($container.find('img')[0]){
-            $container.find('img')[0].remove();
-        }
-
         var name = $card.text();
-        console.log(name);
         var linkAddress = makeLinkFromName(name);
-        $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress);
+        $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress).load(function() {
+
+        });
         $container.append($img);
         $container.show();
         if ($window.width() < 980) {
@@ -56,7 +184,7 @@ Template.searchedDeck.events({
                 top: offset.top - 30 + 'px',
                 left: offset.left + $card.width() + 10 + 'px'
             });
-        } else{
+        } else {
             $container.css({
                 top: 0,
                 left: 0
@@ -65,8 +193,7 @@ Template.searchedDeck.events({
         }
     },
     'mouseleave .name' : function(evt,tmp){
-        var $container = $("#imgPreviewWithStyles").first();
-        $container.hide();
+        $container.remove();
     },
     'mousemove .cardRow' : function(evt,tmp){
         //var offset = $(".newdeckWrap").offset();
@@ -77,221 +204,9 @@ Template.searchedDeck.events({
     }
 });
 
-Template.searchedDeck.onCreated(function(){
-    var instance = this;
-    this.autorun(function(){
-        instance.subscribe('joinCards', Session.get("noNameSelectedDeck"));
-    });
-});
-
-Template.searchedDeck.destroyed = function(){
-    Session.set('noNameSelectedDeck', null);
-    Session.set("noNameDeckFormat", null);
-};
-
-
-//+++++++++++++++++++++++++++
-//deckPercentageOptions_COL +
-//+++++++++++++++++++++++++++
-
-Template.deckPercentageOptions_COL.helpers({
-    deckName : function(){
-         return Session.get("uniqueDeckPercentageOptions");
-    }
-});
-Template.deckPercentageOptions_COL.events({
-    "click .closeModal" : function(evt, tmp){
-        Session.set('showDeckPopOutOption', false);
-        //Session.set('badDeckChoose',false);
-    },
-    "click .selectDeckType" : function(evt, tmp){
-        Meteor.call('updateDeckType', Session.get('noNameSelectedDeck'), $(evt.target).attr("data-deck-name"));
-        //_Deck.update({_id : Session.get('noNameSelectedDeck')},{
-        //    $set : {type : $(evt.target).attr("data-deck-type")}
-        //});
-    },
-    "click .addNewDeck" : function(evt, tmp){
-       var name = $(evt.target).prev().val();
-       Meteor.call('addDeckName', Session.get('noNameSelectedDeck'), name);
-       Meteor.call('findOneDeckWithoutName',Session.get('noNameSelectedDeck'), function (error, data) {
-           if (error) {
-               console.log(error);
-               return;
-           }
-           Session.set('uniqueDeckPercentageOptions', data);
-       });
-    }
-});
-Template.deckPercentageOptions_COL.onRendered(function(){
+Template.deckList_COL.onCreated(function(){
 
 });
-Template.deckPercentageOptions_COL.onCreated(function(){
-
-});
-
-
-//+++++++++++++++++++++++++
-//LISTdeckwithoutname_COL +
-//+++++++++++++++++++++++++
-
-Template.LISTdeckwithoutname_COL.helpers({
-    deckOptions : function(){
-        return _Deck.find({format : Session.get("noNameDeckFormat"), name :{$exists : false}  }, {limit : 8}).fetch();
-        //return Session.get('deckPercentageOptions');
-    }, isActive : function(){
-        if(Session.get("noNameSelectedDeck") === this._id){
-            return true;
-        }
-    }
-    //,
-    //format : function(){
-    //    return Session.get("noNameDeckFormat");
-    //}
-});
-Template.LISTdeckwithoutname_COL.events({
-    "click .noNameDeckID" : function(evt, template){
-    }
-});
-Template.LISTdeckwithoutname_COL.onRendered(function(){
-
-});
-Template.LISTdeckwithoutname_COL.onCreated(function(){
-
-});
-
-//+++++++++++++++++++
-//topDeckList
-//+++++++++++++++++++
-
-Template.deckList_COL.helpers({
-
-    artifact : function(){
-        var names = [];
-        _JoinCardsData.find({creature : false, artifact : true}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, artifactQuantity : function(){
-        var options = { creature : false, artifact : true};
-        return getQuantity(options, false);
-    }, creature : function(){
-        var names = [];
-        _JoinCardsData.find({creature : true}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, creatureQuantity : function(){
-        var options = { creature : true};
-        return getQuantity(options, false);
-    }, planeswalker : function(){
-        var names = [];
-        _JoinCardsData.find({planeswalker : true}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, planeswalkerQuantity : function(){
-        var options = { planeswalker : true};
-        return getQuantity(options, false);
-    }, enchantment : function(){
-        var names = [];
-        _JoinCardsData.find({enchantment : true, creature : false, artifact : false}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, enchantmentQuantity : function(){
-        var options = { enchantment : true, creature : false, artifact : false};
-        return getQuantity(options, false);
-    }, instant : function(){
-        var names = [];
-        _JoinCardsData.find({instant : true}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, instantQuantity : function() {
-        var options = {instant : true};
-        return getQuantity(options, false);
-    }, sorcery : function(){
-        var names = [];
-        _JoinCardsData.find({sorcery : true}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, sorceryQuantity : function(){
-        var options = { sorcery : true};
-        return getQuantity(options, false);
-    }, land : function(){
-        var names = [];
-        _JoinCardsData.find({land : true, creature : false, artifact : false}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : false, name : {$in : names}});
-    }, landQuantity : function(){
-        var options = { land : true, creature : false, artifact : false};
-        return getQuantity(options, false);
-    }, sideboard : function(){
-        var names = [];
-        _JoinCardsData.find({}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({sideboard : true, name : {$in : names}});
-    }, sideboardQuantity: function () {
-        var options = {};
-        return getQuantity(options, true);
-    },
-    Quantity : function(){
-        var options = {};
-        return getQuantity(options, true);
-    }
-});
-
-//add a class where the object is hovered
-
-Template.deckList_COL.events({
-    //'mouseenter .cardRow' : function(evt,tmp){
-    //
-    //    if($(".deckPicture .cardImage")[0]){
-    //        $(".deckPicture .cardImage")[0].remove();
-    //    }
-    //    $(".hoveredPicture .image").attr("src", finalDirectory);
-    //    var cardName = $(evt.target).find(".name").text();
-    //    var finalDirectory = makeLinkFromName(cardName);
-    //    $img = $('<img>', {class : "cardImage img-responsive"}).attr("src", "http://69.195.122.106/nicholas/mtgpics/s/Spellskite.full.jpg");
-    //    $img.attr("src", finalDirectory);
-    //    $(".deckPicture").append($img);
-    //}
-
-    //'mouseenter .name' : function(evt,tmp){
-    //    var $container = $("#imgPreviewWithStyles").first();
-    //    var $img = $("#floatingImage").eq(0);
-    //    var $deckPicture = $(".deckPicture");
-    //    var $window = $(window);
-    //    var $card = $(evt.target);
-    //
-    //    if($container.find('img')[0]){
-    //        $container.find('img')[0].remove();
-    //    }
-    //
-    //    var name = $card.text();
-    //    console.log(name);
-    //    var linkAddress = makeLinkFromName(name);
-    //    $img = $('<img>', {class : "cardImage"}).attr("src", linkAddress);
-    //    $container.append($img);
-    //    $container.show();
-    //    if ($window.width() < 980) {
-    //        $container.appendTo('body');
-    //        var offset = $card.offset();
-    //        $container.css({
-    //            top: offset.top - 30 + 'px',
-    //            left: offset.left + $card.width() + 10 + 'px'
-    //        });
-    //    } else{
-    //        $container.css({
-    //            top: 0,
-    //            left: 0
-    //        });
-    //        $container.appendTo($deckPicture);
-    //    }
-    //},
-    //'mouseleave .name' : function(evt,tmp){
-    //    var $container = $("#imgPreviewWithStyles").first();
-    //    $container.hide();
-    //},
-    //'mousemove .cardRow' : function(evt,tmp){
-    //    //var offset = $(".newdeckWrap").offset();
-    //    //$("#imgPreviewWithStyles").css({
-    //    //    top: (e.pageY - offset.top) + 10 + 'px',
-    //    //    left: (e.pageX - offset.left) + 10 + 'px'
-    //    //});
-    //}
-
-});
-
-
-
 
 Template.deckList_COL.onRendered(function(){
     //console.log($(".newDeckColumn"));
@@ -299,8 +214,6 @@ Template.deckList_COL.onRendered(function(){
     //var sideboardQuantity = getQuantity({}, true);
 
     var cardQuantity = _DeckCards.find({sideboard : false});
-    console.log(cardQuantity.count());
-    //console.log(sideboardQuantity);
 
     $(".newDeckColumn").css({
         "-webkit-column-count" : "2",
@@ -309,19 +222,4 @@ Template.deckList_COL.onRendered(function(){
     });
 });
 
-//+++++++++++++++++++
-//sideBoard_COL
-//+++++++++++++++++++
-
-Template.sideBoard_COL.helpers({
-    sideboard: function () {
-        var names = [];
-        _JoinCardsData.find({}).forEach(function (e) {
-            names.push(e.name);
-        });
-        return _DeckCards.find({sideboard: true, name: {$in: names}});
-    },sideboardQuantity: function () {
-        var options = {};
-        return getQuantity(options, true);
-    }
-});
+//var userIds = topPostsCursor.map(function(p) { return p.userId });

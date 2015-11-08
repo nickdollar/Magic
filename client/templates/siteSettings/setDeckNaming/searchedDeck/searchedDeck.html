@@ -4,65 +4,33 @@
             <button type="submit" class="btn btn-default getEvents" style="display: inline;">getEvents</button>
         </div>
         <div class="row">
-            <div class="col-xs-1" style="border: 1px solid gold">1</div>
-            <div class="col-xs-1" style="border: 1px solid gold">2</div>
-            <div class="col-xs-1" style="border: 1px solid gold">3</div>
-            <div class="col-xs-1" style="border: 1px solid gold">4</div>
-            <div class="col-xs-1" style="border: 1px solid gold">5</div>
-            <div class="col-xs-1" style="border: 1px solid gold">6</div>
-            <div class="col-xs-1" style="border: 1px solid gold">7</div>
-            <div class="col-xs-1" style="border: 1px solid gold">8</div>
-            <div class="col-xs-1" style="border: 1px solid gold">9</div>
-            <div class="col-xs-1" style="border: 1px solid gold">10</div>
-            <div class="col-xs-1" style="border: 1px solid gold">11</div>
-            <div class="col-xs-1" style="border: 1px solid gold">12</div>
-        </div>
-        <div class="row">
-            <div class="col-xs-2" style="border: 1px solid gold">1</div>
-            <div class="col-xs-2" style="border: 1px solid gold">2</div>
-            <div class="col-xs-2" style="border: 1px solid gold">3</div>
-            <div class="col-xs-2" style="border: 1px solid gold">4</div>
-            <div class="col-xs-2" style="border: 1px solid gold">5</div>
-            <div class="col-xs-2" style="border: 1px solid gold">6</div>
-        </div>
-        <div class="row">
-            fasdfasdfasdf
-        </div>
-        <div class="row">
             <div class="col-xs-3 col-md-2">
                 {{>LISTdeckwithoutname_COL}}
             </div>
             <div class="col-xs-9 col-md-10">
                 {{#if selectedDeck}}
-                {{#if Template.subscriptionsReady}}
-                    <div class="row">
+
+                            <div class="row">
                         <div class="col-xs-12 col-md-9">
 
                             <div class="row">
-                                <div class="col-sm-8 col-md-9">
-                                    {{>deckList_COL}}
-                                </div>
-                                <div class="col-sm-4 col-md-3">
-                                    {{>sideBoard_COL}}
+                                <div class="col-xs-12">
+                                     {{>deckList_COL}}
                                 </div>
                             </div>
                             <div class="row">
-
                             </div>
-
-                                    <div class="row">
-                                        {{>deckPercentageOptions_COL}}
-                                    </div>
-
-
-                        </div>
+                                <div class="row">
+                                    {{>deckPercentageOptions_COL}}
+                                </div>
+                            </div>
                         <div class="hidden-xs hidden-sm col-md-3">
                             <div class="row">
                                 {{>deckPicture_COL}}
                             </div>
                         </div>
                     </div>
-                {{/if}}
+
                 {{/if}}
             </div>
         </div>
@@ -87,8 +55,11 @@
             {{#each deckName.results}}
                 <td>
                     <table class="decktableRow">
+                        <tr><td>
+                            {{_deckNameID}}
+                        </td></tr>
                         <tr><td><a href="#" class="btn btn-xs btn-default selectDeckType" data-deck-name={{this.name}}>
-                            {{this.name}}:{{value}}%
+                            {{name}}:{{value}}%
                         </a></td></tr>
                         {{#each matches.positive}}
                             <tr><td><a class="matchPositive" >{{this}}</a></td></tr>
@@ -109,11 +80,7 @@
                 <div class="row">
                     <div class="playerName {{#if isActive}}active{{/if}}">
                         <div>
-                            {{#if name}}
-                                <a class="noNameDeckID" href="{{pathFor 'IRONdeckNaming' options = "searchedDeck" format = format deckID = _id }}">{{name}}</a>
-                            {{else}}
-                                <a class="noNameDeckID" href="{{pathFor 'IRONdeckNaming' options = "searchedDeck" format = format deckID = _id }}">{{_id}}</a>
-                            {{/if}}
+                            <a class="noNameDeckID" href="{{pathFor 'IRONdeckNaming' options = "searchedDeck" format = format deckID = _id }}">{{_id}}</a>
                         </div>
                         <div>
                             <a class="noNameDeckName">{{player}}</a>
@@ -125,105 +92,63 @@
 </template>
 
 <template name="deckList_COL">
-        <div class="newDeckColumn">
-            {{#if creatureQuantity}}
-                <div class="typeBlock creature">
-                    <span class="typeHeader">Creature ({{creatureQuantity}})</span>
-                    {{#each creature}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if artifactQuantity}}
-                <div class="typeBlock artifact">
-                    <span class="typeHeader">Artifact ({{artifactQuantity}})</span>
-                    {{#each artifact}}
-                    <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if planeswalkerQuantity}}
-                <div class="typeBlock planeswalker">
-                    <span class="typeHeader">planeswalker ({{planeswalkerQuantity}})</span>
-                    {{#each planeswalker}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if enchantmentQuantity}}
-                <div class="typeBlock planeswalker">
-                    <span class="typeHeader">Enchantment ({{enchantmentQuantity}})</span>
-                    {{#each enchantment}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if sorceryQuantity}}
-                <div class="typeBlock sorcery">
-                    <span class="typeHeader">Sorcery ({{sorceryQuantity}})</span>
-                    {{#each sorcery}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if instantQuantity}}
-                <div class="typeBlock planeswalker">
-                    <span class="typeHeader">Instant ({{instantQuantity}})</span>
-                    {{#each instant}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{#if landQuantity}}
-                <div class="typeBlock planeswalker">
-                    <span class="typeHeader">Land ({{landQuantity}})</span>
-                    {{#each land}}
-                        <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                    </span>
-                    {{/each}}
-                </div>
-            {{/if}}
-
-        </div>
-</template>
-
-<template name="sideBoard_COL">
-    {{#if sideboardQuantity}}
-        <div class="deckBlock">
-            <div class="typeBlock sideboard">
-                <span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>
-                {{#each sideboard}}
-                    <span class="cardRow">
-                        <span class="quantity">{{quantity}}</span>
-                        <span class="name">{{name}}</span>
-                        </span>
+    <div class="row">
+        <div class="newDeckColumn bottom-separator">
+            {{#each cardType}}
+                <div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>
+                {{#each cards options}}
+                    <div class="row no-gutters">
+                        <!--<div class="quantity col-xs-1"></div>-->
+                        <div class="col-xs-7">
+                            <span class="quantity">{{quantity}}</span>
+                            <span class="name">{{name}}</span>
+                        </div>
+                        <div class="col-xs-3">
+                            {{#each getManaCss name ""}}
+                                <div class="mana {{mana}}"></div>
+                            {{/each}}
+                        </div>
+                        <div class="col-xs-1">
+                            $8.74
+                        </div>
+                    </div>
                 {{/each}}
-            </div>
+            {{/each}}
         </div>
-    {{/if}}
+    </div>
+    <div class="row">
+        <div class="verticalSideboard top-separator">
+            {{#if sideboardQuantity}}
+                <div class="deckBlock">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>
+                        </div>
+                        <div class="newDeckColumn">
+                            {{#each sideboard}}
+                                <div class="row no-gutters">
+                                    <!--<div class="quantity col-xs-1"></div>-->
+                                    <div class="name col-xs-7">
+                                        <span class="quantity">{{quantity}}</span>
+                                        <span class="name">{{name}}</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        {{#each getManaCss name ""}}
+                                            <div class="mana {{mana}}"></div>
+                                        {{/each}}
+                                    </div>
+                                    <div class="col-xs-1">
+                                        $8.74
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
 </template>
 
 <template name="deckPicture_COL">

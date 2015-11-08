@@ -1,0 +1,21 @@
+<template name="bottomMenu">
+    <div class="headerVisible secondaryMenu">
+        <nav class="navbar navbar-default nav-fixed-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{pathFor 'meta' format = "standard"}}">Standard</a></li>
+                    <li><a href="{{pathFor 'meta' format = "modern"}}">Modern</a></li>
+                    <li><a href="{{pathFor 'meta' format = "legacy"}}">Legacy</a></li>
+                    <li><a href="{{pathFor 'meta' format = "vintage"}}">Vintage</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</template>

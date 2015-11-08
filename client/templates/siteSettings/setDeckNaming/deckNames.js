@@ -13,9 +13,9 @@ Session.set('deckPercentageOptions', null);
 Session.set('showDeckPopOutOptionSelectedDeck', null);
 Session.set("uniqueDeckPercentageOptions", null);
 
-//++++++++++++++++++++++
-//IRONdeckNaming       +
-//++++++++++++++++++++++
+//++++++++++++++++++++
+//IRONdeckNaming     +
+//++++++++++++++++++++
 
 Template.IRONdeckNaming.onCreated(function(){
     this.subscribe('decknames');
@@ -35,15 +35,15 @@ Template.IRONdeckNaming.helpers({
 Template.IRONdeckNaming.onCreated(function(){
     var instance = this;
     this.autorun(function(){
-        instance.subscribe('deck');
-        instance.subscribe('event');
+        //instance.subscribe('deck');
+        //instance.subscribe('event');
     });
 });
 
 
-//+++++++++++++++++++++++++
-//deckNames               +
-//+++++++++++++++++++++++++
+//+++++++++++++++++++++
+//deckNames           +
+//+++++++++++++++++++++
 
 
 Template.deckNames.helpers({
@@ -88,9 +88,9 @@ Template.deckNames.events({
 
 
 
-//+++++++++++++++++++++++++
-//formatOptions           +
-//+++++++++++++++++++++++++
+//++++++++++++++++++++
+//formatOptions      +
+//++++++++++++++++++++
 
 Template.formats.events({
     'click .selectFormat' : function(evt, tmp){

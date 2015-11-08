@@ -622,3 +622,296 @@
 //if( Npm.require('path').basename( Npm.require('fs').realpathSync( meteor_root + '/../../../' ) ) == '.meteor' ){
 //    application_root =  Npm.require('fs').realpathSync( meteor_root + '/../../../../' );
 //}
+//
+//addDeckName = function(_selectedDeckID, name){
+//    var format = _Deck.findOne({_id : _selectedDeckID}).format;
+//
+//    var cards = [];
+//
+//    _DeckCards.find({_deckID : _selectedDeckID, sideboard : false}).forEach(function(card){
+//        cards.push(card.name);
+//    });
+//
+//    var _deckNameID = _DeckNames.insert({
+//        format : format,
+//        name : name
+//    });
+//
+//    _CardDatabase.find(
+//        {name : {$in : cards},
+//            land : false
+//        }).forEach(function(card){
+//            _DeckNamesCards.insert({ _deckNameID : _deckNameID,
+//                name : card.name
+//            });
+//        });
+//
+//    _Deck.update({_id : _selectedDeckID},{
+//        $set : {name : name}
+//    });
+//}
+
+//function getOneDeckRank(_deckWithoutNameID){
+//    var _deckNames = _DeckNames.find({}).fetch();
+//    var results = [];
+//    for(var j = 0; j < _deckNames.length; j++)
+//    {
+//        var _deckNameID = _deckNames[j]._id;
+//
+//        var cardDeckNames = [];
+//        _DeckNamesCards.find({_deckNameID : _deckNameID}).forEach(function(card){
+//            cardDeckNames.push(card.name);
+//        });
+//
+//        var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
+//        var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length,2);
+//        var name = _DeckNames.findOne({_id : _deckNameID}).name;
+//
+//        if(value!==0){
+//            results.push({
+//                value : value,
+//                name : name,
+//                deckNameID : _deckNameID._id,
+//                matches : matches
+//            });
+//        }
+//    }
+//    results.sort(function(a, b){return b.value - a.value});
+//    results = results.slice(0,3);
+//    var finalResults = {id : _deckWithoutNameID, results : results};
+//    return finalResults;
+//}
+
+//getDeckRanks = function(){
+//    var _deckNames = _DeckNames.find({}).fetch();
+//    var _deckWithoutNames = _Deck.find({$or : [{title: ""}, {title : null}]}).fetch();
+//    var finalResults = [];
+//    for(var i = 0; i < _deckWithoutNames.length; i++){
+//        var _deckWithoutNameID = _deckWithoutNames[i]._id;
+//        var results = [];
+//        for(var j = 0; j < _deckNames.length; j++)
+//        {
+//            var _deckNameID = _deckNames[j]._id;
+//
+//            //get the list of cards
+//            var cardDeckNames = [];
+//            _DeckNamesCards.find({deckName_id : _deckNameID}).forEach(function(card){
+//                cardDeckNames.push(card.name);
+//            });
+//
+//            var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
+//            var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length, 2);
+//            var deckName = _DeckNames.findOne({deckName_id : _deckNameID}).name;
+//            if(value!==0){
+//                results.push({
+//                    value : value,
+//                    deckName : deckName,
+//                    deckNameID : _deckNameID._id,
+//                    matches : matches
+//                });
+//            }
+//        }
+//
+//        results.sort(function(a, b){return b.value - a.value});
+//        results = results.slice(0,4);
+//        finalResults.push({id : _deckWithoutNameID, results : results});
+//    }
+//    return finalResults;
+//}
+
+getLastEvents = function(){
+
+    var result = request.getSync("http://magic.wizards.com/en/content/deck-lists-magic-online-products-game-info", {
+        encoding: null
+    });
+    buffer = result.body;
+    var $ = cheerio.load(buffer);
+    fields = $('.article-item');
+
+    var events = [];
+    //download the data of each deck
+    fields.each(function(i, elem){
+        var httpAddress = "http://magic.wizards.com" + $(elem).find('.title a').attr('href');
+        var event = $(elem).find('.title a').html();
+        var dateAndNumber = $(elem).find('.section a').html();
+        var eventInfo = {};
+        eventInfo = getEventsInformation(event, httpAddress, dateAndNumber);
+        events.push(eventInfo);
+    });
+
+    //check if the event already exists and store if not
+    for(var i = 0; i < events.length; i++){
+        if(_Event.find({_eventNumber : events[i]._eventNumber}, {limit : 1}).count()===0){
+            if(events[i].type === "sealed") {
+                _Event.insert({
+                    _eventNumber: events[i]._eventNumber,
+                    date: events[i].date,
+                    _eventNumber: events[i]._eventNumber,
+                    format : events[i].format,
+                    eventType: events[i].eventType,
+                    set: events[i].eventType,
+                    boosterQuantity: events[i].eventType,
+                    httpAddress : events[i].httpAddress
+                });
+            }else{
+                _Event.insert({
+                    _eventNumber: events[i]._eventNumber,
+                    date: events[i].date,
+                    _eventNumber: events[i]._eventNumber,
+                    format : events[i].format,
+                    eventType: events[i].eventType,
+                    httpAddress : events[i].httpAddress
+                });
+            }
+        }else{
+            console.log("found it");
+        }
+    }
+}
+
+//
+//getEventsInformation = function(event, httpAddress, dateAndNumber){
+//    console.log(event);
+//    //Patterns
+//    var _eventNumberPatt = /#[0-9]*/;
+//    var dataPatt = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/;
+//    var formatPatt = /standard|pauper|modern|legacy|vintage|sealed/i;
+//    var eventTypePatt = /daily|ptq|judge open|champs|champs|premier|mocs|block champ qual/i;
+//    //var blockTypePatt = /(?:sealed )(\w*)/i;
+//    var setPatt = /(?:\S+\s+){1}(\S+)/i;
+//
+//    var eventInformation = {};
+//
+//    eventInformation.format = event.match(formatPatt)[0].toLowerCase();
+//    eventInformation.eventType = event.match(eventTypePatt)[0].toLowerCase();
+//    eventInformation._eventNumber = dateAndNumber.match(_eventNumberPatt)[0];
+//    eventInformation.date = new Date(dateAndNumber.match(dataPatt)[0]);
+//    eventInformation.httpAddress = httpAddress;
+//    if( eventInformation.format == "sealed"){
+//        eventInformation.set = event.match(setPatt)[1];
+//        eventInformation.boosterQuantity = getEventQunantityOfBooters(httpAddress);
+//    }
+//    return eventInformation;
+//}
+
+//Router.route('/deck', function () {
+//        this.layout('ApplicationLayout');
+//        // render the Post template into the "main" region
+//        // {{> yield}}
+//        this.render('decks');
+//
+//        // render the PostAside template into the yield region named "aside"
+//        // {{> yield "aside"}}
+//        this.render('PostAside', {to: 'aside'});
+//
+//        // render the PostFooter template into the yield region named "footer"
+//        // {{> yield "footer"}}
+//        this.render('PostFooter', {to: 'footer'});
+//});
+
+//Router.route('/', function () {
+//    this.layout('ApplicationLayout');
+//
+//    // render the Post template into the "main" region
+//    // {{> yield}}
+//    this.render('Post');
+//
+//    // render the PostAside template into the yield region named "aside"
+//    // {{> yield "aside"}}
+//    this.render('PostAside', {to: 'aside'});
+//
+//    // render the PostFooter template into the yield region named "footer"
+//    // {{> yield "footer"}}
+//    this.render('PostFooter', {to: 'footer'});
+//});
+
+
+//Router.route('home', {
+//        //name : '',
+//        path: '/',
+//        //controller : '',
+//        template : 'homeTemplate',
+//        yieldRegions : {},
+//        subscriptions: function(){},
+//        layoutTemplate : 'ApplicationLayout',
+//        waitOn : function(){
+//        return[
+//                Meteor.subscribe('deck', function(){
+//                    console.log('deck Loaded');
+//                }),
+//                Meteor.subscribe('event', function(){
+//                    console.log('event Loaded');
+//                }),
+//                Meteor.subscribe('joinCards', Session.get('selectedDeck'), function(){
+//                    console.log('joinCards Loaded');
+//                    Session.set('deckCardsLoaded', true);
+//                })
+//            ]
+//        }
+//    //,
+//    //data: function(){},
+//    //onRun: function () {},
+//    //onRerun: function () {},
+//    //onBeforeAction: function () {},
+//    //onAfterAction: function () {},
+//    //onStop: function () {},
+//    //action : function(){}
+//});
+
+//Template.dropDownMenu.rendered = function(){
+//
+//    var $menu = $(".list-group");
+//
+//    // jQuery-menu-aim: <meaningful part of the example>
+//    // Hook up events to be fired on menu row activation.
+//    $menu.menuAim({
+//        activate: activateSubmenu,
+//        deactivate: deactivateSubmenu
+//    });
+//    // jQuery-menu-aim: </meaningful part of the example>
+//    // jQuery-menu-aim: the following JS is used to show and hide the submenu
+//    // contents. Again, this can be done in any number of ways. jQuery-menu-aim
+//    // doesn't care how you do this, it just fires the activate and deactivate
+//    // events at the right times so you know when to show and hide your submenus.
+//    function activateSubmenu(row) {
+//        var $row = $(row),
+//            submenuId = $row.data("submenuId"),
+//            $submenu = $("#" + submenuId),
+//            height = $menu.outerHeight() + 1,
+//            width = $menu.outerWidth() -2;
+//        // Show the submenu
+//        $submenu.css({
+//            display: "block",
+//            top: "-1px",
+//            left: width,  // main should overlay submenu
+//            height: height  // padding for main dropdown's arrow
+//        });
+//        // Keep the currently activated row's highlighted look
+//        $row.find("a").addClass("maintainHover");
+//    }
+//
+//    function deactivateSubmenu(row) {
+//        var $row = $(row),
+//            submenuId = $row.data("submenuId"),
+//            $submenu = $("#" + submenuId);
+//        // Hide the submenu and remove the row's highlighted look
+//        $submenu.css("display", "none");
+//        $row.find("a").removeClass("maintainHover");
+//    }
+//
+//    // Bootstrap's dropdown menus immediately close on document click.
+//    // Don't let this event close the menu if a submenu is being clicked.
+//    // This event propagation control doesn't belong in the menu-aim plugin
+//    // itself because the plugin is agnostic to bootstrap.
+//
+//    $(".dropdown li").click(function(e) {
+//        e.stopPropagation();
+//    });
+//
+//    $(document).click(function() {
+//        // Simply hide the submenu on any click. Again, this is just a hacked
+//        // together menu/submenu structure to show the use of jQuery-menu-aim.
+//        $(".dropdownPop .popover2").css("display", "none");
+//        $("a.maintainHover").removeClass("maintainHover");
+//    });
+//};

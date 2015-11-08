@@ -1,16 +1,19 @@
 
-Template.registerHelper("getManaCss", function(name) {
-    //console.log(name);
-    var manacost = _JoinExampleCards.findOne({name : name}).manacost;
+Template.registerHelper("getManaCss", function(value, options) {
+    var manacost = "";
     //console.log(manacost);
     var manaRegex = new RegExp("\{([a-zA-Z0-9]+)\}", 'g');
-    //var manaRegex = new RegExp("[a-zA-Z]", 'g');
+    if(options == "deck"){
+        manaRegex = new RegExp("([a-zA-Z])", 'g');
+        manacost = value;
+    }else{
+        manacost = _CardDatabase.findOne({name : value}).manacost;
+    }
+
     var str = [];
     var res;
 
-
     while((res = manaRegex.exec( manacost)) !== null) {
-        //console.log(res);
         if(res[1] === "X"      ) {str.push(  { mana :'mana-x' }) }
         else if(res[1] === "1" ) {str.push(  {mana :'mana-1' }) }
         else if(res[1] === "2" ) {str.push(  {mana :'mana-2' }) }
@@ -48,7 +51,6 @@ Template.registerHelper("getManaCss", function(name) {
         else if(res[1] === "U/P"){str.push( {mana :'mana-up'}) }
         else if(res[1] === "W/P"){str.push( {mana :'mana-wp'}) }
     }
-    console.log(str);
     return str;
 });
 

@@ -52,11 +52,6 @@ Meteor.publish('metaDate', function(){
     return _MetaDate.find({});
 });
 
-Meteor.publish('lastDeckByName', function(name){
-    console.log(name);
-    return _Deck.find({name : name}, {limit : 3});
-});
-
 Meteor.publish('deckplaylist', function(){
     return _DeckPlayList.find({});
 });
@@ -73,6 +68,9 @@ Meteor.publish('cardbreakdowncards', function(){
     return _cardBreakDownCards.find({});
 });
 
+Meteor.publish('decksWithoutName', function(format){
+    return _Deck.find({format : format, $or : [{name : {$exists : false}}, {name : ""}]}, {limit : 8});
+});
 
 
 Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
@@ -95,7 +93,6 @@ Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
                         }
                     }
                 ]
-
             }
         ]
     }
