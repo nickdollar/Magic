@@ -129,7 +129,7 @@ getTop8 = function(event){
                 sideboard : false
             });
         }
-        var colors = setUpColorForDeckName();
+        var colors = setUpColorForDeckName(_deckID);
 
         _Deck.update({_id : _deckID},{
             $set : {colors : colors}

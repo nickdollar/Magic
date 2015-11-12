@@ -48,10 +48,10 @@ Meteor.publishComposite("joinCards", function(_deckID){
     }
 });
 
-Meteor.publishComposite("joinExampleCards", function(name, format){
+Meteor.publishComposite("joinExampleCardsPtq", function(format, name ){
     return {
         find: function () {
-            return _Deck.find({name : name, format : format});
+            return _Deck.find({eventType : "ptq", format : format, name : name}, {limit : 1});
         },
         children: [
             {
@@ -60,7 +60,28 @@ Meteor.publishComposite("joinExampleCards", function(name, format){
                 },
                 children : [
                     {
-                        collectionName: "joinExampleCards",
+                        find: function (card) {
+                            return _CardDatabase.find({name: card.name});
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+});
+
+Meteor.publishComposite("joinExampleCardsDaily", function(format, name ){
+    return {
+        find: function () {
+            return _Deck.find({eventType : "daily", format : format, name : name}, {limit : 1});
+        },
+        children: [
+            {
+                find: function (deck) {
+                    return _DeckCards.find({_deckID: deck._id});
+                },
+                children : [
+                    {
                         find: function (card) {
                             return _CardDatabase.find({name: card.name});
                         }

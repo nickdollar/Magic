@@ -1,6 +1,63 @@
 <template name="meta">
     <div class="col-xs-12">
+        {{>yield "baseaa"}}
+    </div>
+</template>
 
+<template name="metaBase">
+    <div class="row">
+        {{#each metas}}
+            {{> tileFormat format=this}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="tileFormat">
+    <div class="col-xs-12 ">
+        <div class="row">
+            <div class="title">
+                {{format}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 miniTable">
+                <table class="table metaTable">
+                <thead>
+                <tr>
+                    <th colspan="3">DECK</th>
+                    <th>%</th>
+                    <th>CHANGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {{#each meta format}}
+                        <tr>
+                            <td><span>{{math @index "+" 1}}</span></td>
+                            <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                            <td>&#xe093;</td>
+                            <td>{{percent}}%</td>
+                            <td>
+                                <div class="graph">
+                                    {{#each bars}}<div class="bar" style="background-color: {{this}}"></div>{{/each}}
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+                </table>
+            </div>
+            <div class="col-xs-4 news">
+                new
+            </div>
+            <div class="col-xs-4 events">
+                events
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="metaThing">
         <div class="row">
             <div class="col-xs-7" style="border-right: 2px solid rgb(221, 221, 221);">
                 <div class="metaTable">
@@ -14,10 +71,7 @@
 
             </div>
         </div>
-    </div>
-
 </template>
-
 
 <template name="eventsTable_COL">
     <div class="rightDiv">
@@ -48,20 +102,6 @@
 <template name="newMetaTable_COL">
     <div class="leftDiv">
         <div class="row">
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>
-            <div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>
-        </div>
-        <div class="row">
             <div class="col-xs-3" style="background-color: #b3b3b3">
                 <h3>Table</h3>
             </div>
@@ -75,6 +115,18 @@
                             <input type="checkbox" name="checkboxes" id="checkboxes-1" value="daily4_0" checked>
                             Daily 4-0
                         </label>
+                        <label class="checkbox-inline" for="checkboxes-2">
+                            <input type="checkbox" name="checkboxes" id="checkboxes-2" value="ptqTop8" checked>
+                            PTQ TOP 8
+                        </label>
+                        <label class="checkbox-inline" for="checkboxes-3">
+                            <input type="checkbox" name="checkboxes" id="checkboxes-3" value="ptqTop9_16" checked>
+                            PTQ 9-16
+                        </label>
+                        <label class="checkbox-inline" for="checkboxes-4">
+                            <input type="checkbox" name="checkboxes" id="checkboxes-4" value="ptqTop17_32" checked>
+                            PTQ 17-37
+                        </label>
                     </div>
             </div>
         </div>
@@ -82,7 +134,7 @@
             <button type="submit" class="btn btn-default updateMeta" style="display: inline;">Update Meta</button>
         </div>
         <div class="row">
-            <table class="table">
+            <table class="table metaTable">
                 <thead>
                 <tr>
                     <th colspan="4">DECK</th>
@@ -96,24 +148,21 @@
                 {{#if Template.subscriptionsReady}}
                     {{#each meta}}
                     <tr>
-                        <td>{{math @index "+" 1}}</td>
+                        <td><span>{{math @index "+" 1}}</span></td>
                         <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
-                        <td>A</td>
+                        <td>&#xe093;</td>
                         <td>
                             {{#with colors name}}
-                                {{#each getManaCss this "deck"}}
-                                    <span class="mana {{mana}}"></span>
-                                {{/each}}
+                                {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
                             {{/with}}
                         </td>
                         <td>{{type name}}</td>
                         <td>{{percent}}%</td>
-                        <td>$1345</td>
-                        <td><span class="circle"></span>
-                            <span class="circle"></span>
-                            <span class="circle"></span>
-                            <span class="circle"></span>
-                            <span class="circle" style="background-color: blue"></span>
+                        <td>$AAAA</td>
+                        <td>
+                            <div class="graph">
+                                {{#each bars}}<div class="bar" style="background-color: {{this}}"></div>{{/each}}
+                            </div>
                         </td>
                     </tr>
                     {{/each}}

@@ -2,90 +2,64 @@ SV_decksSelectedDeckName = "selectedDeckName";
 Session.set(SV_decksSelectedDeckName, "");
 SV_decksSelectedFormat = "selectedFormat";
 Session.set(SV_decksSelectedFormat, "");
+SV_decksSelectedEventType = "eventType";
+Session.set(SV_decksSelectedEventType, "daily");
 
-Template.examples_ROW.helpers({
-    lastDecks : function(){
-        return _Deck.findOne({});
-    }
-});
-
-Template.examples_ROW.events({
-
-});
-
-Template.examples_ROW.onRendered(function(){
-
-});
-
-Template.examples_ROW.onCreated(function(){
-    var instance = this;
-    this.autorun(function(){
-        instance.subscribe('joinExampleCards', Session.get(SV_decksSelectedDeckName), Session.get(SV_decksSelectedFormat));
-        instance.subscribe('event');
-        instance.subscribe('images');
-        instance.subscribe('deckplaylist');
-        instance.subscribe('cardbreakdowndate');
-        instance.subscribe('cardbreakdowncards');
-    });
-});
 
 Template.exampleDeck_COL.helpers({
-    cardType : function(_deckID){
+    cardType : function(){
         var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
         var types = [];
         for(var i = 0; i< blocks.length; i++){
             if(blocks[i]=="artifact"){
                 var options = {creature : false, artifact : true};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){types.push({name : "Artifact", quantity : quantity, options : options});}
             }else if(blocks[i]=="creature"){
                 var options = { creature : true};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){types.push({name : "Creature", quantity : quantity, options : options})};
             }else if(blocks[i]=="enchantment"){
                 var options = {enchantment : true, creature : false, artifact : false};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){types.push({name : "Enchantment", quantity : quantity, options : options})};
             }else if(blocks[i]=="instant"){
                 var options = {instant : true};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){types.push({name : "Instant", quantity : quantity, options : options})};
             }else if(blocks[i]=="land"){
                 var options = {land : true, creature : false, artifact : false};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){types.push({name : "Land", quantity : quantity, options : options})};
             }else if(blocks[i]=="planeswalker"){
                 var options = {planeswalker : true};
-                    var quantity = getQuantity2(options, false, _deckID);
+                    var quantity = getQuantity2(options, false);
                     if(quantity > 0){types.push({name : "Planeswalker", quantity : quantity, options : options})};
             }else if(blocks[i]=="sorcery"){
                 var options = {sorcery : true};
-                var quantity = getQuantity2(options, false, _deckID);
+                var quantity = getQuantity2(options, false);
                 if(quantity > 0){ types.push({name : "Sorcery", quantity : quantity, options : options})};
             }
         }
         return types;
-    }
-    ,cards : function(_deckID, options){
-        var names = [];
-        _JoinExampleCards.find(options).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({_deckID : _deckID, sideboard : false, name : {$in : names}});
-    }, sideboard : function(_deckID){
-        var names = [];
-        _JoinExampleCards.find({}).forEach(function(e){names.push(e.name);});
-        return _DeckCards.find({_deckID : _deckID, sideboard : true, name : {$in : names}});
     },
-        sideboardQuantity: function (_deckID) {
+    cards : function(options){
+        var names = _CardDatabase.find(options).map(function(p) { return p.name });
+        var deck = _Deck.findOne({eventType: Session.get(SV_decksSelectedEventType)});
+        return _DeckCards.find({ _deckID : deck._id, sideboard : false, name : {$in : names}});
+    },
+    sideboard : function(){
+        var names = _CardDatabase.find({}).map(function(p) { return p.name });
+        var deck = _Deck.findOne({eventType: Session.get(SV_decksSelectedEventType)});
+        return _DeckCards.find({_deckID : deck._id, sideboard : true, name : {$in : names}});
+    },
+    sideboardQuantity: function() {
         var options = {};
-        return getQuantity2(options, true, _deckID);
+        return getQuantity2(options, true);
     },
     test : function(test){
         console.log(test);
         console.log(_DeckCards.find({}));
-    },
-    Quantity : function(_deckID){
-        var options = {};
-        return getQuantity2(options, true);
     },
     event : function(_deckID) {
         var _eventID = _Deck.findOne({_id: _deckID})._eventID;
@@ -95,6 +69,16 @@ Template.exampleDeck_COL.helpers({
         return '';
     }
 });
+
+Template.exampleDeck_COL.events({
+    'click .getDaily' : function(){
+        Session.set(SV_decksSelectedEventType, "daily");
+    },
+    'click .getPTQ' : function(){
+        Session.set(SV_decksSelectedEventType, "ptq");
+    }
+});
+
 
 Template.playList_ROW.events({
    "click .addAYoutubeVideo" : function(evt, tmp){
@@ -115,8 +99,8 @@ Template.playList_ROW.helpers({
 
 Template.cardsPercentage_ROW.helpers({
     weekDates : function(){
-        var date = getLastAndFirstDayOfWeekBefore();
-        var weekQuantity = 8;
+        var date = getWeekStartAndEnd();
+        var weekQuantity = 6;
         var week = 7;
         var oldDate = new Date(date.weekStart);
         var newDate = new Date(date.weekEnd);
@@ -131,23 +115,43 @@ Template.cardsPercentage_ROW.helpers({
         return dates;
     },
     cards : function(){
-        return _cardBreakDownCards.find({deckName : "RWg Burn"}, {sort : {weekTotal : -1}});
+        return _cardBreakDownCards.find({format : Session.get(SV_decksSelectedFormat),  deckName: Session.get(SV_decksSelectedDeckName), type : false}, {sort : {weekTotal : -1}});
     },
     cardWeek : function(cardName){
 
-        var date = getLastAndFirstDayOfWeekBefore();
-        var weekQuantity = 8;
+        var date = getWeekStartAndEnd();
+        var weekQuantity = 6;
         var week = 7;
         var oldDate = new Date(date.weekStart);
         oldDate.setDate(oldDate.getDate() - week*(weekQuantity-1));
 
         var values = [];
+
+        createAFunctionForGradient();
+
+        var oldValue = 0;
+        var oldColor = "";
         for(var i = 0; i< weekQuantity ;i++){
+            var newValue = 0;
             if(_cardBreakDownDate.find({name : cardName, date :  oldDate}, {limit : 1}).count() == 0){
-                values.push(0);
+                newValue = 0;
             }else{
-                values.push(_cardBreakDownDate.findOne({name : cardName, date : {$gte : oldDate}}).quantity);
+                newValue = _cardBreakDownDate.findOne({name : cardName, date : oldDate}).quantity;
             }
+
+            var newColor = "";
+            if(oldValue > newValue){
+                newColor = getColorForPercentageNegative(newValue/4);
+            }else if (oldValue < newValue){
+                newColor = getColorForPercentagePositive(newValue/4);
+            }else{
+                newColor = oldColor;
+            }
+            oldValue = newValue;
+            oldColor = newColor;
+
+            values.push({value : newValue, color : newColor});
+
             oldDate.setDate(oldDate.getDate() + week);
         }
         return values;
@@ -156,6 +160,6 @@ Template.cardsPercentage_ROW.helpers({
 
 Template.cardsPercentage_ROW.events({
    'click .getDeckPercentage' : function(){
-        Meteor.call('cardsPercentage',Session.get(SV_decksSelectedDeckName));
+        Meteor.call('cardsPercentage',Session.get(SV_decksSelectedFormat), Session.get(SV_decksSelectedDeckName));
    }
 });

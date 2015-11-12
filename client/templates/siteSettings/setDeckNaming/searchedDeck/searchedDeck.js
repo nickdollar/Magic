@@ -43,6 +43,7 @@ Template.deckPercentageOptions_COL.helpers({
 });
 Template.deckPercentageOptions_COL.events({
     "click .selectDeckType" : function(evt, tmp){
+        Session.set("uniqueDeckPercentageOptions", null);
         Meteor.call('addDeckName', Router.current().params.deckID, $(evt.target).attr("data-deck-name"), function(error, data){
             var deckID = _Deck.findOne();
             Meteor.defer(function () {
@@ -52,7 +53,7 @@ Template.deckPercentageOptions_COL.events({
     },
     "click .addNewDeck" : function(evt, tmp){
        var name = $(evt.target).prev().val();
-
+       Session.set("uniqueDeckPercentageOptions", null);
        //Meteor.call('findOneDeckWithoutName',Router.current().params.deckID, function (error, data) {
        //    if (error) {
        //        console.log(error);
@@ -143,7 +144,6 @@ Template.deckList_COL.helpers({
         var names = _CardDatabase.find(options).map(function(p) { return p.name });
         return _DeckCards.find({_deckID : Router.current().params.deckID, sideboard : false, name : {$in : names}});
     }, sideboard : function(){
-        //var names = _CardDatabase.find({}).forEach(function(e){names.push(e.name);});
         return _DeckCards.find({_deckID : Router.current().params.deckID, sideboard : true});
     },
     sideboardQuantity: function () {

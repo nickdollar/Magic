@@ -3,9 +3,9 @@ _SelectedNameDeckFields = new Meteor.Collection('selectedNameDeckFields');
 _SelectNameDeckFieldCards = new Meteor.Collection('selectedNamesCardsValues');
 _SelectNameDeckNoNameYet = new Meteor.Collection('selectNameDeckNoNameYet');
 
-//+++++++++++++++++++++
-//deckFormList        +
-//+++++++++++++++++++++
+//+++++++++++++++++
+//deckFormList    +
+//+++++++++++++++++
 
 Template.deckFormList.helpers({
 
@@ -138,11 +138,8 @@ Template.deckInfoForm_COL.helpers({
     },
     format : function(formatArg){
         var format = _DeckNames.findOne({_id : Session.get('selectedIdDeck')}).format;
-
         if(format === formatArg)
         {
-
-            console.log(format);
             return "selected";
         }
         return "";

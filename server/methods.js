@@ -32,7 +32,6 @@ Meteor.methods({
             });
     },
     addDeckName : function(_selectedDeckID, name){
-        console.log(_selectedDeckID, name);
         addNameToDeck(_selectedDeckID, name);
     },
     showDeckWithoutName : function(link){
@@ -56,7 +55,7 @@ Meteor.methods({
         });
     },
     getEvents : function(){
-        getTheEvents("modern", "daily", 14);
+        getTheEvents("standard", "daily", 15);
         downloadEvents("daily");
     },
     updateDeckType : function(_id, name){
@@ -68,7 +67,7 @@ Meteor.methods({
     updateMetaMethod : function(){
         updateMeta2();
     },
-    cardsPercentage : function(deckName){
-        cardsPercentageValues("modern", deckName, 7);
+    cardsPercentage : function(format, deckName){
+        cardsPercentageValues(format, deckName, 7);
     }
 });

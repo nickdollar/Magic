@@ -5,41 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df14e920-98b3-47cb-af8a-78b2ceccdf7c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/eventFunctions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/jsonFunctions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/metaFunctions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/methods.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/playlistFunctions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/utilityFunctions.js" />
-      <change type="MOVED" beforePath="C:\Users\Nicholas\sites\Magic\lib\custom.bootstrap.import.less" afterPath="$PROJECT_DIR$/lib/bootstrap/custom.bootstrap.import.less" />
-      <change type="MOVED" beforePath="C:\Users\Nicholas\sites\Magic\lib\custom.bootstrap.json" afterPath="$PROJECT_DIR$/lib/bootstrap/custom.bootstrap.json" />
-      <change type="MOVED" beforePath="C:\Users\Nicholas\sites\Magic\lib\custom.bootstrap.less" afterPath="$PROJECT_DIR$/lib/bootstrap/custom.bootstrap.less" />
-      <change type="MOVED" beforePath="C:\Users\Nicholas\sites\Magic\lib\custom.bootstrap.mixins.import.less" afterPath="$PROJECT_DIR$/lib/bootstrap/custom.bootstrap.mixins.import.less" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Scapeshift.crop.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Snapcaster Mage.crop.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Snapcaster Mage.tiny.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Splinter Twin.tiny.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Tarmogoyf.crop.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Terminate.crop.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Valakut, the Molten Pinnacle.crop.jpg" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Nicholas\sites\Magic\public\img\Wurmcoil Engine.crop.jpg" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/Magic.css" afterPath="$PROJECT_DIR$/client/Magic.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/testing/TEST.css" afterPath="$PROJECT_DIR$/client/templates/testing/TEST.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/testing/TEST.html" afterPath="$PROJECT_DIR$/client/templates/testing/TEST.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/testing/TEST.js" afterPath="$PROJECT_DIR$/client/templates/testing/TEST.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/abandoned/abandoned.html" afterPath="$PROJECT_DIR$/client/templates/abandoned/abandoned.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/abandoned/abandoned.js" afterPath="$PROJECT_DIR$/client/templates/abandoned/abandoned.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.html" afterPath="$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/collections.js" afterPath="$PROJECT_DIR$/lib/collections.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/completeFunctions.js" afterPath="$PROJECT_DIR$/server/completeFunctions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/cron.js" afterPath="$PROJECT_DIR$/server/cron.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/deck/deck.html" afterPath="$PROJECT_DIR$/client/templates/deck/deck.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/deck/deck.js" afterPath="$PROJECT_DIR$/client/templates/deck/deck.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.html" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.js" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/Publish/deckNamesPublish.js" afterPath="$PROJECT_DIR$/server/Publish/deckNamesPublish.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/Publish/deckPublish.js" afterPath="$PROJECT_DIR$/server/Publish/deckPublish.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/event/event.js" afterPath="$PROJECT_DIR$/client/templates/event/event.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/defaultVariable.js" afterPath="$PROJECT_DIR$/client/defaultVariable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/eventFunctions.js" afterPath="$PROJECT_DIR$/server/eventFunctions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/functions.js" afterPath="$PROJECT_DIR$/lib/functions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/header/header.html" afterPath="$PROJECT_DIR$/client/templates/header/header.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/header/header.js" afterPath="$PROJECT_DIR$/client/templates/header/header.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/meta/meta.css" afterPath="$PROJECT_DIR$/client/templates/meta/meta.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/meta/meta.html" afterPath="$PROJECT_DIR$/client/templates/meta/meta.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/meta/meta.js" afterPath="$PROJECT_DIR$/client/templates/meta/meta.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/metaFunctions.js" afterPath="$PROJECT_DIR$/server/metaFunctions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/methods.js" afterPath="$PROJECT_DIR$/server/methods.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.meteor/packages" afterPath="$PROJECT_DIR$/.meteor/packages" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/registerHelper.js" afterPath="$PROJECT_DIR$/client/registerHelper.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/router.js" afterPath="$PROJECT_DIR$/lib/router.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js" afterPath="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js" />
@@ -65,11 +59,41 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="deckFormList.js" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js">
+            <file leaf-file-name="functions.js" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/lib/functions.js">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="1.1650486">
-                    <caret line="177" column="0" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="searchedDeck.js" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="76" column="3" selection-start-line="76" selection-start-column="3" selection-end-line="76" selection-end-column="3" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="meta.js" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="-1.7586207">
+                    <caret line="33" column="34" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="34" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="router.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/lib/router.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.52672607">
+                    <caret line="127" column="41" selection-start-line="127" selection-start-column="41" selection-end-line="127" selection-end-column="41" />
                     <folding />
                   </state>
                 </provider>
@@ -83,31 +107,11 @@
       <content type="file-editors">
         <state>
           <leaf>
-            <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/server/server.js">
+            <file leaf-file-name="deckFormList.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="-22.862068">
-                    <caret line="39" column="59" selection-start-line="39" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file leaf-file-name="deckPublish.js" pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/server/Publish/deckPublish.js">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="-15.137931">
-                    <caret line="50" column="64" selection-start-line="50" selection-start-column="62" selection-end-line="50" selection-end-column="64" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file leaf-file-name="searchedDeck.js" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state vertical-scroll-proportion="0.5685005">
-                    <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
+                  <state vertical-scroll-proportion="0.41648108">
+                    <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
                     <folding />
                   </state>
                 </provider>
@@ -123,53 +127,48 @@
     <favorites_list name="Magic" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.35915053">
+    <splitter split-orientation="horizontal" split-proportion="0.6346397">
       <split-first>
         <leaf>
-          <file leaf-file-name="metaFunctions.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/server/metaFunctions.js">
+          <file leaf-file-name="meta.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-14.068966">
-                  <caret line="84" column="27" selection-start-line="84" selection-start-column="27" selection-end-line="84" selection-end-column="27" />
+                <state vertical-scroll-proportion="0.23709902">
+                  <caret line="22" column="44" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
                   <folding>
-                    <element signature="n#!!doc" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#td#4;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
+                    <element signature="n#style#0;n#div#0;n#div#0;n#template#3;n#!!top" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="deckformList.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html">
+          <file leaf-file-name="deckPublish.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/server/Publish/deckPublish.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-2.6031747">
-                  <caret line="100" column="76" selection-start-line="100" selection-start-column="61" selection-end-line="100" selection-end-column="76" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="meta.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.html">
+          <file leaf-file-name="deckNamesPublish.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/server/Publish/deckNamesPublish.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.4556962">
-                  <caret line="74" column="112" selection-start-line="74" selection-start-column="112" selection-end-line="74" selection-end-column="112" />
-                  <folding>
-                    <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#3;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#4;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#5;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#6;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#7;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#8;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#9;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#10;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#11;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
-                    <element signature="n#style#0;n#button#0;n#div#2;n#div#0;n#template#2;n#!!top" expanded="true" />
-                  </folding>
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="42" column="20" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="header.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client/templates/header/header.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-43.807693">
+                  <caret line="73" column="68" selection-start-line="73" selection-start-column="68" selection-end-line="73" selection-end-column="68" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -178,31 +177,51 @@
       </split-first>
       <split-second>
         <leaf>
+          <file leaf-file-name="meta.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-22.862068">
+                  <caret line="234" column="19" selection-start-line="234" selection-start-column="19" selection-end-line="234" selection-end-column="19" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="packages.json" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/packages.json">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="searchedDeck.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="46" column="15" selection-start-line="46" selection-start-column="15" selection-end-line="46" selection-end-column="15" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="completeFunctions.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/server/completeFunctions.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="methods.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server/methods.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="16" selection-end-column="43" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="meta.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-0.55613124">
-                  <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="deck.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="139" column="21" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="21" />
+                  <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
                   <folding />
                 </state>
               </provider>
@@ -227,21 +246,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/test.txt" />
-        <option value="$PROJECT_DIR$/private/air.json" />
-        <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.css" />
-        <option value="$PROJECT_DIR$/client/templates/event/event.html" />
-        <option value="$PROJECT_DIR$/client/templates/table.html" />
         <option value="$PROJECT_DIR$/server/Publish/counters.js" />
         <option value="$PROJECT_DIR$/client/subscribe.js" />
         <option value="$PROJECT_DIR$/client/startup.js" />
-        <option value="$PROJECT_DIR$/client/Magic.css" />
         <option value="$PROJECT_DIR$/lib/common.js" />
         <option value="$PROJECT_DIR$/server/Publish/cfs.js" />
         <option value="$PROJECT_DIR$/lib/custom.bootstrap.json" />
         <option value="$PROJECT_DIR$/client/templates/deck/deck.css" />
         <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.css" />
-        <option value="$PROJECT_DIR$/client/templates/deck/deck.html" />
         <option value="$PROJECT_DIR$/server/cron.js" />
         <option value="$PROJECT_DIR$/lib/collections.js" />
         <option value="$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.css" />
@@ -249,35 +261,42 @@
         <option value="$PROJECT_DIR$/server/playlistFunctions.js" />
         <option value="$PROJECT_DIR$/server/JSONFunctions.js" />
         <option value="$PROJECT_DIR$/server/jsonFunctions.js" />
-        <option value="$PROJECT_DIR$/client/templates/meta/meta.css" />
-        <option value="$PROJECT_DIR$/client/templates/deck/deck.js" />
         <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.html" />
-        <option value="$PROJECT_DIR$/server/Publish/deckPublish.js" />
         <option value="$PROJECT_DIR$/client/registerHelper.js" />
         <option value="$PROJECT_DIR$/client/templates/event/event.js" />
-        <option value="$PROJECT_DIR$/lib/functions.js" />
-        <option value="$PROJECT_DIR$/client/templates/header/header.html" />
         <option value="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.js" />
         <option value="$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.html" />
         <option value="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.css" />
         <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.js" />
         <option value="$PROJECT_DIR$/client/templates/bottomMenu/bottomMenu.html" />
-        <option value="$PROJECT_DIR$/client/templates/abandoned/abandoned.html" />
-        <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html" />
-        <option value="$PROJECT_DIR$/server/completeFunctions.js" />
-        <option value="$PROJECT_DIR$/server/Publish/deckNamesPublish.js" />
-        <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/client/templates/header/header.js" />
         <option value="$PROJECT_DIR$/client/templates/abandoned/abandoned.js" />
-        <option value="$PROJECT_DIR$/lib/router.js" />
         <option value="$PROJECT_DIR$/server/utilityFunctions.js" />
-        <option value="$PROJECT_DIR$/server/eventFunctions.js" />
-        <option value="$PROJECT_DIR$/server/methods.js" />
-        <option value="$PROJECT_DIR$/server/metaFunctions.js" />
         <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html" />
-        <option value="$PROJECT_DIR$/client/templates/meta/meta.js" />
-        <option value="$PROJECT_DIR$/client/templates/meta/meta.html" />
+        <option value="$PROJECT_DIR$/server/eventFunctions.js" />
+        <option value="$PROJECT_DIR$/client/templates/abandoned/abandoned.html" />
+        <option value="$PROJECT_DIR$/server/Publish/deckPublish.js" />
+        <option value="$PROJECT_DIR$/client/templates/deck/deck.html" />
+        <option value="$PROJECT_DIR$/client/templates/deck/deck.js" />
+        <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js" />
+        <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html" />
+        <option value="$PROJECT_DIR$/client/Magic.css" />
+        <option value="$PROJECT_DIR$/lib/functions.js" />
+        <option value="$PROJECT_DIR$/server/metaFunctions.js" />
+        <option value="$PROJECT_DIR$/client/defaultVariable.js" />
+        <option value="$PROJECT_DIR$/client/templates/testing/TEST.html" />
+        <option value="$PROJECT_DIR$/client/templates/testing/TEST.js" />
+        <option value="$PROJECT_DIR$/client/templates/testing/TEST.css" />
+        <option value="$PROJECT_DIR$/server/methods.js" />
+        <option value="$PROJECT_DIR$/server/completeFunctions.js" />
+        <option value="$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js" />
+        <option value="$PROJECT_DIR$/client/templates/header/header.html" />
+        <option value="$PROJECT_DIR$/client/templates/meta/meta.js" />
+        <option value="$PROJECT_DIR$/server/Publish/deckNamesPublish.js" />
+        <option value="$PROJECT_DIR$/lib/router.js" />
+        <option value="$PROJECT_DIR$/client/templates/meta/meta.html" />
+        <option value="$PROJECT_DIR$/client/templates/meta/meta.css" />
       </list>
     </option>
   </component>
@@ -289,9 +308,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-3840" />
-    <option name="width" value="1920" />
-    <option name="height" value="1040" />
+    <option name="x" value="-3848" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -316,7 +336,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -456,6 +475,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Magic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Magic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testing" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -768,6 +809,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -857,14 +899,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-3840" y="0" width="1920" height="1040" extended-state="0" />
+    <frame x="-3848" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14930925" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16649105" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1616279" sideWeight="0.5748156" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26046512" sideWeight="0.4251844" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11986301" sideWeight="0.4251844" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -891,9 +933,9 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="top" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295325" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21360256" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16684322" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5079957" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3244186" sideWeight="0.4251844" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26744187" sideWeight="0.4251844" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973656" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -913,47 +955,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="14" />
+      <option name="time" value="15" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/Publish/counters.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/Magic.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/Publish/cfs.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5614679">
-          <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/cron.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4268833">
-          <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.0268817">
-          <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.09139785">
@@ -974,13 +980,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="23" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/testing/TEST.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
           <folding />
         </state>
       </provider>
@@ -1024,14 +1023,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0033500837">
@@ -1070,34 +1061,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="6.12">
-          <caret line="171" column="47" selection-start-line="171" selection-start-column="47" selection-end-line="171" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/header/header.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3811659">
-          <caret line="106" column="8" selection-start-line="106" selection-start-column="8" selection-end-line="106" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/applicationLayout/applicationLayout.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="48" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="106" column="44" selection-start-line="106" selection-start-column="44" selection-end-line="106" selection-end-column="44" />
           <folding />
         </state>
       </provider>
@@ -1114,46 +1081,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="185" column="31" selection-start-line="185" selection-start-column="30" selection-end-line="185" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/completeFunctions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/Publish/deckNamesPublish.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.meteor/packages">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="5" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/utilityFunctions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="19" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -1178,7 +1105,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.024182077">
           <caret line="171" column="31" selection-start-line="171" selection-start-column="31" selection-end-line="171" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1198,74 +1124,152 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/abandoned/abandoned.html">
+    <entry file="file://$PROJECT_DIR$/server/utilityFunctions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32200885">
-          <caret line="282" column="0" selection-start-line="282" selection-start-column="0" selection-end-line="295" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.867031">
+          <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23251028">
+          <caret line="100" column="76" selection-start-line="100" selection-start-column="61" selection-end-line="100" selection-end-column="76" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.js">
+    <entry file="file://$PROJECT_DIR$/client/templates/abandoned/abandoned.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="139" column="21" selection-start-line="139" selection-start-column="20" selection-end-line="139" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.95652175">
+          <caret line="340" column="13" selection-start-line="340" selection-start-column="13" selection-end-line="340" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.6014626">
+          <caret line="121" column="16" selection-start-line="121" selection-start-column="16" selection-end-line="121" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/eventFunctions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.011513">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.89269406">
+          <caret line="115" column="33" selection-start-line="115" selection-start-column="33" selection-end-line="115" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.862068">
-          <caret line="39" column="59" selection-start-line="39" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="58" column="1" selection-start-line="58" selection-start-column="1" selection-end-line="58" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/Publish/deckPublish.js">
+    <entry file="file://$PROJECT_DIR$/client/templates/deck/deck.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.137931">
-          <caret line="50" column="64" selection-start-line="50" selection-start-column="62" selection-end-line="50" selection-end-column="64" />
+        <state vertical-scroll-proportion="0.5906593">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/Magic.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="45" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/defaultVariable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/testing/TEST.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/testing/TEST.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/testing/TEST.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/methods.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="12" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/completeFunctions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="46" column="15" selection-start-line="46" selection-start-column="15" selection-end-line="46" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.meteor/packages">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2650334">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33273056">
-          <caret line="18" column="23" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.038288288">
+          <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/router.js">
+    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckNames.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="89" column="25" selection-start-line="89" selection-start-column="19" selection-end-line="89" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1650486">
-          <caret line="177" column="0" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3319149">
+          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/metaFunctions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.068966">
-          <caret line="84" column="27" selection-start-line="84" selection-start-column="27" selection-end-line="84" selection-end-column="27" />
+        <state vertical-scroll-proportion="0.24276169">
+          <caret line="127" column="27" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="27" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -1274,64 +1278,91 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/functions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.53125">
-          <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckformList.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6031747">
-          <caret line="100" column="76" selection-start-line="100" selection-start-column="61" selection-end-line="100" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4556962">
-          <caret line="74" column="112" selection-start-line="74" selection-start-column="112" selection-end-line="74" selection-end-column="112" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#4;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#5;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#6;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#7;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#8;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#9;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#10;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#11;n#div#0;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#div#2;n#div#0;n#template#2;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/methods.js">
-      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="36" selection-start-line="15" selection-start-column="36" selection-end-line="16" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.55613124">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/searchedDeck/searchedDeck.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5685005">
-          <caret line="31" column="34" selection-start-line="31" selection-start-column="34" selection-end-line="31" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="3" selection-start-line="76" selection-start-column="3" selection-end-line="76" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/header/header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-43.807693">
+          <caret line="73" column="68" selection-start-line="73" selection-start-column="68" selection-end-line="73" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/siteSettings/setDeckNaming/deckFormList/deckFormList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41648108">
+          <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7586207">
+          <caret line="33" column="34" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/Publish/deckPublish.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/Publish/deckNamesPublish.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="20" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/router.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52672607">
+          <caret line="127" column="41" selection-start-line="127" selection-start-column="41" selection-end-line="127" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23709902">
+          <caret line="22" column="44" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#td#4;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#template#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#template#3;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/templates/meta/meta.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.862068">
+          <caret line="234" column="19" selection-start-line="234" selection-start-column="19" selection-end-line="234" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/packages.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

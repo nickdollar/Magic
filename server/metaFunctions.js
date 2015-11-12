@@ -43,7 +43,7 @@ updateMeta = function(){
         var name = names[i].name;
         var deckCount = _Deck.find({format: format, name: name}).count();
         metaInfo._metaDateID = _metaDateID;
-        metaInfo.percent = parseFloat(prettifyDecimails(deckCount / decksCount, 2));
+        metaInfo.percent = parseFloat(prettifyPercentage(deckCount / decksCount, 2));
         metaInfo.name = name;
         metaInfo.format = format;
 
@@ -64,6 +64,10 @@ updateMeta = function(){
 updateMeta2 = function(){
     var format = 'modern';
 
+    var date = getWeekStartAndEnd();
+    var weekStart = new Date(date.weekStart);
+    var weekEnd = new Date(date.weekEnd);
+
     var startDate = new Date();
     startDate.setSeconds(0);
     startDate.setHours(0);
@@ -79,47 +83,58 @@ updateMeta2 = function(){
     var options = [];
     var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, eventType : "daily"}};
     var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, eventType : "daily"}};
-
+    var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, eventType : "ptq"}};
+    var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, eventType : "ptq"}};
+    var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, eventType : "ptq"}};
 
     options.push(daily3_1);
     options.push(daily4_0);
+    options.push(ptqTop8);
+    options.push(ptqTop9_16);
+    options.push(ptqTop17_32);
 
     var names = _DeckNames.find({format : format }).fetch();
 
     var metaTest = {};
     metaTest.format = format;
-    metaTest.date = startDate;
     metaTest.type = {};
-    for(var j = 0; j < options.length; j++)
-    {
-        metaTest.type[options[j].type] = {};
-        var deckTotal = _Deck.find({format : format, $and : [options[j].options]}).count();
-        metaTest.type[options[j].type].deckTotal = deckTotal;
-        metaTest.type[options[j].type].decks = {};
-        var results = [];
-        for(var i = 0; i < names.length; i++) {
+    var firstDate = _Deck.findOne({}, {sort : {date: 1}}).date;
+    firstDate = getWeekStartAndEnd(firstDate).weekStart;
+    while(firstDate <= weekStart){
+        metaTest.weekDate = weekStart;
+        for(var j = 0; j < options.length; j++)
+        {
+            metaTest.type[options[j].type] = {};
 
-            var name = names[i].name;
-            metaTest.type[options[j].type].decks[name] = {};
+            var deckTotal = _Deck.find({format : format, date : {$gte : weekStart, $lte : weekEnd}, $and : [options[j].options]}).count();
+            metaTest.type[options[j].type].deckTotal = deckTotal;
+            metaTest.type[options[j].type].decks = {};
 
-            var count = _Deck.find({format: format, name: name, $and : [options[j].options]}).count();
-            metaTest.type[options[j].type].decks[name] = count;
+            for(var i = 0; i < names.length; i++) {
+                var name = names[i].name;
+                metaTest.type[options[j].type].decks[name] = {};
+                var count = _Deck.find({format: format, date : {$gte : weekStart, $lte : weekEnd}, name: name, $and : [options[j].options]}).count();
+                metaTest.type[options[j].type].decks[name] = count;
+            }
         }
 
+        _MetaValues.update({
+            format : metaTest.format,
+                weekDate : weekStart
+        },
+        {
+            $setOnInsert : metaTest
+        },
+            {upsert : true}
+        )
+        weekStart.setDate(weekStart.getDate() - 7);
+        weekEnd.setDate(weekEnd.getDate() - 7);
     }
-    _MetaValues.update({
-        format : metaTest.format,
-        date : metaTest.date
-    },
-    {
-        $setOnInsert : metaTest
-    },
-        {upsert : true}
-    )
+    console.log("END");
 }
 
 cardsPercentageValues = function(format, deckName, numOfWeeks){
-    var date = getLastAndFirstDayOfWeekBefore();
+    var date = getWeekStartAndEnd();
     var weekStart = new Date(date.weekStart);
     var weekEnd = new Date(date.weekEnd);
 
@@ -127,22 +142,26 @@ cardsPercentageValues = function(format, deckName, numOfWeeks){
     {
         var decks = _Deck.find({format : format, name : deckName, date : {$gte : weekStart, $lt : weekEnd}}).fetch();
         var cardValues = {};
+
         for(var i = 0; i < decks.length; i++){
             _DeckCards.find({_deckID : decks[i]._id, sideboard: false}).forEach(function(card){
+
                 if(!cardValues.hasOwnProperty(card.name)){
-                    cardValues[card.name] = {total : 0};
+                    var cardTemp =_CardDatabase.findOne({name : card.name});
+                    console.log(cardTemp);
+                    cardValues[card.name] = {total : 0, land : cardTemp.land};
                 }
                 cardValues[card.name].total += parseInt(card.quantity);
             });
         }
 
         for(var key in cardValues){
-            cardValues[key].total = prettifyDecimails((cardValues[key].total/decks.length),2);
+            cardValues[key].total = parseFloat((cardValues[key].total/decks.length).toFixed(2));
 
-            _cardBreakDownCards.update({deckName : deckName, cardName : key},
+            _cardBreakDownCards.update({format : format, deckName : deckName, cardName : key},
                 {
                     $set : { weekTotal : cardValues[key].total},
-                    $setOnInsert : {deckName : deckName, cardName : key}
+                    $setOnInsert : {format: format, deckName : deckName, cardName : key, type : cardValues[key].land}
                 },
                 {upsert: true}
             );
@@ -150,19 +169,20 @@ cardsPercentageValues = function(format, deckName, numOfWeeks){
             _cardBreakDownDate.update({
                     name : key,
                     deckName : deckName,
-                    date : date.weekStart
+                    date : weekStart
                 },
                 {
                     $set : {quantity : cardValues[key].total},
                     $setOnInsert : {name : key,
                         deckName : deckName,
-                        date : date.weekStart,
+                        date : weekStart,
                         quantity : cardValues[key].total
                     }
                 },
                 {upsert: true}
             );
         }
+
         weekStart.setDate(weekStart.getDate() - 7);
         weekEnd.setDate(weekEnd.getDate() - 7);
     }

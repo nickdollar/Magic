@@ -664,7 +664,7 @@
 //        });
 //
 //        var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
-//        var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length,2);
+//        var value = prettifyPercentage((matches.positive.length)/cardDeckNames.length,2);
 //        var name = _DeckNames.findOne({_id : _deckNameID}).name;
 //
 //        if(value!==0){
@@ -700,7 +700,7 @@
 //            });
 //
 //            var matches = getMatchesAndNonMatches(_deckWithoutNameID, cardDeckNames, _deckNameID);
-//            var value = prettifyDecimails((matches.positive.length)/cardDeckNames.length, 2);
+//            var value = prettifyPercentage((matches.positive.length)/cardDeckNames.length, 2);
 //            var deckName = _DeckNames.findOne({deckName_id : _deckNameID}).name;
 //            if(value!==0){
 //                results.push({

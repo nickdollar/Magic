@@ -14,7 +14,7 @@ newGetOneDeckRank = function(_deckWithoutNameID){
             var _deckWithNameID = _deckWithNames[j]._id;
 
             var matches = getMatchesAndNonMatches(_deckWithoutNameID, _deckWithNameID);
-            value = parseFloat(prettifyDecimails((matches.positive.length)/(matches.positive.length + matches.negative.length),2));
+            value = parseFloat(prettifyPercentage((matches.positive.length)/(matches.positive.length + matches.negative.length),2));
 
             if(value < 50){
                 //console.log("BREAK: " + value);
@@ -47,12 +47,14 @@ newGetOneDeckRank = function(_deckWithoutNameID){
 getMatchesAndNonMatches = function(_deckWithoutNameID, _deckWithNameID){
     var results = {positive : [], negative: []};
     var deckWithNameCards = _DeckCards.find({_deckID : _deckWithNameID, sideboard : false}).map(function(card){ return card.name});
+    //var nonLandCards = _CardDatabase.find({land : false, name : {$in : deckWithNameCards}}).map(function(card){ return card.name});;
 //get the cards that matches
     results.positive = _DeckCards.find({_deckID : _deckWithoutNameID, sideboard : false, name : {$in : deckWithNameCards}}).map(function(card){ return card.name});
+    results.positive = _CardDatabase.find({land : false, name : {$in : results.positive}}).map(function(card){ return card.name});;
 
     //get the cards that don't matches
     results.negative = _DeckCards.find({_deckID : _deckWithNameID, sideboard : false,  name : {$nin : results.positive}}).map(function(card){ return card.name});
-
+    results.negative = _CardDatabase.find({land : false, name : {$in : results.negative}}).map(function(card){ return card.name});
     return results;
 }
 

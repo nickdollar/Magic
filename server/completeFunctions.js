@@ -8,8 +8,7 @@ addNameToDeck = function(_selectedDeckID, name){
     {
         $setOnInsert : {
             format : deck.format,
-            name : name,
-            colors :  ""
+            name : name
         }
     },
         {upsert : true}
@@ -20,16 +19,17 @@ addNameToDeck = function(_selectedDeckID, name){
         name : name
     });
 
-    var colors = findTheColors(deck.colors, deckName.colors);
+    var colors = findTheColorsInc(deck.colors);
+
+    console.log(colors);
+
 
     _DeckNames.update({
             format : deck.format,
             name : name
         },
         {
-            $set : {
-                colors :  colors
-            }
+            $inc : colors
         },
         {upsert : true}
     );
@@ -40,10 +40,10 @@ addNameToDeck = function(_selectedDeckID, name){
 }
 
 
-findTheColors = function(deckColors, nameDeckColors){
+findTheColors = function(deckColors){
     var manaRegex = new RegExp("([a-zA-Z])", 'g');
     var tempMana = {"B" : false, "G" : false, "R" : false, "U" : false, "W" : false};
-    var mana = deckColors + nameDeckColors;
+    var mana = deckColors;
     console.log("Mana: " + mana);
     var result;
     while((result = manaRegex.exec(mana)) !== null) {
@@ -60,6 +60,28 @@ findTheColors = function(deckColors, nameDeckColors){
             colors += key;
         }
     }
-    console.log(colors);
+    return colors;
+}
+
+findTheColorsInc = function(deckColors){
+    var manaRegex = new RegExp("([a-zA-Z])", 'g');
+    var tempMana = {"B" : false, "G" : false, "R" : false, "U" : false, "W" : false};
+    var mana = deckColors;
+    var result;
+    while((result = manaRegex.exec(mana)) !== null) {
+
+        if(result[1] == "B") { tempMana["B"] = true; }
+        else if (result[1] == "G") { tempMana["G"] = true}
+        else if (result[1] == "R") { tempMana["R"] = true}
+        else if (result[1] == "U") { tempMana["U"] = true}
+        else if (result[1] == "W") { tempMana["W"] = true}
+    }
+
+    var colors = {};
+    for(var key in tempMana ){
+        if(tempMana[key] == true){
+            colors[key] = 1;
+        }
+    }
     return colors;
 }

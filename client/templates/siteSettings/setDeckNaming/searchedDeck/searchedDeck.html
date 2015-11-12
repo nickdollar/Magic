@@ -44,6 +44,7 @@
 </template>
 
 <template name="deckPercentageOptions_COL">
+    {{#if deckName}}
     <h4 class="modal-title">{{deckName.id}}</h4>
 
     <input type="text" name="" class="deckname">
@@ -72,6 +73,9 @@
             {{/each}}
         </tr>
     </table>
+        {{else}}
+        loading...
+    {{/if}}
 </template>
 
 <template name="LISTdeckwithoutname_COL">
