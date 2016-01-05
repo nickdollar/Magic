@@ -104,17 +104,6 @@ Template.event_LISTdeckwithoutname_COL.helpers({
     //    return Session.get("noNameDeckFormat");
     //}
 });
-Template.event_LISTdeckwithoutname_COL.events({
-    "click .noNameDeckID" : function(evt, template){
-    }
-});
-Template.event_LISTdeckwithoutname_COL.onRendered(function(){
-
-});
-Template.event_LISTdeckwithoutname_COL.onCreated(function(){
-
-});
-
 //+++++++++++++++++++
 //topDeckList
 //+++++++++++++++++++

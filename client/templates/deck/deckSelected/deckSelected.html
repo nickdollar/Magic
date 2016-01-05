@@ -1,0 +1,190 @@
+<template name="events_COL">
+        <div class="rightDiv">
+            <div class="row">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="col-xs-6" >EVENT</th>
+                        <th class="col-xs-2 date">Position</th>
+                        <th class="col-xs-1 date">Players</th>
+                        <th class="col-xs-3 date">DATE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each event}}
+                        <tr>
+                            <td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>
+                            <td>{{position}}</td>
+                            <td class="date">{{players}}</td>
+                            <td class="date">{{datePretify date}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</template>
+
+<template name="playList_ROW">
+    <div class="playlist">
+        <div class="col-xs-12">
+            <div class="row">
+                <input class="cardName"/>
+                <button type="submit" class="btn btn-default addAYoutubeVideo">add a Youtube Video or PlayList</button>
+            </div>
+
+            <div class="row">
+                {{#each playlist}}
+                    <div class="col-xs-3">
+                        <div class="thumbnail">
+                            <img src="
+                                {{#with image _cfsImagesID}}
+                                    {{this.url}}
+                                {{/with}}
+                            " alt class="playListThumbnail" />
+                            <div class="caption">
+                                <div>
+                                    {{title}}
+                                </div>
+                                <div>
+                                    by {{channel}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="exampleDeck_COL">
+        <div class="row">
+            <button type="submit" class="btn btn-default getDaily" {{daily}}>Daily</button>
+            <button type="submit" class="btn btn-default getPTQ" {{ptq}}>PTQ</button>
+        </div>
+        <div class="row">
+            <div class="newDeckColumn bottom-separator">
+                {{#each cardType}}
+                    <div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>
+                        {{#each cards block}}
+                            <div class="row no-gutters">
+                                <div class="name col-xs-7">{{quantity}} {{name}}</div>
+                                <div class="col-xs-3">
+                                    {{#each getManaCss name}}
+                                        <div class="mana {{mana}}"></div>
+                                    {{/each}}
+                                </div>
+                                <div class="col-xs-2">
+                                    $8.74
+                                </div>
+                            </div>
+                        {{/each}}
+                {{/each}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="verticalSideboard top-separator">
+                {{#if sideboardQuantity}}
+                    <div class="deckBlock">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>
+                            </div>
+                        <div class="newDeckColumn">
+                            {{#each sideboard}}
+                                <div class="cardRow">
+                                    <span class="quantity">{{quantity}}</span>
+                                    <span class="name">{{name}}</span>
+                                </div>
+                            {{/each}}
+                        </div>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+</template>
+
+<template name="cardsPercentage_ROW">
+    <h2>Main Deck</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-xs-4">Name</th>
+            {{#each weekDates}}
+                <th class="col-xs-1">{{this}}</th>
+            {{/each}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#each cards}}
+            <tr>
+                <td>{{cardName}}</td>
+                {{#each cardWeek cardName}}
+                    <td style="background-color: {{color}}">{{value}}</td>
+                {{/each}}
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="cardsPercentageSideboard_ROW">
+    <h2>Sideboard</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-xs-4">Name</th>
+            {{#each weekDates}}
+                <th class="col-xs-1">{{this}}</th>
+            {{/each}}
+        </tr>
+        </thead>
+        <tbody>
+        {{#each cards}}
+            <tr>
+                <td>{{cardName}}</td>
+                {{#each cardWeek cardName}}
+                    <td style="background-color: {{color}}">{{value}}</td>
+                {{/each}}
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="deckOptions">
+    {{#with decksOptions}}
+        {{#each deckNames}}
+            <button type="submit" class="btn btn-default deckOptions">{{name}}</button>
+        {{/each}}
+    {{/with}}
+</template>
+
+<template name="adminArea">
+    <div class="col-xs-12">
+        <div class="row">Admin</div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="row"></div>
+                <div class="ui-widget">
+                    <label>Archetype</label>
+                    <select id="combobox">
+                        <option value="">Base</option>
+                        {{#each archetypesOptions}}
+                            <option value="{{archetype}}" {{selected}}>{{archetype}}</option>
+                        {{/each}}
+                   </select>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <button type="submit" class="btn btn-default updateArchetype">Update Archetype</button>
+                <button type="submit" class="btn btn-default removeArchetype">Remove</button>
+            </div>
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-default getDeckPercentage">getDeckPercentage</button>
+        </div>
+    </div>
+</template>

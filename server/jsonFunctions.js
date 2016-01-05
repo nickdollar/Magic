@@ -4,8 +4,22 @@ makeCardDatabase = function(){
 
     for (var key in myobject) {
 
-        var obj = myobject[key];
+        var obj = clone(myobject[key]);
         var data = {};
+
+        if(obj.hasOwnProperty('layout')){
+            if(obj.layout == "split"){
+                if(obj.names.length > 2){
+                    obj.name = obj.names.join("/");
+                    console.log(obj.name);
+                }else{
+                    obj.name = obj.names.join(" // ");
+                    obj.manaCost = [myobject[obj.names[0]].manaCost,  myobject[obj.names[1]].manaCost].join(" // ");
+                    console.log(obj.name + " " + obj.manaCost);
+                }
+
+            }
+        }
 
         if(obj.hasOwnProperty('name')){
             obj.name = obj.name.replace("\xC6", "Ae");
@@ -59,6 +73,19 @@ makeCardDatabase = function(){
             data.power = obj.power;
         }
 
-        _CardDatabase.insert(data);
+        _CardDatabase.update( {name : data.name},
+
+            {$setOnInsert : data},
+            {upsert : true}
+        );
     }
+}
+
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
 }

@@ -1,40 +1,190 @@
 <template name="ApplicationLayout">
-    {{>hiddenTemplate}}
+    {{>topMenu}}
+    {{>tabbar}}
     <div class="container">
-        <div class="row">{{>topMenu}}</div>
-        <div class="row">{{>colorBarOriginal}}</div>
-        <div class="row">{{>yield "secondaryMenu"}}</div>
+
         <div class="row">{{>yield}}</div>
     </div>
 </template>
 
 
-<template name="hiddenTemplate">
-    {{>megaMenu}}
-    {{>mouseOverPicture}}
-</template>
 
-<template name="header">
-    <div class="headerStatic">
-        <div class="row">
-            {{>topMenuStatic}}
-            <!--<div class="header-title" style="background-color: {{siteColor}}; border-bottom-color: {{siteColorBorder}} ">-->
-            <!--<div class="header-title">-->
-            <!--<h1 class="visible-xs">fffExtra Small</h1>-->
-            <!--<h1 class="visible-sm">fffSmall</h1>-->
-            <!--<h1 class="visible-md">fffMedian</h1>-->
-            <!--<h1 class="visible-lg">fffLarge</h1>-->
-            <!--</div>-->
-            <!--</div>-->
+<template name="metaFP">
+    <div class="row">
+        <div class="col-xs-12">
+            {{#each metas}}
+                <div class="row">
+                    {{> deckPercentChanges format=this}}
+                </div>
+            <div class="row">
+                <div class="col-xs-3 whiteBackground border-divider" >
+                    {{>deckMetaBox this}}
+                </div>
+                <div class="col-xs-3 whiteBackground border-divider" >
+                    {{>cardMetaBox this}}
+                </div>
+                <div class="col-xs-3 whiteBackground border-divider" >
+                    {{>eventMetaBox this}}
+                </div>
+                <div class="col-xs-3 whiteBackground border-divider" >
+                    {{>lastestMetaBox this}}
+                </div>
+            </div>
+            {{/each}}
         </div>
     </div>
+</template>
 
+<template name="deckFP">
+    <div class="row">
+        {{#each metas}}
+            <div class="col-xs-12">
+                <div class="row">
+                    {{> decksFormatChanges format=this}}
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 whiteBackground border-divider" >
+                        {{>newPlayLists}}
+                    </div>
+                    <div class="col-xs-3 whiteBackground border-divider" >
+                        {{>nextStreamEventBox}}
+                    </div>
+                    <div class="col-xs-3 whiteBackground border-divider" >
+                        {{>newArticles}}
+                    </div>
+                    <div class="col-xs-3 whiteBackground border-divider" >
+                        {{>newPrimesAndUpdates}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</template>
+
+<template name="selectADeck">
+    <div class="row">
+        <div class="col-xs-2">
+            <div class="row">
+                {{>narrowSearch}}
+            </div>
+        </div>
+        <div class="col-xs-10">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        {{>deckList}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        {{>archetypesList}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="deckSelected">
+    <div class="col-xs-12">
+        <div class="row">
+            {{>adminArea}}
+        </div>
+        <div class="row">
+            {{>deckOptions}}
+        </div>
+        {{#if isSelected}}
+            <div class="row">
+                <div class="col-xs-7">
+                    {{>exampleDeck_COL}}
+                </div>
+                <div class="col-xs-5">
+                    {{>events_COL}}
+                </div>
+            </div>
+            <div class="row">
+                {{>playList_ROW}}
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    {{>cardsPercentage_ROW}}
+                </div>
+                <div class="col-xs-6">
+                    {{>cardsPercentageSideboard_ROW}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="eventFP">
+    <div class="col-xs-6">
+        {{>passEventsCol}}
+    </div>
+    <div class="col-xs-6">
+        {{>futuroEventsCol}}
+    </div>
 </template>
 
 
-<template name="mouseOverPicture">
-    <!--<div id="imgPreviewWithStyles">-->
-        <!--fasdfasdfasfdsadf-->
-        <!--<img id="floatingImage"/>-->
-    <!--</div>-->
+<template name="selectedMeta">
+    <div class="row">
+        <div class="col-xs-7">
+                <div class="row">
+                     {{>metaTableOptions}}
+                </div>
+                <div class="row">
+                    {{>newMetaTable_COL}}
+                </div>
+        </div>
+        <div class="col-xs-5" >
+            <div class="metaEventTable">
+                {{>eventsTable_COL}}
+            </div>
+            <div class="metaCardsTable">
+                {{>cardTable_COL}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="searchedDeck">
+    <div class="col-xs-12">
+        <div class="row">
+            <button type="submit" class="btn btn-default getEvents" style="display: inline;">getEvents</button>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 col-md-2">
+                {{>LISTdeckwithoutname_COL}}
+            </div>
+            <div class="col-xs-9 col-md-10">
+                {{#if selectedDeck}}
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-9">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {{>deckList_COL}}
+                                </div>
+                            </div>
+                            <div class="row">
+                            </div>
+                            <div class="row">
+                                {{>deckPercentageOptions_COL}}
+                            </div>
+                        </div>
+                        <div class="hidden-xs hidden-sm col-md-3">
+                            <div class="row">
+                                {{>deckPicture_COL}}
+                            </div>
+                        </div>
+                    </div>
+
+                {{/if}}
+            </div>
+        </div>
+    </div>
 </template>

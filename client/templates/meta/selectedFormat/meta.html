@@ -1,0 +1,259 @@
+<template name="tileFormat2">
+    <div class="col-xs-12 ">
+        <div class="row">
+            <div class="title">
+                {{format}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 miniTable" >
+                <table class="table metaTable">
+                <thead>
+                <tr>
+                    <th colspan="3">DECK</th>
+                    <th>%</th>
+                    <th>CHANGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {{#each meta format}}
+                        <tr>
+                            <td><span>{{math @index "+" 1}}</span></td>
+                            <td><a id="deckLink" href="{{pathFor 'decks' format = ../format deckName = name}}">{{name}}</a></td>
+                            <td class="positionChange">
+                                <span>1</span><span class="greenArrow-up"></span>
+                            </td>
+                            <td>{{percent}}%</td>
+                            <td>
+                                <div class="graph">
+                                    {{#each bars}}<div class="bars" style="background-color: {{this}}">fsdfsddsf</div>{{/each}}
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+                </table>
+            </div>
+            <div class="col-xs-4 news">
+
+            </div>
+            <div class="col-xs-4 events">
+                events
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="eventsTable_COL">
+    <div class="rightDiv">
+        <div class="row">
+            <button type="submit" class="btn btn-default btn-xs eventType" value="daily" {{nextDisabled}} style="display: inline;">Daily</button>
+            <button type="submit" class="btn btn-default btn-xs eventType" value="ptq" {{nextDisabled}} style="display: inline;">PTQ</button>
+        </div>
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-6" >EVENT</th>
+                    <th class="col-xs-3 date">DATE</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each event}}
+                <tr>
+                    <td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>
+                    <td class="date">{{datePretify date}}</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template name="newMetaTable_COL">
+    <table class="table metaTable">
+        <thead>
+        <tr>
+            <th colspan="4">DECK</th>
+            <th>TYPE</th>
+            <th>%</th>
+            <th>$</th>
+            <th>CHANGE</th>
+        </tr>
+        </thead>
+        <tbody>
+            {{#each metaTest}}
+            <tr>
+                <td><span>{{tableIndex @index "decksNames"}}</span></td>
+                <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                <td class="positionChange">
+                    {{#if position1 upDown}}
+                        <span>0</span><span class="neutro"></span>
+                        {{else}} {{#if position2 upDown}}
+                            <span>{{change}}</span><span class="greenArrow-up"></span>
+                        {{else}}
+                            <span>{{change}}</span><span class="redArrow-down"></span>
+                        {{/if}}
+                    {{/if}}
+                </td>
+                <td>
+                    {{#with colors name}}
+                        {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                    {{/with}}
+                </td>
+                <td>{{type name}}</td>
+                <td>{{percent}}%</td>
+                <td>$AAAA</td>
+                <td>
+                    <div class="graph">
+                        {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+            </table>
+</template>
+
+<template name="metaTableOptions">
+    <div class="col-xs-2">
+        <div class="row">
+            <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
+        </div>
+    </div>
+    <div class="col-xs-4 pull-right">
+        <div class="row pull-right">
+            <button type="submit" class="btn btn-default btn-xs deckPagination" {{previousDisabled}} value="prev" style="display: inline;">&larr; prev</button>
+            <button type="submit" class="btn btn-default btn-xs deckPagination" {{nextDisabled}} value="next" style="display: inline;">next &rarr;</button>
+        </div>
+    </div>
+    <div class="content row">
+        <div class="col-xs-2">
+            <div class="row">
+                <div>Daily</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" name="daily4_0" class="metaCheckBox" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>
+                        <label for="daily4_0">4-0</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="daily3_1" class="metaCheckBox" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>
+                        <label for="daily3_1">3-1</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="row">
+                <div class="optionListName">PTQ</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="checkbox" aria-checked="false" checked>
+                        <label for="tall-1">Top 8</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="checkbox" aria-checked="false" checked>
+                        <label for="tall-1">Top 8-16</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="checkbox" aria-checked="false" checked>
+                        <label for="tall-1">Top 17-32</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="cardTable_COL">
+    <div class="rightDiv">
+        <button type="submit" class="btn btn-default btn-xs cardUpdate" style="display: inline;">Update<span class="caret"></span></button>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="row">
+                    <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
+                </div>
+            </div>
+            <div class="col-xs-4 pull-right">
+                <div class="row pull-right">
+                    <button type="submit" class="btn btn-default btn-xs cardPagination" value="prev" {{previousDisabled}} style="display: inline;">&larr; prev</button>
+                    <button type="submit" class="btn btn-default btn-xs cardPagination" value="next" {{nextDisabled}} style="display: inline;">next &rarr;</button>
+                </div>
+            </div>
+        </div>
+        <div class="content row">
+            <div class="col-xs-2">
+                <div class="row">
+                    <div>Daily</div>
+                    <ul class="list-unstyled optionsList">
+                        <li>
+                            <input type="checkbox" name="daily4_0"  class="eventTypes" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>
+                            <label for="daily4_0">4-0</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="daily3_1"  class="eventTypes" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>
+                            <label for="daily3_1">3-1</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="row">
+                    <div class="optionListName">PTQ</div>
+                    <ul class="list-unstyled optionsList">
+                        <li>
+                            <input type="checkbox" name="ptqTop8" class="eventTypes" id="ptqTop8" value="ptqTop8" role="checkbox" aria-checked="false" checked>
+                            <label for="tall-1">Top 8</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="ptqTop9_16"  class="eventTypes" id="ptqTop9_16" value="ptqTop9_16" role="checkbox" aria-checked="false" checked>
+                            <label for="tall-1">Top 8-16</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="ptqTop17_32"  class="eventTypes" id="ptqTop17_32" value="ptqTop17_32" role="checkbox" aria-checked="false" checked>
+                            <label for="tall-1">Top 17-32</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="row">
+                    <div class="optionListName">Cards</div>
+                    <ul class="list-unstyled optionsList">
+                        <li>
+                            <input type="checkbox" name="ptqTop8"  class="mainSideboard" id="ptqTop8" value="Main" role="checkbox" aria-checked="false" checked>
+                            <label for="tall-1">Main</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="ptqTop9_16"  class="mainSideboard" id="ptqTop9_16" value="Sideboard" role="checkbox" aria-checked="false">
+                            <label for="tall-1">Sideboard</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-6">Card</th>
+                    <th class="col-xs-3 date">%</th>
+                    <th class="col-xs-3 date">AVG.</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each metaPerWeek}}
+                    <tr>
+                        <td><span>{{tableIndex @index "cardsTable"}}</span> <span>{{name}}</span></td>
+                        <td class="inDecks">{{percent}}%</td>
+                        <td class="average">{{avg}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

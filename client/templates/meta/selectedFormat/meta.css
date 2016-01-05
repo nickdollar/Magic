@@ -1,0 +1,427 @@
+
+
+.metaTable th {
+    color: #888888;
+    font-size: 10px;
+    font-family: arial;
+    letter-spacing: 1.2px;
+}
+
+.metaTable th:not(:first-child){
+    text-align: center;
+}
+
+.metaTable table tr td{
+    padding: 3px 2px;
+}
+
+.metaTable table td:nth-child(1){
+
+}
+
+
+.smallMetaTable th {
+    color: #888888;
+    font-size: 10px;
+    font-family: arial;
+    letter-spacing: 0.8px;
+}
+
+.smallMetaTable th:not(:first-child){
+    text-align: center;
+}
+
+.smallMetaTable td, .smallMetaTable th{
+    padding: 3px 2px !important;
+}
+
+.smallMetaTable table td:nth-child(1){
+
+}
+
+.smallMetaTable .weekChange {
+    text-align: center;
+}
+
+.metaEventTable th {
+    color: #888888;
+    font-size: 10px;
+    font-family: arial;
+    letter-spacing: 1.2px;
+}
+
+.metaEventTable th:not(:first-child){
+    text-align: center;
+}
+
+.metaEventTable .date {
+    text-align: center;
+}
+
+.metaEventTable a {
+    font-family: Verdana;
+    font-size: 12px;
+}
+
+.rightDiv {
+    padding-left: 8px;
+}
+
+.leftDiv {
+    padding-right: 9px;
+}
+
+
+.list ul {
+    border: 1px solid #ccc;
+
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -border-radius: 10px;
+}
+
+.list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    list-style-type: none;
+}
+.list li:last-child {
+    border-bottom: none;
+}
+
+.list span {
+    float: right;
+}
+
+
+
+.table-Left {
+    position: absolute;
+    width: 250px;
+}
+
+colgroup .table-col-position{
+    width: 25px;
+}
+
+.table-position {
+    color: #999;
+    font-size: 16px;
+    border-bottom: 1px solid #777777;
+
+}
+
+colgroup .table-col-name {
+    width: auto;
+}
+
+.table-name {
+    font-size: 14px;
+    letter-spacing: -.5px;
+    border-bottom: 1px solid blue;
+
+}
+
+colgroup .table-col-colors {
+    width: 40px;
+}
+
+.table-colors {
+    border-bottom: 1px solid darksalmon;
+}
+
+colgroup .table-col-type{
+    width: 50px;
+}
+
+.table-type {
+    border-bottom: 1px solid purple;
+
+}
+
+colgroup .table-col-change {
+    width: 30px;
+}
+
+.table-change {
+    border-bottom: 1px solid chocolate;
+}
+
+.tableRightDiv {
+    padding-left: 250px;
+}
+
+.tableRight {
+
+}
+
+.neutro {
+    height: 8px;
+    margin-left: 3px;
+    width: 8px;
+    display: inline-block;
+    background-color: #ccc;
+    box-sizing: border-box;
+}
+
+.positionUp {
+    margin-left: 0px;
+}
+
+.positionUp:after {
+    color: green;
+    content : "\25B2";
+}
+
+.positionDown:after {
+    color: red;
+    content : "\25BC";
+}
+
+.tableRightDiv tbody tr td:nth-child(odd){
+    background-color: #f5f5f5;
+}
+
+.tableRightDiv tbody tr td:nth-child(even){
+
+}
+
+.left-table-body tr, .right-table-body tr{
+    height: 56px;
+    padding: 0 16px;
+    font-family: open_sansregular;
+}
+
+.left-table-body tr{
+
+}
+
+
+.right-table-body tr{
+    text-align: center;
+}
+
+.table-head-left, .table-head-right {
+
+}
+
+.table-head{
+    height: 40px;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    font-family: aaarghnormal;
+    font-size: 11px;
+    color: #999;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -.3px;
+}
+
+.table-head th {
+    padding: 0 16px;
+}
+
+.circle {
+    border-collapse: collapse;
+    border-left: 1px;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #777777;
+}
+
+.graph {
+    height: 100%;
+}
+.graph .bar {
+    height: 16px;
+    width: 7px;
+    margin: 1px;
+    display: inline-block;
+    position: relative;
+    vertical-align: baseline;
+
+}
+
+
+
+.graph .bar.red {
+    background-color: #f16752;
+}
+
+.graph .bar.green {
+    background-color: #8ed5db;
+}
+
+.graph .bar.gray {
+    background-color: #d3d2cf;
+}
+
+
+.metaMainSectionTitle {
+    margin-top: 4px;
+    height: 42px;
+}
+
+
+.miniTable{
+    overflow: hidden;
+    height: 200px;
+
+}
+
+.positionChange {
+    height: 25px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.sprite {
+    /*vertical-align: middle;*/
+    /*display: inline-block;*/
+    /*width: 18px;*/
+    /*height: 25px;*/
+    /*-webkit-background-size: 25px 18px;*/
+    /*zoom:0.6;*/
+    /*-moz-transform:scale(0.6);*/
+
+    /*-webkit-transform:scale(0.6);*/
+
+}
+.greenArrow-up {
+     display: inline-block;
+     background: url('/img/upDownArrow.svg') no-repeat;
+     background-position: 0px 9px;
+     background-origin: padding-box;
+     background-size: 20px;
+     height: 20px;
+     width: 10px;
+ }
+
+.redArrow-down {
+    display: inline-block;
+    background: url('/img/upDownArrow.svg') no-repeat;
+    background-position: -10px 9px;
+    background-origin: padding-box;
+    background-size: 20px;
+    height: 20px;
+    width: 10px;
+}
+
+.checkBoxParent{
+
+}
+
+.checkBoxChild {
+    margin-left: 10px;
+}
+
+/*.sprite.redArrow-down { background-position: 0 -35px; }*/
+
+.optionsList li {
+    height: 17px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.optionsList label {
+    height: 17px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.optionsList {
+    height: 17px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+}
+
+.optionsListName {
+    font-weight: bolder;
+}
+
+.optionsList ul {
+    height: 17px;
+    background-color: #00b3ee;
+}
+
+.optionsList li {
+    font-size: 10px;
+    font-family: arial, helvetica, freesans, sans-serif;
+}
+
+.optionsList input {
+    vertical-align: middle;
+    -ms-transform: scale(0.75); /* IE */
+    -moz-transform: scale(0.75); /* FF */
+    -webkit-transform: scale(0.75); /* Safari and Chrome */
+    -o-transform: scale(0.75); /* Opera */
+}
+
+ul > li {
+
+}
+
+.container .header {
+    background-color:#d3d3d3;
+    padding: 2px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.container .content {
+    display: none;
+    padding : 5px;
+}
+
+.changePercentageBlock {
+    display: none;
+    width: 150px;
+    min-height: 30px;
+    position: absolute;
+    background-color: white;
+}
+
+.changePercentageBlock span {
+    margin-left: 3px;
+    height: 30px;
+    font-family: Helvetica;
+    font-size: 21px;
+}
+
+.changePercentageBlock span.green {
+    background-color: #8ed5db;
+}
+
+.changePercentageBlock span.red {
+    background-color: #f16752;
+}
+
+.changePercentageBlock span.gray {
+    background-color: #d3d2cf;
+}
+
+.borderless td, .borderless th {
+    border: none !important;
+}
+
+
+/*div {*/
+    /*background-color: white;*/
+/*}*/
+
+.whiteBackground {
+    background-color: white;
+}
+
+body {
+    /*background-color: #0097cf;*/
+}
+
+.col-inside {
+    border: solid 2px #f4f4f2;
+
+}
+.col1:first-child {
+    padding: 0 4px 0 0;
+}
+

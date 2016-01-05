@@ -101,7 +101,18 @@ Template.registerHelper("getManaCssParentheses", function(manacost) {
     return str;
 });
 
-Template.registerHelper("math", function(lvalue, operator, rvalue, options) {
+Handlebars.registerHelper("tableIndex", function(index, options) {
+
+    if(options == "decksNames"){
+       return (Session.get(SV_metaDeckListPagination) + index + 1);
+    }
+
+    if(options == "cardsTable"){
+       return Session.get(SV_metaCardListPagination) + index + 1;
+    }
+});
+
+Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     lvalue = parseFloat(lvalue);
     rvalue = parseFloat(rvalue);
 
@@ -114,6 +125,14 @@ Template.registerHelper("math", function(lvalue, operator, rvalue, options) {
     }[operator];
 });
 
+Template.registerHelper("fixForLink", function() {
+
+    //var phrase = this.name.replace(/ /, "-");
+
+    var phrase = this.name ? this.name.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+
+    return phrase;
+});
 
 Template.registerHelper("datePretify", function(date) {
 
@@ -121,4 +140,30 @@ Template.registerHelper("datePretify", function(date) {
     var mm = (date.getMonth()+1).toString();
     var dd  = date.getDate().toString();
     return (mm[1]?mm:"0"+mm[0]) +"-"+ (dd[1]?dd:"0"+dd[0]) + "-" + yyyy ;
+});
+
+Template.registerHelper("prettifyDate", function(timestamp) {
+    return new Date(timestamp).toString('yyyy-MM-dd')
+});
+
+Template.registerHelper("getLinkAddress", function(cardName) {
+    cardName = encodeURI(cardName);
+    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+    var linkBase = "http://69.195.122.106/nicholas/mtgpics/";
+    var folderLetter = cardName.charAt(0).toLocaleLowerCase();
+    var finalDirectory = linkBase+folderLetter+"/"+cardName+".full.jpg";
+    return finalDirectory;
+});
+Template.registerHelper("convertToLink", function(cardName) {
+    cardName = encodeURI(cardName);
+    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+    var linkBase = "http://69.195.122.106/nicholas/crops/";
+    var folderLetter = cardName.charAt(0).toLocaleLowerCase();
+    var finalDirectory = linkBase+folderLetter+"/"+cardName+".crop.jpg";
+    return finalDirectory;
+});
+Template.registerHelper("convertToTemplate", function(color) {
+    var linkBase = "http://69.195.122.106/nicholas/deckTemplates";
+    var finalDirectory = linkBase+"/"+color+".jpg";
+    return finalDirectory;
 });

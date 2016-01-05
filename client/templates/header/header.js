@@ -1,65 +1,6 @@
 Session.set("siteName", null);
 
-//+++++++++++++++++++
-//colorBarOriginal        +
-//+++++++++++++++++++
-
-
-Template.colorBarOriginal.helpers({
-    siteColor : function(){
-        return Session.get('siteColor');
- },
-    siteColorBorder : function(){
-        return shadeColor(Session.get('siteColor'), -20);
-    }
-});
-
-Template.colorBarOriginal.events({
-
-});
-
-
-Template.colorBarOriginal.rendered = function(){
-    var moveLeft = 0;
-    var moveDown = 0;
-
-    $("#danger").hover ( function () { MenuOpenCloseErgoTimer (
-            100,
-            function (node) {
-                var target = '#pop1';
-                $(target).show();
-                var buttonMenu = $("#danger");
-                var windowPosition = (buttonMenu.offset().top - $(window).scrollTop());
-                var position = $(node).position();
-                $(target).css('top', windowPosition + 50).css('left', buttonMenu.offset().left);
-            },
-            this
-        ); },
-        function () { MenuOpenCloseErgoTimer (
-            200,
-            function () {
-                var target = '#pop1';
-                $(target).hide();
-            }
-        ); }
-    );
-
-    $("#pop1").hover ( function () { MenuOpenCloseErgoTimer (
-            0,
-            function () {
-                $("#pop1").show();
-            }
-        ); },
-        function () { MenuOpenCloseErgoTimer (
-            200,
-            function () {
-                $("#pop1").hide();
-            }
-        ); }
-    );
-};
-
-function MenuOpenCloseErgoTimer (dDelay, fActionFunction, node) {
+function MenuOpenCloseErgoTimer(dDelay, fActionFunction, node){
     if (typeof this.delayTimer == "number") {
         clearTimeout (this.delayTimer);
         this.delayTimer = '';
@@ -69,31 +10,6 @@ function MenuOpenCloseErgoTimer (dDelay, fActionFunction, node) {
     else
         this.delayTimer     = setTimeout (function() { fActionFunction (); }, dDelay);
 }
-
-//+++++++++++++++++++++
-//logo_BLOCK        +
-//+++++++++++++++++++++
-
-Template.logo_COL.helpers({
-    siteName : function(){
-        return Session.get('siteName');
-    }
-});
-
-//+++++++++++++++++++++
-//headerStatic        +
-//+++++++++++++++++++++
-
-//Template.headerStatic.helpers({
-//    siteColor : function(){
-//        console.log(Session.get('siteColor'));
-//        return Session.get('siteColor');
-//    },
-//    siteColorBorder : function(){
-//        return shadeColor(Session.get('siteColor'), -20);
-//    }
-//});
-
 
 
 Template.topMenu.helpers({
@@ -106,106 +22,9 @@ Template.topMenu.events({
 
 });
 
-Template.topMenu.rendered = function(){
-    var template = this;
-    this.findAll("a").forEach( function(element){
-        var id = element.id;
-        var name = id.substring(0, id.length-4);
-
-
-        $(element).css("color", Session.get(name));
-        $(element).hover(function () {
-                //console.log(Session.get(name));
-           $(this).css({"border-top-color": Session.get(name),
-               "border-top-width":"2px",
-               "border-top-style":"solid"})
-        },
-            function () {
-            $(this).css({"border-top-color": "transparent",
-                "border-top-width":"2px",
-                "border-top-style":"solid"})
-            }
-
-        );
-    });
-};
-
-Template.topMenuStatic.rendered = function(){
-    var template = this;
-    this.findAll("a").forEach( function(element){
-        var id = element.id;
-        var name = id.substring(0, id.length-4);
-
-
-        $(element).css("color", Session.get(name));
-        $(element).hover(function () {
-                $(this).css({"border-top-color": Session.get(name),
-                    "border-top-width":"2px",
-                    "border-top-style":"solid"})
-            },
-            function () {
-                $(this).css({"border-top-color": "transparent",
-                    "border-top-width":"2px",
-                    "border-top-style":"solid"})
-            }
-
-        );
-    });
-    //var menuOffset = $('.top-nav')[0].offsetTop; // replace #menu with the id or class of the target navigation
-
-    $(document).bind('ready scroll', function() {
-        var docScroll = $(document).scrollTop();
-        if (docScroll >= 155) {
-            if (!$('#headerBlock .headerStatic').hasClass('headerStatic-is-active')) {
-                $('#headerBlock .headerStatic').addClass('headerStatic-is-active').css({
-                    top: '-146px',
-                    display: 'block'
-                }).stop().animate({
-                    top: 0
-                }, 250);
-            }
-        } else if (docScroll < 155){
-            if ($('#headerBlock .headerStatic').hasClass('headerStatic-is-active')) {
-                $('#headerBlock .headerStatic').stop().animate({
-                    top: "-86px"
-                }, 250, function(){
-                    $(this).removeClass('headerStatic-is-active').removeAttr('style');
-                });
-            }
-        }
-
-    });
-};
 
 
 
-
-Template.megaMenu.helpers({
-
-});
-
-Template.megaMenu.events({
-
-});
-
-Template.megaMenu.rendered = function(){
-
-};
-
-Template.testMenu.helpers({
-    siteColor : function(){
-        return Session.get("siteColor");
-    }
-});
-
-Template.testMenu.events({
-
-});
-
-Template.testMenu.rendered = function(){
-    makeSuperMenu();
-
-};
 
 var makeSuperMenu = function(){
 //++++++++++++++++++++++++++

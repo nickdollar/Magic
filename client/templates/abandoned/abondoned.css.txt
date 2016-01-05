@@ -1,0 +1,7 @@
+.headerStatic {
+    display: none;
+    position : fixed;
+    top : -146px;
+}
+
+

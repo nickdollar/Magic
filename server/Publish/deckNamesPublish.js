@@ -60,18 +60,28 @@ Meteor.publish('cardbreakdown', function(){
     return _cardBreakDown.find({});
 });
 
-Meteor.publish('cardbreakdowndate', function(){
-    return _cardBreakDownDate.find({});
-});
-
-Meteor.publish('cardbreakdowncards', function(){
-    return _cardBreakDownCards.find({});
+Meteor.publish('deckcardsweekchange', function(){
+    return _deckCardsWeekChange.find({});
 });
 
 Meteor.publish('decksWithoutName', function(format){
     return _Deck.find({format : format, $or : [{name : {$exists : false}}, {name : ""}]}, {limit : 8});
 });
 
+Meteor.publish('deckArchetype', function(format){
+    return _Deck.find({format : format, $or : [{name : {$exists : false}}, {name : ""}]}, {limit : 8});
+});
+
+
+Meteor.publish('formatsCards', function(){
+    var d = new Date();
+    d.setDate(d.getDate()-6);
+    return _formatsCards.find({date : {$gte : d}});
+});
+
+Meteor.publish('simplifiedTables',function(){
+   return _simplifiedTables.find({});
+});
 
 Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
     return {
@@ -93,6 +103,22 @@ Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
                         }
                     }
                 ]
+            }
+        ]
+    }
+});
+
+Meteor.publishComposite("deckEvents", function(format, selectedNameDeck) {
+    return {
+        find: function () {
+            return _Deck.find({name: selectedNameDeck, format : format});
+        },
+        children: [
+            {
+                find: function (deckName) {
+                    console.log(deckName);
+                    return _Event.find({_id : deckName._eventID});
+            }
             }
         ]
     }

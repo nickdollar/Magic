@@ -6,7 +6,21 @@ Meteor.publish('event', function() {
     return _Event.find();
 });
 
+Meteor.publish('metaEvent', function(format, eventType) {
+    return _Event.find({format : format , eventType : eventType});
+});
 
+Meteor.publish('cardsmetavalues', function(){
+    return _cardsMetaValues.find({});
+});
+
+Meteor.publish('cardweekquantity', function(format){
+    return _cardWeekQuantity.find({format : format});
+});
+
+Meteor.publish('deckArchetypes', function(format){
+    return _deckArchetypes.find({format : format});
+});
 
 Meteor.publishComposite("testing", function(format){
     return {
@@ -73,11 +87,13 @@ Meteor.publishComposite("joinExampleCardsPtq", function(format, name ){
 Meteor.publishComposite("joinExampleCardsDaily", function(format, name ){
     return {
         find: function () {
+
             return _Deck.find({eventType : "daily", format : format, name : name}, {limit : 1});
         },
         children: [
             {
                 find: function (deck) {
+                    console.log(deck);
                     return _DeckCards.find({_deckID: deck._id});
                 },
                 children : [
@@ -91,3 +107,4 @@ Meteor.publishComposite("joinExampleCardsDaily", function(format, name ){
         ]
     }
 });
+

@@ -1,5 +1,5 @@
 downloadEvents = function(eventType){
-    _Event.find({eventType : eventType}).forEach(function(event){
+    _Event.find({eventType : eventType, deckStored : {$exists : false}}).forEach(function(event){
         if(!event.hasOwnProperty('deckStored')){
             console.log("Added Event");
             getEventDeckInformation(event);
@@ -10,15 +10,13 @@ downloadEvents = function(eventType){
                     }
                 });
         } else{
-            console.log("Events Exists");
+            console.log("DownloadEvents Events Exists");
         };
     });
 }
 
 getTheEvents = function(format, type, days){
-
     var date = new Date();
-
     for(var i = 0; i < days ; i++){
         var day = pad(date.getDate());
         var month = pad(date.getMonth()+1);
@@ -36,6 +34,8 @@ getTheEvents = function(format, type, days){
             if(deckMeta.length == 0){
                 console.log("Page Doesn't exists");
             }else{
+                var rows = $('tbody tr');
+
                 if(_Event.find({httpAddress : url}, {limit : 1}).count() == 0){
                     var eventInformation = getTheEventNumberAndDate($(deckMeta[0]).text());
                     _Event.insert({
@@ -43,6 +43,7 @@ getTheEvents = function(format, type, days){
                         _eventNumber: eventInformation._eventNumber,
                         format : format,
                         eventType: type,
+                        players : rows.length,
                         httpAddress : url
                     });
                 }else{
@@ -70,7 +71,6 @@ getEventQuantityOfBooters = function(address, callback){
 }
 
 getEventDeckInformation = function(event){
-
     if(event.eventType === "ptq" | event.eventType === "premier" | event.eventType === "mocs"){
         getTop8(event);
     }else{
@@ -221,7 +221,6 @@ getInfoFromPlayerTop8Winner = function(line){
 
 
 getDaily = function(event){
-
     var result = request.getSync(event.httpAddress, {
         encoding: null
     });
@@ -303,6 +302,7 @@ getDaily = function(event){
             console.log("Deck With less than 60: " + _deckID + " " + mainDeckQuantity);
             console.log(event.httpAddress);
             console.log(information.player);
+            _Deck.update({_id : _deckID}, {$set : {missingCards : true}});
         }
         if(sideboardQuantity < 15){
             console.log("Deck With less than 15: " + _deckID + " " + sideboardQuantity);

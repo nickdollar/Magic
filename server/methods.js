@@ -40,13 +40,14 @@ Meteor.methods({
     findOneDeckWithoutName : function(_deckWithoutNameID){
         return newGetOneDeckRank(_deckWithoutNameID);
     },
-    insertNewPlayList : function(youtubelink, deckName){
+    insertNewPlayList : function(youtubelink, deckName, format){
         var playListInformation = getPlayListInformation(youtubelink);
         var file = _Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });
         _DeckPlayList.insert({
             _deckName : deckName,
             _cfsImagesID : file._id,
+            format : format,
             date : playListInformation.date,
             title : playListInformation.title,
             channel : playListInformation.channel,
@@ -55,8 +56,23 @@ Meteor.methods({
         });
     },
     getEvents : function(){
-        getTheEvents("standard", "daily", 15);
-        downloadEvents("daily");
+        metaPerWeek();
+        //addAllCardsOnModernPerWeek();
+        //makeCardDatabase();
+        //updateMeta2();
+        //cardsPercentageValues(format, deckName, 7);
+        //simplifyData();
+        //defineDeckColors();
+        //console.log("getEvents");
+        //getTheEvents("standard", "daily", 7);
+        //downloadEvents("daily");
+        //getTheEvents("legacy", "daily", 7);
+        //downloadEvents("daily");
+        //getTheEvents("vintage", "daily", 7);
+        //downloadEvents("daily");
+        //getTheEvents("modern", "daily", 7);
+        //downloadEvents("daily");
+        //console.log("Done getEvents");
     },
     updateDeckType : function(_id, name){
         addNameToDeck(_selectedDeckID, name);
@@ -65,9 +81,31 @@ Meteor.methods({
         //});
     },
     updateMetaMethod : function(){
-        updateMeta2();
+        updateMeta();
     },
     cardsPercentage : function(format, deckName){
         cardsPercentageValues(format, deckName, 7);
+    },
+    cardUpdate : function(){
+        lastCardValues();
+        //addAllCardsOnModernPerWeek();
+    },
+    getCardMeta : function(options){
+
+        var values = metaPerWeek(options);
+        console.log("Card Meta: " + memorySizeOf(values));
+        return values;
+    },
+    getDeckMeta : function(daily3_1, daily4_0, ptqTop8, ptqTop9_16, ptqTop17_32){
+        var values = deckMetaTest(daily3_1, daily4_0, ptqTop8, ptqTop9_16, ptqTop17_32);
+        console.log("Deck Meta: " + memorySizeOf(values));
+        return values;
+    },
+    addAArchetypeAndNameToArchetype : function(deckName, archetype, format){
+        addArchetypeAndDeckToArchetype(deckName, archetype, format);
+    },
+    removeArchetype : function(archetype){
+        _deckArchetypes.remove({archetype : archetype});
     }
 });
+

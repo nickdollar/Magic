@@ -1,0 +1,107 @@
+
+<template name="cardMetaBox">
+    <div class="border-divider">
+        <div class="miniTable rightBottomBorder">
+            <table class="table borderless smallMetaTable">
+                <thead>
+                <tr>
+                    <th colspan="2">Card</th>
+                    <th>CHANGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each cardsMetaChange}}
+                    <tr>
+                        <td>{{tableIndex @index "decksNames"}}</td>
+                        <td><a id="deckLink" href="">{{name}}</a></td>
+                        <td class="weekChange">{{change}}%</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template name="eventMetaBox">
+
+    <div class="border-divider">
+        <div class="miniTable rightBottomBorder">
+            <table class="table borderless smallMetaTable">
+                <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Players</th>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each eventMetaChange}}
+                    <tr>
+                        <td><a id="deckLink" href="">{{eventType}}</a></td>
+                        <td class="weekChange">{{players}}</td>
+                        <td class="weekChange">{{datePretify date}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+
+<template name="lastestMetaBox">
+    <div class="border-divider">
+        <div class="miniTable rightBottomBorder">
+            <ul class="list-group">
+                {{#each newDecks}}
+                   <li class="list-group-item">Deck : {{name}}</li>
+                {{/each}}
+                {{#each newCards}}
+                    <li class="list-group-item">Card : {{name}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template name="deckMetaBox">
+    <div class="border-divider">
+        <div class="miniTable rightBottomBorder">
+            <table class="table borderless smallMetaTable">
+                <thead>
+                <tr>
+                    <th colspan="3">DECK</th>
+                    <th>CHANGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each meta}}
+                    <tr>
+                        <td>{{tableIndex @index "decksNames"}}</td>
+                        <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                        <td class="positionChange">
+                            {{#if position1 upDown}}
+                                <span>0</span><span class="neutro"></span>
+                                {{else}} {{#if position2 upDown}}
+                                    <span>{{change}}</span><span class="greenArrow-up"></span>
+                                {{else}}
+                                    <span>{{change}}</span><span class="redArrow-down"></span>
+                                {{/if}}
+                            {{/if}}
+                        </td>
+                        <td class="weekChange">{{weekChange}}%</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template name="deckPercentChanges">
+        <div class="metaMainSectionTitle">
+            <a id="deckLink" href="{{pathFor 'selectedMeta' format = format}}">{{format}}</a>
+        </div>
+</template>
+

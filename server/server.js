@@ -7,7 +7,7 @@ newGetOneDeckRank = function(_deckWithoutNameID){
     var value = 0;
     var results = [];
     for(var i = 0; i < deckNames.length; i++){
-        var _deckWithNames = _Deck.find({format : deckWithoutName.format, name : deckNames[i].name}).fetch();
+        var _deckWithNames = _Deck.find({format : deckWithoutName.format, name : deckNames[i].name}, {limit : 3}).fetch();
 
         for(var j = 0; j < _deckWithNames.length; j++)
         {
@@ -17,7 +17,6 @@ newGetOneDeckRank = function(_deckWithoutNameID){
             value = parseFloat(prettifyPercentage((matches.positive.length)/(matches.positive.length + matches.negative.length),2));
 
             if(value < 50){
-                //console.log("BREAK: " + value);
                 break;
             }
 
@@ -87,4 +86,54 @@ getPlayListInformation = function(youtubeLink){
     information.videosQuantity =  playListQuantity;
 
     return information;
+}
+
+
+defineDeckColors = function(){
+    console.log("Start defineDeckColors");
+    var decksNames = _DeckNames.find({}).fetch();
+
+    var colorsOptions = ["G", "B", "R", "W", "U"]
+
+
+
+    for(var i = 0; i < decksNames.length ; i++){
+        var biggestValue = 0;
+
+        for(var j = 0; j < colorsOptions.length; j++){
+            if(decksNames[i].hasOwnProperty(colorsOptions[j])){
+                if(decksNames[i][colorsOptions[j]] > biggestValue){
+                    biggestValue = decksNames[i][colorsOptions[j]];
+                }
+            }
+        }
+
+        var colors = "";
+        var minValues = 0.5;
+        //check the number
+
+        for(var j = 0; j < colorsOptions.length; j++) {
+            if (decksNames[i].hasOwnProperty(colorsOptions[j])) {
+                if ((decksNames[i][colorsOptions[j]] / biggestValue) > minValues) {
+                    colors += colorsOptions[j];
+                }
+            }
+        }
+
+        var randomPrice = getRandomInt(0, 2000);
+        var deckType = "";
+        if(randomPrice % 3 == 0){
+            deckType = "aggro";
+        }else if(randomPrice % 3 ==1) {
+            deckType = "combo";
+        }else if(randomPrice % 3 ==2) {
+            deckType = "control";
+        }
+
+        _DeckNames.update({_id : decksNames[i]._id},
+        {
+            $set : {colors : colors, price : randomPrice, type : deckType}
+        });
+    }
+    console.log("End defineDeckColors");
 }
