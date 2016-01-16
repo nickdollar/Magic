@@ -1,9 +1,10 @@
 <template name="ApplicationLayout">
-    {{>topMenu}}
-    {{>tabbar}}
-    <div class="container">
-
-        <div class="row">{{>yield}}</div>
+    <div class="header">
+        {{>topMenu}}
+        {{>typeMenu}}
+    </div>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:800,600' rel='stylesheet' type='text/css'>    <div class="container content">
+        {{>yield}}
     </div>
 </template>
 
@@ -36,29 +37,26 @@
 </template>
 
 <template name="deckFP">
-    <div class="row">
-        {{#each metas}}
+    {{#each metas}}
+        <div class="row">
             <div class="col-xs-12">
                 <div class="row">
-                    {{> decksFormatChanges format=this}}
+                    {{>decksFormatChanges format = this}}
                 </div>
                 <div class="row">
-                    <div class="col-xs-3 whiteBackground border-divider" >
+                    <div class="col-xs-4">
                         {{>newPlayLists}}
                     </div>
-                    <div class="col-xs-3 whiteBackground border-divider" >
-                        {{>nextStreamEventBox}}
-                    </div>
-                    <div class="col-xs-3 whiteBackground border-divider" >
+                    <div class="col-xs-4">
                         {{>newArticles}}
                     </div>
-                    <div class="col-xs-3 whiteBackground border-divider" >
+                    <div class="col-xs-4">
                         {{>newPrimesAndUpdates}}
                     </div>
                 </div>
             </div>
-        {{/each}}
-    </div>
+        </div>
+    {{/each}}
 </template>
 
 <template name="selectADeck">
@@ -70,53 +68,47 @@
         </div>
         <div class="col-xs-10">
             <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
-                        {{>deckList}}
-                    </div>
-                </div>
+                {{>deckList}}
             </div>
             <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
-                        {{>archetypesList}}
-                    </div>
-                </div>
+                {{>archetypesList}}
             </div>
         </div>
     </div>
 </template>
 
 <template name="deckSelected">
-    <div class="col-xs-12">
-        <div class="row">
-            {{>adminArea}}
+    <div class="row">
+        <div class="col-xs-12">
+            {{>deckAdminArea}}
         </div>
-        <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
             {{>deckOptions}}
         </div>
-        {{#if isSelected}}
-            <div class="row">
-                <div class="col-xs-7">
-                    {{>exampleDeck_COL}}
-                </div>
-                <div class="col-xs-5">
-                    {{>events_COL}}
-                </div>
-            </div>
-            <div class="row">
-                {{>playList_ROW}}
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    {{>cardsPercentage_ROW}}
-                </div>
-                <div class="col-xs-6">
-                    {{>cardsPercentageSideboard_ROW}}
-                </div>
-            </div>
-        {{/if}}
     </div>
+    {{#if isSelected}}
+        <div class="row">
+            <div class="col-xs-7">
+                {{>exampleDeck_COL}}
+            </div>
+            <div class="col-xs-5">
+                {{>events_COL}}
+            </div>
+        </div>
+        <div class="row">
+            {{>playList_ROW}}
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                {{>cardsPercentage_ROW}}
+            </div>
+            <div class="col-xs-6">
+                {{>cardsPercentageSideboard_ROW}}
+            </div>
+        </div>
+    {{/if}}
 </template>
 
 <template name="eventFP">
@@ -132,12 +124,12 @@
 <template name="selectedMeta">
     <div class="row">
         <div class="col-xs-7">
-                <div class="row">
-                     {{>metaTableOptions}}
-                </div>
-                <div class="row">
-                    {{>newMetaTable_COL}}
-                </div>
+            <div class="row">
+                 {{>metaTableOptions}}
+            </div>
+            <div class="row">
+                {{>newMetaTable_COL}}
+            </div>
         </div>
         <div class="col-xs-5" >
             <div class="metaEventTable">
@@ -161,10 +153,8 @@
             </div>
             <div class="col-xs-9 col-md-10">
                 {{#if selectedDeck}}
-
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
-
                             <div class="row">
                                 <div class="col-xs-12">
                                     {{>deckList_COL}}
@@ -182,7 +172,6 @@
                             </div>
                         </div>
                     </div>
-
                 {{/if}}
             </div>
         </div>

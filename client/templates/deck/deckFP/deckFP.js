@@ -4,12 +4,3 @@ Template.deckFP.helpers({
         return metas;
     }
 });
-
-
-
-
-Template.newPlayLists.helpers({
-    playlists : function(){
-        return _DeckPlayList.find({});
-    }
-});

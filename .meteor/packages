@@ -4,10 +4,8 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-jquery
 iron:router
 handlebars
-mizzao:jquery-ui
 reywood:publish-composite
 templates:tabs
 less
@@ -15,7 +13,6 @@ underscore
 manuel:reactivearray
 tmeasday:publish-counts
 mizzao:autocomplete
-sergeyt:typeahead
 mrt:cheerio
 froatsnook:request
 standard-minifiers
@@ -42,8 +39,7 @@ meteorhacks:npm
 
 
 npm-container
-maazalik:malihu-jquery-custom-scrollbar
 alethes:pages
-rcy:nouislider
-rajit:bootstrap3-datepicker
+jquery
 tsega:bootstrap3-datetimepicker
+rajit:bootstrap3-datepicker

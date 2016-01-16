@@ -14,7 +14,7 @@ Template.registerHelper("getManaCss", function(value, options) {
     var res;
 
     while((res = manaRegex.exec( manacost)) !== null) {
-        if(res[1] === "X"      ) {str.push(  { mana :'mana-x' }) }
+        if(res[1] === "X"      ) {str.push(  {mana :'mana-x' }) }
         else if(res[1] === "1" ) {str.push(  {mana :'mana-1' }) }
         else if(res[1] === "2" ) {str.push(  {mana :'mana-2' }) }
         else if(res[1] === "3" ) {str.push(  {mana :'mana-3' }) }

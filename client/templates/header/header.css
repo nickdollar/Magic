@@ -1,31 +1,32 @@
-.navbar{
-    margin-bottom: 0px;
-}
+/*.navbar{*/
+    /*margin-bottom: 0px;*/
+    /*background-color: #23282d;*/
 
-.navbar-nav  li {
-    float: none;
-    display: inline-block;
-}
+/*}*/
 
-.nav-tabs-center {
-    display: table;
-    margin:0 auto;
-}
+/*.navbar-default .navbar-nav > li > a {*/
+    /*color: white;*/
+    /*font-family: 'Open Sans', sans-serif;*/
+    /*font-weight: 600;*/
+    /*font-size: 13px;*/
+/*}*/
 
-.navbar-brand,
-.navbar-nav li a {
-    line-height: 20px;
-    height: 20px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
+/*.navbar-default .navbar-nav > li > a:hover{*/
+    /*color: green;*/
+/*}*/
 
-.navbar-height {
-    min-height: 32px;
-    height: 32px;
-    border: 0;
-}
+/*.navbar-nav li a {*/
+    /*line-height: 20px;*/
+    /*height: 20px;*/
+    /*padding-top: 6px;*/
+    /*padding-bottom: 6px;*/
+    /*color: white;*/
+/*}*/
 
-.nav.nav-tabs ul li :hover {
-    background-color: #0092ef;
-}
+/*.navbar-height {*/
+    /*min-height: 32px;*/
+    /*height: 32px;*/
+    /*border: 0;*/
+/*}*/
+
+

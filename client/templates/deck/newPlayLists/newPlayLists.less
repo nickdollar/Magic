@@ -1,0 +1,95 @@
+@playlist-left-margin:                -15px;
+@playlist-remove-bottom-margin:       0px;
+@playlist-cool-border-right:          1px solid #e5e5e5;
+@playlist-cool-border-bottom:         1px solid #dfdfdd;
+@playlist-item-top-padding:           10px;
+@playlist-bg:                         white;
+@playlist-item-bottom-padding:        10px;
+@playlist-top-bar-width:              100%;
+@playlist-top-bar:                    5px solid red;
+@playlist-top-position:               absolute;
+@playlist-padding:                    0 10px 0 10px;
+@playlist-heading-height:             30px;
+@playlist-heading-width:              100%;
+@playlist-line-height:                30px;
+@playlist-ul-height:                  252px;
+
+@playlist-li-height:                  @playlist-ul-height/3;
+@playlist-li-padding:                 0px 0px 0px 0px;
+@playlist-li-border:                  1px 0px 1px 0px;
+@playlist-li-display:                 block;
+@playlist-border-top-left-radius:     0px;
+@playlist-border-top-right-radius:    0px;
+
+
+@playlist-image-float:                left;
+@playlist-image-height:               60px;
+@playlist-image-width:                80px;
+@playlist-image-display:              inline-block;
+@playlist-information-margin-left:    10px;
+@playlist-information-height:         60px;
+@playlist-information-width:          160px;
+@playlist-information-display:        inline-block;
+@playlist-information-font-family:    "Open sans";
+@playlist-information-font-weight:    800;
+@playlist-information-font-size:      11px;
+
+.newPlayListsBox{
+  margin-left:        @playlist-left-margin;
+  margin-right:       @playlist-left-margin;
+  border-right:       @playlist-cool-border-right;
+  border-bottom:      @playlist-cool-border-bottom;
+  background-color:   @playlist-bg;
+
+  &:before {
+    width: @playlist-top-bar-width;
+    border-top: @playlist-top-bar;
+    position: absolute;
+    content: "";
+  }
+  .wrap{
+    padding: @playlist-padding;
+    .heading {
+      padding: 5px 0px 5px 0px;
+      height: @playlist-heading-height;
+      width: @playlist-heading-width;
+      line-height: @playlist-line-height;
+    }
+    ul{
+      margin-bottom: @playlist-remove-bottom-margin;
+      height: @playlist-ul-height;
+      > li {
+        padding: @playlist-li-padding;
+        border-width: @playlist-li-border;
+        border-top-left-radius: @playlist-border-top-left-radius;
+        border-top-right-radius: @playlist-border-top-right-radius;
+        height: @playlist-li-height;
+
+        &:last-child {
+          border-bottom-width: 0px;
+        }
+
+        > a {
+          padding-top: @playlist-item-top-padding;
+          padding-bottom:  @playlist-item-bottom-padding;
+          display: @playlist-li-display;
+          img {
+            float: @playlist-image-float;
+            height: @playlist-image-height;
+            width: @playlist-image-width;
+            display: @playlist-image-display;
+          }
+          .information{
+            margin-left: @playlist-information-margin-left;
+            height: @playlist-information-height;
+            width: @playlist-information-width;
+            display: @playlist-information-display;
+            font-family: @playlist-information-font-family;
+            font-weight: @playlist-information-font-weight;
+            font-size: @playlist-information-font-size;
+          }
+        }
+      }
+    }
+  }
+}

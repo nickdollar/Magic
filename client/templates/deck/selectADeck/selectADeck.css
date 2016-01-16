@@ -1,54 +1,7 @@
-/*.deckBox {*/
-    /*border-bottom: 8px solid #f4f4f2;*/
-    /*background: white;*/
-/*}*/
-
-/*.deckBox:first-child {*/
-    /*border-right: 4px solid #f4f4f2;*/
-/*}*/
-
-/*.deckBox:not(:first-child):not(:last-child){*/
-    /*border-right: 4px solid #f4f4f2;*/
-    /*border-left: 4px solid #f4f4f2;*/
-/*}*/
-
-/*.deckBox:last-child {*/
-    /*border-left: 4px solid #f4f4f2;*/
-/*}*/
-
-
-
-.box {
-    border-bottom: 8px solid #f4f4f2;
-    background: white;
-}
-
-.box:first-child {
-    border-right: 4px solid #f4f4f2;
-}
-
-.box:not(:first-child):not(:last-child){
-    border-right: 4px solid #f4f4f2;
-    border-left: 4px solid #f4f4f2;
-}
-
-.box:last-child {
-    border-left: 4px solid #f4f4f2;
-}
-
-
-
-
 .borbor {
     height: 40px;
-
     border-right: 1px solid #e5e5e5;
     border-bottom: 1px solid #dfdfdd;
-}
-
-.narrowMenuSearch {
-    background: white;
-    margin-right: 10px;
 }
 
 .ui-slider-horizontal {
@@ -77,3 +30,5 @@
     border: 0;
     box-sizing: border-box;
 }
+
+

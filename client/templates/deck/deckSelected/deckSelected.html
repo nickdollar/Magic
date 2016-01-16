@@ -1,28 +1,28 @@
 <template name="events_COL">
-        <div class="rightDiv">
-            <div class="row">
-                <table class="table">
-                    <thead>
+    <div class="rightDiv">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-6" >EVENT</th>
+                    <th class="col-xs-2 date">Position</th>
+                    <th class="col-xs-1 date">Players</th>
+                    <th class="col-xs-3 date">DATE</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each event}}
                     <tr>
-                        <th class="col-xs-6" >EVENT</th>
-                        <th class="col-xs-2 date">Position</th>
-                        <th class="col-xs-1 date">Players</th>
-                        <th class="col-xs-3 date">DATE</th>
+                        <!--<td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>-->
+                        <td>{{position}}</td>
+                        <td class="date">{{players}}</td>
+                        <td class="date">{{datePretify date}}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {{#each event}}
-                        <tr>
-                            <td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>
-                            <td>{{position}}</td>
-                            <td class="date">{{players}}</td>
-                            <td class="date">{{datePretify date}}</td>
-                        </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
-            </div>
+                {{/each}}
+                </tbody>
+            </table>
         </div>
+    </div>
 </template>
 
 <template name="playList_ROW">
@@ -162,29 +162,3 @@
     {{/with}}
 </template>
 
-<template name="adminArea">
-    <div class="col-xs-12">
-        <div class="row">Admin</div>
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="row"></div>
-                <div class="ui-widget">
-                    <label>Archetype</label>
-                    <select id="combobox">
-                        <option value="">Base</option>
-                        {{#each archetypesOptions}}
-                            <option value="{{archetype}}" {{selected}}>{{archetype}}</option>
-                        {{/each}}
-                   </select>
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <button type="submit" class="btn btn-default updateArchetype">Update Archetype</button>
-                <button type="submit" class="btn btn-default removeArchetype">Remove</button>
-            </div>
-        </div>
-        <div class="row">
-            <button type="submit" class="btn btn-default getDeckPercentage">getDeckPercentage</button>
-        </div>
-    </div>
-</template>

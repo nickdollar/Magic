@@ -1,0 +1,102 @@
+@bg:                        #E62117;
+@nav-min-height:            0px;
+@nav-border-bottom:         0px;
+@link-color:                #eee;
+@link-hover-color:          #333;
+@link-hover-bg:             transparent;
+@link-active-color:         black;
+@link-active-bg:            darken(@bg, 6.5%);
+@link-disabled-color:       #ccc;
+@link-font-family:          'Open Sans';
+@link-font-weight:          800;
+@link-disabled-bg:          transparent;
+@padding-top:               5px;
+@padding-bottom:            5px;
+
+.typeMenu {
+
+  .navbar-nav {
+    display: inline-block;
+    float: none;
+    vertical-align: top;
+  }
+
+  .navbar {
+
+    text-align: center;
+    border-bottom: 0px;
+    background-color: @bg;
+    min-height: @nav-min-height;
+    margin-bottom: 0px;
+
+    .navbar-nav {
+      > li > a {
+        color: @link-color;
+        padding-top:   @padding-top;
+        padding-bottom:   @padding-bottom;
+        font-family: @link-font-family;
+        font-weight: @link-font-weight;
+
+        &:hover,
+        &:focus {
+          color: @link-active-color;
+          background-color: @link-hover-bg;
+        }
+      }
+      > .active > a {
+        &,
+        &:hover,
+        &:focus {
+          color: @link-active-color;
+          background-color: @link-hover-bg;
+        }
+      }
+      > .disabled > a {
+        &,
+        &:hover,
+        &:focus {
+          color: @link-disabled-color;
+          background-color: @link-hover-bg;
+        }
+      }
+    }
+
+    //.navbar-toggle {
+    //  border-color: @navbar-default-toggle-border-color;
+    //  &:hover,
+    //  &:focus {
+    //    background-color: @navbar-default-toggle-hover-bg;
+    //  }
+    //  .icon-bar {
+    //    background-color: @navbar-default-toggle-icon-bar-bg;
+    //  }
+    //}
+
+    // Links in navbars
+    //
+    // Add a class to ensure links outside the navbar nav are colored correctly.
+
+    .navbar-link {
+      color: @link-color;
+      &:hover {
+        color: @link-hover-color;
+      }
+    }
+
+    .btn-link {
+      color: @link-color;
+      &:hover,
+      &:focus {
+        color: @link-hover-color;
+      }
+      &[disabled],
+      fieldset[disabled] & {
+        &:hover,
+        &:focus {
+          color: @link-disabled-color;
+        }
+      }
+    }
+  }
+}
+

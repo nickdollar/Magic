@@ -19,7 +19,10 @@
                     {{#each meta format}}
                         <tr>
                             <td><span>{{math @index "+" 1}}</span></td>
-                            <td><a id="deckLink" href="{{pathFor 'decks' format = ../format deckName = name}}">{{name}}</a></td>
+                            <td><a>
+                                <!--id="deckLink" href="{{pathFor 'decks' format = ../format deckName = name}}">-->
+                                {{name}}
+                            </a></td>
                             <td class="positionChange">
                                 <span>1</span><span class="greenArrow-up"></span>
                             </td>
@@ -63,7 +66,9 @@
                 <tbody>
                 {{#each event}}
                 <tr>
-                    <td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>
+                    <td><a>
+                        <!--class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">-->
+                        MTGO Modern Daily</a></td>
                     <td class="date">{{datePretify date}}</td>
                 </tr>
                 {{/each}}
@@ -88,7 +93,9 @@
             {{#each metaTest}}
             <tr>
                 <td><span>{{tableIndex @index "decksNames"}}</span></td>
-                <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                <td><a>
+                        <!--id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}"-->
+                        {{name}}</a></td>
                 <td class="positionChange">
                     {{#if position1 upDown}}
                         <span>0</span><span class="neutro"></span>
