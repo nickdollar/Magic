@@ -1,0 +1,30 @@
+<template name="deckOptions">
+    <div class="deckOptions">
+        {{#with decksOptions}}
+            {{#each decksNames}}
+                <div id="owlDeckOptions">
+                    <div class="deckBox">
+                        <a class="thumbnail" href="{{pathFor 'deckSelected' format = format archetype = archetype deckSelected = fixForLink}}">
+                            <div class="firstLine">
+                                <div class="deckName">
+                                {{name}}
+                                </div>
+                                <div class="deckMana">
+                                {{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}
+                                </div>
+                            </div>
+                        <div class="secondLine">
+                            <div class="type">
+                            {{type}}
+                            </div>
+                            <div class="values">
+                            ${{price}}
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            {{/each}}
+        {{/with}}
+    </div>
+</template>

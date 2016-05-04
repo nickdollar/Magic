@@ -1942,3 +1942,480 @@ updateMeta = function(){
 //        );
 //    });
 //};
+
+divideDeckByDate = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]};
+
+    var dates = getDateSyntax(options.dates);
+    var positions = positionValues(options.types);
+    var formatDecks = _DeckNames.find({format : "modern"}).map(function(deckName){ return {name : deckName.name, quantity : 0}});
+
+    var values = {};
+    for(var h = 0; h < dates.length; h++){
+        var date = dates[h];
+        for(var i = 0; i < positions.length; i++){
+            var position = positions[i];
+            var positionQuantity = _Deck.find({format : "modern", $or : [position.position], date : {$gte : date.date }}).count();
+            for(var j = 0; j < formatDecks.length; j++ ){
+                formatDecks[j].quantity = _Deck.find({name : formatDecks[j].name, format : "modern", $or : [position.position], date : {$gte : date.date }}).count();
+                if(formatDecks[j].quantity > 0){
+                    if (typeof values[date.type] === 'undefined') { values[date.type] = {} }
+                    if (typeof values[date.type][position.name] === 'undefined') { values[date.type][position.name] = {quantity : positionQuantity, decks : []} }
+                    if (typeof values[date.type][position.name]["decks"][formatDecks[j].name] === 'undefined') { values[date.type][position.name]["decks"][formatDecks[j].name] = 0 }
+                    values[date.type][position.name]["decks"][formatDecks[j].name] = formatDecks[j].quantity;
+                }
+            }
+        }
+    }
+    return values;
+};
+
+
+createCombinationsValues = function(values){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]};
+    var typesCombination = permutationAndCombination(options.types);
+    var combinationsValues = {};
+    for(var i = 0; i < options.dates.length; i++){
+        var date = options.dates[i];
+        if (typeof values[date] === 'undefined') { continue; };
+        for(var j = 0; j < typesCombination.length; j++){
+            var combination = typesCombination[j];
+            for(var k = 0; k < combination.length; k++){
+                if (typeof values[date][combination[k]] === 'undefined') { continue };
+                for(var key in values[date][combination[k]]["decks"]){
+                    if (typeof combinationsValues[date] === 'undefined') { combinationsValues[date] = {} };
+                    if (typeof combinationsValues[date][combination.toString()] === 'undefined') { combinationsValues[date][combination.toString()] = {quantity : 0, decks : {}} };
+                    if (typeof combinationsValues[date][combination.toString()]["decks"][key] === 'undefined') { combinationsValues[date][combination.toString()]["decks"][key] = 0};
+                    combinationsValues[date][combination.toString()]["decks"][key] += values[date][combination[k]]["decks"][key];
+                }
+                combinationsValues[date][combination.toString()]["quantity"] += values[date][combination[k]].quantity
+            }
+        }
+    }
+    return combinationsValues;
+}
+
+createPercentage = function(values){
+    for(var date in values){
+        for(var type in values[date]){
+            for(var deckName in values[date][type]["decks"]){
+                values[date][type]["decks"][deckName] = {quantity : values[date][type]["decks"][deckName], perc : values[date][type]["decks"][deckName]/values[date][type]["quantity"]};
+            }
+        }
+    }
+
+    for(var date in values) {
+        for (var type in values[date]) {
+            _MetaValues.update({option: "deck", date: date, type: type},
+                {
+                    $set: {quantity: values[date][type]["quantity"], decks: values[date][type]["decks"]},
+                    $setOnInsert: {option: "deck", date: date, type: type, quantity: values[date][type]["quantity"], decks: values[date][type]["decks"]}
+                },
+                {
+                    upsert: true
+                });
+        }
+    };
+    return values;
+}
+
+createArchetypes = function(deckValues){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]};
+    var typesCombinations = permutationAndCombination(options.types);
+
+
+    var archetypes = _deckArchetypes.find({format : "modern"}).map(function(x){
+        var decks = x.deckNames.map(function(deck){
+            return deck.name;
+        });
+        return {name : x.archetype, decks : decks};
+    });
+
+    var archetypesResults = [];
+    for(var date in deckValues){
+        for(var typesComb in deckValues[date]){
+            for(var i = 0; i < archetypes.length; i++){
+                var archetype = archetypes[i];
+                var total = 0;
+                for(var j = 0; j < archetype.decks.length; j++){
+                    var deck = archetype.decks[j];
+                    if (typeof archetypesResults[date] === 'undefined') { archetypesResults[date] = {} };
+                    if (typeof archetypesResults[date][typesComb] === 'undefined') { archetypesResults[date][typesComb] = {} };
+                    if (typeof archetypesResults[date][typesComb][archetype.name] === 'undefined') { archetypesResults[date][typesComb][archetype.name] = {total : 0, decks : []} };
+                    if (typeof deckValues[date][typesComb]["decks"][deck] === 'undefined') {
+                        archetypesResults[date][typesComb][archetype.name]["decks"][deck] = 0;
+                    }else{
+                        archetypesResults[date][typesComb][archetype.name]["decks"][deck] = deckValues[date][typesComb]["decks"][deck];
+                        archetypesResults[date][typesComb][archetype.name]["total"] += deckValues[date][typesComb]["decks"][deck][perc];
+                    }
+                };
+            }
+        }
+    }
+    return archetypesResults;
+};
+
+weeklyArchetypeChange = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+        dates = options.dates,
+        typesCombinations = permutationAndCombination(options.types),
+        archetypes = _deckArchetypes.find({format : "modern"}).fetch();
+
+    dates.forEach(function(date, j) {
+        typesCombinations.forEach(function (typeCombination) {
+            var archetypeQuantity = 0;
+            var query = _MetaValues.findOne({option : "deck", type : typeCombination.toString(), date : date});
+            if(query == null){ return }
+            var archetypesPercentage = [];
+            archetypes.forEach(function(archetype, i){
+                var deckNames = archetype.deckNames;
+
+                var totalPercentage = 0, totalQuantity = 0;
+                deckNames.forEach(function(name){
+                    var result = query["values"].filter(function( obj ) {
+                        return obj.name == name.name;
+                    });
+                    if(result.length != 1) return;
+
+                    totalPercentage += result[0].percentage;
+                    totalQuantity += result[0].quantity;
+                    archetypeQuantity += result[0].quantity;
+                });
+                archetypesPercentage.push({name : archetype.archetype, quantity : totalQuantity, percentageBonita : prettifyPercentage(totalPercentage, 2), percentage : totalPercentage});
+            });
+
+            optionPosition(archetypesPercentage);
+            weeklyDeckBlockChange2(archetypesPercentage, date, typeCombination);
+            weeklyDeckBlockAdding2(archetypesPercentage, date, typeCombination);
+
+            archetypesPercentage.forEach(function(deck){
+                console.log(deck);
+                var baseValues = {option: "deck", type : typeCombination.toString, format : "modern"};
+                var newValues = {option: "deck", type : typeCombination.toString, format : "modern"};
+                for(var key in deck){
+                    newValues[key] = deck[key];
+                }
+
+                //_temp.update(baseValues,
+                //    {
+                //        $set: deck,
+                //        $setOnInsert: newValues
+                //    },
+                //    {
+                //        upsert: true
+                //    }
+                //);
+            });
+
+
+
+
+            //_MetaValues.update({option: "archetype", date: date, type: type.toString()},
+            //    {
+            //        $set: {quantity: archetypeQuantity, values: archetypesPercentage},
+            //        $setOnInsert: {option: "archetype", date: date, type: type.toString(), quantity: archetypeQuantity, values: archetypesPercentage}
+            //    },
+            //    {
+            //        upsert: true
+            //    }
+            //);
+        });
+    });
+};
+
+getWeeklyPosition = function(values, names, weeksQuantity){
+    var positions = [];
+    for(var i = 0; i < weeksQuantity; i++){
+        var weeks = [];
+        values.forEach(function(decks){
+            weeks.push({name : decks.name, value : decks.percentage[i]});
+        });
+
+        weeks.sort(function(a, b){
+            return b.value - a.value;
+        });
+
+        var position = 0;
+        var base_value = 9999;
+        weeks.forEach(function(deck){
+            if(deck.value == base_value){
+                deck.position = position;
+            }else if(deck.value < base_value){
+                position++;
+                base_value = deck.value;
+                deck.position = position;
+            }
+        });
+        positions.push(weeks);
+    };
+
+    var optionValues = [];
+    names.forEach(function(name){
+        var weekValues = [];
+        positions.forEach(function(week){
+            var weekValue = week.find(function(obj){
+                return obj.name == name;
+            });
+            weekValues.push(weekValue.position);
+        });
+        var index = values.findIndex(function(obj){
+            return obj.name == name;
+        });
+        values[index].position = weekValues;
+    });
+    _temp.insert({values : values});
+};
+
+weeklyPosition = function(position){
+    var options = ["deckBlocks", "archetypesBlock", "deckBlocksAdding", "archetypeBlocksAdding"];
+    options.forEach(function(option){
+        _MetaValues.find({option : option}).forEach(function(value){
+            var weeksQuantity = value.values[0].percentage.length;
+            var positions = [];
+            for(var i = 0; i < weeksQuantity; i++){
+                var weeks = [];
+                value.values.forEach(function(decks){
+                    weeks.push({name : decks.name, value : decks.percentage[i]});
+                });
+                weeks.sort(function(a, b){
+                    return b.value - a.value;
+                });
+                var position = 0;
+                var base_value = 9999;
+                weeks.forEach(function(deck){
+                    if(deck.value == base_value){
+                        deck.position = position;
+                    }else if(deck.value < base_value){
+                        position++;
+                        base_value = deck.value;
+                        deck.position = position;
+                    }
+                });
+                positions.push(weeks);
+            };
+            var deckNames = positions[0].map(function(deck){
+                return deck.name
+            });
+            var optionValues = [];
+            deckNames.forEach(function(name){
+                var weekValues = [];
+                positions.forEach(function(week){
+                    var weekValue = week.find(function(obj){
+                       return obj.name == name;
+                    });
+                    weekValues.push(weekValue.position);
+                });
+                optionValues.push({name : name, position : weekValues});
+            });
+            _temp.insert({value : optionValues});
+        });
+    });
+}
+
+
+weeklyArchetypeBlockChange = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+        typesCombinations = permutationAndCombination(options.types),
+        archetypes = _deckArchetypes.find({format : "modern"}).fetch(),
+        archetypesNames = _deckArchetypes.find({format : "modern"}).map(function(obj){return obj.archetype});
+
+    typesCombinations.forEach(function (typeCombination, j) {
+        var query = _MetaValues.findOne({option : "deckBlocks", type : typeCombination.toString()});
+        if(query == null){ return }
+
+        var archetypesValues = [];
+        var weeksQuantity = 0;
+        archetypes.forEach(function(archetype, i){
+            var deckNames = archetype.deckNames,
+                archetypePercentage = [],
+                archetypeQuantity = [];
+            deckNames.forEach(function(name) {
+                var deckArray = query["values"].find(function (obj) {
+                    return obj.name == name.name;
+                });
+                weeksQuantity = deckArray.percentage.length;
+                if(deckArray == null) return;
+                if(deckArray.percentage.length != archetypePercentage.length){
+                    archetypePercentage = deckArray.percentage.slice();
+                    archetypeQuantity = deckArray.weekDataQuantity.slice();
+                }else{
+                    for(var k = 0; k < deckArray.percentage.length; k++){
+                        archetypePercentage[k] += deckArray.percentage[k];
+                        archetypeQuantity[k] += deckArray.weekDataQuantity[k];
+                    }
+                }
+            });
+            archetypesValues.push({name : archetype.archetype, percentage : archetypePercentage, weekDataQuantity : archetypeQuantity});
+        });
+
+        getWeeklyPosition(archetypesValues, archetypesNames, weeksQuantity);
+        //_MetaValues.update({option: "archetypeBlocks", type : typeCombination.toString()},
+        //    {
+        //        $set: {values : archetypesValues},
+        //        $setOnInsert: {option: "archetypeBlocks", type : typeCombination.toString(), values : archetypesValues}
+        //    },
+        //    {
+        //        upsert: true
+        //    }
+        //);
+    });
+};
+
+
+
+
+
+
+weeklyArchetypeAddingBlockChange = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+    typesCombinations = permutationAndCombination(options.types),
+    archetypes = _deckArchetypes.find({format : "modern"}).fetch();
+
+    typesCombinations.forEach(function (typeCombination, j) {
+        var query = _MetaValues.findOne({option : "deckBlocksAdding", type : typeCombination.toString()});
+        if(query == null){ return }
+
+        var archetypesValues = [];
+        archetypes.forEach(function(archetype, i){
+            var deckNames = archetype.deckNames,
+                archetypePercentage = [],
+                archetypeQuantity = [];
+            deckNames.forEach(function(name) {
+                var deckArray = query["values"].find(function (obj) {
+                    return obj.name == name.name;
+                });
+                if(deckArray == null) return;
+                if(deckArray.percentage.length != archetypePercentage.length){
+                    archetypePercentage = deckArray.percentage.slice();
+                    archetypeQuantity = deckArray.weekDataQuantity.slice();
+                }else{
+                    for(var k = 0; k < deckArray.percentage.length; k++){
+                        archetypePercentage[k] += deckArray.percentage[k];
+                        archetypeQuantity[k] += deckArray.weekDataQuantity[k];
+                    }
+                }
+            });
+            archetypesValues.push({name : archetype.archetype, percentage : archetypePercentage, weekDataQuantity : archetypeQuantity});
+        });
+        _MetaValues.update({option: "archetypeBlocksAdding", type : typeCombination.toString()},
+            {
+                $set: {values : archetypesValues},
+                $setOnInsert: {option: "archetypeBlocksAdding", type : typeCombination.toString(), values : archetypesValues}
+            },
+            {
+                upsert: true
+            }
+        );
+    });
+};
+
+
+weeklyDeckBlockChange = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+        typesCombinations = positionCombinationsOptions(options.types),
+        decksNames = _DeckNames.find({format : "modern"}).map(function(name){
+            return name.name;
+        }),
+        weeksQuantity = 10;
+
+
+    typesCombinations.forEach(function(typeCombination){
+        var deckValues = [];
+        decksNames.forEach(function(name){
+            var weekDataPercentage = [],
+                weekDataQuantity = [],
+                weekChange = [],
+                weekNegPosChange = [],
+                weekDateEnd = new Date(Date.UTC(2015, 11, 12, 23, 59, 59, 999)),
+                weekDateStart = new Date((weekDateEnd.getTime()  + 1) - (86400000 * 7));
+
+
+            var lastWeekValue = 0;
+            for(var i = 0; i < weeksQuantity; i++) {
+                var position = "";
+                var change = 0;
+                var result = 0;
+                var allDecksQuery = _Deck.find({format: "modern", $or: typeCombination.values, date: {$gte: weekDateStart, $lte: weekDateEnd}}).fetch();
+                var deckQuery = _Deck.find({name: name, format: "modern", $or: typeCombination.values, date: {$gte: weekDateStart, $lte: weekDateEnd}}).fetch();
+                if (allDecksQuery.length != 0){
+                    result = deckQuery.length/allDecksQuery.length;
+                }
+
+                if(result > lastWeekValue){
+                    position = "up";
+                    change = result - lastWeekValue;
+                }else if(result < lastWeekValue){
+                    change = result - lastWeekValue;
+                    position = "down";
+                }else{
+                    position = "equal";
+                }
+                lastWeekValue = result;
+
+                weekDataPercentage.push(result);
+                weekDataQuantity.push(deckQuery.length);
+                weekChange.push(position);
+                weekNegPosChange.push(change);
+
+                weekDateStart = new Date(weekDateStart.getTime() - (86400000 * 7));
+                weekDateEnd = new Date(weekDateEnd.getTime() - (86400000 * 7));
+            }
+
+            deckValues.push({name : name, percentage : weekDataPercentage, weekDataQuantity : weekDataQuantity, weekChange : weekChange, weekNegPosChange : weekNegPosChange});
+        });
+        getWeeklyPosition(deckValues, decksNames, weeksQuantity);
+
+        _temp.update({option: "deckBlocks", type : typeCombination.toString},
+            {
+                $set: {values : deckValues},
+                $setOnInsert: {option: "deckBlocks", type : typeCombination.toString, values : deckValues}
+            },
+            {
+                upsert: true
+            }
+        );
+    });
+};
+
+weeklyDeckBlockAdding = function(){
+    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+        typesCombinations = positionCombinationsOptions(options.types),
+        dates = getDateSyntax(options.dates),
+        decksNames = _DeckNames.find({format : "modern"}).map(function(name){
+            return name.name;
+        });
+
+    dates.forEach(function(date){
+        typesCombinations.forEach(function(typeCombination){
+            var deckValues = [];
+            decksNames.forEach(function(name){
+                var weekDataPercentage = [],
+                    weekDataQuantity = [],
+                    weekDateEnd = new Date(Date.UTC(2015, 11, 12, 23, 59, 59, 999)),
+                    dateStart = new Date((weekDateEnd.getTime()  + 1) - (86400000 * 7 *  (date.weeks + 1))),
+                    dateEnd = new Date((dateStart.getTime()  - 1) + (86400000 * 7));
+                for(var i = -1; i < date.weeks; i++) {
+                    var result = 0;
+                    var allDecksQuery = _Deck.find({format: "modern", $or: typeCombination.values, date: {$gte: dateStart, $lte: dateEnd}}).fetch();
+                    var deckQuery = _Deck.find({name: name, format: "modern", $or: typeCombination.values, date: {$gte: dateStart, $lte: dateEnd}}).fetch();
+                    if (allDecksQuery.length != 0){
+                        result = deckQuery.length/allDecksQuery.length;
+                    }
+                    weekDataPercentage.push(result);
+                    weekDataQuantity.push(deckQuery.length);
+                    dateEnd = new Date(dateEnd.getTime() + (86400000 * 7));
+                }
+                deckValues.push({name : name, percentage : weekDataPercentage, weekDataQuantity : weekDataQuantity});
+            });
+            _MetaValues.update({option: "deckBlocksAdding", type : typeCombination.toString},
+                {
+                    $set: {values : deckValues},
+                    $setOnInsert: {option: "deckBlocksAdding", type : typeCombination.toString, values : deckValues}
+                },
+                {
+                    upsert: true
+                }
+            );
+        });
+    });
+};

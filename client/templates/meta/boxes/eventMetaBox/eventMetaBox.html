@@ -1,0 +1,40 @@
+<template name="eventMetaBox">
+    <div class="eventMetaBox customTable">
+        <div class="tableHeader">
+            <ul class="list-inline">
+                <li class="sectionName">Events</li>
+                <li class="options">PAST</li>
+                <li class="options">UPCOMING</li>
+            </ul>
+            <div class="buttons">
+                <span>
+                    <button type="button" class="btn btn-default btn-xs previous">Prev</button>
+                </span>
+                <span class="separator"></span>
+                <span>
+                    <button type="button" class="btn btn-default btn-xs next">Next</button>
+                </span>
+            </div>
+        </div>
+        <div class="tableWrap">
+            <table class="example table">
+                <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Players</th>
+                    <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each eventMetaChange}}
+                    <tr>
+                        <td><a id="deckLink" href="">{{eventType}}</a></td>
+                        <td class="weekChange">{{players}}</td>
+                        <td class="weekChange">{{datePretify date}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>

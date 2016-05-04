@@ -1,0 +1,27 @@
+<template name="cardsPercentageMain">
+    <div class="cardsPercentageMain">
+        <div class="cardPercentageTitle">
+            Main Deck
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="col-xs-4">Name</th>
+                {{#each weekDates}}
+                    <th class="col-xs-1">{{this}}</th>
+                {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+            {{#each cards}}
+                <tr>
+                    <td>{{cardName}}</td>
+                    {{#each cardWeek cardName}}
+                        <td style="background-color: {{color}}">{{value}}</td>
+                    {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

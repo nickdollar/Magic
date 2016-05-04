@@ -1,0 +1,48 @@
+<template name="deckMetaBox">
+    <div class="deckMetaBox customTable">
+            <div class="tableHeader">
+                <ul class="list-inline">
+                    <li class="sectionName">Archetypes</li>
+                    <li class="options">CHANGES</li>
+                    <li class="options">NEW</li>
+                </ul>
+                <div class="buttons">
+                    <button type="button" class="btn btn-default btn-xs previous">Prev</button>
+                    <button type="button" class="btn btn-default btn-xs next">Next</button>
+                </div>
+            </div>
+
+        <div class="tableWrap">
+            <table class="example table borderless smallMetaTable">
+                <thead>
+                <tr>
+                    <th>DECK</th>
+                    <th>DECK</th>
+                    <th>DECK</th>
+                    <th>CHANGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each meta}}
+                    <tr>
+                        <td>{{tableIndex @index "decksNames"}}</td>
+                        <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                        <td class="positionChange">
+                            {{#if position1 upDown}}
+                                <span>0</span><span class="neutro"></span>
+                            {{else}} {{#if position2 upDown}}
+                                <span>{{change}}</span><span class="greenArrow-up"></span>
+                            {{else}}
+                                <span>{{change}}</span><span class="redArrow-down"></span>
+                            {{/if}}
+                            {{/if}}
+                        </td>
+                        <td class="weekChange">{{weekChange}}%</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</template>

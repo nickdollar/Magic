@@ -22,7 +22,6 @@ addAllCardsOnModernPerWeek  = function(){
         var weekStart = new Date(date.weekStart);
         var weekEnd = new Date(date.weekEnd);
 
-        console.log(firstDate);
         while(firstDate <= weekStart)
         {
             var values = {weekDate : weekStart, format : formats[a]};

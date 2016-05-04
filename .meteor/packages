@@ -15,7 +15,6 @@ tmeasday:publish-counts
 mizzao:autocomplete
 mrt:cheerio
 froatsnook:request
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -36,10 +35,15 @@ cfs:filesystem
 percolate:synced-cron
 meteorhacks:fast-render
 meteorhacks:npm
-
-
 npm-container
 alethes:pages
 jquery
 tsega:bootstrap3-datetimepicker
 rajit:bootstrap3-datepicker
+andrei:tablesorter
+mizzao:jquery-ui
+spacebars-compiler
+ephemer:reactive-datatables
+standard-minifier-css
+standard-minifier-js
+aldeed:tabular

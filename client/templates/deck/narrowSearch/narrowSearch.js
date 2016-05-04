@@ -109,7 +109,6 @@ updateListFunction = function()
         for(var i = 0; i < boxes.length; i++){
             var minValue = parseInt(boxes[i].dataset.min);
             var maxValue = parseInt(boxes[i].dataset.max);
-            console.log("AAA: " + minValue);
             if(!(min > minValue && min > maxValue) && (max < maxValue && max < minValue)){
                 result += boxType + "[data-min=" + minValue + "][data-max=" + maxValue + "], ";
             }

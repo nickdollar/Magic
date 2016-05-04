@@ -1,0 +1,26 @@
+<template name="deckList">
+    <div class="deckList">
+        {{#each decksName}}
+            <div class="col-xs-3 deckBox" data-colors="{{colors}}" data-type="{{type}}" data-price="{{price}}" hidden>
+                <a class="thumbnail" href="{{pathFor 'deckSelected' format = format archetype = archetype deckSelected = fixForLink}}">
+                    <div class="firstLine">
+                        <div class="archetypeName">
+                            {{name}}
+                        </div>
+                        <div class="archetypeMana">
+                            {{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}
+                        </div>
+                    </div>
+                    <div class="secondLine">
+                        <div class="type">
+                            {{type}}
+                        </div>
+                        <div class="values">
+                            ${{price}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {{/each}}
+    </div>
+</template>

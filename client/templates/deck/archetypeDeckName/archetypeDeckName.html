@@ -1,0 +1,19 @@
+<template name="archetypeDeckName">
+    <div class="archetypeDeckName">
+        {{#with thisarchetype}}
+            <div class="firstline">
+                <h1>
+                    {{archetype}}
+                    <!--<small>Exploring {{mana}} </small>-->
+                </h1>
+                <div class="archetypeMana">
+                    {{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}
+                </div>
+            </div>
+            <div class="information">
+                <div class="type">{{type}}</div>
+                <div class="price">${{min}}-${{max}}</div>
+            </div>
+        {{/with}}
+    </div>
+</template>

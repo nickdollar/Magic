@@ -12,13 +12,6 @@
     border: 1px solid darkcyan;
 }
 
-.newDeckColumn {
-    -webkit-column-count: 2; /* Chrome, Safari, Opera */
-    -moz-column-count: 2; /* Firefox */
-    column-count: 2;
-}
-
-
 .sideboardColumn {
     -webkit-column-count: 2; /* Chrome, Safari, Opera */
     -moz-column-count: 2; /* Firefox */
@@ -51,16 +44,6 @@
     /*-webkit-column-break-inside: avoid;*/
     /*page-break-inside: avoid;*/
     /*break-inside: avoid;*/
-}
-
-.typeHeader {
-
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.typeHeader .cardRow {
-
 }
 
 .playerNamesSideMenu {

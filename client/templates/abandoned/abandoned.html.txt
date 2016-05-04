@@ -1297,3 +1297,68 @@ Template.colorBarOriginal.rendered = function(){
 //        theme : "minimal-dark"
 //    });
 //});
+
+                <!--<tr>-->
+                                                <!--<td class="details-control"></td>-->
+                                                <!--<td><span>{{tableIndex @index "decksNames"}}</span></td>-->
+                                                <!--<td>-->
+                                                    <!--<a>-->
+                                                        <!--{{name}}-->
+                                                    <!--</a>-->
+                                                <!--</td>-->
+                                                <!--<td class="positionChange">-->
+                                                    <!--{{#if position1 upDown}}-->
+                                                        <!--<span>0</span><span class="neutro"></span>-->
+                                                    <!--{{else}} {{#if position2 upDown}}-->
+                                                        <!--<span>{{change}}</span><span class="greenArrow-up"></span>-->
+                                                    <!--{{else}}-->
+                                                        <!--<span>{{change}}</span><span class="redArrow-down"></span>-->
+                                                    <!--{{/if}}-->
+                                                    <!--{{/if}}-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--{{#with colors name}}-->
+                                                        <!--{{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}-->
+                                                    <!--{{/with}}-->
+                                                <!--</td>-->
+                                                <!--<td>{{type name}}</td>-->
+                                                <!--<td>{{percent}}%</td>-->
+                                                <!--<td>$AAAA</td>-->
+                                                <!--<td>-->
+                                                    <!--<div class="graph">-->
+                                                        <!--{{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}-->
+                                                    <!--</div>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->
+
+                                            <!--<tr>-->
+                                                <!--<td><span>{{tableIndex @index "decksNames"}}</span></td>-->
+                                                <!--<td>-->
+                                                    <!--<a>-->
+                                                        <!--{{name}}-->
+                                                    <!--</a>-->
+                                                <!--</td>-->
+                                                <!--<td class="positionChange">-->
+                                                    <!--{{#if position1 upDown}}-->
+                                                        <!--<span>0</span><span class="neutro"></span>-->
+                                                    <!--{{else}} {{#if position2 upDown}}-->
+                                                        <!--<span>{{change}}</span><span class="greenArrow-up"></span>-->
+                                                    <!--{{else}}-->
+                                                        <!--<span>{{change}}</span><span class="redArrow-down"></span>-->
+                                                    <!--{{/if}}-->
+                                                    <!--{{/if}}-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--{{#with colors name}}-->
+                                                        <!--{{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}-->
+                                                    <!--{{/with}}-->
+                                                <!--</td>-->
+                                                <!--<td>{{type name}}</td>-->
+                                                <!--<td>{{percent}}%</td>-->
+                                                <!--<td>$AAAA</td>-->
+                                                <!--<td>-->
+                                                    <!--<div class="graph">-->
+                                                        <!--{{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}-->
+                                                    <!--</div>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->

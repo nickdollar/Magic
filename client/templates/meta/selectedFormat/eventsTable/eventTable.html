@@ -1,0 +1,30 @@
+<template name="eventsTable">
+    <div class="eventsTable">
+        <table id="eventsTable" class="table 4">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>EVENT</th>
+                    <th>EVENT</th>
+                    <th>DATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each event}}
+                    <tr>
+                        <td class="details-control"></td>
+                        <td>
+                            MTGO Modern Daily
+                        </td>
+                        <td>
+                            14
+                        </td>
+                        <td>
+                            {{datePretify date}}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

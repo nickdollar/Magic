@@ -174,11 +174,27 @@ cardsPercentageValues = function(format, deckName, numOfWeeks){
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 deckMetaTest = function(options){
 
     if(options == null){
         options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], pagination : 0}
     }
+
+
 
     var deckNames = _DeckNames.find({format : "modern"}).map(function(deckName){ return deckName.name});
     var date = getWeekStartAndEnd();

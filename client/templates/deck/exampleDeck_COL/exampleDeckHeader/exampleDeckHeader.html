@@ -1,0 +1,35 @@
+<template name="exampleDeckHeader">
+    <div class="exampleDeckHeader">
+        {{#with deck}}
+            <div class="col-sm-4 left">
+                <div class="row">
+                    <div class="venue">
+                        MTGO - {{capitalizeEvents}}
+                    </div>
+                    <div class="tourneyType">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4 center">
+                <div class="row">
+                    <span class="venue">
+                        {{player}}
+                    </span>
+                    <span class="tournamentType">
+                        {{deckPosition}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-sm-4 right">
+                <div class="row">
+                    <span class="tournamentType">
+                        {{prettifyDate date}}
+                    </span>
+                </div>
+            </div>
+        {{/with}}
+    </div>
+</template>

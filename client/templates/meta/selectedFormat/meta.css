@@ -63,10 +63,6 @@
     font-size: 12px;
 }
 
-.rightDiv {
-    padding-left: 8px;
-}
-
 .leftDiv {
     padding-right: 9px;
 }
@@ -231,18 +227,7 @@ colgroup .table-col-change {
 }
 
 .graph {
-    height: 100%;
 }
-.graph .bar {
-    height: 16px;
-    width: 7px;
-    margin: 1px;
-    display: inline-block;
-    position: relative;
-    vertical-align: baseline;
-
-}
-
 
 
 .graph .bar.red {
@@ -330,11 +315,7 @@ colgroup .table-col-change {
     margin-top: 0px;
 }
 
-.optionsList {
-    height: 17px;
-    margin-bottom: 20px;
-    margin-top: 0px;
-}
+
 
 .optionsListName {
     font-weight: bolder;

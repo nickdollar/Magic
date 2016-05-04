@@ -1,0 +1,48 @@
+<template name="eventInfoBar">
+    <div class="eventInfoBar">
+        <table>
+            <tr class="eventInfoBar-top-row">
+                {{#with event}}
+                    <td class="eventTab col-xs-3">
+                        <div class="eventType">
+                        {{capitalizeEvents eventType}} {{datePretify date 'year'}}
+                        </div>
+                        <div>
+                            245 Players
+                        </div>
+                    </td>
+                {{/with}}
+                {{#with deck}}
+                    <td class="deckTab col-xs-6">
+                        <span infobar-deck-name>
+                            {{name}}
+                        </span>
+                        <span infobar-deck-name>
+                            ({{deckPosition}})
+                        </span>
+                        <span>
+                            {{#each getManaCss colors "deck"}}<div class="eventInfoBarMana mana {{mana}}"></div>{{/each}}
+                        </span>
+                    </td>
+                    <td class="deckInfoTab col-xs-3">
+                        8985
+                    </td>
+                {{/with}}
+            </tr>
+            <tr class="eventInfoBar-bottow-row">
+                <td colspan="3" class="options">
+                    <ul class="list-inline">
+                        <li>Compare</li>
+                        <li>More Stats</li>
+                        <li>Download</li>
+                        <li>Buy TCG</li>
+                        <li>Buy TIX</li>
+                        <li>AAA</li>
+                        <li>Sort</li>
+                        <li>Sample Hand</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+</template>

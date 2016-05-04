@@ -1,0 +1,24 @@
+<template name="events_COL">
+    <div class="deckEvents">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="col-xs-6" >EVENT</th>
+                <th class="col-xs-2 date">S</th>
+                <th class="col-xs-1 date">P</th>
+                <th class="col-xs-3 date">DATE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each event}}
+                <tr>
+                    <td><a class="noNameDeckID" href="{{pathFor 'event' _eventID = _id }}">MTGO Modern Daily</a></td>
+                    <td>{{position}}</td>
+                    <td class="date">{{players}}</td>
+                    <td class="date">{{datePretify date}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

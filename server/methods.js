@@ -81,8 +81,10 @@ Meteor.methods({
         //});
     },
     updateMetaMethod : function(){
-        updateMeta();
+        //makeDeck();
+        weeklyCardChange();
     },
+
     cardsPercentage : function(format, deckName){
         cardsPercentageValues(format, deckName, 7);
     },
@@ -93,19 +95,23 @@ Meteor.methods({
     getCardMeta : function(options){
 
         var values = metaPerWeek(options);
-        console.log("Card Meta: " + memorySizeOf(values));
         return values;
     },
     getDeckMeta : function(daily3_1, daily4_0, ptqTop8, ptqTop9_16, ptqTop17_32){
-        var values = deckMetaTest(daily3_1, daily4_0, ptqTop8, ptqTop9_16, ptqTop17_32);
-        console.log("Deck Meta: " + memorySizeOf(values));
-        return values;
+        var values = createTestMeta();
+        //return values;
     },
     addAArchetypeAndNameToArchetype : function(deckName, archetype, format){
         addArchetypeAndDeckToArchetype(deckName, archetype, format);
     },
     removeArchetype : function(archetype){
         _deckArchetypes.remove({archetype : archetype});
+    },
+    getPlayListDataMETHOD : function(format, deckSelected){
+        var data = {events : {}, playlist : []};
+        data.events = getEvents(format, deckSelected);
+        data.playlists = getPlayListData(format, deckSelected);
+        return data;
     }
 });
 

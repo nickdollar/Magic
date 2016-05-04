@@ -1,9 +1,8 @@
 .verticalSideboard {
-    border-top: 2px solid firebrick;
+    border-top: 2px solid lightgrey;
 }
 
 .bottom-separator {
-    padding-bottom: 10px;
 }
 
 .top-separator {
@@ -24,17 +23,6 @@
 
 .exampleColumn :not(:first-child){
     padding-left: 5px;
-}
-
-
-.row.no-gutters {
-    margin-right: 0;
-    margin-left: 0;
-}
-.row.no-gutters > [class^="col-"],
-.row.no-gutters > [class*=" col-"] {
-    padding-right: 0;
-    padding-left: 0;
 }
 
 .organize {

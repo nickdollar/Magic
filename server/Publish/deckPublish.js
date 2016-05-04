@@ -22,6 +22,11 @@ Meteor.publish('deckArchetypes', function(format){
     return _deckArchetypes.find({format : format});
 });
 
+Meteor.publish('temp', function(){
+    return _temp.find({});
+});
+
+
 Meteor.publishComposite("testing", function(format){
     return {
         find: function () {
@@ -93,7 +98,6 @@ Meteor.publishComposite("joinExampleCardsDaily", function(format, name ){
         children: [
             {
                 find: function (deck) {
-                    console.log(deck);
                     return _DeckCards.find({_deckID: deck._id});
                 },
                 children : [

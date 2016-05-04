@@ -1,0 +1,349 @@
+<template name="newMetaTable">
+    {{#if Template.subscriptionsReady}}
+        {{>dataTableNewMetaTable}}
+    {{else}}
+        loading...
+    {{/if}}
+</template>
+
+<template name="dataTableNewMetaTable">
+    <div class="newMetaTable">
+        <table id="example2" class="display" cellspacing="0" width="100%" style>
+            <thead>
+            <tr class="hiddenHeader">
+                <th></th>
+                <th></th>
+                <th>ARCHETYPE</th>
+                <th>COLORS</th>
+                <th>%</th>
+                <th>LOW</th>
+                <th>HIGH</th>
+                <th>TYPE</th>
+                <th>CHANGES</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            {{#each metaTest}}
+                <tr>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td class="tablePosition">{{position}}</td>
+                    <td class="tableName"><span>{{name}}</span>
+                        {{#with positionChange}}
+                            <div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>
+                        {{/with}}
+                    </td>
+                    <td class="tableMana">
+                        {{#with colors name}}
+                            {{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}
+                        {{/with}}
+                    </td>
+                    <td class="tablePercentage">{{prettifyPercentage percentage}}%</td>
+
+                    <td class="priceTable">
+                        ${{minPrice}}
+                    </td>
+                    <td class="priceTable">
+                        ${{maxPrice}}
+                    </td>
+                    <td class="deckType">
+                        {{type}}
+                    </td>
+                    <td class="blocks">
+                        <div class="graph">
+                            {{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}
+                        </div>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

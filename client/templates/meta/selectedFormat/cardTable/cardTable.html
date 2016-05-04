@@ -1,0 +1,25 @@
+<template name="cardTable">
+    <div class="cardTable">
+        <table  id="cardTable" class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Card</th>
+                <th>%</th>
+                <th>AVG.</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each metaPerWeek}}
+                <tr>
+                    <td>{{position}}</td>
+                    <td><span>{{name}}</span></td>
+                    <td class="inDecks">{{prettifyPercentage percentage}}%</td>
+                    <td class="average">{{toFixed perDeck}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>
+

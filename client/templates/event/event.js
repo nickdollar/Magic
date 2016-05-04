@@ -69,12 +69,12 @@ Template.event.events({
 });
 
 Template.event.onCreated(function(){
-    var instance = this;
-    this.autorun(function(){
-        instance.subscribe('joinCards', Session.get("_selectedDeckID"));
-        instance.subscribe('deck');
-        console.log(_JoinCardsData.find());
-    });
+    //var instance = this;
+    //this.autorun(function(){
+    //    instance.subscribe('joinCards', Session.get("_selectedDeckID"));
+    //    instance.subscribe('deck');
+    //    console.log(_JoinCardsData.find());
+    //});
 });
 
 Template.event.destroyed = function(){
@@ -89,10 +89,6 @@ Template.event.destroyed = function(){
 
 Template.event_LISTdeckwithoutname_COL.helpers({
     deckOptions : function(){
-        console.log(_Deck.find());
-        console.log("deckOptions");
-        console.log(Session.get("_selectedEventID"));
-        console.log(_Deck.find({_eventID : Session.get("_selectedEventID")}, {limit : 8}).fetch());
         return _Deck.find({_eventID : Session.get("_selectedEventID")}, {limit : 8}).fetch();
     }, isActive : function(){
         if(Session.get("noNameSelectedDeck") === this._id){

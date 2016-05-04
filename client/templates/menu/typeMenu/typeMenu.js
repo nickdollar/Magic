@@ -1,6 +1,5 @@
 Template.typeMenu.helpers({
    path : function(){
-       console.log(Session.get("topMenuSite"));
         return Session.get("currentRouter");
    },
     active : function(format){

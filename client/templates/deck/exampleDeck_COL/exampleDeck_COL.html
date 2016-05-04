@@ -1,0 +1,39 @@
+<template name="exampleDeck_COL">
+    <div class="deckBlock">
+        <div class="newDeckColumn">
+            {{#each cardType}}
+                <div class="typeHeader">{{name}} ({{quantity}})</div>
+                {{#each cards block}}
+                    <div class="cardLine">
+                        <div class="name">{{quantity}} {{name}}</div>
+                        <div class="cardInfo">
+                            <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                            <div class="price">$118.74</div>
+                        </div>
+                    </div>
+                {{/each}}
+            {{/each}}
+        </div>
+
+        <div class="verticalSideboard">
+            {{#if sideboardQuantity}}
+                <span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>
+                <div class="newDeckColumn">
+                    {{#each sideboard}}
+                        <div class="cardLine">
+                            <span class="name">{{quantity}} {{name}}</span>
+                            <div class="cardInfo">
+                                <div class="manaValue">
+                                    {{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}
+                                </div>
+                                <div class="price">
+                                    $118.74
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</template>

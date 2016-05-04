@@ -1,8 +1,17 @@
+Template.registerHelper('arrayify',function(obj){
+    result = [];
+    for (var key in obj) result.push({name:key,value:obj[key]});
+    return result;
+});
 
 Template.registerHelper("getManaCss", function(value, options) {
+    return getManaCss(value, options);
+});
+
+getManaCss = function(value, options){
     var manacost = "";
     //console.log(manacost);
-    var manaRegex = new RegExp("\{([a-zA-Z0-9]+)\}", 'g');
+    var manaRegex = new RegExp("\{([a-zA-Z0-9/]+)\}", 'g');
     if(options == "deck"){
         manaRegex = new RegExp("([a-zA-Z])", 'g');
         manacost = value;
@@ -14,45 +23,45 @@ Template.registerHelper("getManaCss", function(value, options) {
     var res;
 
     while((res = manaRegex.exec( manacost)) !== null) {
-        if(res[1] === "X"      ) {str.push(  {mana :'mana-x' }) }
-        else if(res[1] === "1" ) {str.push(  {mana :'mana-1' }) }
-        else if(res[1] === "2" ) {str.push(  {mana :'mana-2' }) }
-        else if(res[1] === "3" ) {str.push(  {mana :'mana-3' }) }
-        else if(res[1] === "4" ) {str.push(  {mana :'mana-4' }) }
-        else if(res[1] === "5" ) {str.push(  {mana :'mana-5' }) }
-        else if(res[1] === "6" ) {str.push(  {mana :'mana-6' }) }
-        else if(res[1] === "7" ) {str.push(  {mana :'mana-7' }) }
-        else if(res[1] === "8" ) {str.push(  {mana :'mana-8' }) }
-        else if(res[1] === "9" ) {str.push(  {mana :'mana-9' }) }
-        else if(res[1] === "10") {str.push(  {mana :'mana-10'}) }
-        else if(res[1] === "11") {str.push(  {mana :'mana-11'}) }
-        else if(res[1] === "12") {str.push(  {mana :'mana-12'}) }
-        else if(res[1] === "13") {str.push(  {mana :'mana-13'}) }
-        else if(res[1] === "14") {str.push(  {mana :'mana-14'}) }
-        else if(res[1] === "15") {str.push(  {mana :'mana-15'}) }
-        else if(res[1] === "16") {str.push(  {mana :'mana-16'}) }
-        else if(res[1] === "17") {str.push(  {mana :'mana-17'}) }
-        else if(res[1] === "18") {str.push(  {mana :'mana-18'}) }
-        else if(res[1] === "19") {str.push(  {mana :'mana-19'}) }
-        else if(res[1] === "20") {str.push(  {mana :'mana-20'}) }
-        else if(res[1] === "B" ) {str.push(  {mana :'mana-b' }) }
-        else if(res[1] === "G" ) {str.push(  {mana :'mana-g' }) }
-        else if(res[1] === "R" ) {str.push(  {mana :'mana-r' }) }
-        else if(res[1] === "U" ) {str.push(  {mana :'mana-u' }) }
-        else if(res[1] === "W" ) {str.push(  {mana :'mana-w' }) }
-        else if(res[1] === "2B") {str.push(  {mana :'mana-2b'}) }
-        else if(res[1] === "2G") {str.push(  {mana :'mana-2g'}) }
-        else if(res[1] === "3R") {str.push(  {mana :'mana-3r'}) }
-        else if(res[1] === "2U") {str.push(  {mana :'mana-2u'}) }
-        else if(res[1] === "2W") {str.push(  {mana :'mana-2w'}) }
-        else if(res[1] === "B/P"){str.push( {mana :'mana-bp'}) }
-        else if(res[1] === "G/P"){str.push( {mana :'mana-gp'}) }
-        else if(res[1] === "R/P"){str.push( {mana :'mana-rp'}) }
-        else if(res[1] === "U/P"){str.push( {mana :'mana-up'}) }
-        else if(res[1] === "W/P"){str.push( {mana :'mana-wp'}) }
+        if(res[1] === "X"      ) {str.push( {mana :'mana-x' }) }
+        else if(res[1] === "1" ) {str.push( {mana :'mana-1' }) }
+        else if(res[1] === "2" ) {str.push( {mana :'mana-2' }) }
+        else if(res[1] === "3" ) {str.push( {mana :'mana-3' }) }
+        else if(res[1] === "4" ) {str.push( {mana :'mana-4' }) }
+        else if(res[1] === "5" ) {str.push( {mana :'mana-5' }) }
+        else if(res[1] === "6" ) {str.push( {mana :'mana-6' }) }
+        else if(res[1] === "7" ) {str.push( {mana :'mana-7' }) }
+        else if(res[1] === "8" ) {str.push( {mana :'mana-8' }) }
+        else if(res[1] === "9" ) {str.push( {mana :'mana-9' }) }
+        else if(res[1] === "10") {str.push( {mana :'mana-10'}) }
+        else if(res[1] === "11") {str.push( {mana :'mana-11'}) }
+        else if(res[1] === "12") {str.push( {mana :'mana-12'}) }
+        else if(res[1] === "13") {str.push( {mana :'mana-13'}) }
+        else if(res[1] === "14") {str.push( {mana :'mana-14'}) }
+        else if(res[1] === "15") {str.push( {mana :'mana-15'}) }
+        else if(res[1] === "16") {str.push( {mana :'mana-16'}) }
+        else if(res[1] === "17") {str.push( {mana :'mana-17'}) }
+        else if(res[1] === "18") {str.push( {mana :'mana-18'}) }
+        else if(res[1] === "19") {str.push( {mana :'mana-19'}) }
+        else if(res[1] === "20") {str.push( {mana :'mana-20'}) }
+        else if(res[1] === "B" ) {str.push( {mana :'mana-b' }) }
+        else if(res[1] === "G" ) {str.push( {mana :'mana-g' }) }
+        else if(res[1] === "R" ) {str.push( {mana :'mana-r' }) }
+        else if(res[1] === "U" ) {str.push( {mana :'mana-u' }) }
+        else if(res[1] === "W" ) {str.push( {mana :'mana-w' }) }
+        else if(res[1] === "2B") {str.push( {mana :'mana-2b'}) }
+        else if(res[1] === "2G") {str.push( {mana :'mana-2g'}) }
+        else if(res[1] === "3R") {str.push( {mana :'mana-3r'}) }
+        else if(res[1] === "2U") {str.push( {mana :'mana-2u'}) }
+        else if(res[1] === "2W") {str.push( {mana :'mana-2w'}) }
+        else if(res[1] === "B/P"){str.push( {mana :'mana-bp' })}
+        else if(res[1] === "G/P"){str.push( {mana :'mana-gp' })}
+        else if(res[1] === "R/P"){str.push( {mana :'mana-rp' })}
+        else if(res[1] === "U/P"){str.push( {mana :'mana-up' })}
+        else if(res[1] === "W/P"){str.push( {mana :'mana-wp' })}
     }
     return str;
-});
+}
 
 Template.registerHelper("getManaCssParentheses", function(manacost) {
 
@@ -126,24 +135,25 @@ Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
 });
 
 Template.registerHelper("fixForLink", function() {
-
-    //var phrase = this.name.replace(/ /, "-");
-
     var phrase = this.name ? this.name.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
-
     return phrase;
 });
 
-Template.registerHelper("datePretify", function(date) {
+Template.registerHelper("datePretify", function(date, option) {
 
-    var yyyy = date.getFullYear().toString();
+    var yy = date.getFullYear().toString().substr(2,2);
     var mm = (date.getMonth()+1).toString();
     var dd  = date.getDate().toString();
-    return (mm[1]?mm:"0"+mm[0]) +"-"+ (dd[1]?dd:"0"+dd[0]) + "-" + yyyy ;
+    if(option == "year"){
+        return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]) + "-" + yy;
+    }
+
+     return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0])
 });
 
 Template.registerHelper("prettifyDate", function(timestamp) {
-    return new Date(timestamp).toString('yyyy-MM-dd')
+    var dateString = (timestamp.getMonth() + 1) + '/' + timestamp.getDate() + '/' +  timestamp.getFullYear();
+    return dateString;
 });
 
 Template.registerHelper("getLinkAddress", function(cardName) {
@@ -167,3 +177,49 @@ Template.registerHelper("convertToTemplate", function(color) {
     var finalDirectory = linkBase+"/"+color+".jpg";
     return finalDirectory;
 });
+
+Template.registerHelper('capitalizeEvents', function(){
+    if(this.eventType == "ptq"){
+        return "PTQ";
+    } else if(this.eventType == "daily"){
+        return "Daily";
+    }
+});
+
+Template.registerHelper('deckPosition', function(){
+    if(this.eventType == "ptq"){
+        var s=["th","st","nd","rd"],
+            v=this.position%100;
+        return this.position+(s[(v-20)%10]||s[v]||s[0]);
+    } else if(this.eventType == "daily"){
+        return this.victory + "-" + this.loss;
+    }
+
+});
+
+Template.registerHelper('upperCase', function(string){
+    return string.toUpperCase();
+});
+
+Template.registerHelper('prettifyPercentage', function(string){
+    return prettifyPercentage(string);
+});
+
+prettifyPercentage = function(string){
+    var temp = parseFloat(string) * Math.pow(10, 2);
+    temp = parseFloat(temp.toFixed(2));
+    return temp;
+};
+
+Template.registerHelper('absoluteValue', function(string){
+    return prettifyPercentage(string);
+});
+
+Template.registerHelper('toFixed', function(string){
+   return parseFloat(string).toFixed(2);
+});
+
+
+absoluteValue = function(string){
+    return Math.abs(parseFloat(string));
+}
