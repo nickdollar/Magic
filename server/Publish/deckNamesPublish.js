@@ -28,6 +28,12 @@ _Deck.allow({
     }
 });
 
+_temp.allow({
+    'insert' : function(){
+        return true;
+    }
+});
+
 _Event.allow({
     'insert' : function(){
         return true;
@@ -40,6 +46,27 @@ _Event.allow({
     }
 });
 
+Meteor.publish('eventOthersTable', function(format){
+    if(format == null){
+        return _Event.find();
+    }
+    return _Event.find({format : format});
+});
+
+Meteor.publish('futureEventsTable', function(format){
+    if(format == null){
+        return _Event.find({customEvent : true});
+    }
+    return _Event.find({format : {$in : [format]}, customEvent : true});
+});
+
+Meteor.publish('mtgoEventsTable', function(format){
+    if(format == null){
+        return _Event.find({_eventNumber : {$exists : true}})
+    }
+    return _Event.find({format : format, _eventNumber : {$exists : true}});
+});
+
 Meteor.publish('decknames', function(){
     return _DeckNames.find({});
 });
@@ -48,21 +75,8 @@ Meteor.publish('metaDate', function(){
     return _MetaDate.find({});
 });
 
-Meteor.publish('archetypeDeckNames', function(format, archetype){
-    var names = _deckArchetypes.findOne({format : format, archetype : archetype}).deckNames.map(function(a){return a.name});
-    return _DeckNames.find({format : format, name : {$in : names}});
-});
-
-Meteor.publish('deckplaylist', function(){
-    return _DeckPlayList.find({});
-});
-
 Meteor.publish('cardbreakdown', function(){
     return _cardBreakDown.find({});
-});
-
-Meteor.publish('deckcardsweekchange', function(){
-    return _deckCardsWeekChange.find({});
 });
 
 Meteor.publish('decksWithoutName', function(format){
@@ -73,10 +87,21 @@ Meteor.publish('deckArchetype', function(format){
     return _Deck.find({format : format, $or : [{name : {$exists : false}}, {name : ""}]}, {limit : 8});
 });
 
-
-Meteor.publish('AllArchetype', function(format){
-    return _deckArchetypes.find();
+Meteor.publish('pastEventsTable', function(format){
+    if(format === null){
+        return _futureEvents.find();
+    }
+    return _futureEvents.find({format : {$in : [format]}});
 });
+
+Meteor.publish('events', function(format){
+    if(format === null){
+        return _Event.find();
+    }
+    return _Event.find({format : format});
+
+});
+
 
 Meteor.publish('formatsCards', function(){
     var d = new Date();
@@ -150,37 +175,4 @@ Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
     }
 });
 
-Meteor.publishComposite("deckEventsDaily", function(format, selectedNameDeck) {
-    return {
-        find: function () {
-            return _Deck.find({name: selectedNameDeck, format : format}, {limit : 5});
-        },
-        children: [
-            {
 
-                find: function (deckName) {
-                    return _Event.find({_id : deckName._eventID});
-
-                    //return _Event.find({_id : deckName._eventID, eventType : "daily"});
-            }
-            }
-        ]
-    }
-});
-
-
-
-Meteor.publishComposite("deckEventsPtq", function(format, selectedNameDeck) {
-    return {
-        find: function () {
-            return _Deck.find({name: selectedNameDeck, format : format, eventType : "ptq"}, {limit : 5});
-        },
-        children: [
-            {
-                find: function (deckName) {
-                    return _Event.find({_id : deckName._eventID});
-                }
-            }
-        ]
-    }
-});

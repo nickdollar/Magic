@@ -31,6 +31,7 @@ Meteor.methods({
             }
             });
     },
+
     addDeckName : function(_selectedDeckID, name){
         addNameToDeck(_selectedDeckID, name);
     },
@@ -40,45 +41,34 @@ Meteor.methods({
     findOneDeckWithoutName : function(_deckWithoutNameID){
         return newGetOneDeckRank(_deckWithoutNameID);
     },
-    insertNewPlayList : function(youtubelink, deckName, format){
-        var playListInformation = getPlayListInformation(youtubelink);
+    insertNewPlayList : function(form){
+        var playListInformation = getPlayListInformation(form.playlistUrl);
         var file = _Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });
         _DeckPlayList.insert({
-            _deckName : deckName,
+            _deckName : form.deckName,
             _cfsImagesID : file._id,
-            format : format,
+            format : form.format,
             date : playListInformation.date,
             title : playListInformation.title,
             channel : playListInformation.channel,
             link : playListInformation.link,
             videosQuantity : playListInformation.videosQuantity
         });
+        console.log("Done insert new playlist");
+    },
+    sendEmail : function(form){
+        console.log(aa);
+    },
+    removeEvent : function(_id){
+        //console.log(_id, Meteor.user()._id)
+        _Event.remove({_id : _id, eventCreator : Meteor.user()._id});
     },
     getEvents : function(){
         metaPerWeek();
-        //addAllCardsOnModernPerWeek();
-        //makeCardDatabase();
-        //updateMeta2();
-        //cardsPercentageValues(format, deckName, 7);
-        //simplifyData();
-        //defineDeckColors();
-        //console.log("getEvents");
-        //getTheEvents("standard", "daily", 7);
-        //downloadEvents("daily");
-        //getTheEvents("legacy", "daily", 7);
-        //downloadEvents("daily");
-        //getTheEvents("vintage", "daily", 7);
-        //downloadEvents("daily");
-        //getTheEvents("modern", "daily", 7);
-        //downloadEvents("daily");
-        //console.log("Done getEvents");
     },
     updateDeckType : function(_id, name){
         addNameToDeck(_selectedDeckID, name);
-        //_Deck.update({_id : _id},{
-        //    $set : {name : name}
-        //});
     },
     updateMetaMethod : function(){
         //makeDeck();
@@ -112,6 +102,50 @@ Meteor.methods({
         data.events = getEvents(format, deckSelected);
         data.playlists = getPlayListData(format, deckSelected);
         return data;
+    },
+    addAFutureEvent : function(futureEvent){
+        var extraInfo = {deckStored : false, customEvent : true};
+        for(var key in extraInfo){
+            futureEvent[key] = extraInfo[key];
+        }
+        _Event.insert(futureEvent);
+    },
+    addVODToEvent : function(_id, vod){
+        _Event.update({_id : _id},
+            {
+                $set : {vod : vod}
+            }
+        );
+    },
+    addYoutubePlaylist : function(_id, playlist){
+        _futureEvents.update({_id : _id},
+            {
+                $set : {playlist : playlist}
+            }
+        );
+    },
+    testEvent : function(){
+        queryInsideASubset();
+        //getMtgoPtqEvents("standard", 5);
+        //getMtgoPtq8();
+        //getDailyEvents("vintage", 5);
+        //extractInfoFromDaily();
+
+        //getMtgoPtqEvents();
+        //getMtgoPtq8();
+        //getProTourLinks();
+        //getProTour();
+        //getProTourLinks();
+
+
+        //PRO TOUR
+        //getProTourLinks();
+        //getProTourHtml();
+        //getProTourDeckLinks();
+        //getProTourRankingsTableHtml();
+        //getProTourRankings();
+        //getPtTop8Bracket();
+        //getProTourDecks();
     }
 });
 

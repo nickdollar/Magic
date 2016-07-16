@@ -1,0 +1,44 @@
+<template name="futureEventsTable">
+    <div class="futureEventsTable">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Event
+                    </th>
+                    <th>
+                        Format
+                    </th>
+                    <th>
+                        Stream
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each futureEvents}}
+                    <tr>
+                        <td class="name">
+                            {{#if creator}}
+                                <span class="deleteFutureEvent">Delete</span>
+                            {{/if}}
+                            {{eventName}}
+                        </td>
+                        <td class="format">
+                            {{#each format}}{{this}}{{/each}}
+                        </td>
+                        <td class="stream">
+                            <a href="https://www.twitch.tv/{{streamChannel}}"><img class="twitchLogo" src="/img/twitchPurple.png"></a>
+                        </td>
+                        <td class="date">
+                            <div class="monthDay">{{datePrettify time}}</div>
+                            <div class="hour">{{hoursDateTimezone time timezone}}</div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

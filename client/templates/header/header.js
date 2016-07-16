@@ -1,5 +1,3 @@
-Session.set("siteName", null);
-
 function MenuOpenCloseErgoTimer(dDelay, fActionFunction, node){
     if (typeof this.delayTimer == "number") {
         clearTimeout (this.delayTimer);

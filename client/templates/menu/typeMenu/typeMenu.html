@@ -1,16 +1,14 @@
 <template name="typeMenu">
     <div class="typeMenu">
         <nav class="navbar navbar-static-top navbar-height">
-            <div class="container">
-                <div class="collapse navbar-collapse navbar-inner">
-                    <ul class="nav navbar-nav selected">
-                        <li class="{{active ''}}"><a href="{{pathFor path format = ''}}" >All</a></li>
-                        <li class="{{active 'standard'}}"><a href="{{pathFor path format = 'standard'}}" >Standard</a></li>
-                        <li class="{{active 'modern'}}"><a href="{{pathFor path format = 'modern'}}">Modern</a></li>
-                        <li class="{{active 'vintage'}}"><a href="{{pathFor path format = 'vintage'}}">Vintage</a></li>
-                        <li class="{{active 'legacy'}}"><a href="{{pathFor path format = 'legacy'}}">Legacy</a></li>
-                    </ul>
-                </div>
+            <div class="collapse navbar-collapse navbar-inner">
+                <ul class="nav navbar-nav selected">
+                    <li class="{{active ''}}"><a name="" class="selectedFormat" href="{{pathFor path format = ''}}" >news</a></li>
+                    <li class="{{active 'standard'}}"><a name="standard" class="selectedFormat" href="{{pathFor path format = 'standard'}}" >Standard</a></li>
+                    <li class="{{active 'modern'}}"><a name="modern" class="selectedFormat" href="{{pathFor path format = 'modern'}}">Modern</a></li>
+                    <li class="{{active 'vintage'}}"><a name="vintage" class="selectedFormat" href="{{pathFor path format = 'vintage'}}">Vintage</a></li>
+                    <li class="{{active 'legacy'}}"><a name="legacy" class="selectedFormat" href="{{pathFor path format = 'legacy'}}">Legacy</a></li>
+                </ul>
             </div>
         </nav>
     </div>

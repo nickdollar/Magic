@@ -15,46 +15,81 @@ downloadEvents = function(eventType){
     });
 }
 
-getTheEvents = function(format, type, days){
-    var date = new Date();
-    for(var i = 0; i < days ; i++){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + format +"-" + type + "-"+year + "-" + month + "-" + day;
 
-        var res = request.getSync(url, {
-            encoding : null
-        });
-        if (res.response.statusCode == 200) {
-            var buffer = res.body;
-            var $ = cheerio.load(buffer);
-            var deckMeta = $('.deck-meta h5');
 
-            if(deckMeta.length == 0){
-                console.log("Page Doesn't exists");
-            }else{
-                var rows = $('tbody tr');
 
-                if(_Event.find({httpAddress : url}, {limit : 1}).count() == 0){
-                    var eventInformation = getTheEventNumberAndDate($(deckMeta[0]).text());
-                    _Event.insert({
-                        date: eventInformation.date,
-                        _eventNumber: eventInformation._eventNumber,
-                        format : format,
-                        eventType: type,
-                        players : rows.length,
-                        httpAddress : url
-                    });
-                }else{
-                    console.log("event Exist Already");
-                }
-            }
-        }
 
-        date = new Date(date.setDate(date.getDate() - 1));
-    }
-}
+//extractCardsFromLeague = function(){
+//    var event = _temp.findOne({});
+//    var buffer = event.value;
+//    var $ = cheerio.load(buffer);
+//    var decks = $('.bean--wiz-content-deck-list');
+//
+//    var rows = $(".even, .odd");
+//    var options = $("thead th");
+//    var tableInformation = [];
+//
+//    for(var i = 0 ; i < rows.length; i++) {
+//        var columns = $(rows[i]).find("td");
+//        var table = {};
+//        for(var j = 0; j < options.length; j++){
+//            table[$(options[j]).html()] = $(columns[j]).html();
+//        }
+//        tableInformation.push(table);
+//    }
+//
+//    for(var i = 0 ; i < decks.length; i++){
+//        var deckNumbers = tableInformation[i];
+//
+//        var information = getDeckInfo($(decks[i]).find('h4').html());
+//        var data = {
+//            _eventID : event._id,
+//            date : event.date,
+//            eventType : event.eventType,
+//            player : information.player,
+//            format : event.format,
+//            victory : information.victory,
+//            draw : information.draw,
+//            loss : information.loss
+//        };
+//
+//        var cards = $(decks[i]).find('.sorted-by-overview-container .row');
+//        var deckCards = {main : [], sideboard : []};
+//        var mainDeckQuantity = 0;
+//        for(var j = 0; j < cards.length; j++){
+//            var quantity = parseInt($(cards[j]).find('.card-count').text());
+//            mainDeckQuantity += quantity;
+//            var name = $(cards[j]).find('.card-name').text();
+//            name = fixCards(name);
+//            deckCards.main.push(
+//                {
+//                    name : name,
+//                    quantity : quantity
+//                }
+//            );
+//        }
+//        var colors = setUpColorForDeckName(deckCards);
+//
+//        data.colors = colors;
+//
+//        var sideboard = $(decks[i]).find('.sorted-by-sideboard-container .row');
+//        var sideboardQuantity = 0;
+//        for(j = 0; j < sideboard.length; j++){
+//            var quantity = parseInt($(sideboard[j]).find('.card-count').text());
+//            sideboardQuantity += quantity;
+//            var name = $(sideboard[j]).find('.card-name').text();
+//            name = fixCards(name);
+//            deckCards.sideboard.push(
+//                {
+//                    name : name,
+//                    quantity : quantity
+//                }
+//            );
+//        }
+//
+//        console.log(data);
+//    }
+//}
 
 getEventQuantityOfBooters = function(address, callback){
     var result = request.getSync(address, {
@@ -150,7 +185,7 @@ getTop8 = function(event){
     }
 }
 
-getTop8Table = function($, top8Table){
+getTop8Bracket = function($, top8Table){
     var quarterFinalsPlayers = {};
     var semiFinalsPlayers = {};
     var finalsPlayers = {};
@@ -195,26 +230,26 @@ getTop8Table = function($, top8Table){
 }
 
 getInfoFromPlayerTop8Loser = function(line){
-    var positionPatt = new RegExp(/\d/);
-    var scoreWinPatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )(\d)/);
-    var scoreLosePatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )\d-(\d)/);
-    var namePatt = new RegExp(/(?:\(\d\)\s)([^, ]+)/);
+    var positionPatt = new RegExp(/\d+(?=\))/);
+    var namePatt = new RegExp(/(?! )(?=[a-zA-Z]).*?(?=\s*?$)/i);
     var information = {};
-    //information.position = positionPatt.exec(line)[0];
-    information.name = namePatt.exec(line)[1];
+
+    information.position = positionPatt.exec(line)[0];
+    information.name = namePatt.exec(line)[0];
     return information;
 }
 
 getInfoFromPlayerTop8Winner = function(line){
-    var scoreWinPatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )(\d)/);
-    var scoreLosePatt = new RegExp(/(?:\(\d\)\s)[^, ]+(?:, )\d-(\d)/);
-    var namePatt = new RegExp(/(?:\(\d\)\s)([^, ]+)(?:, )/);
+    var positionPatt = new RegExp(/\d+(?=\))/i);
+    var scoreWinPatt = new RegExp(/\d(?=-)/i);
+    var scoreLosePatt = new RegExp(/(?=\d-)\d/i);
+    var namePatt = new RegExp(/(?!\(\d\))(?=[A-Za-z])[A-Za-z ]+(?=,)/i);
 
     var information = {};
-    information.name = namePatt.exec(line)[1];
-    information.wins = scoreWinPatt.exec(line)[1];
-    information.losses = scoreLosePatt.exec(line)[1];
-
+    information.name = namePatt.exec(line)[0];
+    information.wins = scoreWinPatt.exec(line)[0];
+    information.losses = scoreLosePatt.exec(line)[0];
+    information.position = positionPatt.exec(line)[0];
 
     return information;
 }
@@ -243,8 +278,6 @@ getDaily = function(event){
     }
 
     for(var i = 0 ; i < decks.length; i++){
-        //var deckNumbers = tableInformation[i];
-
         var information = getDeckInfo($(decks[i]).find('h4').html());
         var data = {
             _eventID : event._id,
@@ -267,7 +300,6 @@ getDaily = function(event){
             mainDeckQuantity += quantity;
             var name = $(cards[j]).find('.card-name').text();
             name = fixCards(name);
-
             _DeckCards.insert({
                 _deckID : _deckID,
                 name : name,
@@ -330,6 +362,7 @@ getDeckInfoFromTop8 = function(information){
 
 
 getDeckInfo = function(information){
+    console.log(information);
     var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
     var playerPatt = /^(.*?) \(/;
     var digitPatt = /\d+/g;
@@ -338,15 +371,10 @@ getDeckInfo = function(information){
     var results = score.match(digitPatt);
     temp.player = information.match(playerPatt)[1];
 
-
     if(results.length==2){
-        temp.victory = parseInt(results[0]);
-        temp.loss = parseInt(results[1]);
-        temp.draw = 0;
+        temp.score = {victory : parseInt(results[0]), loss : parseInt(results[1]), draw : 0}
     }else if(results.length==3){
-        temp.victory = parseInt(results[0]);
-        temp.draw = parseInt(results[1]);
-        temp.loss = parseInt(results[2]);
+        temp.score = {victory : parseInt(results[0]), draw : parseInt(results[1]), loss : parseInt(results[2])}
     }
     return temp;
 }

@@ -7,7 +7,7 @@ Template.narrowSearch.onRendered(function(){
         slide: function( event, ui ) {
             $("#minAmount").text(ui.values[ 0 ]);
             $("#maxAmount").text(ui.values[ 1 ]);
-            updateListFunction();
+            tablePriceSearch();
         }
     });
 
@@ -16,112 +16,151 @@ Template.narrowSearch.onRendered(function(){
 });
 
 Template.narrowSearch.events({
-    'change input, .ui-slider-range': function (evt, tmp) {
-        updateListFunction();
+    'change #colorsOption input': function (evt, tmp) {
+        tableColorsSearch();
+    },
+    'change #typeOptions input': function (evt, tmp) {
+        tableTypeSearch();
+    },
+    'change #deckOrArchetype input': function (evt, tmp) {
+        if($(evt.target).val() == "decks"){
+            Session.set("deckOrArchetype", true);
+        }else{
+            Session.set("deckOrArchetype", false);
+        }
     }
 });
 
-updateListFunction = function()
-{
-    var types = [];
-    var typesName = ["aggro", "combo", "control"];
-    var colors = {G : false, B : false, R : false, W : false, U : false};
-    var boxType = "";
-
-
-    if($("input:checked:radio[name=decksArchetypes]").val() == "archetypes"){
-        boxType = ".archetypeBox";
+tableColorsSearch = function(){
+    if(!Session.get("deckOrArchetype")){
+        console.log("archetypeListTable");
+        var table = $('#archetypeListTable').DataTable();
     }else{
-        boxType = ".deckBox";
+        console.log("deckListTable");
+        var table = $('#deckListTable').DataTable();
     }
+//COLORS
+    var colorsOptions = {G : false, B : false, R : false, W : false, U : false};
+    var colorsRegex = "";
+    var quantity = 0;
 
-    for(var i = 0; i < typesName.length; i++){
-        if($("input:checked[role=checkbox][value=" + typesName[i] + "]").exists()){
-            types.push("[data-type="+ typesName[i] + "]");
-        }
-    }
-
-
-    for(var key in colors){
-        if($("input:checked[role=checkbox][value="+key+"]").exists()){
-            colors[key] = true;
-        }
-    }
-
-    $(".deckBox, .archetypeBox").hide();
-
-    if($("input:checked:radio[name=optionsRadio]").val() == "contain"){
-
-        var colorsText = [];
-        var search = "";
-
-        for(var key in colors){
-            if(colors[key] == true){
-                colorsText.push("[data-colors*="+ key +"]");
+    if($("input:checked:radio[name=optionsRadio]").val() == "contain") {
+        var colorsRegex = "(";
+        var colorsArray = [];
+        for(var key in colorsOptions){
+            if($("input:checked[role=checkbox][value="+key+"]").exists()){
+                quantity++;
+                colorsArray.push(key);
             }
         }
-
-        for(var i = 0; i < colorsText.length; i++){
-            for(var j = 0; j < types.length; j++){
-                search += boxType + colorsText[i]+types[j] + ", ";
+        colorsRegex += colorsArray.join("|");
+        colorsRegex += ")";
+    }else{
+        for(var key in colorsOptions){
+            if($("input:checked[role=checkbox][value="+key+"]").exists()){
+                quantity++;
+                colorsRegex += "(?=.*" + key + ")";
             }
         }
-
-        search = search.replace(/, $/, "");
-
-        if(search == ""){
-            search += boxType + "[data-colors='']";
-        }
-
-
-        search += ", " +boxType + "[data-colors='']";
-        $(search).show();
+        colorsRegex += "(?=\\b\\w{"+ quantity +"}\\b)" + colorsRegex;
     }
 
-    if($("input:checked[type=radio]").val() == "only"){
-
-        var colorsOnly = ""
-
-        for(var key in colors){
-            if(colors[key] == true){
-                colorsOnly += key;
-            }
-        }
-
-        colorsOnly = boxType + "[data-colors='" +colorsOnly+"']"
-
-        var search = "";
-        for(var i = 0; i < types.length ; i++){
-            search += colorsOnly+types[i] + ", ";
-        }
-        search = search.replace(/, $/, "");
-        $(search).show();
+    if(quantity==0){
+        colorsRegex = "^$";
     }
 
+    console.log(colorsRegex);
 
-    var boxes = $(boxType + "[style*='display: block']");
+    table
+        .column(2)
+        .search(colorsRegex, true)
+        .draw();
+};
+
+tableTypeSearch = function(){
+
+    if(!Session.get("deckOrArchetype")){
+        var table = $('#archetypeListTable').DataTable();
+    }else{
+
+        var table = $('#deckListTable').DataTable();
+    }
+
+    var typesOptions = ["aggro", "combo", "control"];
+    var typeSelectedOptions = [];
+    for(var i = 0; i < typesOptions.length; i++){
+        if($("input:checked[role=checkbox][value=" + typesOptions[i] + "]").exists()) {
+            typeSelectedOptions.push(typesOptions[i]);
+        }
+    }
+
+    var typeOptionsRegex = typeSelectedOptions.join("|");
+    if(typeOptionsRegex==""){
+        typeOptionsRegex = "^$";
+    }
+
+    console.log(typeOptionsRegex);
+
+    table.columns(3)
+        .search(typeOptionsRegex, true)
+        .draw();
+}
+
+tablePriceSearch = function(){
+
+    if(!Session.get("deckOrArchetype")){
+        var table = $('#archetypeListTable').DataTable();
+    }else{
+
+        var table = $('#deckListTable').DataTable();
+    }
+
     var min = parseInt($("#minAmount").text());
     var max = parseInt($("#maxAmount").text());
-    var result = "";
 
+    if(!Session.get("deckOrArchetype")){
+        var minValues = table
+            .column(4)
+            .data()
+            .filter(function(value, index){
+                return parseInt(value) > min;
+            }).join("|");
 
-    if($("input:checked:radio[name=decksArchetypes]").val() == "archetypes"){
-        for(var i = 0; i < boxes.length; i++){
-            var minValue = parseInt(boxes[i].dataset.min);
-            var maxValue = parseInt(boxes[i].dataset.max);
-            if(!(min > minValue && min > maxValue) && (max < maxValue && max < minValue)){
-                result += boxType + "[data-min=" + minValue + "][data-max=" + maxValue + "], ";
-            }
-        }
+        var maxValues = table
+            .column(5)
+            .data()
+            .filter(function(value, index){
+                return parseInt(value) < max;
+            }).join("|");
     }else{
-        for(var i = 0; i < boxes.length; i++){
-            var value = parseInt(boxes[i].dataset.price);
-            if(min > value || max < value){
-                result += boxType + "[data-price=" +value+"], ";
-            }
-        }
+        var price = "("
+        price += table
+            .column(4)
+            .data()
+            .filter(function(value, index){
+                return parseInt(value) > min && parseInt(value) < max;
+            }).join("|");
+        price += ")"
     }
 
-    result = result.replace(/, $/, "");
-    $(result).hide();
+    console.log(price);
+    console.log(minValues);
+
+    var regex = true;
+    if(minValues=="" || maxValues=="" || price == "()"){
+        regex = false;
+    }
+    if(!Session.get("deckOrArchetype")){
+        table.columns(4)
+            .search(minValues, regex)
+            .draw();
+
+        table.columns(5)
+            .search(maxValues, regex)
+            .draw();
+    }else{
+        table.columns(4)
+            .search(price, regex)
+            .draw();
+    }
 };

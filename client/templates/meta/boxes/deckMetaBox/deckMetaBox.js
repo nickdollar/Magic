@@ -1,6 +1,6 @@
 Template.deckMetaBox.helpers({
     meta : function(){
-        return _simplifiedTables.findOne({format : this.format}).decks;
+        //return _simplifiedTables.findOne({format : this.format}).decks;
     },
     colors : function(name){
         var colors = _DeckNames.findOne({name : name}).colors;

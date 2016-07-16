@@ -1,19 +1,20 @@
 Template.deckPlayList.helpers({
     playlist : function(){
-        if(Session.get('deckSelectedData').playlists != null){
-            return Session.get('deckSelectedData').playlists;
-        }
+        //if(Session.get('deckSelectedData').playlists != null){
+        //    return Session.get('deckSelectedData').playlists;
+        //}
+        return _DeckPlayList.find({});
 
-    },
-    playlistExist : function(){
-        if(Session.get('deckSelectedData').playlists.length > 0){
-            return true;
-        }
-        return false;
-    },
-    image : function(_imageID){
-        return _Images.findOne({_id : _imageID});
+},
+playlistExist : function(){
+    if(Session.get('deckSelectedData').playlists.length > 0){
+        return true;
     }
+    return false;
+},
+image : function(_imageID){
+    return _Images.findOne({_id : _imageID});
+}
 });
 
 Template.deckPlayList.events({
@@ -24,7 +25,6 @@ Template.deckPlayList.events({
 });
 
 Template.deckPlayList.onRendered(function(){
-
     var owl = $("#owl-example");
     owl.owlCarousel({
         items : 5,

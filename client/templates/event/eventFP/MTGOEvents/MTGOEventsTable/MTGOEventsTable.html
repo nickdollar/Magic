@@ -1,0 +1,46 @@
+<template name="MTGOEventsTable">
+    <div class="MTGOEventsTable">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Event
+                    </th>
+                    <th>
+                        type
+                    </th>
+                    <th>
+                        Format
+                    </th>
+                    <th>
+                        players
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each mtgoEvents}}
+                    <tr class="clickable-row">
+                        <td class="name">
+                            <a href="{{pathFor 'selectedEvent' format=format _eventID =_id}}">{{_eventNumber}}</a>
+                        </td>
+                        <td class="format">
+                            {{eventType}}
+                        </td>
+                        <td class="format">
+                            {{format}}
+                        </td>
+                        <td class="players">
+                            {{players}}
+                        </td>
+                        <td class="date">
+                            <div class="monthDay">{{datePrettify date}}</div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

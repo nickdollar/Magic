@@ -1,6 +1,6 @@
 Template.topMenu.helpers({
     format : function(){
-        return Router.current().params.format;
+        return Session.get("selectedMenuFormat");
     },
     active : function(link){
         if(Session.get("topMenuSite") == link){
@@ -8,3 +8,11 @@ Template.topMenu.helpers({
         }
     }
 });
+
+Template.topMenu.events({
+    "click .logout" : function(){
+        AccountsTemplates.logout()
+    }
+});
+
+

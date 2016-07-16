@@ -1,0 +1,56 @@
+.futureEventsTable{
+  background-color: white;
+  height: 317px;
+  margin-bottom: 20px;
+  table {
+    margin-bottom: 0px;
+    thead{
+      tr {
+        th{
+          padding: 3px;
+          font-size: 10px;
+          text-align: center;
+        }
+      }
+    }
+
+
+    tbody {
+      tr {
+        height: 37px;
+        td {
+          white-space: nowrap;
+          padding: 3px;
+
+          &.name {
+            width: 99%;
+          }
+
+          &.format {
+          }
+
+          &.stream {
+            width: 100px;
+            .twitchLogo {
+              height: 20px;
+              width: 20px;
+            }
+          }
+
+          &.date {
+
+            .monthDay {
+              text-align: right;
+              font-size: 11px;
+            }
+
+            .hour {
+              text-align: right;
+              font-size: 11px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@
                 {{#with event}}
                     <td class="eventTab col-xs-3">
                         <div class="eventType">
-                        {{capitalizeEvents eventType}} {{datePretify date 'year'}}
+                        {{capitalizeEvents eventType}} {{datePrettify date 'year'}}
                         </div>
                         <div>
                             245 Players
@@ -25,19 +25,21 @@
                         </span>
                     </td>
                     <td class="deckInfoTab col-xs-3">
-                        8985
+                        <div>
+                            TCGplayer 8985
+                        </div>
+                        <div>
+                            Tix 8985
+                        </div>
                     </td>
                 {{/with}}
             </tr>
             <tr class="eventInfoBar-bottow-row">
                 <td colspan="3" class="options">
                     <ul class="list-inline">
-                        <li>Compare</li>
-                        <li>More Stats</li>
+                        <!--<li>Compare</li>-->
+                        <!--<li>More Stats</li>-->
                         <li>Download</li>
-                        <li>Buy TCG</li>
-                        <li>Buy TIX</li>
-                        <li>AAA</li>
                         <li>Sort</li>
                         <li>Sample Hand</li>
                     </ul>

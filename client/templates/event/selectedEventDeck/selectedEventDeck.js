@@ -3,7 +3,7 @@ var cardsOptions = {
     creature : {creature: true},
     enchantment : {enchantment: true, creature: false, artifact: false},
     instant : {instant: true},
-    planeswaler : {planeswalker: true},
+    planeswalker : {planeswalker: true},
     sorcety : {sorcery: true},
     land : {land: true, creature: false},
     sideboard : {}
@@ -17,9 +17,6 @@ Template.selectedEventDeck.helpers({
     },
     cardBlock : function(option){
         var eventDecksQuery = [];
-
-        console.log(Session.get("selectedEvent__deckID"));
-
         if(option === "sideboard"){
             if(Session.get("selectedEvent__deckID") == null){
                 eventDecksQuery = _eventDecks.findOne().sideboard;
@@ -34,6 +31,8 @@ Template.selectedEventDeck.helpers({
                 eventDecksQuery = _eventDecks.findOne({_id : Session.get("selectedEvent__deckID")}).main;
             }
         }
+
+
         var quantity = 0;
         var result = [];
 

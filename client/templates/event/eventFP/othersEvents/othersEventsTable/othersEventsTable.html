@@ -1,0 +1,41 @@
+<template name="othersEventsTable">
+    <div class="othersEventsTable">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Event
+                    </th>
+                    <th>
+                        Format
+                    </th>
+                    <th>
+                        Stream
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each futureEvents}}
+                    <tr>
+                        <td class="name">
+                            {{eventName}}
+                        </td>
+                        <td class="format">
+                            {{#each formats}}{{this}}{{/each}}
+                        </td>
+                        <td class="stream">
+                            <a href="https://www.twitch.tv/{{streamChannel}}"><img class="twitchLogo" src="/img/twitchPurple.png"></a>
+                        </td>
+                        <td class="date">
+                            <div class="monthDay">{{datePrettify time}}</div>
+                            <div class="hour">{{hoursDateTimezone time timezone}}</div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

@@ -1,5 +1,5 @@
 newGetOneDeckRank = function(_deckWithoutNameID){
-
+    check(_deckWithoutNameID, String);
     var deckWithoutName = _Deck.findOne({_id : _deckWithoutNameID});
 
     var deckNames = _DeckNames.find({format : deckWithoutName.format}).fetch();
@@ -74,8 +74,11 @@ getPlayListInformation = function(youtubeLink){
     var _playlistIDRegex = new RegExp('^.*(youtu.be\/|list=)([^#\&\?]*).*', 'i');
     var _playlistID = youtubeLink.match(_playlistIDRegex)[2];
 
-    var playListQuantity = APIRequestPlayListItems(_playlistID).pageInfo.totalResults;
-    var snippetPlayListInfo = APIRequestPlayListItems(_playlistID).items[0].snippet;
+
+    var request = APIRequestPlayListItems(_playlistID);
+
+    var playListQuantity = request.pageInfo.totalResults;
+    var snippetPlayListInfo = request.items[0].snippet;
 
     var information = {};
     information.date = new Date(snippetPlayListInfo.publishedAt);

@@ -1,10 +1,7 @@
-setUpColorForDeckName = function(_deckID){
+setUpColorForDeckName = function(deckCards){
     var manaRegex = new RegExp("\{([a-zA-Z])\}", 'g');
-    var cards = _DeckCards.find({_deckID : _deckID}).fetch();
-
     var tempMana = {"B" : false, "G" : false, "R" : false, "U" : false, "W" : false};
-    cards.forEach(function(card){
-        //console.log(card.name);
+    deckCards.main.forEach(function(card){
         if(_CardDatabase.findOne({name : card.name}) != null ){
             var mana = _CardDatabase.findOne({name : card.name}).manacost;
             var result;

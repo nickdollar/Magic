@@ -1,4 +1,5 @@
 createTestMeta = function() {
+    console.log("GGGGGGG");
     console.log("START");
     var start = new Date().getTime();
 
@@ -7,8 +8,8 @@ createTestMeta = function() {
 
     var end = new Date().getTime();
     var time = end - start;
-    console.log(time);
-    console.log("END");
+    //console.log(time);
+    //console.log("END");
 };
 
 

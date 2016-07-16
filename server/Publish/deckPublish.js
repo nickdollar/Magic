@@ -18,9 +18,10 @@ Meteor.publish('cardweekquantity', function(format){
     return _cardWeekQuantity.find({format : format});
 });
 
-Meteor.publish('deckArchetypes', function(format){
-    return _deckArchetypes.find({format : format});
+Meteor.publish('AllArchetype', function(format){
+    return _deckArchetypes.find();
 });
+
 
 Meteor.publish('temp', function(){
     return _temp.find({});

@@ -1,0 +1,27 @@
+{
+  "name": "Magic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "jstz": "^1.0.7",
+    "meteor-node-stubs": "^0.2.3",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickdollar/Magic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickdollar/Magic/issues"
+  },
+  "homepage": "https://github.com/nickdollar/Magic"
+}

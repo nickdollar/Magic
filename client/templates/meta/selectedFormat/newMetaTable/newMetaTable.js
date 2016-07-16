@@ -57,18 +57,14 @@ format = function(archetype) {
     var decksNameQuery = _deckArchetypes.findOne({archetype : archetype}).deckNames.map(function(obj){
         return obj.name;
     });
-
     var deckQuery = _DeckNames.find({name : {$in : decksNameQuery}}).fetch();
-
     var decksValuesQuery = _MetaValues.find({option : "deck", name : {$in : decksNameQuery}, date : Session.get('date'), type : Session.get("types")}, {sort : {percentage : -1}}).fetch();
     var html = "";
     decksValuesQuery.forEach(function(decksValuesOueryObj){
         var deck = deckQuery.find(function( deckQueryObj ) {
             return deckQueryObj.name == decksValuesOueryObj.name;
             });
-
         var deckInfo = _DeckNames.findOne({format : "modern", name : decksValuesOueryObj.name});
-
         var upDownEqual = decksValuesOueryObj.positionUpDownEqual[decksValuesOueryObj.positionUpDownEqual.length - 1];
         var positionWeekChange = decksValuesOueryObj.positionWeekChange[decksValuesOueryObj.positionWeekChange.length - 1];
 
@@ -93,7 +89,6 @@ format = function(archetype) {
         for(var i = decksValuesOueryObj.weekAddChange.length - 5; i < decksValuesOueryObj.weekAddChange.length; i++ ){
             blocks.push({color : decksValuesOueryObj.weekAddChange[i], change : prettifyPercentage(decksValuesOueryObj.weekAddNegPosChange[i], 2),  value : prettifyPercentage(decksValuesOueryObj.weekAddPercentage[i], 2), week : "AAA"});
         }
-
         html += "<td class='blocks'>" +
                 "<div class='graph'>";
         blocks.forEach(function(blockObj){
@@ -148,7 +143,6 @@ Template.dataTableNewMetaTable.onRendered(function(){
     $(".metaTableOptions .deckPagination[value=next]").click(function(){
         table.page('next').draw(false);
     });
-
     $('#example2').show()
 });
 
@@ -208,59 +202,4 @@ Template.dataTableNewMetaTable.events({
             left: evt.pageX + 10 + 'px'
         });
     }
-
 });
-
-
-
-
-
-
-
-//
-//Template.dataTableNewMetaTable.helpers({
-//    metaTest : function(){
-//        var values = _MetaValues.find({option : "archetype", type : Session.get("types"), date : Session.get('date')}, {sort : {position : 1}}).fetch();
-//        return values;
-//    },
-//    bars : function(){
-//        var blocks = [];
-//        for(var i = this.weekAddChange.length - 5; i < this.weekAddChange.length; i++ ){
-//            blocks.push({color : this.weekAddChange[i], change : prettifyPercentage(this.weekAddNegPosChange[i], 2),  value : prettifyPercentage(this.weekAddPercentage[i], 2), week : "AAA"});
-//        }
-//        return blocks;
-//    },
-//    positionChange : function(){
-//        var upDownEqual = this.positionUpDownEqual[this.positionUpDownEqual.length - 1];
-//        var positionWeekChange = this.positionWeekChange[this.positionWeekChange.length - 1];
-//        return {positionWeekChange : positionWeekChange, upDownEqual : upDownEqual};
-//    },
-//    colors : function(){
-//        var colors = _deckArchetypes.findOne({archetype : this.name}).colors;
-//        return colors;
-//    },
-//    minPrice : function(){
-//        var minPrice = _deckArchetypes.findOne({archetype : this.name}).min;
-//        return minPrice;
-//    },
-//    maxPrice : function(){
-//        var maxPrice = _deckArchetypes.findOne({archetype : this.name}).max;
-//        return maxPrice;
-//    },
-//    type : function(name){
-//        return _DeckNames.findOne({name : name}).type;
-//    },
-//    format : function(){
-//        return Session.get(SV_metaEventsFormat);
-//    },
-//    checked : function(){
-//        return "checked";
-//    },
-//    position1 : function(upDown) {
-//        if(upDown == "neutral") {
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
-//});

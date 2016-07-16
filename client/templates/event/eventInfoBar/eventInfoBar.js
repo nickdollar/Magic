@@ -1,6 +1,5 @@
 Template.eventInfoBar.helpers({
     event : function(){
-        console.log(_Event.findOne());
       return _Event.findOne();
     },
     deck : function (){
@@ -10,13 +9,14 @@ Template.eventInfoBar.helpers({
         return _eventDecks.findOne();
     },
     deckPosition : function(){
-        if(this.pos !== undefined){
-            return position;
+        if(this.position !== undefined){
+            return this.position;
         }
+
         var position = this.victory + "-" + this.loss;
 
         if(this.draw != 0){
-            position += " " + draw;
+            position += " " + this.draw;
         }
         return position;
     }

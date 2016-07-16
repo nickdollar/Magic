@@ -1,13 +1,17 @@
 .selectedEventBar {
-
+  height: 400px;
+  position: relative;
+  background-color: white;
 
   .table {
+
     thead {
       display: none;
     }
 
     tbody {
       tr {
+        max-height: 40px;
         &.player {
 
         }
@@ -17,10 +21,10 @@
       }
 
         &.activated {
-          background-color: #00b3ee;
+          background-color: lightgrey;
         }
         td {
-          padding: 5px;
+          padding: 2px;
           .firstLine {
             .position {
               float: left;
@@ -39,4 +43,32 @@
       }
     }
   }
+
+  .tableInfo {
+    position: absolute;
+    bottom: 0;
+
+    .dtInfo {
+      font-size: 12px;
+    }
+
+    .dtPaginate {
+
+      .dataTables_paginate {
+        text-align: right;
+        ul {
+          li{
+            a{
+              font-size: 12px;
+              border: none;
+              padding: 3px 5px;
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+
 }
