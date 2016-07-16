@@ -3,9 +3,28 @@
         {{>topMenu}}
         {{>typeMenu}}
     </div>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>    <div class="container content">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
+    <div class="container content">
         {{>yield}}
+        {{>modals}}
     </div>
+</template>
+
+<template name="audit">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                {{>auditEventsTable}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modals">
+    {{>pastEventsVodModal}}
+    {{>futuroEventsModal}}
+    {{>pastEventsYoutubePlaylistModal}}
+    {{>loginModal}}
 </template>
 
 <template name="metaFP">
@@ -79,14 +98,18 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="row">
-                        {{>deckList}}
+                        {{#if deckOrArchetype}}
+                            {{>deckList}}
+                        {{else}}
+                            {{>archetypesList}}
+                        {{/if}}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="row">
-                        {{>archetypesList}}
+
                     </div>
                 </div>
             </div>
@@ -129,15 +152,21 @@
                     {{>eventBar}}
                 </div>
                 <div class="row tnails">
-                    <div class="col-xs-4">
-                        {{>eventSmall}}
+                    <div class="col-xs-6">
+                        <div class="row">
+                            {{>eventSmallTable}}
+                        </div>
                     </div>
-                    <div class="col-xs-4">
-                        {{>eventPtq}}
+                    <div class="col-xs-6">
+                        <div class="row">
+                            {{>eventPtqTable}}
+                        </div>
                     </div>
-                    <div class="col-xs-4">
-                        {{>eventSmall}}
-                    </div>
+                    <!--<div class="col-xs-4">-->
+                        <!--<div class="row">-->
+                            <!--{{>eventOthersTable}}-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
@@ -174,14 +203,6 @@
     </div>
 </template>
 
-<template name="eventFP">
-    <div class="col-xs-6">
-        {{>passEventsCol}}
-    </div>
-    <div class="col-xs-6">
-        {{>futuroEventsCol}}
-    </div>
-</template>
 
 
 <template name="selectedMeta">
@@ -235,11 +256,67 @@
                         </div>
                         <div class="hidden-xs hidden-sm col-md-3">
                             <div class="row">
-                                {{>deckPicture_COL}}
+                                {{>deckPicture_COL }}
                             </div>
                         </div>
                     </div>
                 {{/if}}
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template name="events">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-12" id="pastEvents">
+                    <div class="row">
+                        {{>pastStreamedEventsHeader}}
+                    </div>
+                    <div class="row">
+                        {{>pastStreamedEventsTable}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-12" id="#futuroEvents">
+                    <div class="row">
+                        {{>futureEventsHeader}}
+                    </div>
+                    <div class="row">
+                        {{>futureEventsTable}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-12" id="pastEvents">
+                    <div class="row">
+                        {{>MTGOEventsHeader}}
+                    </div>
+                    <div class="row">
+                        {{>MTGOEventsTable}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-12" id="#futuroEvents">
+                    <div class="row">
+                        {{>othersEventsHeader}}
+                    </div>
+                    <div class="row">
+                        {{>othersEventsTable}}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -257,7 +334,9 @@
             </div>
         </div>
         <div class="col-xs-9">
-            {{>selectedEventDeck}}
+            <div class="row">
+                {{>selectedEventDeck}}
+            </div>
         </div>
     </div>
 </template>

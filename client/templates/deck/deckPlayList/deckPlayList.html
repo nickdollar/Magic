@@ -1,7 +1,5 @@
 <template name="deckPlayList">
 <div class="playListRow">
-
-
     <div id="owl-example" class="multiple-items">
         {{#if playlist}}
             {{#each playlist}}
@@ -25,20 +23,9 @@
             {{/each}}
         {{else}}
             <div class="playListItem">
-                playListItem
+                No playlist
             </div>
         {{/if}}
-    </div>
-    <div class="customNavigation">
-        <!--<button type="button" class="btn btn-primary btn-sm prev">-->
-            <!--Prev-->
-        <!--</button>-->
-        <!--<button type="button" class="btn btn-primary btn-sm next">-->
-            <!--Next-->
-        <!--</button>-->
-        <!--<button type="button" class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#myModal">-->
-            <!--Add a Playlist-->
-        <!--</button>-->
     </div>
 </div>
 </template>

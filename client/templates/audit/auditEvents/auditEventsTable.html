@@ -1,0 +1,41 @@
+<template name="auditEventsTable">
+    <div class="auditEventsTable">
+        <button class="aaaa">AAAAA</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>_id</th>
+                    <th>Event Number</th>
+                    <th>Date</th>
+                    <th>Format</th>
+                    <th>Type</th>
+                    <th>stored</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#each events}}
+                <tr>
+                    <td>
+                        {{_id}}
+                    </td>
+                    <td>
+                        {{_eventNumber}}
+                    </td>
+                    <td>
+                        {{prettifyDate date}}
+                    </td>
+                    <td>
+                        {{format}}
+                    </td>
+                    <td>
+                        {{eventType}}
+                    </td>
+                    <td>
+                        {{deckStored}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</template>

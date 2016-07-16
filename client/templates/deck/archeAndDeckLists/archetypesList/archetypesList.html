@@ -1,26 +1,52 @@
 <template name="archetypesList">
-    <div class="archetypes">
-        {{#each archetypesName}}
-            <div class="col-xs-3 archetypeBox" data-colors="{{colors}}" data-type="{{type}}" data-min="{{min}}"  data-max="{{max}}">
-                <a class="thumbnail" href="{{pathFor 'deckSelected' format = format archetype = archetypeLinkFix}}">
-                    <div class="firstLine">
-                        <div class="archetypeName">
-                            {{archetype}}
-                        </div>
-                        <div class="archetypeMana">
-                            {{#each getManaCss colors "deck"}}<div class="mana {{mana}}">x</div>{{/each}}
-                        </div>
-                    </div>
-                    <div class="secondLine">
-                        <div class="type">
-                            {{type}}
-                        </div>
-                        <div class="values">
-                            ${{min}}-{{max}}
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {{/each}}
+    <div class="archetypesList">
+        <table id="archetypeListTable" class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>name</th>
+                <th>colors</th>
+                <th>type</th>
+                <th>min</th>
+                <th>max</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each archetypesName}}
+                <tr>
+                    <td class="details-control" data-name="{{archetype}}"></td>
+                    <td><a href={{pathFor 'deckSelected' archetype=fixForLinkArchetype}}>{{archetype}}</a></td>
+                    <td data-search="{{colors}}">{{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}</td>
+                    <td>{{type}}</td>
+                    <td data-search="{{min}}">{{min}}</td>
+                    <td data-search="{{max}}">{{max}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
     </div>
 </template>
+
+
+<!--{{#each archetypesName}}-->
+    <!--<div class="col-xs-3 archetypeBox" data-colors="{{colors}}" data-type="{{type}}" data-min="{{min}}"  data-max="{{max}}">-->
+        <!--<a class="thumbnail" href="{{pathFor 'deckSelected' format = format archetype = archetypeLinkFix}}">-->
+            <!--<div class="firstLine">-->
+                <!--<div class="archetypeName">-->
+                    <!--{{archetype}}-->
+                <!--</div>-->
+                <!--<div class="archetypeMana">-->
+                    <!--{{#each getManaCss colors "deck"}}<div class="mana {{mana}}">x</div>{{/each}}-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="secondLine">-->
+                <!--<div class="type">-->
+                    <!--{{type}}-->
+                <!--</div>-->
+                <!--<div class="values">-->
+                    <!--${{min}}-{{max}}-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</a>-->
+    <!--</div>-->
+<!--{{/each}}-->

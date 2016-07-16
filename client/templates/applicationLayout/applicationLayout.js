@@ -10,28 +10,14 @@ Template.metaFP.helpers({
 });
 
 Template.metaFP.onRendered(function(){
-        $("table").each(function(index){
-            var length = 6;
-            if($(this).hasClass("three")){
-                length = 3;
-            }
+    $("table").each(function(index){
+        var length = 6;
+        if($(this).hasClass("three")){
+            length = 3;
+        }
 
         var oTable = $(this).DataTable({
-            paging: true,
-            searching : false,
-            ordering : false,
-            info : false,
-            pagingType : "simple",
-            lengthChange: false,
             pageLength : length,
-            language: {
-                paginate: {
-                    first: '>>',
-                    previous: '<',
-                    next: '>',
-                    last: '>>'
-                }
-            },
             dom:"<'row'<'col-sm-12't>>"
         });
 
@@ -50,7 +36,16 @@ Template.selectedMeta.helpers({
 
 });
 
+Template.selectADeck.helpers({
+    deckOrArchetype : function(){
+        return Session.get("deckOrArchetype");
+    }
+})
 
+
+Template.selectADeck.onRendered(function(){
+    Session.set("deckOrArchetype", false);
+});
 
 
 Template.selectedMeta.onRendered(function(){
@@ -113,3 +108,5 @@ Template.selectedMeta.onRendered(function(){
 
 
 });
+
+

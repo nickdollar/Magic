@@ -1362,3 +1362,151 @@ Template.colorBarOriginal.rendered = function(){
                                                     <!--</div>-->
                                                 <!--</td>-->
                                             <!--</tr>-->
+
+
+
+                                             <select class="form-control">
+                                                        <!--<option timeZoneId="1"  UTCAdjustment="UTC-12:00" value="-12" name="">(UTC-12:00) International Date Line West</option>-->
+                                                        <!--<option timeZoneId="2"  UTCAdjustment="UTC-11:00" value="-11" name="">(UTC-11:00) Coordinated Universal Time-11</option>-->
+                                                        <option timeZoneId="3"  UTCAdjustment="UTC-10:00" value="-10" name="">(UTC-10:00) Hawaii</option>
+                                                        <option timeZoneId="4"  UTCAdjustment="UTC-09:00" value="-9" name="">(UTC-09:00) Alaska</option>
+                                                        <option timeZoneId="6"  UTCAdjustment="UTC-08:00" value="-8" name="US/Pacific">(UTC-08:00) Baja California</option>
+                                                        <option timeZoneId="5"  UTCAdjustment="UTC-08:00" value="-8" name="US/Pacific">(UTC-08:00) Pacific Time (US & Canada)</option>
+                                                        <option timeZoneId="7"  UTCAdjustment="UTC-07:00" value="-7" name="US/Arizona">(UTC-07:00) Arizona</option>
+                                                        <option timeZoneId="8"  UTCAdjustment="UTC-07:00" value="-7" name="America/Chihuahua">(UTC-07:00) Chihuahua, La Paz, Mazatlan</option>
+                                                        <option timeZoneId="9"  UTCAdjustment="UTC-07:00" value="-7" name="Mountain">(UTC-07:00) Mountain Time (US & Canada)</option>
+                                                        <option timeZoneId="10" UTCAdjustment="UTC-06:00" value="-6" name="America/Central">(UTC-06:00) Central America</option>
+                                                        <option timeZoneId="11" UTCAdjustment="UTC-06:00" value="-6" name="US/Central">(UTC-06:00) Central Time (US & Canada)</option>
+                                                        <option timeZoneId="12" UTCAdjustment="UTC-06:00" value="-6" name="US/Central">(UTC-06:00) Guadalajara, Mexico City, Monterrey</option>
+                                                        <option timeZoneId="13" UTCAdjustment="UTC-06:00" value="-6" name="America/Central">(UTC-06:00) Saskatchewan</option>
+
+                                                        <option timeZoneId="14" UTCAdjustment="UTC-05:00" value="-5" name="BogotaLimaQuitoRio_Branco">(UTC-05:00) Bogota, Lima, Quito, Rio Branco</option>
+                                                        <option timeZoneId="15" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Chetumal</option>
+                                                        <option timeZoneId="15" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Eastern Time (US & Canada)</option>
+                                                        <option timeZoneId="16" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Indiana (East)</option>
+
+                                                        <option timeZoneId="18" UTCAdjustment="UTC-04:00" value="-4" name="America/Caracas">(UTC-04:30) Caracas</option>
+                                                        <option timeZoneId="18" UTCAdjustment="UTC-04:00" value="-4" name="America/Asuncion">(UTC-04:30) Asuncion</option>
+                                                        <option timeZoneId="17" UTCAdjustment="UTC-04:00" value="-4" name="Canada/Atlantic">(UTC-04:00) Atlantic Time (Canada)</option>
+
+                                                        <option timeZoneId="19" UTCAdjustment="UTC-04:00" value="-4" name="America/Cuiaba">(UTC-04:00) Cuiaba</option>
+                                                        <option timeZoneId="20" UTCAdjustment="UTC-04:00" value="-4" name="Georgetown/La_Paz/Manaus/San_Juan">(UTC-04:00) Georgetown, La Paz, Manaus, San Juan</option>
+                                                        <option timeZoneId="21" UTCAdjustment="UTC-03:30" value="-3.5" name="Canada/Newfoundland">(UTC-03:30) Newfoundland</option>
+
+                                                        <option timeZoneId="22" UTCAdjustment="UTC-03:00" value="-3" name="Brazil/East">(UTC-03:00) Brasilia</option>
+                                                        <option timeZoneId="22" UTCAdjustment="UTC-03:00" value="-3" name="America/Fortaleza">(UTC-03:00) Cayenne, Fortaleza</option>
+                                                        <option timeZoneId="23" UTCAdjustment="UTC-03:00" value="-3" name="Buenos_Aires/Georgetown">(UTC-03:00) City of Buenos Aires</option>
+                                                        <option timeZoneId="24" UTCAdjustment="UTC-03:00" value="-3" name="America/Greenland">(UTC-03:00) Greenland</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="Montevideo">(UTC-03:00) Montevideo</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="America/Salvador">(UTC-03:00) Salvador</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="America/Santiago">(UTC-03:00) Santiago</option>
+
+
+                                                        <option timeZoneId="26" UTCAdjustment="UTC-02:00" value="-2" name="Atlantic/South_Georgia">(UTC-02:00) Coordinated Universal Time-02</option>
+
+                                                        <option timeZoneId="28" UTCAdjustment="UTC-01:00" value="-1" name="Azores">(UTC-01:00) Azores</option>
+                                                        <option timeZoneId="27" UTCAdjustment="UTC-01:00" value="-1" name="Cape_Verde_Is.">(UTC-01:00) Cape Verde Is.</option>
+
+
+                                                        <option timeZoneId="29" UTCAdjustment="UTC+00:00" value="0" name="Casablanca">(UTC) Casablanca</option>
+                                                        <option timeZoneId="29" UTCAdjustment="UTC+00:00" value="0" name="Casablanca">(UTC) Coordinated Universal Time</option>
+
+                                                        <option timeZoneId="30" UTCAdjustment="UTC+00:00" value="0" name="">(UTC) Dublin, Edinburgh, Lisbon, London</option>
+                                                        <option timeZoneId="30" UTCAdjustment="UTC+00:00" value="0" name="">(UTC) Monrovia, Reykjavik</option>
+
+                                                        <option timeZoneId="31" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+                                                        <option timeZoneId="32" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                                                        <option timeZoneId="33" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                                                        <option timeZoneId="34" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+                                                        <option timeZoneId="35" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) West Central Africa</option>
+                                                        <option timeZoneId="35" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Windhoek</option>
+
+                                                        <option timeZoneId="36" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Amman</option>
+                                                        <option timeZoneId="37" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Athens, Bucharest</option>
+                                                        <option timeZoneId="38" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Beirut</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Cairo</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Damascus</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) E. Europe</option>
+                                                        <option timeZoneId="40" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Harare, Pretoria</option>
+                                                        <option timeZoneId="41" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Istanbul</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Jerusalem</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Kaliningrad</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Tripoli</option>
+
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Baghdad</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Kuwait, Riyadh</option>
+                                                        <option timeZoneId="43" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Minsk</option>
+                                                        <option timeZoneId="44" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Moscow, St. Petersburg, Volgograd</option>
+                                                        <option timeZoneId="44" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Nairobi</option>
+
+
+
+                                                        <option timeZoneId="45" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Astrakhan, Ulyanovsk</option>
+                                                        <option timeZoneId="46" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+03:30) Tehran</option>
+                                                        <option timeZoneId="47" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Abu Dhabi, Muscat</option>
+                                                        <option timeZoneId="48" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Baku</option>
+                                                        <option timeZoneId="50" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Izhevsk, Samara</option>
+                                                        <option timeZoneId="51" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Port Louis</option>
+                                                        <option timeZoneId="51" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Tbilisi</option>
+                                                        <option timeZoneId="52" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Yerevan</option>
+
+                                                        <option timeZoneId="53" UTCAdjustment="UTC+04:30" value="4.5" name="">(UTC+04:30) Kabul</option>
+
+                                                        <option timeZoneId="54" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Ashgabat, Tashkent</option>
+                                                        <option timeZoneId="55" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Ekaterinburg</option>
+                                                        <option timeZoneId="55" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Islamabad, Karachi</option>
+
+                                                        <option timeZoneId="57" UTCAdjustment="UTC+05:30" value="5.5" name="">(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                                                        <option timeZoneId="56" UTCAdjustment="UTC+05:30" value="5.5" name="">(UTC+05:30) Sri Jayawardenepura</option>
+
+
+                                                        <option timeZoneId="58" UTCAdjustment="UTC+05:45" value="5.75" name="">(UTC+05:45) Kathmandu</option>
+
+
+                                                        <option timeZoneId="60" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Astana</option>
+                                                        <option timeZoneId="59" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Dhaka</option>
+                                                        <option timeZoneId="59" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Novosibirsk</option>
+
+
+                                                        <option timeZoneId="62" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Barnaul, Gorno-Altaysk</option>
+                                                        <option timeZoneId="61" UTCAdjustment="UTC+06:30" value="6.5" name="">(UTC+06:30) Yangon (Rangoon)</option>
+                                                        <option timeZoneId="62" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Bangkok, Hanoi, Jakarta</option>
+                                                        <option timeZoneId="63" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Krasnoyarsk</option>
+
+                                                        <option timeZoneId="64" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+                                                        <option timeZoneId="66" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Irkutsk</option>
+                                                        <option timeZoneId="65" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Kuala Lumpur, Singapore</option>
+                                                        <option timeZoneId="67" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Perth</option>
+                                                        <option timeZoneId="68" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Taipei</option>
+                                                        <option timeZoneId="68" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Ulaanbaatar</option>
+
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Chita</option>
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Pyongyang</option>
+                                                        <option timeZoneId="69" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Osaka, Sapporo, Tokyo</option>
+                                                        <option timeZoneId="70" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Seoul</option>
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Yakutsk</option>
+
+                                                        <option timeZoneId="72" UTCAdjustment="UTC+09:30" value="9.5" name="">(UTC+09:30) Adelaide</option>
+                                                        <option timeZoneId="73" UTCAdjustment="UTC+09:30" value="9.5" name="">(UTC+09:30) Darwin</option>
+
+                                                        <option timeZoneId="74" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Brisbane</option>
+                                                        <option timeZoneId="75" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Canberra, Melbourne, Sydney</option>
+                                                        <option timeZoneId="77" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Guam, Port Moresby</option>
+                                                        <option timeZoneId="76" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Hobart</option>
+                                                        <option timeZoneId="76" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Magadan</option>
+                                                        <option timeZoneId="78" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Vladivostok</option>
+
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Sakhalin</option>
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Chokurdakh</option>
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Solomon Is., New Caledonia</option>
+
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Anadyr, Petropavlosvsk-Kamchatsky</option>
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Auckland, Wellington</option>
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Coordinated Universal Time+12</option>
+                                                        <option timeZoneId="81" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Fiji</option>
+
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Nuku'alofa</option>
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Samoa</option>
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Kiritimati Island</option>
+                                                    </select>

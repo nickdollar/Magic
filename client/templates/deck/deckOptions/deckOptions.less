@@ -1,7 +1,11 @@
 .deckOptions {
-
-  #owlDeckOptions{
+  background-color: white;
+  padding: 10px 0px;
+  #owl-deckOption{
       .deckBox {
+        margin: 0px 5px;
+        padding: 8px;
+        border: 1px solid lightgrey;
         a {
           background-color: white;
           margin-bottom: 6px;
@@ -10,9 +14,8 @@
             .deckName {
               position: relative;
               display: inline-block;
-              float: left;
               text-overflow: ellipsis;
-              width: 120px;
+              width: 100px;
               /* Required for text-overflow to do anything */
               white-space: nowrap;
               overflow: hidden;
@@ -20,24 +23,14 @@
             }
             .deckMana {
               text-align: right;
-              width: 53px;
               display: inline-block;
+            }
+            .values {
               float: right;
+              display: inline-block;
             }
           }
 
-          .secondLine {
-            overflow: hidden;
-            .type {
-              position: relative;
-              display: inline-block;
-              float: left;
-            }
-            .values {
-              display: inline-block;
-              float: right;
-            }
-          }
         }
       }
   }

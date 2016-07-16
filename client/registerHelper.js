@@ -1,5 +1,7 @@
+import moment from "moment";
+
 Template.registerHelper('arrayify',function(obj){
-    result = [];
+    var result = [];
     for (var key in obj) result.push({name:key,value:obj[key]});
     return result;
 });
@@ -112,13 +114,13 @@ Template.registerHelper("getManaCssParentheses", function(manacost) {
 
 Handlebars.registerHelper("tableIndex", function(index, options) {
 
-    if(options == "decksNames"){
-       return (Session.get(SV_metaDeckListPagination) + index + 1);
-    }
-
-    if(options == "cardsTable"){
-       return Session.get(SV_metaCardListPagination) + index + 1;
-    }
+    //if(options == "decksNames"){
+    //   return (Session.get(SV_metaDeckListPagination) + index + 1);
+    //}
+    //
+    //if(options == "cardsTable"){
+    //   return Session.get(SV_metaCardListPagination) + index + 1;
+    //}
 });
 
 Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
@@ -139,16 +141,30 @@ Template.registerHelper("fixForLink", function() {
     return phrase;
 });
 
-Template.registerHelper("datePretify", function(date, option) {
+Template.registerHelper("fixForLinkArchetype", function() {
+    var phrase = this.archetype ? this.archetype.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+    return phrase;
+});
 
-    var yy = date.getFullYear().toString().substr(2,2);
-    var mm = (date.getMonth()+1).toString();
-    var dd  = date.getDate().toString();
-    if(option == "year"){
-        return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]) + "-" + yy;
-    }
+Template.registerHelper("replaceSpaceForHyphen", function() {
+    var phrase = this.archetype ? this.archetype.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+    return phrase;
+});
 
-     return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0])
+Template.registerHelper("hoursDateTimezone", function(date, timezone) {
+    //return moment.tz(date, timezone).format("h:mma z");
+});
+
+Template.registerHelper("datePrettify", function(date, option) {
+    return moment(date).format('MM/DD');
+    //var yy = date.getFullYear().toString().substr(2,2);
+    //var mm = (date.getMonth()+1).toString();
+    //var dd  = date.getDate().toString();
+    //if(option == "year"){
+    //    return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]) + "-" + yy;
+    //}
+    //
+    // return (mm[1]?mm:"0"+mm[0]) + "-datetimepicker " + (dd[1]?dd:"0"+dd[0])
 });
 
 Template.registerHelper("prettifyDate", function(timestamp) {
@@ -196,6 +212,11 @@ Template.registerHelper('deckPosition', function(){
     }
 
 });
+
+Template.registerHelper('initial', function(string){
+    return string.charAt(0).toUpperCase();
+});
+
 
 Template.registerHelper('upperCase', function(string){
     return string.toUpperCase();

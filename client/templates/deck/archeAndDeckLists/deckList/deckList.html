@@ -1,26 +1,26 @@
 <template name="deckList">
     <div class="deckList">
-        {{#each decksName}}
-            <div class="col-xs-3 deckBox" data-colors="{{colors}}" data-type="{{type}}" data-price="{{price}}" hidden>
-                <a class="thumbnail" href="{{pathFor 'deckSelected' format = format archetype = archetype deckSelected = fixForLink}}">
-                    <div class="firstLine">
-                        <div class="archetypeName">
-                            {{name}}
-                        </div>
-                        <div class="archetypeMana">
-                            {{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}
-                        </div>
-                    </div>
-                    <div class="secondLine">
-                        <div class="type">
-                            {{type}}
-                        </div>
-                        <div class="values">
-                            ${{price}}
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {{/each}}
+        <table id="deckListTable" class="table">
+            <thead>
+            <tr>
+                <th>name</th>
+                <th>archetype</th>
+                <th>colors</th>
+                <th>type</th>
+                <th>price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each decksName}}
+                <tr>
+                    <td><a href={{pathFor 'deckSelected' archetype=archetypeReplaceSpaceForDash deckSelected=fixForLink}}>{{name}}</a></td>
+                    <td><a href={{pathFor 'deckSelected' archetype=archetypeReplaceSpaceForDash }}>{{archetype}}</a></td>
+                    <td data-search="{{colors}}">{{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}</td>
+                    <td>{{type}}</td>
+                    <td data-search="{{price}}">{{price}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
     </div>
 </template>
