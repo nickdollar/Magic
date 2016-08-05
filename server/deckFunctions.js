@@ -1,8 +1,3 @@
-getPlayListData = function(format, deckSelected){
-    var data = _DeckPlayList.find({format : format, _deckName : deckSelected.replace("-", " ")}).fetch();
-    return data;
-};
-
 getEvents = function(format, deckSelected){
     var events = {dailies : [], ptq : [], others : []};
 

@@ -6,6 +6,19 @@ Meteor.publish('deckSelectedDeckPlaylist', function(){
     return _DeckPlayList.find({});
 });
 
+Meteor.publish('deckSelectedDeckPlaylistResults', function(){
+    return _DeckPlayList.find({}, {fields : {likeCount : 1}});
+});
+
+Meteor.publish('deckSelectedDeckPlaylistUpvotes', function(userId){
+    if(this.userId == null){
+        return _DeckPlayList.find({likes : ""} , { fields  : {likes : "", dislikes : ""}});
+    }
+    var currentUserId = this.userId;
+    return _DeckPlayList.find({$or : [{likes : currentUserId}, {dislikes : currentUserId}]} , { fields  : {likes : currentUserId, dislikes: currentUserId}});
+    //return _DeckPlayList.find({likes : {$elemMatch : {"_id" : currentUserId}}} , { fields  : {likes : { $elemMatch: {_id : currentUserId}}}});
+});
+
 Meteor.publish('deckSelectedDeckArchetypes', function(format){
     return _deckArchetypes.find({format : format});
 });

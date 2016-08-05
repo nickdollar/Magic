@@ -1,31 +1,80 @@
 <template name="deckPlayList">
-<div class="playListRow">
-    <div id="owl-example" class="multiple-items">
-        {{#if playlist}}
-            {{#each playlist}}
-                <div class="playListItem">
-                    <a href="{{link}}">
-                        <img src="
-                                {{#with image _cfsImagesID}}
-                            {{this.url}}
-                        {{/with}}
-                            " alt class="playListThumbnail" />
-                        <div class="caption">
-                            <div class="title">
-                                {{title}}
-                            </div>
-                            <div class="channel">
-                                by {{channel}}
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            {{/each}}
+    <div class="playListRow">
+        {{#if playlistExist}}
+            {{> playlistToRender playlistsInfo=childPlaylistsInfo}}
         {{else}}
             <div class="playListItem">
                 No playlist
             </div>
         {{/if}}
     </div>
-</div>
+</template>
+
+<template name="playlistToRender">
+    <div class="playlistToRender">
+        <div id="owl-example" class="multiple-items">
+            {{#each playlist}}
+                <div class="playListItem">
+                    <div class="topPlayListRow">
+                        <div class="playListImage">
+                            <a href="{{link}}">
+                                <img src="{{#with image _cfsImagesID}}{{this.url}}{{/with}}" alt class="playListThumbnail"
+                                />
+                            </a>
+                        </div>
+                        <div class="votingArea">
+                            <div class="dropdown">
+                                <div class="clickButton"><i class="ion-close-circled"></i></div>
+                                <div class="dropdown-content">
+                                    <div class="reportForm">
+                                        {{#autoForm schema=typesSchema1 id="reportForm" type="method" buttonClasses="btn btn-primary btn-sm" meteormethod="reportAPlaylist"}}
+                                            {{> afFormGroup name="reportString" type="select-radio" }}
+                                            {{> afQuickField name="_id" type="hidden" value=_id}}
+                                            <div>
+                                                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                            </div>
+                                        {{/autoForm}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{#if currentUser}}
+                                {{#if upVote}}
+                                    <div class="removeUpVote"><i class="ion-arrow-up-c upColor"></i></div>
+                                {{else}}
+                                    <div class="upVote"><i class="ion-arrow-up-c"></i></div>
+                                {{/if}}
+                            {{else}}
+                                <div data-toggle="modal" data-target="#loginModel">U</div>
+                            {{/if}}
+
+                            <div class="voteValues">{{likeCount}}</div>
+                            {{#if currentUser}}
+                                {{#if downVote}}
+                                    <div class="removeDownVote"><i class="ion-arrow-down-c downColor"></i></div>
+                                {{else}}
+                                    <div class="downVote"><i class="ion-arrow-down-c"></i></div>
+                                {{/if}}
+                            {{else}}
+                                <div data-toggle="modal" data-target="#loginModel"><i class="ion-arrow-down-c"></i></div>
+                            {{/if}}
+                        </div>
+                        <div style="clear: both"></div>
+
+                    </div>
+                    <div class="bottomPlayListRow">
+                        <div class="caption">
+                            <div class="title">
+                                <a href="{{link}}">
+                                    {{title}}
+                                </a>
+                            </div>
+                            <div class="channel">
+                                by <a href="http://www.youtube.com/user/{{channel}}">{{channel}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
 </template>

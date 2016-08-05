@@ -1,20 +1,82 @@
 .playListRow {
   background-color: white;
   padding-top: 5px;
+
   //padding-bottom: 15px;
 
   .playListItem {
     height: 170px;
     margin-right: 10px;
     margin-left: 10px;
+    .topPlayListRow {
+      .playListImage{
+        width: 80%;
+        float: left;
+        img {
+          width: 100%;
+        }
+      }
 
-    img {
-      width: 100%;
+      .votingArea{
+        float: right;
+
+
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          padding: 5px;
+          display: none;
+          position: absolute;
+          background-color: white;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          right: 10px;
+          top: 14px;
+          border: 1px;
+          .reportForm {
+            .form-group {
+              margin-bottom: 10px;
+            }
+          }
+
+        }
+
+        .removeUpVote {
+          .upColor {
+            color: dodgerblue;
+          }
+        }
+
+        .upVote {
+
+        }
+
+        .removeDownVote {
+          .downColor {
+            color: coral;
+          }
+        }
+
+        //.dropdown:hover .dropdown-content {
+        //  display: block;
+        //}
+      }
     }
 
-    .caption{
+    .bottomPlayListRow {
+      .caption{
 
+      }
     }
+
+
+
+
+
 
   }
 

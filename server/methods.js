@@ -32,8 +32,101 @@ Meteor.methods({
             });
     },
 
+    upADeckPlayListVote : function(playlist){
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                dislikes : {_id : Meteor.user()._id}
+            },{
+                $inc : {likeCount : 1},
+                $pull : {dislikes : {_id : Meteor.user()._id}}
+            }
+        )
+
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                likes : {$ne : Meteor.user()._id}
+            },{
+                $inc : {likeCount : 1},
+                $push : {likes : {_id : Meteor.user()._id}}
+            }
+        )
+    },
+    removeUpADeckPlayListVote : function(playlist){
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                likes : {_id : Meteor.user()._id}
+            },{
+                $inc : {likeCount : -1},
+                $pull : {likes : {_id : Meteor.user()._id}}
+            }
+        )
+    },
+    downADeckPlayListVote : function(playlist){
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                likes : {_id : Meteor.user()._id}
+            },{
+                $inc : {likeCount : -1},
+                $pull : {likes : {_id : Meteor.user()._id}}
+            }
+        )
+
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                dislikes : {$ne : {_id : Meteor.user()._id}}
+            },{
+                $inc : {likeCount : -1},
+                $push : {dislikes : {_id : Meteor.user()._id}}
+            }
+        )
+    },
+    removeDownADeckPlayListVote : function(playlist){
+        _DeckPlayList.update(
+            {
+                _id : playlist._id,
+                dislikes : {_id : Meteor.user()._id}
+            },{
+                $inc : {likeCount : 1},
+                $pull : {dislikes : {_id : Meteor.user()._id}}
+            }
+        )
+    },
+
+
     addDeckName : function(_selectedDeckID, name){
         addNameToDeck(_selectedDeckID, name);
+    },
+    reportAPlaylist : function(form){
+
+        if(form.reportString == "bad"){
+            _DeckPlayList.update(
+                {
+                    _id : form._id,
+                    bad : {$ne : Meteor.user()._id}
+                },{
+                    $inc : {badCount : 1},
+                    $push : {bad : {_id : Meteor.user()._id}}
+                }
+            )
+        }
+
+        if(form.reportString == "wrong"){
+            _DeckPlayList.update(
+                {
+                    _id : form._id,
+                    wrong : {$ne : Meteor.user()._id}
+                },{
+                    $inc : {wrongCount : 1},
+                    $push : {wrong : {_id : Meteor.user()._id}}
+                }
+            )
+        }
+
     },
     showDeckWithoutName : function(link){
         return insertANewVideo();
@@ -53,7 +146,8 @@ Meteor.methods({
             title : playListInformation.title,
             channel : playListInformation.channel,
             link : playListInformation.link,
-            videosQuantity : playListInformation.videosQuantity
+            videosQuantity : playListInformation.videosQuantity,
+            likeCount : 0
         });
         console.log("Done insert new playlist");
     },
@@ -98,10 +192,46 @@ Meteor.methods({
         _deckArchetypes.remove({archetype : archetype});
     },
     getPlayListDataMETHOD : function(format, deckSelected){
-        var data = {events : {}, playlist : []};
-        data.events = getEvents(format, deckSelected);
-        data.playlists = getPlayListData(format, deckSelected);
-        return data;
+        //values.upVotes = _DeckPlayList.find({
+        //    format : format,
+        //    _deckName : new RegExp(deckSelected.replace("-", " "), 'i'),
+        //    likes : Meteor.user()._id
+        //})
+        //    .fetch()
+        //    .length;
+        //values.downVotes = _DeckPlayList.find({
+        //    format : format,
+        //    _deckName : new RegExp(deckSelected.replace("-", " "), 'i'),
+        //    dislikes : Meteor.user()._id
+        //})
+        //    .fetch()
+        //    .length;
+        var test = _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')},
+                {fields :{
+                    _deckName : 1,
+                    _cfsImagesID : 1,
+                    format : 1,
+                    date : 1,
+                    title : 1,
+                    channel : 1,
+                    link : 1,
+                    videoQuantity : 1,
+                    likeCount : 1,
+                    likes : {$elemMatch : {_id : Meteor.user()._id}},
+                    dislikes : {
+                        $elemMatch : {
+                            _id : Meteor.user()._id}
+                    }
+                }
+                }
+            ).fetch();
+        return test;
+    },
+    getPlayListDataMETHODUpvote : function(format, deckSelected){
+        return _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
+    },
+    getPlayListDataMETHODDownvote : function(format, deckSelected){
+        return _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
     },
     addAFutureEvent : function(futureEvent){
         var extraInfo = {deckStored : false, customEvent : true};
