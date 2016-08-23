@@ -21,11 +21,9 @@ Schema.contact = new SimpleSchema({
     },
     format : {
         type: String,
-        label: "Playlist Url"
     },
     deckName : {
         type: String,
-        label: "Playlist Url"
     }
 });
 

@@ -126,7 +126,6 @@ Meteor.methods({
                 }
             )
         }
-
     },
     showDeckWithoutName : function(link){
         return insertANewVideo();
@@ -276,6 +275,27 @@ Meteor.methods({
         //getProTourRankings();
         //getPtTop8Bracket();
         //getProTourDecks();
+    },
+    get5MoreDaysLeague : function(){
+
+    },
+    methodEventLeagueDownloadHtml : function(_id){
+        eventLeagueDownloadHTML(_id);
+    },
+    methodEventLeagueExtractDecks : function(_id){
+        eventLeagueExtractDecks(_id);
+    },
+    methodEventLeagueGetInfoNew : function(){
+        eventLeagueGetInfoNew("modern");
+    },
+    methodEventLeagueGetInfoOld : function(){
+        eventLeagueGetInfoOld("modern", 5);
+    },
+    methodAddNameToDeck : function(data){
+        addNameToDeck2(data.deckName, data.deckID, data.format);
+    },
+    methodFindDeckComparison : function(data){
+        return findDeckComparison(data._id, data.format);
     }
 });
 

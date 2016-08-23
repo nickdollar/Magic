@@ -256,7 +256,7 @@
                         </div>
                         <div class="hidden-xs hidden-sm col-md-3">
                             <div class="row">
-                                {{>deckPicture_COL }}
+                                {{>deckPicture_COL}}
                             </div>
                         </div>
                     </div>
@@ -339,4 +339,18 @@
             </div>
         </div>
     </div>
+</template>
+
+<template name="dashBoard">
+    <div class="row">
+        <div class="col-xs-12">
+            {{>eventAuditHeader}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {{>eventsAudit}}
+        </div>
+    </div>
+
 </template>

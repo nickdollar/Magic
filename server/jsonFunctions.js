@@ -27,7 +27,7 @@ makeCardDatabase = function(){
         }
 
         if(obj.hasOwnProperty('type')){
-            obj.type = obj.type.replace("—", "-");
+            obj.type = obj.type.replace("ï¿½", "-");
             data.type = obj.type;
         }
 
@@ -79,6 +79,8 @@ makeCardDatabase = function(){
             {upsert : true}
         );
     }
+
+    console.log("Done");
 }
 
 function clone(obj) {

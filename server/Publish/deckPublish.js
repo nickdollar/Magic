@@ -1,3 +1,4 @@
+
 Meteor.publish('deck', function() {
     return _Deck.find();
 });

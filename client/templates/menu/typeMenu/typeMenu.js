@@ -10,7 +10,6 @@ Template.typeMenu.helpers({
            return "events";
        }
        return Router.current().route.getName();
-
    },
     active : function(format){
         if(Session.get("selectedMenuFormat") == format){

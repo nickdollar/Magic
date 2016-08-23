@@ -1,0 +1,111 @@
+<template name="eventsAudit">
+    <div class="row">
+        {{> tabular table=TabularTables.newModernFormatEvent class="table table-striped table-bordered table-condensed"}}
+    </div>
+    {{#if isEventSelected}}
+
+        {{>auditEventDecks eventId=childrenEventId}}
+    {{/if}}
+</template>
+
+<template name="checkAllDecks">
+    AAAAA
+</template>
+
+<template name="auditEventDecks">
+    <div class="row">
+        {{> tabular table=TabularTables.dashBoardDecks selector=selector class="table table-striped table-bordered table-condensed"}}
+    </div>
+    <div class="test4" style="min-height: 500px">
+        {{#if isDeckSelected }}
+            {{>auditDeckInfo deck=isDeckSelected}}
+        {{/if}}
+    </div>
+</template>
+
+<template name="auditDeckInfo">
+
+
+
+
+    {{#if Template.subscriptionsReady}}
+        <div class="row">
+            {{#autoForm schema=test id="addNameToDeck" type="method" meteormethod="methodAddNameToDeck"}}
+                <fieldset>
+                    <!--{{> afQuickField name="tags" type="selectize" options=options template="bootstrap3-horizontal" label-class="col-sm-2" input-col-class="col-sm-4"}}-->
+                    {{> afQuickField name="deckName" type="selectize" options=options}}
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </fieldset>
+            {{/autoForm}}
+            <div>
+                <button type="button" class="btn btn-primary js-findDeckComparison">Primary</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9">
+                <div class="row">
+
+                    <div class="deckBlock">
+                        <div class="newDeckColumn">
+                            {{#each cardType}}
+                                <div class="typeHeader">{{name}} ({{quantity}})</div>
+                                {{#each cards block}}
+                                    <div class="cardLine">
+                                        <div class="name">{{quantity}} {{name}}</div>
+                                        <div class="cardInfo">
+                                            <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/each}}
+                        </div>
+
+                        <!--<div class="verticalSideboard">-->
+                            <!--{{#if sideboardQuantity}}-->
+                                <!--<span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>-->
+                                <!--<div class="newDeckColumn">-->
+                                    <!--{{#each sideboard}}-->
+                                        <!--<div class="cardLine">-->
+                                            <!--<span class="name">{{quantity}} {{name}}</span>-->
+                                            <!--<div class="cardInfo">-->
+                                                <!--<div class="manaValue">-->
+                                                    <!--{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}-->
+                                                <!--</div>-->
+                                                <!--<div class="price">-->
+                                                    <!--$118.74-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--{{/each}}-->
+                                <!--</div>-->
+                            <!--{{/if}}-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>%</th>
+                        <th>Con.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each percentage}}
+                        <tr>
+                            <td>{{deckName}}</td>
+                            <td>{{prettifyPercentage result}}</td>
+                            <td><span class="js-confirmDeck">Con.</span></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{/if}}
+</template>

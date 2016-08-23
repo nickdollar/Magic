@@ -2,6 +2,7 @@ updateMeta = function(){
     var formats = ["standard", "modern", "legacy", "vintage"];
 
     var options = [];
+    var league = {type : "league", options : { victory : 5, loss : 0, eventType : "league"}};
     var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, eventType : "daily"}};
     var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, eventType : "daily"}};
     var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, eventType : "ptq"}};
