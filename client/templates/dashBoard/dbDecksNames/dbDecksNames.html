@@ -1,0 +1,89 @@
+<template name="organizeDecksNames">
+    {{#if Template.subscriptionsReady}}
+        {{> tabular table=TabularTables.dBDecksNames class="table table-striped table-bordered table-condensed"}}
+
+        {{#if deckName}}
+            {{>decksPercentage deckName=deckName}}
+        {{/if}}
+    {{/if}}
+</template>
+
+
+<template name="decksPercentage">
+    {{#if isDecksPercentage}}
+            {{>decksPercentageTable decksPercentage=decksPercentage deckName2=deckName}}
+    {{else}}
+        Loading2...
+    {{/if}}
+</template>
+
+<template name="decksPercentageTable">
+    <div>
+        <table id="example" class="display" width="100%"></table>
+    </div>
+    <div>
+        {{#if selectedDeck_id}}
+            {{>decksPercentageTableCardsPercentage selectedDeck_id=selectedDeck_id deckName3=deckName2}}
+        {{else}}
+            decksPercentageTableCardsPercentage...
+        {{/if}}
+    </div>
+</template>
+
+<template name="decksPercentageTableCardsPercentage">
+    {{#if Template.subscriptionsReady}}
+            {{#autoForm schema=decksPercentageTableCardsPercentageSchema id="decksPercentageTableCardsPercentageAddNameToDeck" type="method" meteormethod="methodAddNameToDeck"}}
+                <fieldset>
+                    {{> afQuickField name="deckName" options=options}}
+                    {{> afQuickField name="DecksData_id" type="hidden" value=selectedDeck_id}}
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </fieldset>
+            {{/autoForm}}
+        <div class="col-xs-9">
+            <div class="row">
+                <div class="deckBlock">
+                    <div class="newDeckColumn">
+                        {{#each cardType}}
+                            <div class="typeHeader">{{name}} ({{quantity}})</div>
+                            {{#each cards block}}
+                                <div class="cardLine">
+                                    <div class="name js-nameMouseOver">{{quantity}} {{name}}</div>
+                                    <div class="cardInfo">
+                                        <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                                    </div>
+                                    <div class="cardInfo">
+                                        {{prettifyPercentage cardPercentage}}%
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="row">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>%</th>
+                        <th>Con.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each percentage}}
+                        <tr>
+                            <td>{{deckName}}</td>
+                            <td>{{prettifyPercentage result}}</td>
+                            <td><span class="js-confirmDeck">Con.</span></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{/if}}
+</template>
