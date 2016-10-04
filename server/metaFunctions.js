@@ -209,7 +209,6 @@ deckMetaTest = function(options){
     var total2 = 0;
 
     for(var i = 0; i < metaValues.length; i++) {
-
         for(var j = 0; j < options.types.length; j++){
             if (metaValues[i].type.hasOwnProperty(options.types[j])) {
                 total += metaValues[i].type[options.types[j]].deckTotal;
@@ -221,7 +220,6 @@ deckMetaTest = function(options){
         if(i > metaValues.length -3 && total2 == 0){
             total2 = total;
         }
-
     }
 
     var results2 = [];

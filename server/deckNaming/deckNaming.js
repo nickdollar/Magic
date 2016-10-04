@@ -1,6 +1,6 @@
-deckNaming = function(_deckID){
-    var deckNames = _temp3.find({}).fetch();
-    var deck = _temp2.find({_id : _deckID});
+deckNaming = function(DecksData_id){
+    var deckNames = DecksNames.find({}).fetch();
+    var deck = DecksData.find({_id : DecksData_id});
     var perDeck = [];
     for(var i = 0; i < deckNames.length; i++){
         var array = deckNames[i].main;
@@ -17,39 +17,80 @@ deckNaming = function(_deckID){
     }
 };
 
-addNameToDeck2 = function(deckName, deckID, format){
+removeNameFromDeck = function(DecksData_id){
+    var deckData = DecksData.findOne({_id : DecksData_id});
 
-    if(_temp3.find({"decksList._id" : deckID }).count()){
-        // console.log("Deck Exist");
+    deckData.main.forEach(function(obj){
+        var query = {};
+        query = {_id : deckData.DecksNames_id, "DecksData._id" : deckData._id};
+        query["main.name"] = obj.name;
+
+        var increment = {"main.$.decksQuantity" : -1, "main.$.total" : -obj.quantity};
+        DecksNames.update(query,
+            {
+                $inc : increment
+            })
+    });
+    DecksData.update(deckData,
+        {$unset : {DecksNames_id : ""}}
+    );
+
+    DecksNames.update({_id : deckData.DecksNames_id, "DecksData._id" : deckData._id}, {
+        $inc : {
+            decks : -1,
+                "colors.B" : -deckData.colors.B,
+                "colors.C" : -deckData.colors.C,
+                "colors.G" : -deckData.colors.G,
+                "colors.R" : -deckData.colors.R,
+                "colors.U" : -deckData.colors.U,
+                "colors.W" : -deckData.colors.W
+        },
+        $pull : {
+            DecksData : {
+                _id : deckData._id}
+        }
+    },
+        {multi : true}
+    );
+};
+
+createANewDeckName = function(deckName, format){
+    if(deckName == null || format == null){
         return;
-    };
-
-    _temp3.update({deckName : deckName, format : format},
+    }
+    deckName = deckName.toLowerCase();
+    DecksNames.update({name : deckName, format : format},
         {
-            $setOnInsert : { deckName: deckName, format: format, decks : 0}
+            $setOnInsert : { name: deckName, format: format, decks : 0, colors : {B : 0, C: 0, G : 0, R: 0, U : 0, W : 0}}
         },
         { upsert : true }
     );
+};
 
-    _temp2.findOne({_id : deckID}).main.forEach(function(obj){
+
+addNameToDeck = function(deckName, DecksData_id){
+
+    deckName = deckName.toLowerCase();
+    var deckData = DecksData.findOne({_id : DecksData_id});
+
+    var deckName = DecksNames.findOne({name : deckName, format : deckData.format});
+
+    deckData.main.forEach(function(obj){
         var query = {};
-        query = {deckName : deckName, format : format};
+        query = {_id : deckName._id};
         query["main.name"] = obj.name;
 
-        console.log(query);
-        var exists = _temp3.find(query).count();
+        var exists = DecksNames.find(query).count();
 
         if(exists){
-            // console.log("exists");
             var increment = {"main.$.decksQuantity" : 1, "main.$.total" : obj.quantity};
-            _temp3.update(query,
+            DecksNames.update(query,
                 {
                     $inc : increment
                 })
         }else {
-            // console.log("don't exists");
             var setQuery = {name : obj.name, decksQuantity : 1, total : obj.quantity};
-            _temp3.update({deckName : deckName, format : format},
+            DecksNames.update({_id : deckName._id},
                 {
                     $push : {
                         main : setQuery
@@ -57,10 +98,29 @@ addNameToDeck2 = function(deckName, deckID, format){
                 })
         }
     });
-    _temp2.update(  {_id : deckID},
-                    {$set : {name : deckName}}
+    DecksData.update(  {_id : deckData._id},
+                    {$set : {DecksNames_id : deckName._id}}
     );
-    _temp3.update({deckName : deckName, format : format}, {$inc : {decks : 1}, $push : {decksList : {_id : deckID}}});
+
+    DecksNames.update({
+            _id : deckName._id
+        }, {
+            $inc : {
+            decks : 1,
+            "colors.B" : deckData.colors.B,
+            "colors.C" : deckData.colors.C,
+            "colors.G" : deckData.colors.G,
+            "colors.R" : deckData.colors.R,
+            "colors.U" : deckData.colors.U,
+            "colors.W" : deckData.colors.W
+        },
+            $push : {
+                DecksData : {
+                    _id : deckData._id
+                }
+            }
+        }
+    );
 };
 
 Array.prototype.diff = function(arr2) {
@@ -75,9 +135,10 @@ Array.prototype.diff = function(arr2) {
     return ret;
 };
 
-findDeckComparison = function(_id, format){
-    var deckNames = _temp3.find({format : format});
-    var deck = _temp2.findOne({_id : _id});
+findDeckComparison = function(_id){
+    var deck = DecksData.findOne({_id : _id});
+    var deckNames = DecksNames.find({format : deck.format});
+
     var deckCards = deck.main.map(function(obj){
         return obj.name;
     });
@@ -89,8 +150,12 @@ findDeckComparison = function(_id, format){
     var decks = [];
 
 
-
     deckNames.forEach(function(obj){
+
+        if(obj.main == null){
+            return;
+        }
+
         var deckNameDeckCards = obj.main.map(function(obj2){
             return obj2.name;
         });
@@ -136,7 +201,7 @@ findDeckComparison = function(_id, format){
             return a + b.decksQuantity;
         }, 0);
 
-        decks.push({deckName : obj.deckName, result  : (sum/obj.decks)/nonLandsCards.length});
+        decks.push({name : obj.name, result  : (sum/obj.decks)/nonLandsCards.length});
     });
     var decksFiltered = decks.filter(function(obj){
         return obj.result > 0.3;
@@ -144,7 +209,121 @@ findDeckComparison = function(_id, format){
 
     decksFiltered.sort(function(a,b){
         return b.result -a.result;
-    })
-
+    });
+    
+    
     return decksFiltered;
+};
+
+
+addArchetype = function(archetypeName, format, type){
+
+        archetypeName = archetypeName.toLowerCase();
+        type = type.toLowerCase();
+        DecksArchetypes.update({name : archetypeName, format : format, type : type},
+        {
+            $setOnInsert : {name : archetypeName, format : format, type : type}
+        },
+        {upsert : true}
+    );
+};
+
+addArchetypeToDeck = function(DecksArchetypes_id, DecksNames_id){
+    var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
+    var deckName = DecksNames.findOne({_id : DecksNames_id});
+
+    DecksNames.update({_id : DecksNames_id},
+        {
+            $set : {
+                DecksArchetypes_id : deckArchetype._id,
+            }
+        }
+    );
+
+    DecksArchetypes.update({"decksNames._id" : deckName._id},
+                    {
+                        $pull : {
+                            DecksNames : {
+                                _id: deckName._id,
+                            }
+                        }
+                    }
+    );
+
+    DecksArchetypes.update({ _id : deckArchetype._id},
+                    {
+                        $push : {
+                            DecksNames : {
+                                _id: deckName._id,
+                            }
+                        }
+                    }
+    );
+};
+
+
+getDeckNamePercentage = function(DecksNames_id){
+
+    var deckName = DecksNames.findOne({_id : DecksNames_id});
+    var deckNameDeckCards = deckName.main.map(function(obj){
+        return obj.name;
+    });
+    var deckNameDeckCardsNonLands = _CardDatabase.find({name : {$in : deckNameDeckCards}, land : false}).map(function(obj){
+        return obj.name;
+    });
+    deckNameDeckCardsNonLands.sort();
+    deckName.main.sort(function(a,b){
+        var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    });
+    var deckNameDeckCardsNonLandsData = [];
+    for(var i = 0; i < deckName.main.length; i += 1) {
+        if(deckNameDeckCardsNonLands.indexOf( deckName.main[i].name ) > -1){
+            deckNameDeckCardsNonLandsData.push( deckName.main[i] );
+        }
+    }
+    var deckPercentages = [];
+    DecksData.find({DecksNames_id : deckName._id}).forEach(function(obj){
+
+        var deckCards = obj.main.map(function(obj){
+            return obj.name;
+        });
+
+        var nonLandsCards = _CardDatabase.find({name : {$in : deckCards}, land : false}).map(function(obj){
+            return obj.name;
+        });
+
+        var filteredCardData = [];
+
+        for(var i = 0; i < deckNameDeckCardsNonLandsData.length; i += 1) {
+
+            var test = nonLandsCards.findIndex( function(obj2){
+                return obj2 == deckNameDeckCardsNonLandsData[i].name;
+            });
+            if(test > -1){
+                filteredCardData.push(deckNameDeckCardsNonLandsData[i]);
+            }
+        }
+
+        var sum = filteredCardData.reduce(function(a, b){
+            return a + b.decksQuantity;
+        }, 0);
+
+        DecksNames.update({_id : deckName._id, "DecksNames._id" : obj._id},
+            {$set : {"DecksNames.$.percentage" : (sum/deckName.decks)/nonLandsCards.length}}
+        )
+        deckPercentages.push([obj._id, (sum/deckName.decks)/nonLandsCards.length]);
+        deckPercentages.sort(function(a,b){
+            return b[1] - a[1];
+        })
+    });
+    return  deckPercentages;
 };

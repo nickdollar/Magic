@@ -1,37 +1,35 @@
 Template.archetypesList.helpers({
-    archetypesName : function(){
-        return _deckArchetypes.find({format : Router.current().params.format, deckNames : { $ne : []}});
+    DecksArchetypes : function(){
+        return DecksArchetypes.find({format : Router.current().params.format});
     },
-    archetypeLinkFix : function(){
-        return this.archetype.replace(/ /g, "-");
+    dataSearchColors : function(){
+        return getCssManaByNumberFromDeckName(this._id);
     },
-    deckName : function(){
-        return this.deckNames[0].name.replace(/ /g,"-");
+    getCssColorsFromArchetypes : function(){
+        return getCssColorsFromArchetypes(this._id);
     }
 });
 
-
 formatDeckArchetypes = function(archetype) {
-    var decksNameQuery = _deckArchetypes.findOne({archetype : archetype}).deckNames.map(function(obj){
-        return obj.name;
-    });
-
-    var deckQuery = _DeckNames.find({name : {$in : decksNameQuery}}).fetch();
+    var decksNameQuery = DecksArchetypes.findOne({name : archetype});
+    if(decksNameQuery.DecksNames == null) return "";
+    if(!decksNameQuery.DecksNames.length) return "";
+    var decksNames = DecksNames.find({$or : decksNameQuery.DecksNames}).fetch();
 
     var html = "";
-    deckQuery.forEach(function(deckQueryObj){
+    decksNames.forEach(function(decksNamesObj){
         html += '<tr>'+
                     '<td></td>'+
-                    '<td class="tableName">' + deckQueryObj.name +'</td>'+
+                    '<td class="tableName">' + decksNamesObj.name +'</td>'+
                     '<td class="tableMana">';
 
-        var manas = getManaCss(deckQueryObj.colors, "deck");
+        var manas = getCssManaByNumberFromDeckName(decksNamesObj._id);
         manas.forEach(function(mana){
-            html += "<div class='mana " + mana.mana + "'></div>";
+            html += "<div class='mana mana-" + mana.mana + "'></div>";
         });
         html += '</td>'+
-            '<td class="tablePrice">' + deckQueryObj.type +'</td>' +
-            '<td class="tablePrice"  colspan="2">$' + deckQueryObj.price +'</td>';
+            '<td class="tablePrice">' + decksNameQuery.type +'</td>' +
+            '<td class="tablePrice"  colspan="2">$' + 500 +'</td>';
         html += '</tr>';
     });
     return html;
@@ -62,7 +60,7 @@ Template.archetypesList.onRendered(function(){
             tr.addClass('shown');
         }
     });
-    tableColorsSearch();
-    tableTypeSearch();
-    tablePriceSearch();
+    // tableColorsSearch();
+    // tableTypeSearch();
+    // tablePriceSearch();
 });

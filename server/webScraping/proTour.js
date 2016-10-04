@@ -65,7 +65,7 @@ getProTourLinks = function(){
             eventCorrected.url = "http://magic.wizards.com" + $(html[i]).attr("href");
             eventCorrected.eventType = "GP";
 
-            _temp.update(
+            Events.update(
                 {city : eventCorrected.city, date : event.date},
                 {
                     $set : eventCorrected,
@@ -80,7 +80,7 @@ getProTourLinks = function(){
 
 
 getProTourHtml = function() {
-    var gp = _temp.findOne({});
+    var gp = Events.findOne({});
     var res = request.getSync(gp.url, {
         encoding: null
     });
@@ -92,7 +92,7 @@ getProTourHtml = function() {
             console.log("Page Doesn't exists");
         } else {
             console.log("Page exists");
-            _temp.update(
+            Events.update(
                 {city: gp.city, date: gp.date},
                 {
                     $set : {html : $(html).html()}
@@ -117,7 +117,7 @@ TOP 32 DECKLISTS
 */
 
 getProTourDeckLinks = function(){
-    var gp = _temp.findOne({html : {$exists : true}});
+    var gp = Events.findOne({html : {$exists : true}});
     var $ = cheerio.load(gp.html);
     var allDecksExists = false;
     //Get Deck HTML
@@ -139,7 +139,7 @@ getProTourDeckLinks = function(){
         alldecksHtmls += $deckHtml("#main-content");
     }
 
-    _temp.update(
+    Events.update(
         {city: gp.city, date: gp.date},
         {
             $set : {allDecksUrls : allDecksUrls, alldecksHtmls : alldecksHtmls, allDecksExists : allDecksExists}
@@ -149,7 +149,7 @@ getProTourDeckLinks = function(){
 }
 
 getProTourRankingsTableHtml = function(){
-    var gp = _temp.findOne({html : {$exists : true}});
+    var gp = Events.findOne({html : {$exists : true}});
     var $ = cheerio.load(gp.html);
     var finalRanksExists = false;
 
@@ -168,7 +168,7 @@ getProTourRankingsTableHtml = function(){
         finalRanksExists = true;
     }
 
-    _temp.update(
+    Events.update(
         {city: gp.city, date: gp.date},
         {
             $set : {finalRanksUrl : $(".final a").attr("href"),finalRanksHtml : $finalRanksHtml(finalRankingsTableHtml).html(), finalRanksExists : finalRanksExists}
@@ -179,7 +179,7 @@ getProTourRankingsTableHtml = function(){
 
 
 getProTourRankings = function(){
-    var gp = _temp.findOne({html : {$exists : true}});
+    var gp = Events.findOne({html : {$exists : true}});
 
     if(!gp.finalRanksExists){
         return;
@@ -209,7 +209,7 @@ getProTourRankings = function(){
         rankings.push(player);
     }
 
-    _temp.update(
+    Events.update(
         {city: gp.city, date: gp.date},
         {
             $set : {rankings : rankings}
@@ -220,7 +220,7 @@ getProTourRankings = function(){
 
 getPtTop8Bracket = function(){
 
-    var gp = _temp.findOne({html : {$exists : true}});
+    var gp = Events.findOne({html : {$exists : true}});
 
     var $ = cheerio.load(gp.html);
     var quarterFinalsPlayers = {};
@@ -258,7 +258,7 @@ getPtTop8Bracket = function(){
             loser : getInfoFromPlayerTop8Loser($(finalsPlayers.losers).text())
         });
 
-    _temp.update(
+    Events.update(
         {city: gp.city, date: gp.date},
         {
             $set : {top8Bracket : top8Bracket}
@@ -270,7 +270,7 @@ getPtTop8Bracket = function(){
 
 getProTourDecks = function(event){
 
-    var gp = _temp.findOne({html : {$exists : true}});
+    var gp = Events.findOne({html : {$exists : true}});
     var $ = cheerio.load(gp.alldecksHtmls);
     var decks = $('.bean--wiz-content-deck-list');
 
@@ -339,7 +339,7 @@ getProTourDecks = function(event){
         data.totalSideboard = sideboardQuantity;
         data.sideboard = deckCards.sideboard;
         data.colors = setUpColorForDeckName(deckCards);
-        _temp2.update(
+        DecksData.update(
             {_eventID : data._eventID, player : data.player, position : data.position},
             {
                 $setOnInsert : data,

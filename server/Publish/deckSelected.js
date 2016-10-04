@@ -1,41 +1,123 @@
-Meteor.publish('deckSelectedImages', function(){
-    return _Images.find({});
+function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+    return a;
+}
+
+
+Meteor.publishComposite("deckNamesDecksDataCardDatabase", function(_id) {
+    return {
+        find: function () {
+            return DecksNames.find({_id}, {limit : 1});
+        },
+        children: [
+            {
+                find: function (decksNames) {
+                    return DecksData.find({DecksNames_id : decksNames._id}, {sort : {date : 1}, limit : 1});
+                },
+                children : [
+                    {
+                        find : function(decksData){
+                            var main = decksData.main.map(function(obj){
+                                return obj.name;
+                            });
+                            var sideboard = decksData.sideboard.map(function(obj){
+                                return obj.name;
+                            });
+                            var allCards = arrayUnique(main.concat(sideboard));
+
+                            return _CardDatabase.find({name: {$in : allCards}});
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 });
 
+Meteor.publishComposite("deckSelectedAndCardDatabase", function(_id) {
+    return {
+        find: function () {
+            return DecksData.find({_id : _id});
+        },
+        children : [
+            {
+                find : function(decksData){
+                    var main = decksData.main.map(function(obj){
+                        return obj.name;
+                    });
+                    var sideboard = decksData.sideboard.map(function(obj){
+                        return obj.name;
+                    });
+                    var allCards = arrayUnique(main.concat(sideboard));
+                    return _CardDatabase.find({name: {$in : allCards}});
+                }
+            }
+        ]
+    }
+});
+
+Meteor.publishComposite("deckSelectedGetDeckDataAndCardData", function(DecksNames_id) {
+    return {
+        find: function () {
+            console.log(DecksNames_id);
+            return DecksData.find({DecksNames_id : DecksNames_id}, {limit : 1});
+        },
+        children: [
+            {
+                find: function (DeckData) {
+                    return DecksData.find({DecksNames_id : DeckData._id}, {sort : {date : 1}, limit : 1});
+                }
+            }
+        ]
+    }
+});
+
+
+Meteor.publish('Images', function(){
+    return Images.find({});
+});
+
+Meteor.publish('deckSelectedGetNewestDeck', function(DecksNames_id){
+    return DecksData.find({DecksNames_id : DecksNames_id});
+});
+
+Meteor.publish('deckSelectedSelectedName', function(format, name){
+    format = format.replace(/-/g, ".");
+    name = name.replace(/-/g, ".");
+    var nameRegex = new RegExp(name, "g");
+    console.log(nameRegex);
+    return DecksNames.find({format : format, name : {$regex : nameRegex}});
+});
+
+
 Meteor.publish('deckSelectedDeckPlaylist', function(){
-    return _DeckPlayList.find({});
+    return DecksNamesPlaylists.find({});
 });
 
 Meteor.publish('deckSelectedDeckPlaylistResults', function(){
-    return _DeckPlayList.find({}, {fields : {likeCount : 1}});
+    return DecksNamesPlaylists.find({}, {fields : {likeCount : 1}});
 });
 
 Meteor.publish('deckSelectedDeckPlaylistUpvotes', function(userId){
     if(this.userId == null){
-        return _DeckPlayList.find({likes : ""} , { fields  : {likes : "", dislikes : ""}});
+        return DecksNamesPlaylists.find({likes : ""} , { fields  : {likes : "", dislikes : ""}});
     }
     var currentUserId = this.userId;
-    return _DeckPlayList.find({$or : [{likes : currentUserId}, {dislikes : currentUserId}]} , { fields  : {likes : currentUserId, dislikes: currentUserId}});
-    //return _DeckPlayList.find({likes : {$elemMatch : {"_id" : currentUserId}}} , { fields  : {likes : { $elemMatch: {_id : currentUserId}}}});
-});
-
-Meteor.publish('deckSelectedDeckArchetypes', function(format){
-    return _deckArchetypes.find({format : format});
-});
-
-
-Meteor.publish('deckSelectedeventSmallTable', function(format){
-    return _Deck.find({format : format});
+    return DecksNamesPlaylists.find({$or : [{likes : currentUserId}, {dislikes : currentUserId}]} , { fields  : {likes : currentUserId, dislikes: currentUserId}});
+    //return DecksNamesPlaylists.find({likes : {$elemMatch : {"_id" : currentUserId}}} , { fields  : {likes : { $elemMatch: {_id : currentUserId}}}});
 });
 
 Meteor.publish('deckSelectedDeckCardsWeekChange', function(){
     return _deckCardsWeekChange.find({});
 });
 
-Meteor.publish('deckSelectedArchetypeDeckNames', function(format, archetype){
-    var names = _deckArchetypes.findOne({format : format, archetype : archetype}).deckNames.map(function(a){return a.name});
-    return _DeckNames.find({format : format, name : {$in : names}});
-});
+
 
 Meteor.publishComposite("deckSelectedDeckEventsDaily", function(format, selectedNameDeck) {
     return {

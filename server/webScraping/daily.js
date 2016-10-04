@@ -29,7 +29,7 @@ getMtgoDailyEvents = function(format, days){
             }else{
                 console.log("page exists");
                 var decks = $('.deck-group');
-                _temp.update(
+                Events.update(
                     {type : type, date : date},
                     {
                         $setOnInsert : {
@@ -61,7 +61,7 @@ getMtgoDailyEvents = function(format, days){
 }
 
 extractInfoFromMtgoDaily = function(format){
-    var event = _temp.findOne({});
+    var event = Events.findOne({});
 
     var $ = cheerio.load(event.html);
     var decks = $('.bean--wiz-content-deck-list');
@@ -130,7 +130,7 @@ extractInfoFromMtgoDaily = function(format){
         data.totalSideboard = sideboardQuantity;
         data.sideboard = deckCards.sideboard;
         data.colors = setUpColorForDeckName(deckCards);
-        _temp2.update(
+        DecksData.update(
             {_eventID : data._eventID, player : data.player},
             {
                 $setOnInsert : data,

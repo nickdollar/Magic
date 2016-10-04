@@ -45,7 +45,6 @@ var decksPercentageTableCardsPercentageAddNameToDeckHooks = {
 
     },
     beginSubmit: function() {
-        Session.set("playlistTest", false);
     }
 }
 

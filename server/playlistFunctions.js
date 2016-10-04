@@ -61,7 +61,7 @@ insertANewVideo = function(youtubeLink){
     information.link = youtubeLink;
     information.thumbnail = snippet.thumbnails.medium.url;
 
-    _Images.insert(information.thumbnail, function (err, fileObj) {
+    Images.insert(information.thumbnail, function (err, fileObj) {
         // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
     });
 }

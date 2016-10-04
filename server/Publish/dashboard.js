@@ -1,19 +1,41 @@
 Meteor.publish('notCompleteEvent', function(){
-    return _temp.find({}, {sort : {date : 1}});
+    return Events.find({}, {sort : {date : 1}});
 });
 
-Meteor.publish('_temp2FieldsName', function(){
-    return _temp2.find({}, {fields : {name : 1, _eventID : 1}});
+Meteor.publish('_temp2FieldsName_eventID', function(){
+    return DecksData.find({}, {fields : {name : 1, events_id : 1}});
 });
 
-Meteor.publish("deckNames", function(){
-    return _temp3.find({});
+Meteor.publish("DecksData", function(){
+    return DecksData.find({});
 });
+
+Meteor.publish("DecksNames", function(){
+    return DecksNames.find({});
+});
+
+Meteor.publish("_temp2", function(){
+    return DecksData.find();
+});
+
+Meteor.publish("DecksArchetypes", function(){
+    return DecksArchetypes.find();
+});
+
+
+Meteor.publish("_temp3ReturnFromID", function(_id){
+    return DecksNames.find({_id : _id});
+});
+
+Meteor.publish("DecksNamesWithoutArchetype", function(){
+    return DecksNames.find({$or :[{DecksArchetypes_id : {$exists : false}}, {DecksArchetypes_id : null}]});
+});
+
 
 Meteor.publishComposite("deckSelectedID", function(_id) {
     return {
         find: function () {
-            return _temp2.find({_id : _id});
+            return DecksData.find({_id : _id});
         },
         children: [
             {

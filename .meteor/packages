@@ -16,7 +16,7 @@ mizzao:autocomplete
 froatsnook:request
 meteor-base@1.0.4
 mobile-experience@1.0.4
-mongo@1.1.11
+mongo@1.1.12
 blaze-html-templates@1.0.4
 session@1.1.6
 tracker@1.1.0
@@ -28,9 +28,9 @@ spacebars@1.0.12
 check@1.2.3
 #nemo64:bootstrap
 twbs:bootstrap
-http@1.2.9
+http
 cfs:standard-packages
-#cfs:gridfs
+cfs:gridfs
 cfs:filesystem
 percolate:synced-cron
 meteorhacks:fast-render
@@ -43,7 +43,7 @@ standard-minifier-css@1.2.0
 standard-minifier-js@1.2.0
 themeteorchef:jquery-validation
 ecmascript@0.5.8
-
+reactive-dict
 
 #cool things
 mrt:flash-messages
@@ -59,13 +59,15 @@ pagebakers:ionicons
 reactive-var@1.0.10
 
 
+
 #debbugging
 meteortoys:allthings
 
 #accounts
-accounts-ui@1.1.9
+accounts-ui
 accounts-facebook@1.0.10
 accounts-google@1.0.10
+accounts-password
 #accounts-github
 #accounts-twitter
 #accounts-meetup
@@ -88,4 +90,8 @@ meteorhacks:aggregate
 aldeed:autoform
 jamiecollinson:selectize-bootstrap
 comerc:autoform-selectize
-shell-server
+shell-server@0.2.1
+
+
+
+dburles:collection-helpers

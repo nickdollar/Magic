@@ -1,68 +1,68 @@
-<template name="metaTableOptions">
-    <div class="metaTableOptions">
-        <div class="optionsHeader">
-            <div class="buttonsContainer">
-                <div class="optionButton">
-                    <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
-                </div>
-                <div class="paginationButtons">
-                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="prev" style="display: inline;">&larr; prev</button>
-                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="next" style="display: inline;">next &rarr;</button>
-                </div>
-            </div>
-        </div>
-        <div class="content">
-            <div class="custom-column">
-                <div>Daily</div>
-                <ul class="list-unstyled optionsList">
-                    <li>
-                        <input type="checkbox" name="daily4_0" class="metaCheckBox" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>
-                        <label for="daily4_0">4-0</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="daily3_1" class="metaCheckBox" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>
-                        <label for="daily3_1">3-1</label>
-                    </li>
-                </ul>
-            </div>
-            <div class="custom-column">
-                <div class="optionListName">PTQ</div>
-                <ul class="list-unstyled optionsList">
-                    <li>
-                        <input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="checkbox" aria-checked="false" checked>
-                        <label for="tall-1">Top 8</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="checkbox" aria-checked="false" checked>
-                        <label for="tall-1">Top 9-16</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="checkbox" aria-checked="false" checked>
-                        <label for="tall-1">Top 17-32</label>
-                    </li>
-                </ul>
-            </div>
-            <div class="custom-column">
-                <div class="optionListName">Deck Date</div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="exampleRadios" id="exampleRadios1" role="radio" value="year" checked>
-                        Year
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="exampleRadios" id="exampleRadios2" role="radio" value="twoWeeks">
-                        Two Weeks
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="exampleRadios" id="exampleRadios3" role="radio" value="sixWeeks">
-                        Six Month
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+<!--<template name="metaTableOptions">-->
+    <!--<div class="metaTableOptions">-->
+        <!--<div class="optionsHeader">-->
+            <!--<div class="buttonsContainer">-->
+                <!--<div class="optionButton">-->
+                    <!--<button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>-->
+                <!--</div>-->
+                <!--<div class="paginationButtons">-->
+                    <!--<button type="submit" class="btn btn-default btn-xs deckPagination" value="prev" style="display: inline;">&larr; prev</button>-->
+                    <!--<button type="submit" class="btn btn-default btn-xs deckPagination" value="next" style="display: inline;">next &rarr;</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="content">-->
+            <!--<div class="custom-column">-->
+                <!--<div>Daily</div>-->
+                <!--<ul class="list-unstyled optionsList">-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="daily4_0" class="metaCheckBox" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>-->
+                        <!--<label for="daily4_0">4-0</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="daily3_1" class="metaCheckBox" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>-->
+                        <!--<label for="daily3_1">3-1</label>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="custom-column">-->
+                <!--<div class="optionListName">PTQ</div>-->
+                <!--<ul class="list-unstyled optionsList">-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="checkbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 8</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="checkbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 9-16</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="checkbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 17-32</label>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="custom-column">-->
+                <!--<div class="optionListName">Deck Date</div>-->
+                <!--<div class="radio">-->
+                    <!--<label>-->
+                        <!--<input type="radio" name="exampleRadios" id="exampleRadios1" role="radio" value="year" checked>-->
+                        <!--Year-->
+                    <!--</label>-->
+                <!--</div>-->
+                <!--<div class="radio">-->
+                    <!--<label>-->
+                        <!--<input type="radio" name="exampleRadios" id="exampleRadios2" role="radio" value="twoWeeks">-->
+                        <!--Two Weeks-->
+                    <!--</label>-->
+                <!--</div>-->
+                <!--<div class="radio">-->
+                    <!--<label>-->
+                        <!--<input type="radio" name="exampleRadios" id="exampleRadios3" role="radio" value="sixWeeks">-->
+                        <!--Six Month-->
+                    <!--</label>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->

@@ -1,11 +1,6 @@
-SV_decksSelectedDeckName = "selectedDeckName";
-Session.set(SV_decksSelectedDeckName, "");
-SV_decksSelectedEventType = "eventType";
-Session.setDefault(SV_decksSelectedEventType, "daily");
-
 Template.deckSelected.helpers({
     isSelected : function(){
-        return Router.current().params.deckSelected != null ? true : false;
+        return Router.current().params.deckSelected;
     }
 });
 
@@ -25,8 +20,6 @@ Template.events_COL.helpers({
             eventData.players = event.players;
             list.push(eventData);
         }
-
         return list;
     }
 })
-

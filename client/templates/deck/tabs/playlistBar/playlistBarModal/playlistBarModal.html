@@ -1,25 +1,4 @@
-<template name="playlistBarModal">
-    <div class="modal fade" id="addPLayListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    {{#autoForm schema=contactFormSchema id="contactForm" type="method" meteormethod="insertNewPlayList"}}
-                        <fieldset>
-                            <legend>Add a Playlist</legend>
-                            {{> afQuickField name="playlistUrl"}}
-                            {{> afQuickField name="format" type="hidden" value=format}}
-                            {{> afQuickField name="deckName" type="hidden" value=deckSelected}}
-                            <div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                <button type="reset" class="btn btn-default">Reset</button>
-                            </div>
-                        </fieldset>
-                    {{/autoForm}}
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+
 
 <!--<form class="form-horizontal">-->
 <!--<div class="form-group">-->

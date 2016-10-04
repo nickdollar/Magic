@@ -14,7 +14,7 @@
             {{#each decksName}}
                 <tr>
                     <td><a href={{pathFor 'deckSelected' archetype=archetypeReplaceSpaceForDash deckSelected=fixForLink}}>{{name}}</a></td>
-                    <td><a href={{pathFor 'deckSelected' archetype=archetypeReplaceSpaceForDash }}>{{archetype}}</a></td>
+                    <td><a href={{pathFor 'deckSelected' archetype=archetypeReplaceSpaceForDash }}>{{archetype}}aaa</a></td>
                     <td data-search="{{colors}}">{{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}</td>
                     <td>{{type}}</td>
                     <td data-search="{{price}}">{{price}}</td>

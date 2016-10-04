@@ -6,122 +6,163 @@ Template.registerHelper('arrayify',function(obj){
     return result;
 });
 
-Template.registerHelper("getManaCss", function(value, options) {
-    return getManaCss(value, options);
+Template.registerHelper("getManaCss", function(value) {
+    return getManaCss(value);
 });
 
-getManaCss = function(value, options){
-    var manacost = "";
-    //console.log(manacost);
-    var manaRegex = new RegExp("\{([a-zA-Z0-9/]+)\}", 'g');
-    if(options == "deck"){
-        manaRegex = new RegExp("([a-zA-Z])", 'g');
-        manacost = value;
-    }else{
-        manacost = _CardDatabase.findOne({name : value}).manacost;
-    }
-
+getCssManaFromDeck = function(colors){
     var str = [];
-    var res;
-
-    while((res = manaRegex.exec( manacost)) !== null) {
-        if(res[1] === "X"      ) {str.push( {mana :'mana-x' }) }
-        else if(res[1] === "1" ) {str.push( {mana :'mana-1' }) }
-        else if(res[1] === "2" ) {str.push( {mana :'mana-2' }) }
-        else if(res[1] === "3" ) {str.push( {mana :'mana-3' }) }
-        else if(res[1] === "4" ) {str.push( {mana :'mana-4' }) }
-        else if(res[1] === "5" ) {str.push( {mana :'mana-5' }) }
-        else if(res[1] === "6" ) {str.push( {mana :'mana-6' }) }
-        else if(res[1] === "7" ) {str.push( {mana :'mana-7' }) }
-        else if(res[1] === "8" ) {str.push( {mana :'mana-8' }) }
-        else if(res[1] === "9" ) {str.push( {mana :'mana-9' }) }
-        else if(res[1] === "10") {str.push( {mana :'mana-10'}) }
-        else if(res[1] === "11") {str.push( {mana :'mana-11'}) }
-        else if(res[1] === "12") {str.push( {mana :'mana-12'}) }
-        else if(res[1] === "13") {str.push( {mana :'mana-13'}) }
-        else if(res[1] === "14") {str.push( {mana :'mana-14'}) }
-        else if(res[1] === "15") {str.push( {mana :'mana-15'}) }
-        else if(res[1] === "16") {str.push( {mana :'mana-16'}) }
-        else if(res[1] === "17") {str.push( {mana :'mana-17'}) }
-        else if(res[1] === "18") {str.push( {mana :'mana-18'}) }
-        else if(res[1] === "19") {str.push( {mana :'mana-19'}) }
-        else if(res[1] === "20") {str.push( {mana :'mana-20'}) }
-        else if(res[1] === "B" ) {str.push( {mana :'mana-b' }) }
-        else if(res[1] === "G" ) {str.push( {mana :'mana-g' }) }
-        else if(res[1] === "R" ) {str.push( {mana :'mana-r' }) }
-        else if(res[1] === "U" ) {str.push( {mana :'mana-u' }) }
-        else if(res[1] === "W" ) {str.push( {mana :'mana-w' }) }
-        else if(res[1] === "2B") {str.push( {mana :'mana-2b'}) }
-        else if(res[1] === "2G") {str.push( {mana :'mana-2g'}) }
-        else if(res[1] === "3R") {str.push( {mana :'mana-3r'}) }
-        else if(res[1] === "2U") {str.push( {mana :'mana-2u'}) }
-        else if(res[1] === "2W") {str.push( {mana :'mana-2w'}) }
-        else if(res[1] === "B/P"){str.push( {mana :'mana-bp' })}
-        else if(res[1] === "G/P"){str.push( {mana :'mana-gp' })}
-        else if(res[1] === "R/P"){str.push( {mana :'mana-rp' })}
-        else if(res[1] === "U/P"){str.push( {mana :'mana-up' })}
-        else if(res[1] === "W/P"){str.push( {mana :'mana-wp' })}
+    for(var obj in colors){
+             if(obj === "B" && colors[obj]){str.push('b')}
+        else if(obj === "G" && colors[obj]){str.push('g')}
+        else if(obj === "C" && colors[obj]){str.push('c')}
+        else if(obj === "R" && colors[obj]){str.push('r')}
+        else if(obj === "U" && colors[obj]){str.push('u')}
+        else if(obj === "W" && colors[obj]){str.push('w')}
     }
     return str;
 }
 
-Template.registerHelper("getManaCssParentheses", function(manacost) {
 
-    var manaRegex = new RegExp("\{([^}]+)\}", 'g');
+getHTMLColors = function(colors){
+    var html = '<td class="tableMana">';
+    for(var obj in colors){
+        if(obj === "B" && colors[obj]){html += '<span class="mana mana-b"></span>'}
+        else if(obj === "G" && colors[obj]){html += '<span class="mana mana-g"></span>'}
+        else if(obj === "C" && colors[obj]){html += '<span class="mana mana-c"></span>'}
+        else if(obj === "R" && colors[obj]){html += '<span class="mana mana-r"></span>'}
+        else if(obj === "U" && colors[obj]){html += '<span class="mana mana-u"></span>'}
+        else if(obj === "W" && colors[obj]){html += '<span class="mana mana-w"></span>'}
+    }
+    return html;
+}
+
+getCssManaByNumberFromDeckNameById = function(DecksNames_id){
+
+    var deckName = DecksNames.findOne({_id : DecksNames_id});
+    if(deckName == null) return;
+    var str = [];
+    for(var obj in deckName.colors){
+        if(obj === "B" && deckName.colors[obj]){str.push( {mana :'b' })}
+        else if(obj === "G" && deckName.colors[obj]){str.push( {mana :'g' })}
+        else if(obj === "C" && deckName.colors[obj]){str.push( {mana :'c' })}
+        else if(obj === "R" && deckName.colors[obj]){str.push( {mana :'r' })}
+        else if(obj === "U" && deckName.colors[obj]){str.push( {mana :'u' })}
+        else if(obj === "W" && deckName.colors[obj]){str.push( {mana :'w' })}
+    }
+    return str;
+}
+
+getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
+    var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
+    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
+    if(deckArchetype.DecksNames == null) return;
+    if(!deckArchetype.DecksNames.length) return;
+
+    DecksNames.find({$or : deckArchetype.DecksNames}).forEach(function(obj){
+        for(var color in obj.colors){
+            colors[color] += obj.colors[color];
+        }
+    });
+
+    var html = '<td class="tableMana">';
+    for(var obj in colors){
+        if(obj === "B" && colors[obj]){html += '<span class="mana mana-b"></span>'}
+        else if(obj === "G" && colors[obj]){html += '<span class="mana mana-g"></span>'}
+        else if(obj === "C" && colors[obj]){html += '<span class="mana mana-c"></span>'}
+        else if(obj === "R" && colors[obj]){html += '<span class="mana mana-r"></span>'}
+        else if(obj === "U" && colors[obj]){html += '<span class="mana mana-u"></span>'}
+        else if(obj === "W" && colors[obj]){html += '<span class="mana mana-w"></span>'}
+    }
+    return html;
+}
+
+getCssColorsFromArchetypes = function(DecksArchetypes_id){
+    var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
+    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
+    if(deckArchetype.DecksNames == null) return;
+    if(!deckArchetype.DecksNames.length) return;
+
+    DecksNames.find({$or : deckArchetype.DecksNames}).forEach(function(obj){
+        for(var color in obj.colors){
+            colors[color] += obj.colors[color];
+        }
+    });
+
+    var str = [];
+    for(var obj in colors){
+             if(obj === "B" && colors[obj]){str.push( {mana :'b' })}
+        else if(obj === "G" && colors[obj]){str.push( {mana :'g' })}
+        else if(obj === "C" && colors[obj]){str.push( {mana :'c' })}
+        else if(obj === "R" && colors[obj]){str.push( {mana :'r' })}
+        else if(obj === "U" && colors[obj]){str.push( {mana :'u' })}
+        else if(obj === "W" && colors[obj]){str.push( {mana :'w' })}
+    }
+    return str;
+}
+
+
+getManaCss = function(value){
+    var manacost = _CardDatabase.findOne({name : value}).manacost;
+    var manaRegex = new RegExp("(?:B|G|R|U|W)?\/?(?:X|P|B|G|R|U|W|\\d+)(?=})", 'g');
+
     var str = [];
     var res;
 
     while((res = manaRegex.exec(manacost)) !== null) {
-        if(res[0] === "X"      ) {str.push({mana :'mana-x' }) }
-        else if(res[0] === "1" ) {str.push({mana :'mana-1' }) }
-        else if(res[0] === "2" ) {str.push({mana :'mana-2' }) }
-        else if(res[0] === "3" ) {str.push({mana :'mana-3' }) }
-        else if(res[0] === "4" ) {str.push({mana :'mana-4' }) }
-        else if(res[0] === "5" ) {str.push({mana :'mana-5' }) }
-        else if(res[0] === "6" ) {str.push({mana :'mana-6' }) }
-        else if(res[0] === "7" ) {str.push({mana :'mana-7' }) }
-        else if(res[0] === "8" ) {str.push({mana :'mana-8' }) }
-        else if(res[0] === "9" ) {str.push({mana :'mana-9' }) }
-        else if(res[0] === "10") {str.push({mana :'mana-10'}) }
-        else if(res[0] === "11") {str.push({mana :'mana-11'}) }
-        else if(res[0] === "12") {str.push({mana :'mana-12'}) }
-        else if(res[0] === "13") {str.push({mana :'mana-13'}) }
-        else if(res[0] === "14") {str.push({mana :'mana-14'}) }
-        else if(res[0] === "15") {str.push({mana :'mana-15'}) }
-        else if(res[0] === "16") {str.push({mana :'mana-16'}) }
-        else if(res[0] === "17") {str.push({mana :'mana-17'}) }
-        else if(res[0] === "18") {str.push({mana :'mana-18'}) }
-        else if(res[0] === "19") {str.push({mana :'mana-19'}) }
-        else if(res[0] === "20") {str.push({mana :'mana-20'}) }
-        else if(res[0] === "B" ) {str.push({mana :'mana-b' }) }
-        else if(res[0] === "G" ) {str.push({mana :'mana-g' }) }
-        else if(res[0] === "R" ) {str.push({mana :'mana-r' }) }
-        else if(res[0] === "U" ) {str.push({mana :'mana-u' }) }
-        else if(res[0] === "W" ) {str.push({mana :'mana-w' }) }
-        else if(res[0] === "2B") {str.push({mana :'mana-2b'}) }
-        else if(res[0] === "2G") {str.push({mana :'mana-2g'}) }
-        else if(res[0] === "3R") {str.push({mana :'mana-3r'}) }
-        else if(res[0] === "2U") {str.push({mana :'mana-2u'}) }
-        else if(res[0] === "2W") {str.push({mana :'mana-2w'}) }
-        else if(res[0] === "B/P"){str.push({mana :'mana-bp'}) }
-        else if(res[0] === "G/P"){str.push({mana :'mana-gp'}) }
-        else if(res[0] === "R/P"){str.push({mana :'mana-rp'}) }
-        else if(res[0] === "U/P"){str.push({mana :'mana-up'}) }
-        else if(res[0] === "W/P"){str.push({mana :'mana-wp'}) }
+        if(res[0] === "X"      ) {str.push({mana :'x' }) }
+        else if(res[0] === "1" ) {str.push({mana :'1' }) }
+        else if(res[0] === "2" ) {str.push({mana :'2' }) }
+        else if(res[0] === "3" ) {str.push({mana :'3' }) }
+        else if(res[0] === "4" ) {str.push({mana :'4' }) }
+        else if(res[0] === "5" ) {str.push({mana :'5' }) }
+        else if(res[0] === "6" ) {str.push({mana :'6' }) }
+        else if(res[0] === "7" ) {str.push({mana :'7' }) }
+        else if(res[0] === "8" ) {str.push({mana :'8' }) }
+        else if(res[0] === "9" ) {str.push({mana :'9' }) }
+        else if(res[0] === "10") {str.push({mana :'10'}) }
+        else if(res[0] === "11") {str.push({mana :'11'}) }
+        else if(res[0] === "12") {str.push({mana :'12'}) }
+        else if(res[0] === "13") {str.push({mana :'13'}) }
+        else if(res[0] === "14") {str.push({mana :'14'}) }
+        else if(res[0] === "15") {str.push({mana :'15'}) }
+        else if(res[0] === "16") {str.push({mana :'16'}) }
+        else if(res[0] === "17") {str.push({mana :'17'}) }
+        else if(res[0] === "18") {str.push({mana :'18'}) }
+        else if(res[0] === "19") {str.push({mana :'19'}) }
+        else if(res[0] === "20") {str.push({mana :'20'}) }
+
+        else if(res[0] === "B" ) {str.push({mana :'b' }) }
+        else if(res[0] === "G" ) {str.push({mana :'g' }) }
+        else if(res[0] === "R" ) {str.push({mana :'r' }) }
+        else if(res[0] === "U" ) {str.push({mana :'u' }) }
+        else if(res[0] === "W" ) {str.push({mana :'w' }) }
+
+        else if(res[0] === "2B") {str.push({mana :'2b'}) }
+        else if(res[0] === "2G") {str.push({mana :'2g'}) }
+        else if(res[0] === "3R") {str.push({mana :'3r'}) }
+        else if(res[0] === "2U") {str.push({mana :'2u'}) }
+        else if(res[0] === "2W") {str.push({mana :'2w'}) }
+
+        else if(res[0] === "B/P"){str.push({mana :'bp'}) }
+        else if(res[0] === "G/P"){str.push({mana :'gp'}) }
+        else if(res[0] === "R/P"){str.push({mana :'rp'}) }
+        else if(res[0] === "U/P"){str.push({mana :'up'}) }
+        else if(res[0] === "W/P"){str.push({mana :'wp'}) }
+
+        else if(res[0] === "B/G"){str.push({mana :'bg'}) }
+        else if(res[0] === "B/R"){str.push({mana :'br'}) }
+        else if(res[0] === "G/U"){str.push({mana :'gu'}) }
+        else if(res[0] === "G/W"){str.push({mana :'gw'}) }
+        else if(res[0] === "R/G"){str.push({mana :'rg'}) }
+        else if(res[0] === "R/W"){str.push({mana :'rw'}) }
+        else if(res[0] === "U/B"){str.push({mana :'ub'}) }
+        else if(res[0] === "U/R"){str.push({mana :'ur'}) }
+        else if(res[0] === "W/B"){str.push({mana :'wb'}) }
+        else if(res[0] === "W/U"){str.push({mana :'wu'}) }
     }
     return str;
-});
-
-Handlebars.registerHelper("tableIndex", function(index, options) {
-
-    //if(options == "decksNames"){
-    //   return (Session.get(SV_metaDeckListPagination) + index + 1);
-    //}
-    //
-    //if(options == "cardsTable"){
-    //   return Session.get(SV_metaCardListPagination) + index + 1;
-    //}
-});
+}
 
 Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     lvalue = parseFloat(lvalue);
@@ -142,7 +183,7 @@ Template.registerHelper("fixForLink", function() {
 });
 
 Template.registerHelper("fixForLinkArchetype", function() {
-    var phrase = this.archetype ? this.archetype.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+    var phrase = this.name ? this.name.replace(/ /g, "-") : this.name.replace(/ /g, "-");
     return phrase;
 });
 
@@ -199,6 +240,8 @@ Template.registerHelper('capitalizeEvents', function(){
         return "PTQ";
     } else if(this.eventType == "daily"){
         return "Daily";
+    }else if(this.eventType == "league"){
+        return "League";
     }
 });
 

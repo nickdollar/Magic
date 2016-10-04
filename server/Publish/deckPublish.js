@@ -24,10 +24,6 @@ Meteor.publish('AllArchetype', function(format){
 });
 
 
-Meteor.publish('temp', function(){
-    return _temp.find({});
-});
-
 
 Meteor.publishComposite("testing", function(format){
     return {

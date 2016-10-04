@@ -16,11 +16,8 @@ downloadEvents = function(eventType){
 }
 
 
-
-
-
 //extractCardsFromLeague = function(){
-//    var event = _temp.findOne({});
+//    var event = Events.findOne({});
 //    var buffer = event.value;
 //    var $ = cheerio.load(buffer);
 //    var decks = $('.bean--wiz-content-deck-list');
@@ -362,8 +359,6 @@ getDeckInfoFromTop8 = function(information){
 
 
 getDeckInfo = function(information){
-    console.log("getDeckInfo");
-    console.log(information);
     var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
     var playerPatt = /^(.*?) \(/;
     var digitPatt = /\d+/g;

@@ -1,5 +1,5 @@
 Meteor.publish('selectADeckDeckPlaylist', function(){
-    return _DeckPlayList.find({});
+    return DecksNamesPlaylists.find({});
 });
 
 Meteor.publish('selectADeckDeckArchetypes', function(format){
@@ -8,4 +8,8 @@ Meteor.publish('selectADeckDeckArchetypes', function(format){
 
 Meteor.publish('selectADeckDeck', function() {
     return _Deck.find();
+});
+
+Meteor.publish('DecksArchetypesFormat', function(format) {
+    return DecksArchetypes.find({format : format});
 });

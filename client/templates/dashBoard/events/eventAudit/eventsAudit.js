@@ -1,39 +1,76 @@
 Template.eventsAudit.onCreated(function(){
     var that = this;
-    that.selectedEvent = new ReactiveVar;
+    this.selectedEvent_id = new ReactiveVar;
+    this.DecksDataSelected = new ReactiveVar;
+    this.percentage = new ReactiveVar;
+    this.isDeckReady = new ReactiveVar;
+
+    this.subscribe("DecksNames");
     this.autorun(function(){
-        Meteor.subscribe("_temp2FieldsName");
-    });
+        that.subscribe("deckSelectedID", that.DecksDataSelected.get() && that.DecksDataSelected.get()._id, {
+            onReady : function (){
+                that.isDeckReady.set(true);
+            }
+        });
+    })
 });
 
 Template.eventsAudit.helpers({
     events : function(){
-        return _temp.find({});
-    },
-    test : function () {
-        if(this.validation.exists == null || this.validation.htmlDownloaded == null || this.validation.extractDecks == null){
-            return false;
-        }
-
-        if(this.validation.exists != null){
-            return this.validation.exists;
-        }
-
-        if(this.validation.htmlDownloaded != null){
-            return this.validation.htmlDownloaded;
-        }
-
-        if(this.validation.extractDecks != null){
-            return this.validation.extractDecks;
-        }
-        return true;
+        return Events.find({});
     },
     isEventSelected : function(){
-        return Template.instance().selectedEvent.get();
+        return Template.instance().selectedEvent_id.get();
     },
-    childrenEventId : function(){
-        return Template.instance().selectedEvent.get();
+    cardType : function(){
+        var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
+        var types = [];
+
+        for(var i = 0; i< blocks.length; i++){
+            var quantity = getQuantity3(blocks[i], false, Template.instance().DecksDataSelected.get()._id);
+            if(quantity > 0){types.push({name : capitalizeFirstLetter(blocks[i]), quantity : quantity, block : blocks[i]});}
+        }
+        return types;
+    },
+    cards : function(block){
+        var cardNames = _CardDatabase.find(typeOptions[block]).map(function(p) { return p.name });
+        var deck = DecksData.findOne({_id : Template.instance().DecksDataSelected.get()._id});
+
+        var newArray = deck.main.filter(function(obj1){
+            return cardNames.find(function(obj2){
+                return obj1.name == obj2;
+            });
+        });
+        return newArray;
+    },
+    eventsAuditAddNameToDeckSchema : function(){
+        return Schema.eventsAuditAddNameToDeck;
+    },
+    DeckNames_name : function () {
+        var decks = DecksNames.find({}).map(function(obj){
+            return {label : obj.name, value : obj.name};
+        });
+        return decks;
+    },
+    percentage : function(){
+        return Template.instance().percentage.get();
+    },
+    selector : function (){
+        return {Events_id : Template.instance().selectedEvent_id.get()};
+    },
+    isDeckSelected : function(){
+        return Template.instance().DecksDataSelected.get();
+    },
+    isDeckReady : function(){
+        return Template.instance().isDeckReady.get();
+    },
+    DecksData_idValue : function(){
+        return Template.instance().DecksDataSelected.get()._id;
+    },
+    DecksData_formatValue : function(){
+        return Template.instance().DecksDataSelected.get().format;
     }
+
 });
 
 Template.eventsAudit.events({
@@ -43,11 +80,24 @@ Template.eventsAudit.events({
         var rowData = dataTable.row(row).data();
         if (!rowData) return; // Won't be data if a placeholder row is clicked
 
-        Template.instance().selectedEvent.set();
+        Template.instance().selectedEvent_id.set();
+        Template.instance().DecksDataSelected.set();
+        Template.instance().percentage.set();
+        Template.instance().isDeckReady.set();
         var that = Template.instance();
         Meteor.setTimeout(function(){
-            that.selectedEvent.set(rowData._id);
+
+
+            that.selectedEvent_id.set(rowData._id);
         }, 2);
+
+        // Meteor.call('methodFindDeckComparison', that.data.deck._id, function(error, result){
+        //     if(error){
+        //         alert(error);
+        //     }else{
+        //         that.percentage.set(result);
+        //     }
+        // });
     },
     "click .js-validationExists" : function(evt, tmp){
         alert("validationExists");
@@ -66,104 +116,27 @@ Template.eventsAudit.events({
         var rowData = dataTable.row(row).data();
         if (!rowData) return; // Won't be data if a placeholder row is clicked
         Meteor.call("methodEventLeagueExtractDecks", rowData._id);
-    }
-});
-
-
-Template.auditEventDecks.onCreated(function(){
-    this.selectedDeckID = new ReactiveVar;
-});
-
-
-Template.auditEventDecks.helpers({
-    selector : function (){
-        return {_eventID : Template.instance().data.eventId};
     },
-    isDeckSelected : function(){
-        return Template.instance().selectedDeckID.get();
-    },
-    deckFormat : function(){
-        return "modern";
-    }
-})
-
-
-
-Template.auditEventDecks.events({
     "click .js-deckID" : function(evt, tmp){
         var row = $(event.target).closest('tr').get(0);
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(row).data();
         if (!rowData) return; // Won't be data if a placeholder row is clicked
 
-        Template.instance().selectedDeckID.set();
+        Template.instance().DecksDataSelected.set();
         var that = Template.instance();
         Meteor.setTimeout(function(){
-            that.selectedDeckID.set(rowData);
-        }, 2);
-    }
-});
-
-
-Template.auditDeckInfo.onCreated(function(){
-    var that = Template.instance();
-    console.log(that.data.deck);
-    that.percentage = new ReactiveVar;
-    this.autorun(function(){
-        Meteor.subscribe("deckSelectedID", that.data.deck._id);
-        Meteor.subscribe("deckNames");
-        Meteor.call('methodFindDeckComparison', that.data.deck, function(error, result){
-            if(error){
-                alert(error);
-            }else{
-                that.percentage.set(result);
-            }
-        });
-    });
-});
-
-Template.auditDeckInfo.helpers({
-    cardType : function(){
-        var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
-        var types = [];
-
-        for(var i = 0; i< blocks.length; i++){
-            var quantity = getQuantity3(blocks[i], false, Template.instance().data.deck._id);
-            if(quantity > 0){types.push({name : capitalizeFirstLetter(blocks[i]), quantity : quantity, block : blocks[i]});}
-        }
-        return types;
-    },
-    cards : function(block){
-        var cardNames = _CardDatabase.find(typeOptions[block]).map(function(p) { return p.name });
-        var deck = _temp2.findOne({_id : Template.instance().data.deck._id});
-
-        var newArray = deck.main.filter(function(obj1){
-            return cardNames.find(function(obj2){
-                return obj1.name == obj2;
+            Meteor.call('methodFindDeckComparison', rowData._id, function(error, result){
+                if(error){
+                    alert(error);
+                }else{
+                    that.DecksDataSelected.set(rowData);
+                    that.percentage.set(result);
+                }
             });
-        });
+        }, 2);
 
-        return newArray;
     },
-    test : function(){
-        return Schema.addDeckName;
-    },
-    options : function () {
-        var decks = _temp3.find({}).map(function(obj){
-            console.log(obj);
-            return {label : obj.deckName, value : obj.deckName};
-        });
-
-        console.log(decks);
-
-        return decks;
-    },
-    percentage : function(){
-        return Template.instance().percentage.get();
-    }
-});
-
-Template.auditDeckInfo.events({
     "click .js-findDeckComparison" : function(){
         // Meteor.call('methodAddNameToDeck', Router.current().params.format, Router.current().params.deckSelected.replace(/-/," "), function(error, result){
         //     if(error){
@@ -175,19 +148,26 @@ Template.auditDeckInfo.events({
         // });
     },
     "click .js-confirmDeck" : function(){
-        Meteor.call('methodAddNameToDeck', {deckName : this.deckName, deckID : Template.instance().data.deck._id, format : Template.instance().data.deck.format} );
+        console.log("alert");
+        console.log(this);
+        Meteor.call('methodAddNameToDeck', {DeckName : this.name, DecksData_id : Template.instance().DecksDataSelected.get()._id, format : Template.instance().DecksDataSelected.get().format} );
     }
 });
 
-
-Template.auditDeckInfo.onRendered(function(){
-
+DecksData.helpers({
+    name : function() {
+        var deckName = DecksNames.findOne({_id: this.DecksNames_id});
+        return deckName && deckName.name;
+    }
 });
 
-Schema.addDeckName = new SimpleSchema({
-    deckName: {
-        type: String,
+if (typeof Schema === 'undefined' || Schema === null) {
+    Schema = {};
+}
 
+Schema.eventsAuditAddNameToDeck = new SimpleSchema({
+    DeckName: {
+        type: String,
         autoform: {
             type: "selectize",
             label : "Deck Name",
@@ -196,7 +176,7 @@ Schema.addDeckName = new SimpleSchema({
             }
         }
     },
-    deckID : {
+    DecksData_id : {
         type : String
     },
     format : {
@@ -205,31 +185,30 @@ Schema.addDeckName = new SimpleSchema({
 });
 
 
-var addNameToDeck = {
+// var eventsAuditAddNameToDeckHooks = {
+//
+//     before : {
+//         method : function(doc){
+//             doc.DecksData_id = Template.instance().parentTemplate(1).DecksDataSelected.get()._id;
+//             doc.format = Template.instance().parentTemplate(1).DecksDataSelected.get().format.toLowerCase();
+//             return doc;
+//         }
+//     },
+//     onSubmit: function(insertDoc, updateDoc, currentDoc) {
+//         console.log("onSubmit");
+//     },
+//     onSuccess: function(formType, result) {
+//         console.log("onSucess");
+//     },
+//     onError: function(formType, error) {
+//         console.log(error);
+//         console.log("onError");
+//
+//     },
+//     beginSubmit: function() {
+//     }
+// }
 
-    before : {
-        method : function(doc){
-            doc.deckID = Template.parentData(1).deck._id;
-            doc.format = Template.parentData(1).deck.format;
-            return doc;
-        }
-    },
-    onSubmit: function(insertDoc, updateDoc, currentDoc) {
-        console.log("onSubmit");
-    },
-    onSuccess: function(formType, result) {
-        console.log("onSucess");
-    },
-    onError: function(formType, error) {
-        console.log(error);
-        console.log("onError");
-
-    },
-    beginSubmit: function() {
-        Session.set("playlistTest", false);
-    }
-}
-
-AutoForm.hooks({
-    addNameToDeck : addNameToDeck
-});
+// AutoForm.hooks({
+//     eventsAuditAddNameToDeck : eventsAuditAddNameToDeckHooks
+// });

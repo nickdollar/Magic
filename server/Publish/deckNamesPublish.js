@@ -28,7 +28,7 @@ _Deck.allow({
     }
 });
 
-_temp.allow({
+Events.allow({
     'insert' : function(){
         return true;
     }
@@ -149,30 +149,3 @@ Meteor.publish('selectedEventDeckCard', function(_eventID) {
 
     return _CardDatabase.find({name : {$in : cards}});
 });
-
-Meteor.publishComposite("deckNamesSelected", function(selectedNameDeck) {
-    return {
-        find: function () {
-            return _DeckNames.find({_id: selectedNameDeck});
-        },
-        children: [
-            {
-                collectionName: "selectNamesCards",
-                find: function (_deckNameID) {
-                    return _DeckNamesCards.find({_deckNameID: _deckNameID._id});
-                },
-                children: [
-                    {
-                        collectionName: "selectedNamesCardsValues",
-                        find: function(card){
-
-                            return _CardDatabase.find({name : card.name});
-                        }
-                    }
-                ]
-            }
-        ]
-    }
-});
-
-

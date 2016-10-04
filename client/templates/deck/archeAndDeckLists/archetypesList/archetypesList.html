@@ -12,14 +12,14 @@
             </tr>
             </thead>
             <tbody>
-            {{#each archetypesName}}
+            {{#each DecksArchetypes}}
                 <tr>
-                    <td class="details-control" data-name="{{archetype}}"></td>
-                    <td><a href={{pathFor 'deckSelected' archetype=fixForLinkArchetype}}>{{archetype}}</a></td>
-                    <td data-search="{{colors}}">{{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}</td>
+                    <td class="details-control" data-name="{{name}}"></td>
+                    <td><a href={{pathFor 'deckSelected' archetype=fixForLinkArchetype}}>{{name}}</a></td>
+                    <td data-search="{{#each getCssColorsFromArchetypes}}{{mana}}{{/each}}">{{#each getCssColorsFromArchetypes}}<div class="mana mana-{{mana}}"></div>{{/each}}</td>
                     <td>{{type}}</td>
-                    <td data-search="{{min}}">{{min}}</td>
-                    <td data-search="{{max}}">{{max}}</td>
+                    <td data-search="500">500</td>
+                    <td data-search="700">700</td>
                 </tr>
             {{/each}}
             </tbody>

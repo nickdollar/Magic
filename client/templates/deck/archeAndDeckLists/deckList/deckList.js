@@ -17,6 +17,9 @@ Template.deckList.helpers({
         }else{
             return "NA";
         }
+    },
+    deckName : function(){
+        console.log(this);
     }
 });
 

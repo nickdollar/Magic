@@ -1,7 +1,21 @@
 import cheerio from "cheerio";
 
+fixAllEvents = function(){
+    var decksWithoutHtml = Events.find({$or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
+
+    decksWithoutHtml.forEach(function(obj){
+        eventLeagueDownloadHTML(obj._id);
+    });
+
+    var decksWithoutDecks = Events.find({"validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
+
+    decksWithoutDecks.forEach(function(obj){
+        eventLeagueExtractDecks(obj._id);
+    });
+};
+
+
 eventLeagueGetInfoOld = function(format, days){
-    console.log("eventLeagueGetInfoOld");
     if(format == null){
         console.log("format null");
         return;
@@ -16,7 +30,7 @@ eventLeagueGetInfoOld = function(format, days){
         return;
     }
 
-    var event = _temp.findOne({eventType : "league"}, {sort : {date : 1}, limit : 1});
+    var event = Events.findOne({eventType : "league"}, {sort : {date : 1}, limit : 1});
     var date = null;
     if(event==null){
         date = new Date();
@@ -27,19 +41,15 @@ eventLeagueGetInfoOld = function(format, days){
     }
     date.setHours(0,0,0,0);
 
-    console.log(date);
-
     for(var i = 0; i < days ; i++){
 
         var day = pad(date.getDate());
         var month = pad(date.getMonth()+1);
         var year = date.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = request.getSync(url, {
-            encoding : null
-        });
+        var res = Meteor.http.get(url)
 
-        _temp.update(
+        Events.update(
             {type : "league", date : date, format : format},
             {
                 $setOnInsert : {
@@ -53,8 +63,8 @@ eventLeagueGetInfoOld = function(format, days){
             {upsert : true}
         );
 
-        if (res.response.statusCode == 200) {
-            var buffer = res.body;
+        if (res.statusCode == 200) {
+            var buffer = res.content;
             var $ = cheerio.load(buffer);
             var deckMeta = $('#main-content');
             var upsert = false;
@@ -65,7 +75,7 @@ eventLeagueGetInfoOld = function(format, days){
             }
             console.log("page exists");
         }
-        _temp.update(
+        Events.update(
             {eventType : "league", date : date, format : format},
             {
                 $set : {
@@ -89,7 +99,7 @@ eventLeagueGetInfoNew = function(format){
     }
 
 
-    var event = _temp.findOne({eventType : "league"}, {sort : {date : -1}, limit : 1});
+    var event = Events.findOne({eventType : "league"}, {sort : {date : -1}, limit : 1});
     var date = null;
     if(event==null){
         date = new Date();
@@ -100,19 +110,14 @@ eventLeagueGetInfoNew = function(format){
 
     date.setHours(0,0,0,0);
 
-    console.log(date.getTime());
-    console.log(new Date().getTime());
-
     while(new Date().getTime() > date.getTime()){
         var day = pad(date.getDate());
         var month = pad(date.getMonth()+1);
         var year = date.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = request.getSync(url, {
-            encoding : null
-        });
+        var res = Meteor.http.get(url);
 
-        _temp.update(
+        Events.update(
             {type : "league", date : date, format : format},
             {
                 $setOnInsert : {
@@ -126,8 +131,8 @@ eventLeagueGetInfoNew = function(format){
             {upsert : true}
         );
 
-        if (res.response.statusCode == 200) {
-            var buffer = res.body;
+        if (res.statusCode == 200) {
+            var buffer = res.content;
             var $ = cheerio.load(buffer);
             var deckMeta = $('#main-content');
             var upsert = false;
@@ -138,7 +143,7 @@ eventLeagueGetInfoNew = function(format){
             }
                 console.log("page exists");
             }
-            _temp.update(
+            Events.update(
                 {eventType : "league", date : date, format : format},
                 {
                     $set : {
@@ -151,23 +156,22 @@ eventLeagueGetInfoNew = function(format){
 }
 
 eventLeagueDownloadHTML = function(_id){
-    var event = _temp.findOne({_id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
+    var event = Events.findOne({_id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
 
     if(event == null) {
         return;
     }
-    console.log(event);
-    var res = request.getSync(event.url, {
-        encoding : null
-    });
 
-    if (res.response.statusCode == 200) {
-        var buffer = res.body;
+    var res = Meteor.http.get(event.url);
+
+
+    if (res.statusCode == 200) {
+        var buffer = res.content;
         var $ = cheerio.load(buffer);
         var deckMeta = $('#main-content');
         if(deckMeta.length == 0){
             console.log("event not found");
-            _temp.update(
+            Events.update(
                 {type : "league", date : event.date, format : event.format},
                 {
                     $set : {
@@ -177,7 +181,7 @@ eventLeagueDownloadHTML = function(_id){
             );
         }else{
             console.log("event found");
-            _temp.update(
+            Events.update(
                 {type : "league", date : event.date, format : event.format},
                 {
                     $set : {
@@ -191,18 +195,15 @@ eventLeagueDownloadHTML = function(_id){
 };
 
 eventLeagueExtractDecks = function(_id){
-    var event = _temp.findOne({_id : _id, "validation.exists" : true, "validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
+    var event = Events.findOne({_id : _id, "validation.exists" : true, "validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
     if(event == null) return;
-    console.log(event._id);
-
     var $ = cheerio.load(event.html);
     var decks = $('.bean--wiz-content-deck-list');
 
     for(var i = 0 ; i < decks.length; i++){
         var information = getDeckInfo($(decks[i]).find('h4').html());
-        console.log(information);
         var data = {
-            _eventID : event._id,
+            Events_id : event._id,
             date : event.date,
             eventType : event.eventType,
             player : information.player,
@@ -248,8 +249,8 @@ eventLeagueExtractDecks = function(_id){
         data.sideboard = deckCards.sideboard;
         var colors = setUpColorForDeckName(deckCards);
         data.colors = colors;
-        _temp2.update(
-            {_eventID : data._eventID, player : data.player},
+        DecksData.update(
+            {Events_id : data.Events_id, player : data.player},
             {
                 $setOnInsert : data,
                 $set : data
@@ -258,7 +259,7 @@ eventLeagueExtractDecks = function(_id){
         );
     }
 
-    _temp.update(
+    Events.update(
         {type : "league", date : event.date, format : event.format},
         {
             $set : {

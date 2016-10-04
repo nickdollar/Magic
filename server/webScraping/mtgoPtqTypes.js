@@ -29,7 +29,7 @@ getMtgoPtqEvents = function(format, days){
             }else{
                 console.log("page exists");
                 var decks = $('.deck-group');
-                _temp.update(
+                Events.update(
                     {type : type, date : date},
                     {
                         $setOnInsert : {
@@ -62,7 +62,7 @@ getMtgoPtqEvents = function(format, days){
 
 getMtgoPtq8 = function(event){
 
-    var event = _temp.findOne({});
+    var event = Events.findOne({});
     var $ = cheerio.load(event.html);
     var decks = $('.bean--wiz-content-deck-list');
 
@@ -83,14 +83,14 @@ getMtgoPtq8 = function(event){
 
     var top8Bracket = getTop8Bracket($, top8Table);
 
-    _temp.update({_id : event._id},{
+    Events.update({_id : event._id},{
         $set : {top8Bracket : top8Bracket, rankingsTable : rankingsTable}
     });
 
     for(var i = 0 ; i < decks.length; i++){
         var information = getDeckInfoFromTop8($(decks[i]).find('h4').html());
         var data = {
-            _eventID : event._id,
+            Events_id : event._id,
             date : event.date,
             eventType : event.eventType,
             player : information.player,
@@ -132,8 +132,8 @@ getMtgoPtq8 = function(event){
         data.totalSideboard = sideboardQuantity;
         data.sideboard = deckCards.sideboard;
         data.colors = setUpColorForDeckName(deckCards);
-        _temp2.update(
-            {_eventID : data._eventID, player : data.player},
+        DecksData.update(
+            {Events_id : data.Events_id, player : data.player},
             {
                 $setOnInsert : data,
                 $set : data

@@ -10,15 +10,15 @@
     </div>
 </template>
 
-<template name="audit">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="row">
-                {{>auditEventsTable}}
-            </div>
-        </div>
-    </div>
-</template>
+<!--<template name="audit">-->
+    <!--<div class="row">-->
+        <!--<div class="col-xs-12">-->
+            <!--<div class="row">-->
+                <!--{{>auditEventsTable}}-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
 
 <template name="modals">
     {{>pastEventsVodModal}}
@@ -122,25 +122,9 @@
         <div class="row">
             {{>archetypeDeckName}}
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    {{>archetypedecksBar}}
-                </div>
-                <div class="row">
-                    {{>deckOptions}}
-                </div>
-            </div>
-        </div>
         {{#if isSelected}}
         <div class="row">
             <div class="col-xs-12">
-                <div class="row">
-                    {{>lastestDeckExamplebar}}
-                </div>
-                <div class="row">
-                    {{>exampleDeckHeader}}
-                </div>
                 <div class="row">
                     {{>exampleDeck_COL}}
                 </div>
@@ -148,57 +132,28 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <div class="row">
-                    {{>eventBar}}
-                </div>
-                <div class="row tnails">
-                    <div class="col-xs-6">
-                        <div class="row">
-                            {{>eventSmallTable}}
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="row">
-                            {{>eventPtqTable}}
-                        </div>
-                    </div>
-                    <!--<div class="col-xs-4">-->
+                {{>deckPlayList}}
+            </div>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="col-xs-12">-->
+                <!--<div class="row">-->
+                    <!--{{>deckcardchangesBar}}-->
+                <!--</div>-->
+                <!--<div class="row">-->
+                    <!--<div class="col-xs-6">-->
                         <!--<div class="row">-->
-                            <!--{{>eventOthersTable}}-->
+                            <!--{{>cardsPercentageMain}}-->
                         <!--</div>-->
                     <!--</div>-->
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    {{>playlistBar}}
-                </div>
-                <div class="row">
-                    {{>deckPlayList}}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    {{>deckcardchangesBar}}
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="row">
-                            {{>cardsPercentageMain}}
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="row">
-                            {{>cardsPercentageSideboard}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <!--<div class="col-xs-6">-->
+                        <!--<div class="row">-->
+                            <!--{{>cardsPercentageSideboard}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         {{/if}}
     </div>
 </template>
@@ -209,24 +164,21 @@
     <div class="row">
         <div class="col-xs-8">
             <div class="row">
-                {{>metaTableOptions}}
-            </div>
-            <div class="row">
-                {{>newMetaTable}}
+                {{>dataTableNewMetaTable}}
             </div>
         </div>
         <div class="col-xs-4" >
-            <div class="row">
-                {{>eventsTableHeader}}
-            </div>
-            <div class="row">
-                {{>eventsTable}}
-            </div>
-            <div class="row">
-                {{>cardTableOptions}}
-            </div>
+            <!--<div class="row">-->
+                <!--{{>eventsTableHeader}}-->
+            <!--</div>-->
+            <!--<div class="row">-->
+                <!--{{>eventsTable}}-->
+            <!--</div>-->
             <div class="row">
                 {{>cardTable}}
+            </div>
+            <div class="row">
+                {{>newsTable}}
             </div>
         </div>
     </div>
@@ -322,7 +274,6 @@
     </div>
 </template>
 
-
 <template name="selectedEvent">
     <div id="eventInfoBar" class="row">
         {{>eventInfoBar}}
@@ -353,4 +304,34 @@
         </div>
     </div>
 
+</template>
+
+<template name="dBArchetypes">
+    <div class="row">
+        <div class="col-xs-12">
+            {{>organizeArchetypes}}
+        </div>
+    </div>
+</template>
+
+<template name="dBDeckNames">
+    <div class="row">
+        <div class="col-xs-12">
+            {{>dbDecksNames}}
+        </div>
+    </div>
+    <!--<div class="row">-->
+        <!--<div class="col-xs-12">-->
+            <!--{{>decksWithoutNames}}-->
+        <!--</div>-->
+    <!--</div>-->
+
+</template>
+
+<template name="deckWithoutNames">
+    <div class="row">
+        <div class="col-xs-12">
+            {{>decksWithoutNames}}
+        </div>
+    </div>
 </template>

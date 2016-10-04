@@ -33,7 +33,7 @@ Meteor.methods({
     },
 
     upADeckPlayListVote : function(playlist){
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 dislikes : {_id : Meteor.user()._id}
@@ -43,7 +43,7 @@ Meteor.methods({
             }
         )
 
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 likes : {$ne : Meteor.user()._id}
@@ -54,7 +54,7 @@ Meteor.methods({
         )
     },
     removeUpADeckPlayListVote : function(playlist){
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 likes : {_id : Meteor.user()._id}
@@ -65,7 +65,7 @@ Meteor.methods({
         )
     },
     downADeckPlayListVote : function(playlist){
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 likes : {_id : Meteor.user()._id}
@@ -75,7 +75,7 @@ Meteor.methods({
             }
         )
 
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 dislikes : {$ne : {_id : Meteor.user()._id}}
@@ -86,7 +86,7 @@ Meteor.methods({
         )
     },
     removeDownADeckPlayListVote : function(playlist){
-        _DeckPlayList.update(
+        DecksNamesPlaylists.update(
             {
                 _id : playlist._id,
                 dislikes : {_id : Meteor.user()._id}
@@ -104,7 +104,7 @@ Meteor.methods({
     reportAPlaylist : function(form){
 
         if(form.reportString == "bad"){
-            _DeckPlayList.update(
+            DecksNamesPlaylists.update(
                 {
                     _id : form._id,
                     bad : {$ne : Meteor.user()._id}
@@ -116,7 +116,7 @@ Meteor.methods({
         }
 
         if(form.reportString == "wrong"){
-            _DeckPlayList.update(
+            DecksNamesPlaylists.update(
                 {
                     _id : form._id,
                     wrong : {$ne : Meteor.user()._id}
@@ -134,11 +134,14 @@ Meteor.methods({
         return newGetOneDeckRank(_deckWithoutNameID);
     },
     insertNewPlayList : function(form){
+
+        console.log(form);
         var playListInformation = getPlayListInformation(form.playlistUrl);
-        var file = _Images.insert(playListInformation.thumbnail, function (err, fileObj) {
+        var file = Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });
-        _DeckPlayList.insert({
-            _deckName : form.deckName,
+
+        DecksNamesPlaylists.insert({
+            DecksNames_id : form.DecksNames_id,
             _cfsImagesID : file._id,
             format : form.format,
             date : playListInformation.date,
@@ -150,11 +153,7 @@ Meteor.methods({
         });
         console.log("Done insert new playlist");
     },
-    sendEmail : function(form){
-        console.log(aa);
-    },
     removeEvent : function(_id){
-        //console.log(_id, Meteor.user()._id)
         _Event.remove({_id : _id, eventCreator : Meteor.user()._id});
     },
     getEvents : function(){
@@ -191,21 +190,21 @@ Meteor.methods({
         _deckArchetypes.remove({archetype : archetype});
     },
     getPlayListDataMETHOD : function(format, deckSelected){
-        //values.upVotes = _DeckPlayList.find({
+        //values.upVotes = DecksNamesPlaylists.find({
         //    format : format,
         //    _deckName : new RegExp(deckSelected.replace("-", " "), 'i'),
         //    likes : Meteor.user()._id
         //})
         //    .fetch()
         //    .length;
-        //values.downVotes = _DeckPlayList.find({
+        //values.downVotes = DecksNamesPlaylists.find({
         //    format : format,
         //    _deckName : new RegExp(deckSelected.replace("-", " "), 'i'),
         //    dislikes : Meteor.user()._id
         //})
         //    .fetch()
         //    .length;
-        var test = _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')},
+        var test = DecksNamesPlaylists.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')},
                 {fields :{
                     _deckName : 1,
                     _cfsImagesID : 1,
@@ -227,10 +226,10 @@ Meteor.methods({
         return test;
     },
     getPlayListDataMETHODUpvote : function(format, deckSelected){
-        return _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
+        return DecksNamesPlaylists.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
     },
     getPlayListDataMETHODDownvote : function(format, deckSelected){
-        return _DeckPlayList.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
+        return DecksNamesPlaylists.find({format : format, _deckName : new RegExp(deckSelected.replace("-", " "), 'i')}, {fields : {likes : Meteor.user()._id}}).fetch();
     },
     addAFutureEvent : function(futureEvent){
         var extraInfo = {deckStored : false, customEvent : true};
@@ -291,11 +290,110 @@ Meteor.methods({
     methodEventLeagueGetInfoOld : function(){
         eventLeagueGetInfoOld("modern", 5);
     },
-    methodAddNameToDeck : function(data){
-        addNameToDeck2(data.deckName, data.deckID, data.format);
+    methodEventLeagueGetInfoOld : function(){
+        eventLeagueGetInfoOld("modern", 5);
     },
-    methodFindDeckComparison : function(data){
-        return findDeckComparison(data._id, data.format);
+    methodFixAllEvents : function(){
+        // fixAllEvents();
+
+
+        // createDeckCardsMeta2();
+        // createMeta2();
+        createMetaNewThings();
+
+        // fixNamesOnDecksNames();
+
+
+    },
+    methodAddNameToDeck : function(data){
+        var name = deckNameAndArchetype(data.deckName);
+
+        createANewDeckName(name, data.format);
+        removeNameFromDeck(data.DecksData_id);
+        addNameToDeck(name, data.DecksData_id);
+    },
+    methodFindDeckComparison : function(_id){
+        return findDeckComparison(_id);
+    },
+    methodCreateArchetype : function(data){
+        var name = deckNameAndArchetype(data.deckName);
+        addArchetype(name, data.format, data.type);
+    },
+    methodAddDeckToArchetype : function(data){
+        addArchetypeToDeck(data.archetypeName, data.deckNameID);
+    },
+    methodresetArchetype : function(data){
+        DecksNames.update({},
+            {$unset : {DecksArchetypes_id : ""}},
+            {multi : true})
+
+        DecksArchetypes.update({},
+            {$unset : {decksName : ""}},
+            {multi : true}
+        )
+    },
+    methodRemoveDeck : function(deckData_id){
+        DecksData.remove({_id : deckData_id});
+        DecksNames.update(
+            {"decksList._id" : deckData_id},
+            {$inc : {decks : -1}, $pull : {decksList : {_id : deck._id}}},
+            {multi : true}
+        );
+    },
+    methodRemoveADeckNameFromArchetype : function(data){
+        
+        var deckName = DecksNames.findOne({_id : data._id});
+
+        DecksData.update({ DecksNames_id : deckName._id},
+            {$unset : {DecksArchetypes_id : ""}},
+            {multi : true}
+        )
+
+        DecksNames.update({ _id : deckName._id},
+            {$unset : {DecksArchetypes_id : ""}},
+            {multi : true}
+        )
+
+        DecksArchetypes.update({"DecksNames._id" : deckName._id},
+            {
+                $pull : {
+                    DecksNames : {
+                        _id: deckName._id,
+                    }
+                }
+            },
+            {multi: true}
+        );
+
+        console.log("Updated");
+    },
+    methodRemoveArchetype : function(archetype) {
+        DecksNames.update({DecksArchetypes_id: archetype._id},
+            {$unset: {DecksArchetypes_id : ""}},
+            {multi: true}
+        )
+
+        DecksArchetypes.remove({_id: archetype._id})
+    },
+    methodGetDeckNamePercentage : function(data) {
+        return getDeckNamePercentage(data._id);
     }
 });
 
+ fixNamesOnDecksNames = function(){
+    DecksNames.find({}).forEach(function(obj){
+      var name = deckNameAndArchetype(obj.name);
+       console.log(name);
+       DecksNames.update({_id : obj._id},
+           {$set : {name : name}}
+       )
+    });
+
+     DecksArchetypes.find({}).forEach(function(obj){
+         var name = deckNameAndArchetype(obj.name);
+         console.log(name);
+         DecksArchetypes.update({_id : obj._id},
+             {$set : {name : name}}
+         )
+     });
+ };

@@ -1,3 +1,63 @@
+.positionChange {
+  float: right;
+  .upArrow {
+    display: inline-block;
+    background: url('/img/upDownArrow.svg') no-repeat;
+    background-position: 0px 9px;
+    background-origin: padding-box;
+    background-size: 20px;
+    height: 20px;
+    width: 10px;
+  }
+
+  .downArrow {
+    display: inline-block;
+    background: url('/img/upDownArrow.svg') no-repeat;
+    background-position: -10px 9px;
+    background-origin: padding-box;
+    background-size: 20px;
+    height: 20px;
+    width: 10px;
+  }
+
+  .square {
+    height: 8px;
+    margin-left: 3px;
+    width: 8px;
+    display: inline-block;
+    background-color: #ccc;
+    box-sizing: border-box;
+  }
+
+}
+
+.graph {
+  height: 100%;
+
+  .bar {
+    height: 16px;
+    width: 7px;
+    margin: 1px;
+    display: inline-block;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  .bar.down {
+    background-color: #f16752;
+  }
+
+  .bar.up {
+    background-color: #8ed5db;
+  }
+
+  .bar.equal {
+    background-color: #d3d2cf;
+  }
+}
+
+
+
 .newMetaTable {
   width: 98%;
   margin-top: -6px;
@@ -62,34 +122,7 @@
             //width: 40px;
           }
 
-          .upArrow {
-            display: inline-block;
-            background: url('/img/upDownArrow.svg') no-repeat;
-            background-position: 0px 9px;
-            background-origin: padding-box;
-            background-size: 20px;
-            height: 20px;
-            width: 10px;
-          }
 
-          .downArrow {
-            display: inline-block;
-            background: url('/img/upDownArrow.svg') no-repeat;
-            background-position: -10px 9px;
-            background-origin: padding-box;
-            background-size: 20px;
-            height: 20px;
-            width: 10px;
-          }
-
-          .square {
-            height: 8px;
-            margin-left: 3px;
-            width: 8px;
-            display: inline-block;
-            background-color: #ccc;
-            box-sizing: border-box;
-          }
 
           &.details-control {
             width: 15px;

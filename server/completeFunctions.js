@@ -1,42 +1,42 @@
-addNameToDeck = function(_selectedDeckID, name){
-    var deck = _Deck.findOne({_id : _selectedDeckID});
-
-    _DeckNames.update({
-        format : deck.format,
-        name : name
-    },
-    {
-        $setOnInsert : {
-            format : deck.format,
-            name : name,
-            date : new Date()
-        }
-    },
-        {upsert : true}
-    );
-
-    var deckName = _DeckNames.findOne({
-        format : deck.format,
-        name : name
-    });
-
-    var colors = findTheColorsInc(deck.colors);
-    //colors.totalQuantity = 1;
-    _DeckNames.update({
-            format : deck.format,
-            name : name
-        },
-        {
-            $inc : colors
-        },
-        {upsert : true}
-    );
-
-    _Deck.update({_id : _selectedDeckID},{
-        $set : {name : name}
-    });
-    addCardsToThePool(_selectedDeckID);
-};
+// addNameToDeck = function(_selectedDeckID, name){
+//     var deck = _Deck.findOne({_id : _selectedDeckID});
+//
+//     _DeckNames.update({
+//         format : deck.format,
+//         name : name
+//     },
+//     {
+//         $setOnInsert : {
+//             format : deck.format,
+//             name : name,
+//             date : new Date()
+//         }
+//     },
+//         {upsert : true}
+//     );
+//
+//     var deckName = _DeckNames.findOne({
+//         format : deck.format,
+//         name : name
+//     });
+//
+//     var colors = findTheColorsInc(deck.colors);
+//     //colors.totalQuantity = 1;
+//     _DeckNames.update({
+//             format : deck.format,
+//             name : name
+//         },
+//         {
+//             $inc : colors
+//         },
+//         {upsert : true}
+//     );
+//
+//     _Deck.update({_id : _selectedDeckID},{
+//         $set : {name : name}
+//     });
+//     addCardsToThePool(_selectedDeckID);
+// };
 
 
 addCardsToThePool = function(_deckID){

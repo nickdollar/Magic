@@ -1,26 +1,38 @@
 setUpColorForDeckName = function(deckCards){
-    var manaRegex = new RegExp("\{([a-zA-Z])\}", 'g');
-    var tempMana = {"B" : false, "G" : false, "R" : false, "U" : false, "W" : false};
+    var manaRegex = new RegExp("(?:B|G|R|U|W)?\/?(?:P|B|G|R|U|W)(?=})", 'g');
+    var tempMana = {B : 0, C: 0, G : 0, R : 0, U: 0, W : 0,
+                    "B/G" : 0, "B/R" : 0, "G/U" : 0, "G/W" : 0, "R/G" : 0,
+                    "R/W" : 0, "U/B" : 0, "U/R" : 0, "W/B" : 0, "W/U" : 0};
     deckCards.main.forEach(function(card){
         if(_CardDatabase.findOne({name : card.name}) != null ){
             var mana = _CardDatabase.findOne({name : card.name}).manacost;
             var result;
             while((result = manaRegex.exec(mana)) !== null) {
-                if(result[1] == "B") { tempMana["B"] = true; }
-                else if (result[1] == "G") { tempMana["G"] = true}
-                else if (result[1] == "R") { tempMana["R"] = true}
-                else if (result[1] == "U") { tempMana["U"] = true}
-                else if (result[1] == "W") { tempMana["W"] = true}
+                if      (result[0] == "B")   {tempMana["B"]++}
+                else if (result[0] == "C")   {tempMana["C"]++}
+                else if (result[0] == "G")   {tempMana["G"]++}
+                else if (result[0] == "R")   {tempMana["R"]++}
+                else if (result[0] == "U")   {tempMana["U"]++}
+                else if (result[0] == "W")   {tempMana["W"]++}
+                else if (result[0] == "B/P") {tempMana["B/P"]++}
+                else if (result[0] == "G/P") {tempMana["G/P"]++}
+                else if (result[0] == "R/P") {tempMana["R/P"]++}
+                else if (result[0] == "U/P") {tempMana["U/P"]++}
+                else if (result[0] == "W/P") {tempMana["W/P"]++}
+                else if (result[0] == "B/G") {tempMana["B/G"]++}
+                else if (result[0] == "B/R") {tempMana["B/R"]++}
+                else if (result[0] == "G/U") {tempMana["G/U"]++}
+                else if (result[0] == "G/W") {tempMana["G/W"]++}
+                else if (result[0] == "R/G") {tempMana["R/G"]++}
+                else if (result[0] == "R/W") {tempMana["R/W"]++}
+                else if (result[0] == "U/B") {tempMana["U/B"]++}
+                else if (result[0] == "U/R") {tempMana["U/R"]++}
+                else if (result[0] == "W/B") {tempMana["W/B"]++}
+                else if (result[0] == "W/U") {tempMana["W/U"]++}
             }
         }
     });
-    var colors = "";
-    for(var key in tempMana ){
-        if(tempMana[key] == true){
-            colors += key;
-        }
-    }
-    return colors;
+    return tempMana;
 }
 
 pad = function(n) {
@@ -55,13 +67,13 @@ titleCaps = function(title){
     var small = "(a|an|and|as|at|but|by|en|for|if|in|of|on|or|the|to|v[.]?|via|vs[.]?)";
     var punct = "([!\"#$%&'()*+,./:;<=>?@[\\\\\\]^_`{|}~-]*)";
 
-    var parts = [], split = /[:.;?!] |(?: |^)["Ò]/g, index = 0;
+    var parts = [], split = /[:.;?!] |(?: |^)["ï¿½]/g, index = 0;
 
     while (true) {
         var m = split.exec(title);
 
         parts.push( title.substring(index, m ? m.index : title.length)
-            .replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, function(all){
+            .replace(/\b([A-Za-z][a-z.'ï¿½]*)\b/g, function(all){
                 return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : upper(all);
             })
             .replace(RegExp("\\b" + small + "\\b", "ig"), lower)
@@ -77,7 +89,7 @@ titleCaps = function(title){
     }
 
     return parts.join("").replace(/ V(s?)\. /ig, " v$1. ")
-        .replace(/(['Õ])S\b/ig, "$1s")
+        .replace(/(['ï¿½])S\b/ig, "$1s")
         .replace(/\b(AT&T|Q&A)\b/ig, function(all){
             return all.toUpperCase();
         });
@@ -96,13 +108,13 @@ function upper(word){
 //    var punct = "([!\"#$%&'()*+,./:;<=>?@[\\\\\\]^_`{|}~-]*)";
 //
 //    this.titleCaps = function(title){
-//        var parts = [], split = /[:.;?!] |(?: |^)["Ò]/g, index = 0;
+//        var parts = [], split = /[:.;?!] |(?: |^)["ï¿½]/g, index = 0;
 //
 //        while (true) {
 //            var m = split.exec(title);
 //
 //            parts.push( title.substring(index, m ? m.index : title.length)
-//                .replace(/\b([A-Za-z][a-z.'Õ]*)\b/g, function(all){
+//                .replace(/\b([A-Za-z][a-z.'ï¿½]*)\b/g, function(all){
 //                    return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : upper(all);
 //                })
 //                .replace(RegExp("\\b" + small + "\\b", "ig"), lower)
@@ -118,7 +130,7 @@ function upper(word){
 //        }
 //
 //        return parts.join("").replace(/ V(s?)\. /ig, " v$1. ")
-//            .replace(/(['Õ])S\b/ig, "$1s")
+//            .replace(/(['ï¿½])S\b/ig, "$1s")
 //            .replace(/\b(AT&T|Q&A)\b/ig, function(all){
 //                return all.toUpperCase();
 //            });

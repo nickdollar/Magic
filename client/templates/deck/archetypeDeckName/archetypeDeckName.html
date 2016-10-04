@@ -3,11 +3,10 @@
         {{#with thisarchetype}}
             <div class="firstline">
                 <h1>
-                    {{archetype}}
-                    <!--<small>Exploring {{mana}} </small>-->
+                    {{name}}
                 </h1>
                 <div class="archetypeMana">
-                    {{#each getManaCss colors "deck"}}<div class="mana {{mana}}"></div>{{/each}}
+                    {{#each colors}}<div class="mana mana-{{mana}}"></div>{{/each}}
                 </div>
             </div>
             <div class="information">
@@ -16,4 +15,17 @@
             </div>
         {{/with}}
     </div>
+        <div class="archetypedecksBar areaBar">
+            <ul class="list-inline">
+                <li>
+                    <div class="sectionName">
+                        Archetype Decks
+                    </div>
+                </li>
+            </ul>
+        </div>
+    <div class="deckOptions">
+    <div id="owl-deckOption"></div>
+    </div>
+    {{test}}
 </template>

@@ -4,5 +4,8 @@ Template.eventAuditHeader.events({
     },
     "click .js-getNew" : function(){
         Meteor.call("methodEventLeagueGetInfoNew");
-    }
+    },
+    "click .js-fixAllThings" : function(){
+        Meteor.call("methodFixAllEvents");
+    },
 });
