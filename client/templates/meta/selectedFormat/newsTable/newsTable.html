@@ -1,0 +1,168 @@
+<template name="dataTableNewMetaTable">
+    <div class="metaTableOptions">
+        <div class="optionsHeader">
+            <div class="buttonsContainer">
+                <div class="optionButton">
+                    <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
+                </div>
+                <div class="paginationButtons">
+                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="prev" style="display: inline;">&larr; prev</button>
+                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="next" style="display: inline;">next &rarr;</button>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="custom-column">
+                <div>League</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" name="league5_0" class="metaCheckBox" id="league5_0" value="league5_0" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="league5_0">5-0</label>
+                    </li>
+                </ul>
+            </div>
+            <!--<div class="custom-column">-->
+                <!--<div>Daily</div>-->
+                <!--<ul class="list-unstyled optionsList">-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="daily4_0" class="metaCheckBox" id="daily4_0" value="daily4_0" role="typeCheckbox" aria-checked="false" checked>-->
+                        <!--<label for="daily4_0">4-0</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="daily3_1" class="metaCheckBox" id="daily3_1"  value="daily3_1" role="typeCheckbox" aria-checked="false" checked>-->
+                        <!--<label for="daily3_1">3-1</label>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="custom-column">-->
+                <!--<div class="optionListName">PTQ</div>-->
+                <!--<ul class="list-unstyled optionsList">-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="typeCheckbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 8</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="typeCheckbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 9-16</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="typeCheckbox" aria-checked="false" checked>-->
+                        <!--<label for="tall-1">Top 17-32</label>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <div class="custom-column">
+                <div class="optionListName">Deck Date</div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="decksMetaSpan" role="radio" value="month" checked="checked">
+                        Month
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="decksMetaSpan" role="radio" value="twoMonths">
+                        Two Months
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="decksMetaSpan" role="radio" value="sixMonths">
+                        Six Months
+                    </label>
+                </div>
+            </div>
+            <div class="custom-column">
+                <div class="optionListName">How</div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="decksOrArchetypes" role="radio" value="archetypes" checked="checked">
+                        Archetypes
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="decksOrArchetypes" role="radio" value="decks">
+                        Decks
+                    </label>
+                </div>
+            </div>
+            <div class="custom-column">
+                <div class="optionListName">Position</div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="positionChange" role="radio" value="week" checked="checked">
+                        Week
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="positionChange" role="radio" value="twoWeeks">
+                        Two Weeks
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="positionChange" role="radio" value="month">
+                        Month
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="newMetaTable js-appendTable">
+            <table id="metaDecksNames" class="display" cellspacing="0" width="100%"></table>
+        </div>
+    </div>
+</template>
+
+<!--<table id="metaDecks" class="display" cellspacing="0" width="100%">-->
+    <!--<thead>-->
+    <!--<tr class="hiddenHeader">-->
+    <!--<th></th>-->
+    <!--<th></th>-->
+    <!--<th>ARCHETYPE</th>-->
+    <!--<th>COLORS</th>-->
+    <!--<th>%</th>-->
+    <!--<th>LOW</th>-->
+    <!--<th>HIGH</th>-->
+    <!--<th>TYPE</th>-->
+    <!--<th>CHANGES</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <!--<tbody>-->
+        <!--{{#each metaTest}}-->
+    <!--<tr>-->
+    <!--<td class="details-control" data-name="{{name}}"></td>-->
+    <!--<td class="tablePosition">{{position}}</td>-->
+    <!--<td class="tableName"><span>{{name}}</span>-->
+        <!--{{#with positionChange}}-->
+        <!--<div class="positionChange"><span>{{positionWeekChange}}</span><span class={{upDownEqual}}></span></div>-->
+            <!--{{/with}}-->
+    <!--</td>-->
+    <!--<td class="tableMana">-->
+        <!--{{#with colors name}}-->
+        <!--{{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}-->
+            <!--{{/with}}-->
+    <!--</td>-->
+    <!--<td class="tablePercentage">{{prettifyPercentage percentage}}%</td>-->
+
+    <!--<td class="priceTable">-->
+    <!--${{minPrice}}-->
+    <!--</td>-->
+    <!--<td class="priceTable">-->
+    <!--${{maxPrice}}-->
+    <!--</td>-->
+    <!--<td class="deckType">-->
+    <!--{{type}}-->
+    <!--</td>-->
+    <!--<td class="blocks">-->
+    <!--<div class="">-->
+    <!--{{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--</tr>-->
+        <!--{{/each}}-->
+    <!--</tbody>-->
+<!--</table>-->
