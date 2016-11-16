@@ -1,0 +1,24 @@
+<template name="AdminDecksNamesNew">
+    {{#autoForm schema=DecksNamesSchema id="adminNewsDeckNames" type="method" meteormethod="createNewDecksNames"}}
+        <fieldset>
+            <legend>Add a DecksNames</legend>
+            {{> afQuickField name="name"}}
+            {{> afQuickField name="format"}}
+            {{#if currentFieldValue}}
+                {{> afQuickField name="DecksArchetypes_id"}}
+            {{/if}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+
+    {{#autoForm schema=DecksArchetypesSchema id="addPlaylist2" type="method" meteormethod="createNewDecksArchetype"}}
+        <fieldset>
+            <legend>Add a Archetype</legend>
+            {{> afQuickField name="name"}}
+            {{> afQuickField name="format"}}
+            {{> afQuickField name="type"}}
+            <!--{{> afArrayField name="DecksNames"}}-->
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+</template>

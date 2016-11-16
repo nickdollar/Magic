@@ -1,0 +1,1510 @@
+<template name="deckPopOutOption">
+    <div class="modal show" id="addEmployee">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                    <h4 class="modal-title">{{deckName.id}}</h4>
+                </div>
+                <button type="submit" class="btn btn-default closeModal" style="display: inline;">Close Modal</button>
+                <div class="modal-body">
+                    <table class="deckTable">
+                        <tr>
+                            {{#each deckName.results}}
+                                <td>
+                                    <table class="decktableRow">
+                                        <tr><td><a href="#" class="btn btn-xs btn-default">{{this.deckName}}: {{value}}%</a></td></tr>
+                                        {{#each matches.positive}}
+                                            <tr><td><a class="matchPositive">{{this}}</a></td></tr>
+                                        {{/each}}
+                                        {{#each matches.negative}}
+                                            <tr><td><a class="matchNegative">{{this}}</a></td></tr>
+                                        {{/each}}
+                                    </table>
+                                </td>
+                            {{/each}}
+                        </tr>
+                    </table>
+                    <div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>
+
+
+<!--<template name="deckPopOut">-->
+<!--<div class="modal show" id="addEmployee">-->
+<!--<div class="modal-dialog">-->
+<!--<div class="modal-content">-->
+<!--<div class="modal-header">-->
+<!--&lt;!&ndash;<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>&ndash;&gt;-->
+<!--<h4 class="modal-title">{{deckName}}</h4>-->
+<!--</div>-->
+        <!--{{#if badDeckChoose}}-->
+<!--<div class="rowThing">-->
+<!--<input type="text" name="" class="deckname">-->
+<!--<button type="submit" class="btn btn-default btn-xs addName">Add Name</button>-->
+<!--</div>-->
+        <!--{{else}}-->
+<!--<button type="submit" class="btn btn-default confirmDeckName" style="display: inline;">Confirm Name</button>-->
+        <!--{{/if}}-->
+<!--<button type="submit" class="btn btn-default closeModal" style="display: inline;">Close Modal</button>-->
+
+<!--<div class="modal-body">-->
+        <!--{{#if Template.subscriptionsReady}}-->
+<!--{{>cardMatches}}-->
+        <!--{{/if}}-->
+<!--<div>-->
+<!--</div>-->
+<!--</div>-->
+
+<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
+<!--</template>-->
+
+<!--<template name="cards">-->
+    <!--<div class="areaCornerDiv">-->
+        <!--<div class="rowThing">-->
+            <!--{{>search}}-->
+        <!--</div>-->
+        <!--<div class="areaCornerDiv">-->
+            <!--{{#each cards}}-->
+                <!--<div class="rowThing">-->
+                    <!--{{>cardInfo}}-->
+
+                    <!--<button type="submit" class="btn btn-default btn-xs smallPicture1Remove ">-->
+                        <!--<span class="glyphicon glyphicon-remove"></span>&nbsp;-->
+                    <!--</button>-->
+
+                    <!--&lt;!&ndash;<div class="rowButton">&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if mainPictureOption1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCardRemove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if mainPictureOption2}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCard disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs mainCard ">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{#if smallPicture1Option1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPicture1Remove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if smallPicture1Option2}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPic1">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{#if smallPicture2Option1}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPicture2Remove ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-remove"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;{{#if smallPicture2Option2}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs disabled">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ else}}&ndash;&gt;-->
+                        <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs smallPic2 ">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-star-empty"></span>&nbsp;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;{{/if}}&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-default btn-xs removeCard ">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-trash"></span>&nbsp;&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</div>-->
+            <!--{{/each}}-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
+
+<!--<template name="deckNameColors">-->
+    <!--<div class="inline">-->
+        <!--<button class="btn btn-default btn-xs dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{choosenColors}}-->
+            <!--<span class="caret"></span>-->
+        <!--</button>-->
+        <!--<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">0</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">B</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">R</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">U</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">G</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">W</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BRG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GUB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">URG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WBR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UBR</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">RGWU</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">BRGW</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">UBRG</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">GWUB</a></li>-->
+            <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#">WUBRG</a></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</template>-->
+<!--<div class="row">-->
+<!--<div class="newDeckColumn bottom-separator">-->
+        <!--{{#if creatureQuantity _id}}-->
+<!--<div class="typeBlock creature">-->
+<!--<div class="row typeHeader">Creature ({{creatureQuantity _id}})</div>-->
+        <!--{{#each creature _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--<span class="name">aaaa</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if artifactQuantity _id}}-->
+<!--<div class="typeBlock artifact">-->
+<!--<span class="typeHeader">Artifact ({{artifactQuantity _id}})</span>-->
+        <!--{{#each artifact _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if planeswalkerQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">planeswalker ({{planeswalkerQuantity _id}})</span>-->
+        <!--{{#each planeswalker _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--<span class="name">{{mana}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if enchantmentQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Enchantment ({{enchantmentQuantity _id}})</span>-->
+        <!--{{#each enchantment _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if sorceryQuantity _id}}-->
+<!--<div class="typeBlock sorcery">-->
+<!--<span class="typeHeader">Sorcery ({{sorceryQuantity _id}})</span>-->
+        <!--{{#each sorcery _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if instantQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Instant ({{instantQuantity _id}})</span>-->
+        <!--{{#each instant _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+        <!--{{#if landQuantity _id}}-->
+<!--<div class="typeBlock planeswalker">-->
+<!--<span class="typeHeader">Land ({{landQuantity _id}})</span>-->
+        <!--{{#each land _id}}-->
+<!--<div class="row">-->
+<!--<span class="quantity">{{quantity}}</span>-->
+<!--<span class="name">{{name}}</span>-->
+<!--</div>-->
+        <!--{{/each}}-->
+<!--</div>-->
+        <!--{{/if}}-->
+<!--</div>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">1</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">2</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">3</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">4</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">5</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">6</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">7</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">8</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">9</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">10</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">11</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold">12</div>-->
+<!--</div>-->
+<!--<div class="row">-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>-->
+    <!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>-->
+<!--</div>-->
+<!--<div class="row">-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">1</div>-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">2</div>-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">3</div>-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">4</div>-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">5</div>-->
+    <!--<div class="col-xs-2" style="border: 1px solid gold">6</div>-->
+<!--</div>-->
+
+<!--<div class="row newDeckColumn" >-->
+<!--<table class="table">-->
+<!--<tr>-->
+<!--<td colspan="3">-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">1</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">2</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">3</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">4</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">5</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">6</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">7</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">8</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">9</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">10</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">11</div>-->
+<!--<div class="col-xs-1" style="border: 1px solid gold; padding: 0px">12</div>-->
+<!--</td>-->
+<!--</tr>-->
+        <!--{{#each cardType _deckID}}-->
+<!--<tr>-->
+<!--<td colspan="3">{{name}} ({{quantity}})</td>-->
+<!--</tr>-->
+        <!--{{#each cards ../_deckID options}}-->
+<!--<tr>-->
+<!--<td class="col-xs-1 no-gutters">{{quantity}}</td>-->
+<!--<td class="col-xs-7">{{name}}</td>-->
+<!--<td class="col-xs-4">-->
+        <!--{{#each getManaCss name}}-->
+<!--<span class="mana {{mana}}"></span>-->
+        <!--{{/each}}-->
+<!--</td>-->
+<!--</tr>-->
+        <!--{{/each}}-->
+        <!--{{/each}}-->
+<!--</table>-->
+<!--</div>-->
+
+<!--<div class="row">-->
+    <!--<div class="col-xs-3 lala">-->
+        <!--<div class="row">-->
+            <!--<ul class="list-unstyled optionsList">-->
+                <!--<li>-->
+                    <!--<input type="checkbox" name="tall" id="tall" role="checkbox" aria-checked="false">-->
+                    <!--<label for="tall">PTQ</label>-->
+
+                    <!--<ul class="list-unstyled">-->
+                        <!--<li>-->
+                            <!--<input type="checkbox" name="tall-1" id="tall-1" role="checkbox" aria-checked="false">-->
+                            <!--<label for="tall-1">Top 8</label>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<input type="checkbox" name="tall-2" id="tall-2" role="checkbox" aria-checked="false">-->
+                            <!--<label for="tall-2">Top 9-16</label>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<input type="checkbox" name="tall-2" id="tall-2" role="checkbox" aria-checked="false">-->
+                            <!--<label for="tall-2">Top 17-32</label>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-xs-3">-->
+        <!--<div class="row">-->
+            <!--<ul class="list-unstyled lala">-->
+                <!--<li>-->
+                    <!--<input type="checkbox" name="tall" id="tall" role="checkbox" aria-checked="false">-->
+                    <!--<label for="tall">Daily</label>-->
+
+                    <!--<ul class="list-unstyled">-->
+                        <!--<li>-->
+                            <!--<input type="checkbox" name="tall-1" id="tall-1" role="checkbox" aria-checked="false">-->
+                            <!--<label for="tall-1">4-0</label>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<input type="checkbox" name="tall-2" id="tall-2" role="checkbox" aria-checked="false">-->
+                            <!--<label for="tall-2">3-1</label>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-xs-3">-->
+        <!--<div class="row">-->
+            <!--<button type="button" {{previousDisabled}} class="btn btn-default btn-xs previous">&larr; prev</button>-->
+            <!--<button type="button" {{previousNext}} class="btn btn-default btn-xs next">&rarr; next</button>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+        <span class="button-checkbox">
+            <button type="button" class="btn" data-color="default btn-xs">Default</button>
+            <input type="checkbox" class="hidden" checked />
+        </span>
+
+
+
+         <div class="col-xs-3 box miniTable whiteBackground" >
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <table class="table borderless metaTable">
+                                        <thead>
+                                        <tr>
+                                            <th colspan="3">DECK</th>
+                                            <th>%</th>
+                                            <th>CHANGE</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {{#each meta format}}
+                                            <tr>
+                                                <td>{{tableIndex @index "decksNames"}}</td>
+                                                <td><a id="deckLink" href="{{pathFor 'decks' format = format deckName = name}}">{{name}}</a></td>
+                                                <td class="positionChange">
+                                                    {{#if position1 upDown}}
+                                                        <span>0</span><span class="neutro"></span>
+                                                    {{else}} {{#if position2 upDown}}
+                                                        <span>{{change}}</span><span class="greenArrow-up"></span>
+                                                    {{else}}
+                                                        <span>{{change}}</span><span class="redArrow-down"></span>
+                                                    {{/if}}
+                                                    {{/if}}
+                                                </td>
+                                                <td>{{type name}}</td>
+                                                <td>{{weekChange}}%</td>
+                                            </tr>
+                                        {{/each}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <template name="MENU_deckNames">
+                            <style type="text/css">
+                                .is-active > a, .is-hovered > a {
+                                    border-left: 3px solid {{siteColor}} !important;
+                                    background-color: #f5f5f5 !important;
+                                }
+                            </style>
+                            <div class="superMenu">
+                                <div class="left">
+                                    <ul class="one">
+                                        <li class="level0 oneRow parent">
+                                            <a href="{{pathFor 'IRONdeckNaming' options = "deckFormList"}}"><span>Deck Names</span></a>
+                                            <ul class="two">
+                                                <li class="level1 twoRow parent">
+                                                    <a class="">Standard</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a>C12</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="level1 twoRow parent">
+                                                    <a class="">Modern</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a>C12</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="level1 twoRow parent">
+                                                    <a class="">Legacy</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a>C12</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="level1 twoRow parent">
+                                                    <a class="">Vintage</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a>C12</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="level1 twoRow"><a>C2</a></li>
+                                            </ul>
+
+                                        </li>
+
+                                        <li class="level0 oneRow parent">
+                                            <a id="deckLink" href="{{pathFor 'IRONdeckNaming' options = "searchedDeck"}}"><span>Make Better Data</span></a>
+                                            <ul class="two">
+                                                <li class="level1 twoRow">
+                                                    <a class="" href="{{pathFor 'IRONdeckNaming' format = "standard" options = "searchedDeck"}}">Standard</a>
+                                                </li>
+                                                <li class="level1 twoRow">
+                                                    <a class="" href="{{pathFor 'IRONdeckNaming' format = "modern" options = "searchedDeck"}}">Modern</a>
+                                                </li>
+                                                <li class="level1 twoRow">
+                                                    <a class="" href="{{pathFor 'IRONdeckNaming' format = "legacy" options = "searchedDeck"}}">Legacy</a>
+                                                </li>
+                                                <li class="level1 twoRow">
+                                                    <a class="" href="{{pathFor 'IRONdeckNaming' format = "vintage" options = "searchedDeck"}}">Vintage</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="level0 oneRow parent">
+                                            <a><span>futebol</span></a>
+                                            <ul class="two">
+                                                <li class="level1 twoRow parent">
+                                                    <a class="">C1</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a>C12</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="level1 twoRow"><a>C2</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="level0 oneRow parent">
+                                            <a href="#">
+                                                <span>cartola fc</span>
+                                            </a>
+                                            <ul class="two">
+                                                <li class="level1 twoRow"><a><span>D1</span></a></li>
+                                                <li class="level1 twoRow parent">
+                                                    <a>D1</a>
+                                                    <ul class="three">
+                                                        <li class="threeRow"><a><span>D1</span></a></li>
+                                                        <li class="threeRow"><a><span>D1</span></a></li>
+                                                        <li class="threeRow"><a><span>D1</span></a></li>
+                                                        <li class="threeRow"><a><span>D1</span></a></li>
+                                                        <li class="threeRow"><a><span>D1</span></a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="right">
+                                    AAAafffffffffffffffff
+                                </div>
+                            </div>
+                        </template>
+
+
+<template name="testMenu">
+    <style type="text/css">
+        .is-active > a, .is-hovered > a {
+            border-left: 3px solid {{siteColor}} !important;
+            background-color: #f5f5f5 !important;
+        }
+    </style>
+        <div class="superMenu">
+            <div class="left">
+                <ul class="one">
+                    <li class="level0 oneRow">
+                        <a><span>Principios Editorais</span></a>
+                    </li>
+                    <li class="level0 oneRow"><a><span>grupo globo</span></a></li>
+                    <li class="level0 oneRow parent">
+                        <a><span>futebol</span></a>
+                        <ul class="two">
+                            <li class="level1 twoRow parent">
+                                <a class="">C1</a>
+                                <ul class="three">
+                                    <li class="threeRow"><a>C12</a></li>
+                                    <li class="threeRow"><a>C22</a></li>
+                                    <li class="threeRow"><a>C32</a></li>
+                                    <li class="threeRow"><a>C42</a></li>
+                                    <li class="threeRow"><a>C52</a></li>
+                                </ul>
+                            </li>
+                            <li class="level1 twoRow"><a>C2</a></li>
+                            <li class="level1 twoRow"><a>C3</a></li>
+                            <li class="level1 twoRow"><a>C4</a></li>
+                            <li class="level1 twoRow"><a>C5</a></li>
+                        </ul>
+                    </li>
+                    <li class="level0 oneRow parent">
+                        <a href="#">
+                            <span>cartola fc</span>
+                        </a>
+                        <ul class="two">
+                            <li class="level1 twoRow"><a><span>D1</span></a></li>
+                            <li class="level1 twoRow"><a><span>D2</span></a></li>
+                            <li class="level1 twoRow"><a><span>D3</span></a></li>
+                            <li class="level1 twoRow"><a><span>D4</span></a></li>
+                            <li class="level1 twoRow parent">
+                                <a>D1</a>
+                                <ul class="three">
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                    <li class="threeRow"><a><span>D1</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="level0 oneRow"> <a><span>mma</span></a></li>
+                    <li class="level0 oneRow"> <a><span>f1</span></a></li>
+                    <li class="level0 oneRow"> <a><span>eu atleta</span></a></li>
+                </ul>
+
+            </div>
+            <div class="right">
+                AAAafffffffffffffffff
+            </div>
+        </div>
+</template>
+
+<template name="megaMenu">
+    <div id="pop1" class="popbox">
+        {{>yield "popUpMenu"}}
+    </div>
+</template>
+
+<template name="menu_COL">
+    <div  id="danger" class="menu-area">
+            <div class="hamburger">
+                <b></b>
+                <b></b>
+                <b></b>
+            </div>
+            <span class="menu-label">MENU</span>
+    </div>
+</template>
+
+<template name="deckFormList">
+    <div class="col-xs-12">
+        <div class="row">
+            <h1>Deck List Name</h1>
+        </div>
+        <div class="row">
+            <button type="submit" class="inline btn btn-default createOneMoreDeck">Add A Deck</button>
+        </div>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="row">
+                    {{>formats}}
+                </div>
+                <div class="row">
+                    {{>nameTable_COL}}
+                </div>
+            </div>
+            <div class="col-xs-5">
+                {{>deckInfo_COL}}
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="nameTable_COL">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Format</th>
+            <th>Color</th>
+            <th>Type</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each deckNames}}
+        <tr>
+            <td class="col-xs-4" >{{name}}</td>
+            <td class="col-xs-2" >{{choosenFormat}}</td>
+            <td class="col-xs-2" >{{choosenColors}}</td>
+            <td class="col-xs-2" >{{choosenType}}</td>
+            <td class="col-xs-1" >
+                <button type="submit" class=" inline btn btn-default btn-xs removeDeckID">
+                    <span class="glyphicon glyphicon-trash "></span>&nbsp;
+                </button>
+            </td>
+            <td class="col-xs-1">
+                <button type="submit" class="inline btn btn-default btn-xs selectDeck">
+                    <span class="glyphicon glyphicon-ok"></span>&nbsp;
+                </button>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="deckInfo_COL">
+    {{#if isDeckSelected}}
+    <div class="row">
+        {{>deckInfoForm_COL}}
+    </div>
+    {{else}}
+        No deck Selected
+    {{/if}}
+</template>
+
+<template name="deckInfoForm_COL">
+    <div class="col-xs-12">
+        <form class="form-horizontal">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-xs-2 control-label">Name</label>
+                <div class="col-xs-7">
+                    <input type="text" class="form-control" id="inputDeckName" value={{name}}>
+                </div>
+            </div>
+
+            <!-- Select Basic -->
+            <div class="form-group row">
+                <label class="control-label col-xs-2" for="selectbasic">Format</label>
+                <div class="col-xs-7">
+                    <select id="selectbasic" name="selectbasic" class="form-control">
+                        <option value="vintage" {{format "vintage"}}>vintage</option>
+                        <option value="legacy" {{format "legacy"}}>legacy</option>
+                        <option value="modern" {{format "modern"}}>modern</option>
+                        <option value="standard" {{format "standard"}}>standard</option>
+                        <option value="draft" {{format "draft"}}>draft</option>
+                        <option value="commander" {{format "commander"}}>commander</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Multiple Checkboxes -->
+            <div class="form-group row">
+                <label class="control-label col-xs-2">Colors</label>
+                <div class="col-xs-7">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="W" {{checked "W"}}>
+                            White
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="U" {{checked "U"}}>
+                             Blue
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="B" {{checked "B"}}>
+                            Black
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="R" {{checked "R"}}>
+                            Red
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="G" {{checked "G"}}>
+                            Green
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select Basic -->
+            <div class="control-group row">
+                <label class="control-label col-xs-2" for="selectbasic">Type</label>
+                <div class="controls col-xs-7">
+                    <select class="form-control">
+                        <option value="control" {{type "control"}}>Control</option>
+                        <option value="combo"   {{type "combo"}}>Combo</option>
+                        <option value="aggro"   {{type "aggro"}}>Aggro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary pull-right deckUpdate">Update</button>
+            </div>
+        </form>
+    </div>
+</template>
+
+<template name="cards">
+    <div class="areaCornerDiv">
+        <div class="rowThing">
+          {{>search}}
+        </div>
+        <div class="areaCornerDiv">
+          {{#each cardsList}}
+              <div class="rowThing">
+                {{>cardInfo}}
+                  <button type="submit" class="btn btn-default btn-xs removeCard ">
+                  <span class="glyphicon glyphicon-trash"></span>&nbsp;
+                  </button>
+              </div>
+          {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="search">
+    <div class="form-group">
+        <input class="form-control typeahead cardName"
+               name="search" type="text"
+               placeholder="Type to query"
+               autocomplete="off" spellcheck="off"
+               data-source="search"
+                />
+        <button type="submit" class="btn btn-default btn-xs addCard" >Add Card</button>
+    </div>
+</template>
+
+<template name="cardInfo">
+    {{name}}
+    {{#each getManaCss name}}
+        <span class="mana {{mana}}"></span>
+    {{/each}}
+</template>
+
+<template name="formats">
+        <!--<div class="col-xs-12 col-md-12 col-md-12 col-lg-12">-->
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">standard</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">modern</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">legacy</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">vintage</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">draft</button>
+        <button type="submit" class="btn btn-default btn-xs selectFormat inline">nope</button>
+        <!--</div>-->
+</template>
+
+_SelectedNameDeckNames = new Meteor.Collection('selectedNameDeckNames');
+_SelectedNameDeckFields = new Meteor.Collection('selectedNameDeckFields');
+_SelectNameDeckFieldCards = new Meteor.Collection('selectedNamesCardsValues');
+_SelectNameDeckNoNameYet = new Meteor.Collection('selectNameDeckNoNameYet');
+
+//+++++++++++++++++
+//deckFormList    +
+//+++++++++++++++++
+
+Template.deckFormList.helpers({
+
+});
+
+Template.deckFormList.events({
+
+});
+
+Template.deckFormList.destroyed = function(){
+    Session.set('selectedIdDeck', null);
+};
+
+//++++++++++++++++++
+//nameTable_COL    +
+//++++++++++++++++++
+
+Template.nameTable_COL.helpers({
+    deckNames : function() {
+        if(Session.get('selectedFormat') == null)
+        {
+            return _DeckNames.find(
+                {
+                    format : {$exists : false}
+                });
+        }
+        return _DeckNames.find({
+                format : Session.get('selectedFormat')
+            });
+    },
+    name : function() {
+        var name =_DeckNames.findOne({_id : this._id});
+        if(name)
+        {
+            return name.name;
+        } else
+        {
+            return "No Name";
+        }
+    },
+    choosenFormat : function() {
+        var format = _DeckNames.findOne({_id : this._id, format : {$exists : true}});
+        if(format==null)
+        {
+            return "Nope";
+        }
+        return format.format;
+    },
+    choosenColors : function() {
+        var format = _DeckNames.findOne({_id : this._id, colors : {$exists : true}});
+        if(format==null)
+        {
+            return "No";
+        }
+        return format.colors;
+    },
+    choosenType : function() {
+        var type = _DeckNames.findOne({_id : this._id, type : {$exists : true}});
+        if(type==null)
+        {
+            return "No Type";
+        }
+        return type.type;
+    }
+
+});
+Template.nameTable_COL.onCreated(function(){
+
+});
+Template.nameTable_COL.events({
+    'click .selectDeck' : function(evt, tmp){
+        Session.set('selectedIdDeck', this._id);
+    },
+    'click .removeDeckID' : function(){
+        Meteor.call('removeDeck', this._id);
+    }
+});
+Template.nameTable_COL.onRendered(function (){
+
+});
+
+//++++++++++++++++++
+//deckInfo_COL     +
+//++++++++++++++++++
+
+Template.deckInfo_COL.helpers({
+    isDeckSelected : function(){
+        if(Session.get('selectedIdDeck') != null){
+            return true;
+        }
+        return false;
+    }
+});
+
+Template.deckInfo_COL.events({
+    'click .selectDeck' : function(evt, tmp){
+        Session.set('selectedIdDeck', this._id);
+    },
+    'click .removeDeckID' : function(){
+        Meteor.call('removeDeck', this._id);
+    }
+});
+Template.deckInfo_COL.onRendered(function (){
+
+});
+
+Template.deckInfo_COL.onCreated(function(){
+    var instance = this;
+    this.autorun(function(){
+        instance.subscribe('deckNamesSelected' , Session.get('selectedIdDeck'));
+    });
+});
+
+//++++++++++++++++++
+//deckInfoForm_COL     +
+//++++++++++++++++++
+
+Template.deckInfoForm_COL.helpers({
+    name : function(){
+        return _DeckNames.findOne({_id : Session.get('selectedIdDeck')}).name;
+    },
+    checked : function(color){
+        var colors = _DeckNames.findOne({_id : Session.get('selectedIdDeck')}).colors;
+
+        if(colors.indexOf(color) === -1)
+        {
+            return "";
+        }
+        return "checked";
+    },
+    format : function(formatArg){
+        var format = _DeckNames.findOne({_id : Session.get('selectedIdDeck')}).format;
+        if(format === formatArg)
+        {
+            return "selected";
+        }
+        return "";
+    },
+    type : function(typeArg){
+        var type = _DeckNames.findOne({_id : Session.get('selectedIdDeck')}).type;
+
+        if(type === typeArg)
+        {
+            return "selected";
+        }
+        return "";
+    }
+});
+
+Template.deckInfoForm_COL.events({
+    'click .deckUpdate' : function(evt, tmp){
+        evt.preventDefault();
+        var information = {};
+
+        information.name = $("#inputDeckName").val();
+        information.colors = "";
+        tmp.findAll("input:checked").forEach(function(color){
+            information.colors += color.value;
+        });
+
+        information.format = tmp.findAll("option:selected")[0].value;
+        information.type = tmp.findAll("option:selected")[1].value;
+        Meteor.call('updateDeckNameInformation', information, Session.get('selectedIdDeck'));
+    }
+});
+Template.deckInfoForm_COL.onRendered(function (){
+
+});
+
+Template.deckInfoForm_COL.onCreated(function(){
+    var instance = this;
+    this.autorun(function(){
+        instance.subscribe('selectedNamesCardsValues' , Session.get('selectedIdDeck'));
+    });
+});
+
+//+++++++++++++++++
+//cards           +
+//+++++++++++++++++
+
+Template.cards.helpers({
+    cardsList : function(){
+        return _SelectNameDeckFieldCards.find({});
+    }
+});
+
+Template.cards.events({
+    'click .removeCard' : function() {
+        Meteor.call('removeCardFromDeck', this);
+    }
+});
+
+<template name="topMenuStatic">
+    <nav class="navbar navbar-default nav-fixed-top" >
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a id="mainLink" href="{{pathFor 'main'}}">meta</a></li>
+                <li><a id="deckLink" href="{{pathFor 'decks' _eventID = "kfalskdfsldf" _deckID = "L38dKFFtxzGX6K9FZ"}}">Deck</a></li>
+                <li><a id="metaLink" href="{{pathFor 'meta' }}">META</a></li>
+            </ul>
+        </div>
+    </nav>
+</template>
+
+<template name="IRONdeckNaming">
+          {{>yield "base"}}
+</template>
+
+<template name="nameSimpleCards">
+    {{#each deck}}
+        {{#if getTypeQuantity cards}}
+            {{>nameCardTypeRows}}
+        {{/if}}
+    {{/each}}
+</template>
+
+
+<template name="deckNames">
+    <div class="panel panel-default" id="panel1">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-target="#collapseOne"
+                   href="#collapseOne" class="collapsed">
+                    Deck Names
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="rowThing">
+                    <input type="text" name="" class="deckname">
+                    <button type="submit" class="btn btn-default btn-xs addName">Add Name</button>
+                </div>
+                <div class="areaCornerDiv">
+                    {{#each names}}
+                        <div class="rowThing">
+                            <div class="deckName">
+                                <span class="editESPAN" style="display:block;">{{name}}</span>
+                                <input class="editINPUT" style="display:none;" type="text"/>
+                            </div>
+                            <div class="rowButton">
+                                <!--<button type="submit" class="btn btwn-default editName">edit</button>-->
+                                <button type="submit" class="btn btn-default removeName btn-xs">  <span class="glyphicon glyphicon-trash"></span>&nbsp;</button>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<template name="cardsTop">
+    <div class="panel panel-default" id="panel3">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-target="#collapseThree"
+                   href="#collapseThree" class="collapsed">
+                    Cards
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+            {{>cards}}
+        </div>
+    </div>
+</template>
+
+<template name="nameDeck">
+    <div>
+        {{#each goodDecks}}
+            {{>deckBlock}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="deckBlock">
+    <div class="areaCornerDiv">
+        <div class="rowThing">
+            <div class="nomeDoDeck">
+                {{name}}
+            </div>
+        </div>
+        {{#each decksResults}}
+            <div class="rowThing">
+                <div class="paddingLeft">
+                    <div class="noNameDeck">
+                        {{decknameID}}
+                        {{percentage}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</template>
+
+<template name="nameCardTypeRows">
+    <div class="cardRow"> {{type}} ({{getTypeQuantity cards}})</div>
+    {{#each cards}}
+        <div class="cardRow">
+            <div class="divQuantity">
+                {{quantity}}
+            </div>
+            <div class="divName">
+                <a href="{{getLinkAddress name}}" class="awp">{{name}}</a>
+            </div>
+            <div class="divMana">
+                {{#each getManaCss cardData.manacost}}
+                    <span class="mana {{mana}}"></span>
+                {{/each}}
+            </div>
+        </div>
+    {{/each}}
+</template>
+
+_JoinCardsData = new Meteor.Collection('joinCardsChildren');
+Session.set('selectedIdDeck', null);
+Session.set('selectedFormat', null);
+Session.set('thing', null);
+Session.set('badDecks', null);
+Session.set('badDeckChoose', null);
+Session.set('SelectedDeckName', null);
+Session.set('SelectedDeckNameID', null);
+Session.set('showDeckPopOut', false);
+Session.set('showDeckPopOutOption', false);
+Session.set('selectedDeck', null);
+Session.set('deckPercentageOptions', null);
+Session.set('showDeckPopOutOptionSelectedDeck', null);
+Session.set("uniqueDeckPercentageOptions", null);
+
+<template name="colorBarOriginal">
+    <div class="col-xs-12">
+        <div class="row colorBarOriginal" style="background-color: {{siteColor}}; border-bottom-color: {{siteColorBorder}}">
+            <!--<div class="col-xs-3 menu_COL">-->
+                <!--{{>menu_COL}}-->
+            <!--</div>-->
+            <div class="col-xs-12 logo_COL">
+                {{>logo_COL}}
+            </div>
+            <!--<div class="col-xs-3 search_COL">-->
+                <!--{{>search_COL}}-->
+            <!--</div>-->
+        </div>
+    </div>
+</template>
+
+
+Template.colorBarOriginal.helpers({
+    siteColor : function(){
+        return Session.get('siteColor');
+ },
+    siteColorBorder : function(){
+        return shadeColor(Session.get('siteColor'), -20);
+    }
+});
+
+Template.colorBarOriginal.rendered = function(){
+    var moveLeft = 0;
+    var moveDown = 0;
+
+    $("#danger").hover ( function () { MenuOpenCloseErgoTimer (
+            100,
+            function (node) {
+                var target = '#pop1';
+                $(target).show();
+                var buttonMenu = $("#danger");
+                var windowPosition = (buttonMenu.offset().top - $(window).scrollTop());
+                var position = $(node).position();
+                $(target).css('top', windowPosition + 50).css('left', buttonMenu.offset().left);
+            },
+            this
+        ); },
+        function () { MenuOpenCloseErgoTimer (
+            200,
+            function () {
+                var target = '#pop1';
+                $(target).hide();
+            }
+        ); }
+    );
+
+    $("#pop1").hover ( function () { MenuOpenCloseErgoTimer (
+            0,
+            function () {
+                $("#pop1").show();
+            }
+        ); },
+        function () { MenuOpenCloseErgoTimer (
+            200,
+            function () {
+                $("#pop1").hide();
+            }
+        ); }
+    );
+};
+
+
+//Template.tileFormat.helpers({
+//    meta : function(format){
+//        var deckNames = _DeckNames.find({format : format}).map(function(deckName){ return deckName.name});
+//        var date = getWeekStartAndEnd();
+//        var weekStart = new Date(date.weekStart);
+//        var weekEnd = new Date(date.weekEnd);
+//
+//        var metaValues = _MetaValues.find({format: format}, {sort: {date: -1}}).fetch();
+//        var weeksTotal = [];
+//        var total = 0;
+//
+//        for(var i = 0; i < metaValues.length; i++) {
+//            total += metaValues[i].type.daily3_1.deckTotal;
+//            total += metaValues[i].type.daily4_0.deckTotal;
+//            total += metaValues[i].type.ptqTop8.deckTotal;
+//            total += metaValues[i].type.ptqTop9_16.deckTotal;
+//            total += metaValues[i].type.ptqTop17_32.deckTotal;
+//            weeksTotal.push(total);
+//        }
+//
+//        var results = [];
+//        var totalPercent = 0;
+//        for(var i = 0; i < deckNames.length; i++){
+//            var quantity = 0;
+//            var bars = [];
+//            for(var j = 0; j < metaValues.length; j++) {
+//                quantity += metaValues[j].type.daily3_1.decks[deckNames[i]];
+//                quantity += metaValues[j].type.daily4_0.decks[deckNames[i]];
+//                quantity += metaValues[j].type.ptqTop8.decks[deckNames[i]];
+//                quantity += metaValues[j].type.ptqTop9_16.decks[deckNames[i]];
+//                quantity += metaValues[j].type.ptqTop17_32.decks[deckNames[i]];
+//                bars.push(prettifyPercentage((quantity/weeksTotal[j]), 2));
+//            }
+//
+//            totalPercent += parseFloat(prettifyPercentage((quantity/total), 2));
+//
+//            bars = bars.slice(bars.length-6,bars.length);
+//            var barColors = [];
+//
+//
+//            for(var k = 0; k < bars.length -1; k++){
+//                if(bars[k] > bars[k+1]){
+//                    barColors.push("red");
+//                }else if(bars[k] < bars[k+1]){
+//                    barColors.push("green");
+//                }else{
+//                    barColors.push("gray");
+//                }
+//            }
+//            results.push({name : deckNames[i], percent : parseFloat(prettifyPercentage((quantity/total), 2)), quantity : quantity, bars : barColors });
+//        }
+//
+//        weekStart.setDate(weekStart.getDate() - 7);
+//        weekEnd.setDate(weekEnd.getDate() - 7);
+//        Session.set(SV_metaCardListPagination, 0);
+//        results = results.slice(0,20);
+//        results.sort(function(a, b){return b.percent - a.percent});
+//        return results;
+//    }
+//});
+
+//Template.tileFormat.onRendered(function(){
+//    $(".miniTable").mCustomScrollbar({
+//        theme : "minimal-dark"
+//    });
+//});
+
+                <!--<tr>-->
+                                                <!--<td class="details-control"></td>-->
+                                                <!--<td><span>{{tableIndex @index "decksNames"}}</span></td>-->
+                                                <!--<td>-->
+                                                    <!--<a>-->
+                                                        <!--{{name}}-->
+                                                    <!--</a>-->
+                                                <!--</td>-->
+                                                <!--<td class="positionChange">-->
+                                                    <!--{{#if position1 upDown}}-->
+                                                        <!--<span>0</span><span class="neutro"></span>-->
+                                                    <!--{{else}} {{#if position2 upDown}}-->
+                                                        <!--<span>{{change}}</span><span class="greenArrow-up"></span>-->
+                                                    <!--{{else}}-->
+                                                        <!--<span>{{change}}</span><span class="redArrow-down"></span>-->
+                                                    <!--{{/if}}-->
+                                                    <!--{{/if}}-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--{{#with colors name}}-->
+                                                        <!--{{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}-->
+                                                    <!--{{/with}}-->
+                                                <!--</td>-->
+                                                <!--<td>{{type name}}</td>-->
+                                                <!--<td>{{percent}}%</td>-->
+                                                <!--<td>$AAAA</td>-->
+                                                <!--<td>-->
+                                                    <!--<div class="graph">-->
+                                                        <!--{{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}-->
+                                                    <!--</div>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->
+
+                                            <!--<tr>-->
+                                                <!--<td><span>{{tableIndex @index "decksNames"}}</span></td>-->
+                                                <!--<td>-->
+                                                    <!--<a>-->
+                                                        <!--{{name}}-->
+                                                    <!--</a>-->
+                                                <!--</td>-->
+                                                <!--<td class="positionChange">-->
+                                                    <!--{{#if position1 upDown}}-->
+                                                        <!--<span>0</span><span class="neutro"></span>-->
+                                                    <!--{{else}} {{#if position2 upDown}}-->
+                                                        <!--<span>{{change}}</span><span class="greenArrow-up"></span>-->
+                                                    <!--{{else}}-->
+                                                        <!--<span>{{change}}</span><span class="redArrow-down"></span>-->
+                                                    <!--{{/if}}-->
+                                                    <!--{{/if}}-->
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                    <!--{{#with colors name}}-->
+                                                        <!--{{#each getManaCss this "deck"}}<span class="mana {{mana}}"></span>{{/each}}-->
+                                                    <!--{{/with}}-->
+                                                <!--</td>-->
+                                                <!--<td>{{type name}}</td>-->
+                                                <!--<td>{{percent}}%</td>-->
+                                                <!--<td>$AAAA</td>-->
+                                                <!--<td>-->
+                                                    <!--<div class="graph">-->
+                                                        <!--{{#each bars}}<div class="bar {{color}}" data-change="{{change}}" data-value="{{value}}" data-week="{{week}}" data-color="{{color}}"></div>{{/each}}-->
+                                                    <!--</div>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->
+
+
+
+                                             <select class="form-control">
+                                                        <!--<option timeZoneId="1"  UTCAdjustment="UTC-12:00" value="-12" name="">(UTC-12:00) International Date Line West</option>-->
+                                                        <!--<option timeZoneId="2"  UTCAdjustment="UTC-11:00" value="-11" name="">(UTC-11:00) Coordinated Universal Time-11</option>-->
+                                                        <option timeZoneId="3"  UTCAdjustment="UTC-10:00" value="-10" name="">(UTC-10:00) Hawaii</option>
+                                                        <option timeZoneId="4"  UTCAdjustment="UTC-09:00" value="-9" name="">(UTC-09:00) Alaska</option>
+                                                        <option timeZoneId="6"  UTCAdjustment="UTC-08:00" value="-8" name="US/Pacific">(UTC-08:00) Baja California</option>
+                                                        <option timeZoneId="5"  UTCAdjustment="UTC-08:00" value="-8" name="US/Pacific">(UTC-08:00) Pacific Time (US & Canada)</option>
+                                                        <option timeZoneId="7"  UTCAdjustment="UTC-07:00" value="-7" name="US/Arizona">(UTC-07:00) Arizona</option>
+                                                        <option timeZoneId="8"  UTCAdjustment="UTC-07:00" value="-7" name="America/Chihuahua">(UTC-07:00) Chihuahua, La Paz, Mazatlan</option>
+                                                        <option timeZoneId="9"  UTCAdjustment="UTC-07:00" value="-7" name="Mountain">(UTC-07:00) Mountain Time (US & Canada)</option>
+                                                        <option timeZoneId="10" UTCAdjustment="UTC-06:00" value="-6" name="America/Central">(UTC-06:00) Central America</option>
+                                                        <option timeZoneId="11" UTCAdjustment="UTC-06:00" value="-6" name="US/Central">(UTC-06:00) Central Time (US & Canada)</option>
+                                                        <option timeZoneId="12" UTCAdjustment="UTC-06:00" value="-6" name="US/Central">(UTC-06:00) Guadalajara, Mexico City, Monterrey</option>
+                                                        <option timeZoneId="13" UTCAdjustment="UTC-06:00" value="-6" name="America/Central">(UTC-06:00) Saskatchewan</option>
+
+                                                        <option timeZoneId="14" UTCAdjustment="UTC-05:00" value="-5" name="BogotaLimaQuitoRio_Branco">(UTC-05:00) Bogota, Lima, Quito, Rio Branco</option>
+                                                        <option timeZoneId="15" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Chetumal</option>
+                                                        <option timeZoneId="15" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Eastern Time (US & Canada)</option>
+                                                        <option timeZoneId="16" UTCAdjustment="UTC-05:00" value="-5" name="Eastern">(UTC-05:00) Indiana (East)</option>
+
+                                                        <option timeZoneId="18" UTCAdjustment="UTC-04:00" value="-4" name="America/Caracas">(UTC-04:30) Caracas</option>
+                                                        <option timeZoneId="18" UTCAdjustment="UTC-04:00" value="-4" name="America/Asuncion">(UTC-04:30) Asuncion</option>
+                                                        <option timeZoneId="17" UTCAdjustment="UTC-04:00" value="-4" name="Canada/Atlantic">(UTC-04:00) Atlantic Time (Canada)</option>
+
+                                                        <option timeZoneId="19" UTCAdjustment="UTC-04:00" value="-4" name="America/Cuiaba">(UTC-04:00) Cuiaba</option>
+                                                        <option timeZoneId="20" UTCAdjustment="UTC-04:00" value="-4" name="Georgetown/La_Paz/Manaus/San_Juan">(UTC-04:00) Georgetown, La Paz, Manaus, San Juan</option>
+                                                        <option timeZoneId="21" UTCAdjustment="UTC-03:30" value="-3.5" name="Canada/Newfoundland">(UTC-03:30) Newfoundland</option>
+
+                                                        <option timeZoneId="22" UTCAdjustment="UTC-03:00" value="-3" name="Brazil/East">(UTC-03:00) Brasilia</option>
+                                                        <option timeZoneId="22" UTCAdjustment="UTC-03:00" value="-3" name="America/Fortaleza">(UTC-03:00) Cayenne, Fortaleza</option>
+                                                        <option timeZoneId="23" UTCAdjustment="UTC-03:00" value="-3" name="Buenos_Aires/Georgetown">(UTC-03:00) City of Buenos Aires</option>
+                                                        <option timeZoneId="24" UTCAdjustment="UTC-03:00" value="-3" name="America/Greenland">(UTC-03:00) Greenland</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="Montevideo">(UTC-03:00) Montevideo</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="America/Salvador">(UTC-03:00) Salvador</option>
+                                                        <option timeZoneId="25" UTCAdjustment="UTC-03:00" value="-3" name="America/Santiago">(UTC-03:00) Santiago</option>
+
+
+                                                        <option timeZoneId="26" UTCAdjustment="UTC-02:00" value="-2" name="Atlantic/South_Georgia">(UTC-02:00) Coordinated Universal Time-02</option>
+
+                                                        <option timeZoneId="28" UTCAdjustment="UTC-01:00" value="-1" name="Azores">(UTC-01:00) Azores</option>
+                                                        <option timeZoneId="27" UTCAdjustment="UTC-01:00" value="-1" name="Cape_Verde_Is.">(UTC-01:00) Cape Verde Is.</option>
+
+
+                                                        <option timeZoneId="29" UTCAdjustment="UTC+00:00" value="0" name="Casablanca">(UTC) Casablanca</option>
+                                                        <option timeZoneId="29" UTCAdjustment="UTC+00:00" value="0" name="Casablanca">(UTC) Coordinated Universal Time</option>
+
+                                                        <option timeZoneId="30" UTCAdjustment="UTC+00:00" value="0" name="">(UTC) Dublin, Edinburgh, Lisbon, London</option>
+                                                        <option timeZoneId="30" UTCAdjustment="UTC+00:00" value="0" name="">(UTC) Monrovia, Reykjavik</option>
+
+                                                        <option timeZoneId="31" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+                                                        <option timeZoneId="32" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                                                        <option timeZoneId="33" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                                                        <option timeZoneId="34" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+                                                        <option timeZoneId="35" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) West Central Africa</option>
+                                                        <option timeZoneId="35" UTCAdjustment="UTC+01:00" value="1" name="">(UTC+01:00) Windhoek</option>
+
+                                                        <option timeZoneId="36" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Amman</option>
+                                                        <option timeZoneId="37" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Athens, Bucharest</option>
+                                                        <option timeZoneId="38" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Beirut</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Cairo</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Damascus</option>
+                                                        <option timeZoneId="39" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) E. Europe</option>
+                                                        <option timeZoneId="40" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Harare, Pretoria</option>
+                                                        <option timeZoneId="41" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Istanbul</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Jerusalem</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Kaliningrad</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+02:00) Tripoli</option>
+
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Baghdad</option>
+                                                        <option timeZoneId="42" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Kuwait, Riyadh</option>
+                                                        <option timeZoneId="43" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Minsk</option>
+                                                        <option timeZoneId="44" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Moscow, St. Petersburg, Volgograd</option>
+                                                        <option timeZoneId="44" UTCAdjustment="UTC+02:00" value="2" name="">(UTC+03:00) Nairobi</option>
+
+
+
+                                                        <option timeZoneId="45" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Astrakhan, Ulyanovsk</option>
+                                                        <option timeZoneId="46" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+03:30) Tehran</option>
+                                                        <option timeZoneId="47" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Abu Dhabi, Muscat</option>
+                                                        <option timeZoneId="48" UTCAdjustment="UTC+03:00" value="3" name="">(UTC+04:00) Baku</option>
+                                                        <option timeZoneId="50" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Izhevsk, Samara</option>
+                                                        <option timeZoneId="51" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Port Louis</option>
+                                                        <option timeZoneId="51" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Tbilisi</option>
+                                                        <option timeZoneId="52" UTCAdjustment="UTC+04:00" value="4" name="">(UTC+04:00) Yerevan</option>
+
+                                                        <option timeZoneId="53" UTCAdjustment="UTC+04:30" value="4.5" name="">(UTC+04:30) Kabul</option>
+
+                                                        <option timeZoneId="54" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Ashgabat, Tashkent</option>
+                                                        <option timeZoneId="55" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Ekaterinburg</option>
+                                                        <option timeZoneId="55" UTCAdjustment="UTC+05:00" value="5" name="">(UTC+05:00) Islamabad, Karachi</option>
+
+                                                        <option timeZoneId="57" UTCAdjustment="UTC+05:30" value="5.5" name="">(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                                                        <option timeZoneId="56" UTCAdjustment="UTC+05:30" value="5.5" name="">(UTC+05:30) Sri Jayawardenepura</option>
+
+
+                                                        <option timeZoneId="58" UTCAdjustment="UTC+05:45" value="5.75" name="">(UTC+05:45) Kathmandu</option>
+
+
+                                                        <option timeZoneId="60" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Astana</option>
+                                                        <option timeZoneId="59" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Dhaka</option>
+                                                        <option timeZoneId="59" UTCAdjustment="UTC+06:00" value="6" name="">(UTC+06:00) Novosibirsk</option>
+
+
+                                                        <option timeZoneId="62" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Barnaul, Gorno-Altaysk</option>
+                                                        <option timeZoneId="61" UTCAdjustment="UTC+06:30" value="6.5" name="">(UTC+06:30) Yangon (Rangoon)</option>
+                                                        <option timeZoneId="62" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Bangkok, Hanoi, Jakarta</option>
+                                                        <option timeZoneId="63" UTCAdjustment="UTC+07:00" value="7" name="">(UTC+07:00) Krasnoyarsk</option>
+
+                                                        <option timeZoneId="64" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+                                                        <option timeZoneId="66" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Irkutsk</option>
+                                                        <option timeZoneId="65" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Kuala Lumpur, Singapore</option>
+                                                        <option timeZoneId="67" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Perth</option>
+                                                        <option timeZoneId="68" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Taipei</option>
+                                                        <option timeZoneId="68" UTCAdjustment="UTC+08:00" value="8" name="">(UTC+08:00) Ulaanbaatar</option>
+
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Chita</option>
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Pyongyang</option>
+                                                        <option timeZoneId="69" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Osaka, Sapporo, Tokyo</option>
+                                                        <option timeZoneId="70" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Seoul</option>
+                                                        <option timeZoneId="71" UTCAdjustment="UTC+09:00" value="9" name="">(UTC+09:00) Yakutsk</option>
+
+                                                        <option timeZoneId="72" UTCAdjustment="UTC+09:30" value="9.5" name="">(UTC+09:30) Adelaide</option>
+                                                        <option timeZoneId="73" UTCAdjustment="UTC+09:30" value="9.5" name="">(UTC+09:30) Darwin</option>
+
+                                                        <option timeZoneId="74" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Brisbane</option>
+                                                        <option timeZoneId="75" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Canberra, Melbourne, Sydney</option>
+                                                        <option timeZoneId="77" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Guam, Port Moresby</option>
+                                                        <option timeZoneId="76" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Hobart</option>
+                                                        <option timeZoneId="76" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Magadan</option>
+                                                        <option timeZoneId="78" UTCAdjustment="UTC+10:00" value="10" name="">(UTC+10:00) Vladivostok</option>
+
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Sakhalin</option>
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Chokurdakh</option>
+                                                        <option timeZoneId="79" UTCAdjustment="UTC+11:00" value="11" name="">(UTC+11:00) Solomon Is., New Caledonia</option>
+
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Anadyr, Petropavlosvsk-Kamchatsky</option>
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Auckland, Wellington</option>
+                                                        <option timeZoneId="80" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Coordinated Universal Time+12</option>
+                                                        <option timeZoneId="81" UTCAdjustment="UTC+12:00" value="12" name="">(UTC+12:00) Fiji</option>
+
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Nuku'alofa</option>
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Samoa</option>
+                                                        <option timeZoneId="82" UTCAdjustment="UTC+13:00" value="13" name="">(UTC+13:00) Kiritimati Island</option>
+                                                    </select>

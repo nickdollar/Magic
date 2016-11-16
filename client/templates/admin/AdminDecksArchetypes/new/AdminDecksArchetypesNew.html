@@ -1,0 +1,12 @@
+<template name="AdminDecksArchetypesNew">
+    {{#autoForm schema=DecksArchetypesSchema id="addPlaylist" type="method" meteormethod="insertNewPlayList"}}
+        <fieldset>
+            <legend>Add a Archetype</legend>
+            {{> afQuickField name="name"}}
+            {{> afQuickField name="format"}}
+            {{> afQuickField name="type"}}
+            <!--{{> afArrayField name="DecksNames"}}-->
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Insert</button>
+    {{/autoForm}}
+</template>

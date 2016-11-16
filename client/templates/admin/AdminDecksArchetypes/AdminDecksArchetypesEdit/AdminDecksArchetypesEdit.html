@@ -1,0 +1,24 @@
+<template name="AdminDecksArchetypesEdit">
+    {{>quickForm schema=DecksData id="DecksArchetypeEdit" doc=documentValue collection="DecksArchetypes" doc=documentValue type="update"}}
+
+    {{#autoForm id="AdminDecksArchetypesEditName" schema=editName}}
+        <fieldset>
+            {{> afQuickField name="name"}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+
+    {{#autoForm id="AdminDecksArchetypesEditFormat" schema=editFormat}}
+        <fieldset>
+            {{> afQuickField name="format"}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+
+    {{#autoForm id="AdminDecksArchetypesEditType" schema=editType}}
+        <fieldset>
+            {{> afQuickField name="type"}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+</template>

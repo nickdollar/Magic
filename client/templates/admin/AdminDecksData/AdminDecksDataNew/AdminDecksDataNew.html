@@ -1,0 +1,57 @@
+<template name="AdminDecksDataNew">
+    <div style="height: 500px">
+        {{#if selectedDecksData}}
+        {{#autoForm schema=decksWithoutNamesAddNameToDeckSchema id="decksWithoutNamesAddNameToDeck" type="method" meteormethod="methodAddNameToDeck"}}
+            <fieldset>
+                {{> afQuickField name="DeckName" options=options}}
+                {{> afQuickField name="DecksData_id" type="hidden" value=_idValue}}
+                {{> afQuickField name="format" type="hidden" value=formatValue}}
+                <div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </fieldset>
+        {{/autoForm}}
+        <div class="col-xs-9">
+            <div class="row">
+                <div class="deckBlock">
+                    <div class="newDeckColumn">
+                        {{#each cardType}}
+                            <div class="typeHeader">{{name}} ({{quantity}})</div>
+                            {{#each cards block}}
+                                <div class="cardLine">
+                                    <div class="name js-nameMouseOver">{{quantity}} {{name}}</div>
+                                    <div class="cardInfo">
+                                        <div class="manaValue">{{#each getManaCss name}}<div class="mana mana-{{mana}}"></div>{{/each}}</div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="row">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>%</th>
+                        <th>Con.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each percentage}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>{{prettifyPercentage result}}</td>
+                            <td><span class="js-confirmDeck">Con.</span></td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{/if}}
+    </div>
+</template>
