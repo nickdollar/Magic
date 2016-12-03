@@ -45,3 +45,4 @@ Temporary Items
 #.idea things
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+/node_modules
