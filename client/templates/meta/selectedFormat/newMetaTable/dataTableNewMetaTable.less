@@ -1,5 +1,176 @@
+.dataTableNewMetaTable {
+    background-color: white;
+    width: 98%;
+
+    //margin-top: -6px;
+  .metaHeader {
+    .metaTitle {
+      h4 {
+        margin: 0px;
+      }
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .optionsHeader{
+      float: left;
+    }
+  }
+
+  .content {
+    display: none;
+    padding : 5px;
+
+    .custom-column{
+      font-size: 10px;
+      font-family: arial, helvetica, freesans, sans-serif;
+      font-weight: bolder;
+      display: inline-block;
+      padding-right: 20px;
+      vertical-align: top;
+
+      .radio {
+        margin: 0;
+        height: 17px;
+        label {
+          padding-left: 15px;
+          input {
+            margin-top: 1px;
+            margin-left: -15px;
+          }
+        }
+      }
+
+      .optionsList {
+        li {
+          input {
+            background-color: #08893e !important;
+            margin-top: 0px;
+          }
+        }
+      }
+    }
+  }
+
+
+
+  .dataTableNewMetaTableTable {
+
+    .tableHeight {
+      min-height: 680px;
+    }
+
+    table#dataTableNewMetaTableTable {
+      .dt-center {
+        text-align: center;
+      }
+
+      thead {
+        background-color: white;
+        tr {
+          th {
+            font-size: 10px;
+            font-weight: 600;
+            font-family: "Open Sans";
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td.details-control {
+            background: url('/img/details_open.png') no-repeat center center;
+            cursor: pointer;
+          }
+
+          &.shown td.details-control {
+            background: url('/img/details_close.png') no-repeat center center;
+          }
+
+          td {
+
+
+
+            padding: 4px;
+
+            &.priceTable {
+              width: 40px;
+            }
+
+           &.tablePosition {
+              width: 15px;
+            }
+
+            &.tableName {
+              width: 150px;
+              .name {
+                float: left;
+                background-color: #08893e;
+              }
+
+              .positionChange {
+                float: right;
+              }
+            }
+
+            .graph {
+              height: 100%;
+
+              .bar {
+                height: 16px;
+                width: 7px;
+                margin: 1px;
+                display: inline-block;
+                position: relative;
+                vertical-align: baseline;
+              }
+
+              .bar.down {
+                background-color: #f16752;
+              }
+
+              .bar.up {
+                background-color: #8ed5db;
+              }
+
+              .bar.equal {
+                background-color: #d3d2cf;
+              }
+            }
+
+            table.metaDecksNamesChild {
+              background-color: white;
+              tr {
+                td:first-child {
+                  width: 12px;
+                }
+                td:nth-child(2) {
+                  width: 40px;
+                }
+                td:nth-child(3) {
+                  width: 243px;
+                }
+                td:nth-child(4) {
+                  width: 108px;
+                  text-align: center;
+                }
+                td:nth-child(5) {
+                  width: 70px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .positionChange {
   float: right;
+  height: 21px;
+  text-align: center;
+  font-size: 12px;
   .upArrow {
     display: inline-block;
     background: url('/img/upDownArrow.svg') no-repeat;
@@ -28,153 +199,5 @@
     background-color: #ccc;
     box-sizing: border-box;
   }
-
 }
 
-.graph {
-  height: 100%;
-
-  .bar {
-    height: 16px;
-    width: 7px;
-    margin: 1px;
-    display: inline-block;
-    position: relative;
-    vertical-align: baseline;
-  }
-
-  .bar.down {
-    background-color: #f16752;
-  }
-
-  .bar.up {
-    background-color: #8ed5db;
-  }
-
-  .bar.equal {
-    background-color: #d3d2cf;
-  }
-}
-
-
-
-.newMetaTable {
-  width: 98%;
-  margin-top: -6px;
-  table {
-
-
-
-    thead {
-      background-color: white;
-        tr {
-          th {
-            font-size: 10px;
-            font-weight: 600;
-            font-family: "Open Sans";
-
-            //&.sorting {
-            //  background-position: 110% 10%;
-            //}
-            //&.sorting_asc {
-            //  background-position: 110% 10%;
-            //}
-            //&.sorting_desc {
-            //  background-position: 110% 10%;
-            //  background-color: #00b3ee;
-            //}
-
-            &.sorting:after {
-              content: none;
-            }
-            &.sorting_asc:after {
-              content: none;
-            }
-            &.sorting_desc:after {
-              content: none;
-            }
-            padding: 5px 15px !important;
-          }
-      }
-    }
-
-    tbody {
-      //background-color: #08893e !important;
-      tr {
-        td.details-control {
-          background: url('/img/details_open.png') no-repeat center center;
-          cursor: pointer;
-        }
-
-        &.shown td.details-control {
-          background: url('/img/details_close.png') no-repeat center center;
-        }
-
-        td {
-
-          padding: 4px;
-
-          &.priceTable {
-            width: 40px;
-          }
-
-          &.tableMana{
-            //width: 40px;
-          }
-
-
-
-          &.details-control {
-            width: 15px;
-          }
-
-          &.tablePosition {
-            width: 15px;
-          }
-
-          &.tableName {
-            width: 150px;
-            .name {
-              float: left;
-              background-color: #08893e;
-            }
-
-            .positionChange {
-              float: right;
-            }
-          }
-
-          &.tablePercentage {
-            width: 15px;
-          }
-
-          .graph {
-            height: 100%;
-
-            .bar {
-              height: 16px;
-              width: 7px;
-              margin: 1px;
-              display: inline-block;
-              position: relative;
-              vertical-align: baseline;
-            }
-
-            .bar.down {
-              background-color: #f16752;
-            }
-
-            .bar.up {
-              background-color: #8ed5db;
-            }
-
-            .bar.equal {
-              background-color: #d3d2cf;
-            }
-          }
-        }
-      }
-
-    }
-  }
-}

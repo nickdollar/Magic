@@ -1,0 +1,48 @@
+<template name="AdminDecksDataUniqueWithoutQuantityEditNoName">
+
+    <form>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="standard" checked="checked">
+                Standard
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="modern">
+                Modern
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="legacy">
+                Legacy
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="vintage">
+                Vintage
+            </label>
+        </div>
+    </form>
+    {{> tabular table=TabularTables.AdminDecksDataUniqueWithoutQuantityEditNoNameTable class="table table-sm" selector=selector}}
+
+
+    {{#if cards}}
+    <ul>
+        {{#each cards}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
+
+
+    {{#autoForm schema=DecksDataUniqueWithoutQuantitySchema id="AdminDecksDataUniqueWithoutQuantityEditForm2" collection="DecksDataUniqueWithoutQuantity" doc=documentValue type="update"}}
+        <fieldset>
+            {{> afQuickField name="DecksNames_id"}}
+            {{> afQuickField name="format"}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+    {{/if}}
+</template>

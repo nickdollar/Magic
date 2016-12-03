@@ -1,3 +1,17 @@
-<template name="AdminDecksDataUniqueWithoutQuantity">
+<template name="AdminDecksDataUniqueWithoutQuantityEdit">
+    {{#autoForm schema=DecksDataUniqueWithoutQuantitySchema id="AdminDecksDataUniqueWithoutQuantityEditForm" collection="DecksDataUniqueWithoutQuantity" doc=documentValue type="update"}}
+        <fieldset>
+            {{> afQuickField name="DecksNames_id"}}
+            {{> afQuickField name="format"}}
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update</button>
+    {{/autoForm}}
+
+
+    <ul>
+        {{#each cards}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
 
 </template>

@@ -13,7 +13,7 @@ Template.AdminDecksNamesEdit.helpers({
         return Schemas.DecksNamesFormat;
     },
     documentValue : function(){
-        return DecksNames.findOne({_id : Router.current().params._id});
+        return DecksNames.findOne({_id : FlowRouter.getParam("_id")});
     }
 });
 

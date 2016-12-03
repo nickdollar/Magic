@@ -1,28 +1,25 @@
 Template.archetypeDeckName.onCreated(function(){
+    this.archetypeParamRegex = new ReactiveVar(new RegExp("^" + replaceDashWithDotForRegex(FlowRouter.getParam("archetype")) + "$", "i"));
 });
-
 
 Template.archetypeDeckName.helpers({
     thisarchetype : function(){
-        return DecksArchetypes.findOne({});
+        return DecksArchetypes.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().archetypeParamRegex.get()}});
     },
     name : function(){
-        return DecksArchetypes.findOne({}).name;
+        return DecksArchetypes.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().archetypeParamRegex.get()}}).name;
     },
     colors : function(){
-        return getCssColorsFromArchetypes(DecksArchetypes.findOne({})._id);
+        return getCssColorsFromArchetypes(DecksArchetypes.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().archetypeParamRegex.get()}})._id);
     },
     format : function(){
-        return Router.current().params.format;
-    },
-    archetype : function(){
-        return Router.current().params.archetype;
+        return FlowRouter.getParam("format");
     }
 });
 
 Template.archetypeDeckName.onRendered(function (){
     $('#owl-deckOption').owlCarousel({
-        items : 4,
+        items : 3,
         itemsCustom : false,
         itemsDesktop : false,
         itemsDesktopSmall : false
@@ -38,43 +35,41 @@ Template.archetypeDeckName.onRendered(function (){
         return p;
     };
 
-    var that = this;
-    DecksNames.find({DecksArchetypes_id : DecksArchetypes.findOne({name : {$regex : Router.current().params.archetype}})._id}).observe({
-        added : function(item, olditem) {
+
+
+    DecksNames.find({DecksArchetypes_id : DecksArchetypes.findOne({format : FlowRouter.getParam("format"), name : {$regex : this.archetypeParamRegex.get()}})._id}).observe({
+        added : (item, olditem)=> {
                 if (owlData) {
                     if (owlData.itembyid(item._id) == null) {
                         var customName = item.name.replace(/[^a-zA-Z0-9-_]/g, "-");
                         var customName = item.name.replace(/[^a-zA-Z0-9-_]/g, "-");
-                        var content = "<div class='deckBox'>" +
-                            "<a href='/decks/" + Router.current().params.format + "/" + Router.current().params.archetype + "/" + customName + "'>" +
-                            "<div class='firstLine'>" +
-                            "<div class='deckName'>" +
-                            item.name +
-                            "</div>" +
-                            "<div class='deckMana'>" +
-                            getHTMLColors(item.colors) +
-                            "</div>" +
-                            "<div class='values'>" +
-                            5555
-                        "</div>" +
-                        "</div>" +
-                        "</a>" +
-                        "</div>";
+                        var content = '<div class="deckBox">' +
+                                        '<a href="/decks/' + FlowRouter.getParam("format") + '/' + replaceTokenWithDash(DecksArchetypes.findOne({_id : item.DecksArchetypes_id}).name) + '/' + customName + '">' +
+                                            '<div class="firstLine">' +
+                                                '<div class="deckName">' +
+                                                    item.name +
+                                                '</div>' +
+                                            '</div>' +
+                                            '<div class="secondLine">' +
+                                                '<div class="deckMana">' +
+                                                    getHTMLColors(item.colors) +
+                                                '</div>'
+                                            '</div>' +
+                                        '</a>' +
+                                    '</div>';
                         owlData.addItem(content);
                     }
                 }
                 else {
-                    console.log('owlCarousel null');
+                    
                 }
         },
-        removed: function(item) {
+        removed: (item)=> {
                 var n = owlData.itembyid(item._id);
                 if(n != null)
                 {
-                    console.log("removed");
                     owlData.removeItem(n);
                 }
             }
     });
-
 });

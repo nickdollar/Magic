@@ -1,39 +1,68 @@
-Template.metaFP.helpers({
-    metas : function(){
-        var metas = ['standard', 'modern', 'legacy', 'vintage'];
-        return metas;
+import myComponent from "/client/react/components/app.jsx";
+import DropDown from "/client/react/components/ffff.jsx";
+
+
+Template.ApplicationLayout.onCreated(function(){
+    this.subscribe("DecksNamesGlobal");
+    this.subscribe("DecksArchetypesGlobal");
+    this.state = new ReactiveDict;
+    this.state.set("selected", null);
+});
+
+Template.ApplicationLayout.helpers({
+    subscriptionsReady (){
+        return Template.instance().subscriptionsReady();
     },
-    values : function(){
-        var metas = ['standard', 'modern', 'legacy', 'vintage'];
-        return metas;
+    UserAvatar() {
+        return myComponent;
+    },
+    dropdown: function () {
+        // Assuming this is https://github.com/fraserxu/react-dropdown, loaded
+        // elsewhere in the project.
+        return DropDown;
+    },
+    options: [
+        { value: 'one', label: 'One' },
+        { value: 'two', label: 'Two' },
+        {
+            type: 'group', name: 'group1', items: [
+            { value: 'three', label: 'Three' },
+            { value: 'four', label: 'Four' }
+        ]
+        }
+    ],
+    selected: function () {
+        return Template.instance().state.get("selected");
+    },
+    onChange: function () {
+        var tmpl = Template.instance();
+        return function (option) {
+            tmpl.state.set("selected", option);
+        }
     }
 });
 
+Template.metaFP.helpers({
+
+});
+
 Template.metaFP.onRendered(function(){
-    $("table").each(function(index){
-        var length = 6;
-        if($(this).hasClass("three")){
-            length = 3;
-        }
 
-        var oTable = $(this).DataTable({
-            pageLength : length,
-            dom:"<'row'<'col-sm-12't>>"
-        });
-
-        $(this).closest(".customTable").find(".previous:first").click(function(){
-            oTable.page('previous').draw(false);
-        });
-
-        $(this).closest(".customTable").find(".next:first").click(function(){
-            oTable.page('next').draw(false);
-        });
-    });
 });
 
 
 Template.selectedMeta.helpers({
 
+});
+
+Template.deckSelected.onCreated(function(){
+
+});
+
+Template.deckSelected.helpers({
+   isSelected : function(){
+       return FlowRouter.getParam("deckSelected");
+   }
 });
 
 Template.selectADeck.helpers({
@@ -49,6 +78,7 @@ Template.selectADeck.onRendered(function(){
 
 
 Template.selectedMeta.onRendered(function(){
+
     //$("table").each(function(index){
     //    var length = 2;
     //    //if($(this).hasClass("20")){
@@ -109,4 +139,13 @@ Template.selectedMeta.onRendered(function(){
 
 });
 
+Template.events.helpers({
+    test : function(){
+        return {
 
+        }
+    }
+});
+
+Template.events.onRendered(function(){
+ });

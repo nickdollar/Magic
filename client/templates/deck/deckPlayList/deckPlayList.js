@@ -1,34 +1,33 @@
 Template.deckPlayList.onCreated(function(){
-    var that = this;
-    this.isPlaylistReady = new ReactiveVar();
     this.playlistsInfo = new ReactiveVar();
     this.checks = new ReactiveDict();
     this.checks.set("images", false);
     this.checks.set("DecksNamesPlaylists", false);
     this.checks.set("loaded", true);
+    this.deckSelectedParamRegex = new ReactiveVar(new RegExp("^" +replaceDashWithDotForRegex(FlowRouter.getParam("deckSelected")) + "$", "i"));
 
 
-    this.autorun(function(){
-        that.checks.set("images", false);
-        that.subscribe("Images", {
-            onReady : function(){
-                that.checks.set("images", true);
+    this.autorun(()=>{
+        this.checks.set("images", false);
+        this.subscribe("Images", {
+            onReady : ()=>{
+                this.checks.set("images", true);
             }
         });
     })
-    this.autorun(function(){
-        that.checks.set("DecksNamesPlaylists", false);
-        that.playlistsInfo.set();
-        that.subscribe('DecksNamesPlaylists', DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id, {
-            onReady : function() {
-                that.playlistsInfo.set(DecksNamesPlaylists.find({}).fetch());
-                that.checks.set("DecksNamesPlaylists", true);
+    this.autorun(()=>{
+        this.checks.set("DecksNamesPlaylists", false);
+        this.playlistsInfo.set();
+        this.subscribe('DecksNamesPlaylists', DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : this.deckSelectedParamRegex.get()}})._id, {
+            onReady : ()=> {
+                this.playlistsInfo.set(DecksNamesPlaylists.find({}).fetch());
+                this.checks.set("DecksNamesPlaylists", true);
                 var initializing = false;
 
                 DecksNamesPlaylists.find({DecksArchetypes_id: DecksArchetypes.findOne()._id}).observe({
-                    added: function (id, doc) {
+                    added: (id, doc)=> {
                         if (initializing) {
-                            Meteor.setTimeout(function(){
+                            Meteor.setTimeout(()=>{
                                 var owl = $("#owl-DecksNamesPlaylist");
                                 owl.owlCarousel({
                                     items: 4,
@@ -66,8 +65,8 @@ Template.deckPlayList.helpers({
     playlistExist : function(){
         return Template.instance().checks.get("DecksNamesPlaylists") && Template.instance().checks.get("images") && Template.instance().checks.get("loaded") && DecksNamesPlaylists.findOne({});
     },
-    image : function(_imageID){
-        return Images.findOne({_id : _imageID});
+    image : function(cfsImages_id){
+        return Images.findOne({_id : cfsImages_id});
     },
     playlist : function(){
         return DecksNamesPlaylists.find({});
@@ -87,103 +86,27 @@ Template.deckPlayList.helpers({
     },
     addPlaylistSchema : function() {
 
-        return Schema.addPlaylist;
+        return Schemas.addPlaylist;
     },
     format : function(){
-        return Router.current().params.format;
+        return FlowRouter.getParam("format");
     },
     deckSelected : function(){
-        return DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id;
+        return DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id;
     },
     reportPlaylistSchema : function(){
-        return Schema.reportPlaylist;
+        return Schemas.reportPlaylist;
     },
 });
 
 Template.deckPlayList.events({
-    "click .upVote" : function(evt, tmp){
-        var that = this;
-        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
-            return currentValue._id == that._id
-        });
-
-        if(Template.instance().playlistsInfo.get()[indexThat].likes == null){
-            Template.instance().playlistsInfo.get()[indexThat].likes = [];
-        }
-
-        if(Template.instance().playlistsInfo.get()[indexThat].dislikes == null){
-            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
-        }
-
-        Template.instance().playlistsInfo.get()[indexThat].likes.push({_id : Meteor.user()._id});
-        Template.instance().playlistsInfo.get()[indexThat].likeCount++;
-
-
-        if(Template.instance().playlistsInfo.get()[indexThat].dislikes.length == 1){
-            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
-            Template.instance().playlistsInfo.get()[indexThat].likeCount++;
-        }
-        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
-        Meteor.call("upADeckPlayListVote", this);
-    },
-    "click .removeUpVote" : function(evt, tmp){
-        var that = this;
-        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
-            return currentValue._id == that._id
-        });
-
-        Template.instance().playlistsInfo.get()[indexThat].likes = [];
-        Template.instance().playlistsInfo.get()[indexThat].likeCount--;
-
-        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
-        Meteor.call("removeUpADeckPlayListVote", this);
-    },
-    "click .downVote" : function(evt, tmp){
-        var that = this;
-        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
-            return currentValue._id == that._id
-        });
-
-        if(Template.instance().playlistsInfo.get()[indexThat].likes == null){
-            Template.instance().playlistsInfo.get()[indexThat].likes = [];
-        }
-
-        if(Template.instance().playlistsInfo.get()[indexThat].dislikes == null){
-            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
-        }
-
-        Template.instance().playlistsInfo.get()[indexThat].dislikes.push({_id : Meteor.user()._id});
-        Template.instance().playlistsInfo.get()[indexThat].likeCount--;
-
-
-        if(Template.instance().playlistsInfo.get()[indexThat].likes.length == 1){
-            Template.instance().playlistsInfo.get()[indexThat].likes = [];
-            Template.instance().playlistsInfo.get()[indexThat].likeCount--;
-        }
-        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
-        Meteor.call("downADeckPlayListVote", this);
-    },
-    "click .removeDownVote" : function(evt, tmp){
-
-        var that = this;
-        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
-            return currentValue._id == that._id
-        });
-
-        Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
-        Template.instance().playlistsInfo.get()[indexThat].likeCount++;
-
-        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
-
-        Meteor.call("removeDownADeckPlayListVote", this);
-    }
+   
 });
 
 Template.deckPlayList.onRendered(function(){
-    var that = this;
-    this.autorun(function(){
-        if(that.checks.get("DecksNamesPlaylists") && that.checks.get("images") && that.checks.get("loaded")) {
-            Meteor.setTimeout(function(){
+    this.autorun(()=>{
+        if(this.checks.get("DecksNamesPlaylists") && this.checks.get("images") && this.checks.get("loaded")) {
+            Meteor.setTimeout(()=>{
                 var owl = $("#owl-DecksNamesPlaylist");
                 owl.owlCarousel({
                     items: 4,
@@ -213,12 +136,12 @@ Template.deckPlayList.onRendered(function(){
 
 });
 
-if (typeof Schema === 'undefined' || Schema === null) {
-    Schema = {};
+if (typeof Schemas === 'undefined' || Schemas === null) {
+    Schemas = {};
 }
 
 
-Schema.reportPlaylist = new SimpleSchema({
+Schemas.reportPlaylist = new SimpleSchema({
     reportString: {
         type: String,
         optional: false,
@@ -228,7 +151,8 @@ Schema.reportPlaylist = new SimpleSchema({
             options: [
                 {label: "Bad Playlist", value: "bad"},
                 {label: "Wrong Deck", value: "wrong"}
-            ]
+            ],
+
         }
     },
     _id : {
@@ -244,7 +168,7 @@ FlashMessages.configure({
 
 
 
-Schema.addPlaylist = new SimpleSchema({
+Schemas.addPlaylist = new SimpleSchema({
     playlistUrl: {
         type: String,
         regEx: /youtube.com\/(?:watch|playlist)\?(?:v|list)=[a-zA-Z0-9-_]+(?:$|\s|&list=[a-zA-Z0-9-_]+)(?:&index=\d)?/i,
@@ -309,10 +233,13 @@ var addPlaylistHooks = {
     // Called when any submit operation succeeds
     onSuccess: function(formType, result) {
         console.log("onSucess");
+        console.log(formType);
+        console.log(result);
     },
 
     // Called when any submit operation fails
     onError: function(formType, error) {
+        console.log(error);
         console.log("onError");
     },
 
@@ -346,7 +273,7 @@ var addPlaylistHooks = {
     beginSubmit: function() {
         var thatTemplate = Template.instance().parentTemplate(1);
         thatTemplate.checks.set("loaded", false);
-        Meteor.setTimeout(function(){
+        Meteor.setTimeout(()=>{
             thatTemplate.checks.set("loaded", true);
         }, 100);
     },

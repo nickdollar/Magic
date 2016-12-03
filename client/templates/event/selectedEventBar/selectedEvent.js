@@ -118,8 +118,6 @@ Template.selectedEvent.events({
 });
 
 Template.selectedEvent.onRendered(function(){
-
-
     if ($.fn.DataTable.isDataTable("#playersTable")) {
         console.log("Destroy Table");
         $('#playersTable').DataTable().clear();
@@ -146,21 +144,21 @@ Template.selectedEvent.onRendered(function(){
         rowId : "_id",
         columns: [
             {title: "player", render : function(data, type, row, meta){
+                var position = "";
+                if(row.position){
+                    // var s=["th","st","nd","rd"],
+                    //     v=row.position%100;
+                    // position = row.position+(s[(v-20)%10]||s[v]||s[0]);
+                    position = row.position;
+                } else{
+                    position =  row.victory + "-" + row.loss;
+                }
+
                 if(type == "sort"){
                     return parseInt(row.position);
                 }
 
                 if(type == "display"){
-                    var position = "";
-                    if(row.position){
-                        // var s=["th","st","nd","rd"],
-                        //     v=row.position%100;
-                        // position = row.position+(s[(v-20)%10]||s[v]||s[0]);
-                        position = row.position;
-                    } else{
-                        position =  row.victory + "-" + row.loss;
-                    }
-
                     if(!DecksNames.findOne({_id : row.DecksNames_id})){
 
                         return  '<div><span>( ' +position+ ' ) </span><a href="/events/'+ FlowRouter.getParam("format") +'/'+ FlowRouter.getParam("Events_id")+'/'+ row._id +'">'+ row._id +'</a><span> ' + getHTMLColors(row.colors) +'</span></div>' +
@@ -186,12 +184,13 @@ Template.selectedEvent.onRendered(function(){
 
     this.autorun(()=> {
         if(this.checks.get("DecksDataFromEvent_idSimplified")) {
-        var data;
-        if(DecksData.findOne()){
-            data = DecksData.find({}).fetch();
-        }
-        $('#playersTable').DataTable().rows.add(data)
-            .draw();
+            var data = [];
+            if(DecksData.findOne()){
+                data = DecksData.find({}).fetch();
+            }
+            $('#playersTable').DataTable().rows.add(data)
+                                           .draw();
+            this.checks.set("DecksDataFromEvent_idSimplified", false);
         }
     });
 });

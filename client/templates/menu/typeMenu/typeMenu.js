@@ -2,14 +2,14 @@ Session.setDefault("selectedMenuFormat", '');
 
 Template.typeMenu.helpers({
    path : function(){
-       if(Router.current().route.getName() == "metaFP"){
+       if(FlowRouter.getRouteName() == "metaFP"){
            return "selectedMeta";
-       }else if (Router.current().route.getName() == "deckFP"){
+       }else if (FlowRouter.getRouteName() == "deckFP"){
            return "selectADeck";
-       }else if(Router.current().route.getName() == "selectedEvent"){
+       }else if(FlowRouter.getRouteName() == "eventsFP"){
            return "events";
        }
-       return Router.current().route.getName();
+       return FlowRouter.getRouteName();
    },
     active : function(format){
         if(Session.get("selectedMenuFormat") == format){

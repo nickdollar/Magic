@@ -1,9 +1,39 @@
+Meteor.publish('DecksArchetypesFormatNotReactive', function(format) {
+
+    return DecksArchetypes.find({}, {reactive : false});
+    var DecksArchetypes_idQuery = DecksNames.find({format : format, DecksArchetypes_id : {$ne : null}, decks : {$gt : 0}}).map(function(obj){
+        return obj.DecksArchetypes_id;
+    });
+
+    return DecksArchetypes.find({_id : {$in : DecksArchetypes_idQuery}}, {reactive : false});
+});
+
+Meteor.publish('DecksArchetypesGlobal', function() {
+    return DecksArchetypes.find({});
+});
+
+Meteor.publish('DecksArchetypesFormat', function(format) {
+    return DecksArchetypes.find({format : format});
+});
+
 Meteor.publish('testDecksArchetypes', function(format, weeksSpan, types) {
     return DecksArchetypes.find({ format : format });
 });
 
-Meteor.publish('DecksArchetypesByNameRegexLimit1', function(name) {
-    return DecksArchetypes.find({ name : {$regex : name, $options : "g"}}, {limit : 1});
+Meteor.publish("DecksArchetypes", function(){
+    return DecksArchetypes.find();
+});
+
+Meteor.publish("DecksArchetypesThatHasDecksData", function(){
+
+});
+
+Meteor.publish("DecksArchetypesMainPage", function(){
+    return DecksArchetypes.find({}, {fields : {name : 1}});
+});
+
+Meteor.publish('DecksArchetypesByNameRegexLimit', function(format, name) {
+    return DecksArchetypes.find({ format : format, name : {$regex : new RegExp(name, "i")}}, {limit : 1});
 });
 
 Meteor.publishComposite("deckSelectedArchetypesAndDecksNames", function(format, archetypeName) {

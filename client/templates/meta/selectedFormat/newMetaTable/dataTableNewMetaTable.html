@@ -1,57 +1,77 @@
 <template name="dataTableNewMetaTable">
-    <div class="metaTableOptions">
-        <div class="optionsHeader">
-            <div class="buttonsContainer">
-                <div class="optionButton">
-                    <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
-                </div>
-                <div class="paginationButtons">
-                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="prev" style="display: inline;">&larr; prev</button>
-                    <button type="submit" class="btn btn-default btn-xs deckPagination" value="next" style="display: inline;">next &rarr;</button>
+    <div class="dataTableNewMetaTable">
+        <div class="metaHeader">
+            <div class="optionsHeader">
+                <div class="buttonsContainer">
+                    <div class="optionButton">
+                        <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
+
+                    </div>
                 </div>
             </div>
+            <div class="metaTitle"><h4>Meta Breakdown</h4></div>
         </div>
         <div class="content">
             <div class="custom-column">
-                <div>League</div>
+                <div>MTGO</div>
                 <ul class="list-unstyled optionsList">
                     <li>
-                        <input type="checkbox" name="league5_0" class="metaCheckBox" value="league5_0" role="typeCheckbox" aria-checked="false" checked>
-                        <label for="league5_0">5-0</label>
+                        <input type="checkbox" name="league5_0" value="league5_0" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="league5_0">League 5-0</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="daily4_0" id="daily4_0" value="daily4_0" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily4_0">Daily 4-0</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="daily3_1" id="daily3_1"  value="daily3_1" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">Daily 3-1</label>
                     </li>
                 </ul>
             </div>
-            <!--<div class="custom-column">-->
-                <!--<div>Daily</div>-->
-                <!--<ul class="list-unstyled optionsList">-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="daily4_0" class="metaCheckBox" id="daily4_0" value="daily4_0" role="typeCheckbox" aria-checked="false" checked>-->
-                        <!--<label for="daily4_0">4-0</label>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="daily3_1" class="metaCheckBox" id="daily3_1"  value="daily3_1" role="typeCheckbox" aria-checked="false" checked>-->
-                        <!--<label for="daily3_1">3-1</label>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</div>-->
-            <!--<div class="custom-column">-->
-                <!--<div class="optionListName">PTQ</div>-->
-                <!--<ul class="list-unstyled optionsList">-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="typeCheckbox" aria-checked="false" checked>-->
-                        <!--<label for="tall-1">Top 8</label>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="typeCheckbox" aria-checked="false" checked>-->
-                        <!--<label for="tall-1">Top 9-16</label>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="typeCheckbox" aria-checked="false" checked>-->
-                        <!--<label for="tall-1">Top 17-32</label>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</div>-->
-                <div class="custom-column">
+            <div class="custom-column">
+                <div>MTGO</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" name="GP" class="metaCheckBox" value="GP" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="league5_0">Grand Prix</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="custom-column">
+                <div>SCG</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="SCGSuperIQ" value="SCGSuperIQ" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily4_0">SCG Super IQ</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="InviQualifier"  value="InviQualifier" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">Invi Qualifier</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="SCGInvitational"  value="SCGInvitational" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">SCG Invitational</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="SCGClassic"  value="SCGClassic" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">SCG Classic</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="GrandPrix"  value="GrandPrix" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">Grand Prix</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="LegacyChamps"  value="LegacyChamps" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">Legacy Champs</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" class="metaCheckBox" id="WorldMagicCup"  value="WorldMagicCup" role="typeCheckbox" aria-checked="false" checked>
+                        <label for="daily3_1">World Magic Cup</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="custom-column">
                 <div class="optionListName">Deck Date</div>
                 <div class="radio">
                     <label>
@@ -101,18 +121,30 @@
                         Two Weeks
                     </label>
                 </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="positionChange" role="radio" value="month">
-                        Month
-                    </label>
-                </div>
             </div>
         </div>
-    </div>
-    <div>
-        <div class="newMetaTable js-appendTableMetaDecksNames">
-            <table id="metaDecksNames" class="display" cellspacing="0" width="100%"></table>
+
+            <!--<div class="custom-column">-->
+            <!--<div class="optionListName">PTQ</div>-->
+            <!--<ul class="list-unstyled optionsList">-->
+            <!--<li>-->
+            <!--<input type="checkbox" name="ptqTop8" class="metaCheckBox" id="ptqTop8" value="ptqTop8" role="typeCheckbox" aria-checked="false" checked>-->
+            <!--<label for="tall-1">Top 8</label>-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--<input type="checkbox" name="ptqTop9_16" class="metaCheckBox" id="ptqTop9_16" value="ptqTop9_16" role="typeCheckbox" aria-checked="false" checked>-->
+            <!--<label for="tall-1">Top 9-16</label>-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--<input type="checkbox" name="ptqTop17_32" class="metaCheckBox" id="ptqTop17_32" value="ptqTop17_32" role="typeCheckbox" aria-checked="false" checked>-->
+            <!--<label for="tall-1">Top 17-32</label>-->
+            <!--</li>-->
+            <!--</ul>-->
+            <!--</div>-->
+
+        <div class="dataTableNewMetaTableTable js-dataTableNewMetaTableTable">
+            <table id="dataTableNewMetaTableTable" class="table table-sm" cellspacing="0" width="100%"></table>
         </div>
     </div>
+
 </template>

@@ -55,17 +55,6 @@ metaTotalDecksCards = function(format, timeSpan, startDate, endDate, options, th
         return totalAggregation[0].total;
     }
     return 0;
-
-
-    // MetaCards.update(
-    //     {format : format, options : options, timeSpan : timeSpan, format : format},
-    //     {
-    //         $set : {totalDecks : totalDecks},
-    //     },
-    //     {
-    //         upsert : true
-    //     }
-    // );
 };
 
 
@@ -98,8 +87,11 @@ metaCardsMainSideboard = function(format, timeSpan, startDate, endDate, options,
     var mainSideboard = DecksData.aggregate(
         [
             {$match : {date: {$gte: startDate, $lte: endDate}, format : format, $or: thatOptions, DecksNames_id : {$ne : null}}},
-            {$project : {cards : {"$setUnion" : [{$map : {input : "$main", as: "el", in : {name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "main"}}}},
-                {$map : { input : "$sideboard", as: "el", in : { name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "sideboard"}}}}]}}},
+            {$project : {cards : {"$setUnion" :
+                [
+                    {$map : {input : "$main", as: "el", in : {name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "main"}}}},
+                    {$map : { input : "$sideboard", as: "el", in : { name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "sideboard"}}}}
+                ]}}},
             {$unwind : "$cards"},
             {$group : {"_id": { _id : "$_id", class: "$cards.class", name: "$cards.name" }, quantity : {$sum : "$cards.quantity"}}},
             {$group : {_id : {_id : "$_id._id", name : "$_id.name"}, quantity: {$sum : "$quantity"}}},

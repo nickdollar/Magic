@@ -24,7 +24,7 @@ Template.AdminDecksArchetypesEdit.helpers({
         return Schemas.DecksArchetypes;
     },
     documentValue : function(){
-        return DecksArchetypes.findOne({_id : Router.current().params._id});
+        return DecksArchetypes.findOne({_id : FlowRouter.getParam("_id")});
     }
 });
 
@@ -60,19 +60,19 @@ Schemas.DecksArchetypesFormat = new SimpleSchema({
     }
 });
 
-Schemas.DecksArchetypesType = new SimpleSchema({
-    type : {
-        type : String,
-        allowedValues : ["aggro", "combo", "control"],
-        autoform : {
-            type : "select",
-            options : function (){
-                return [
-                    {label: "aggro", value: "Aggro"},
-                    {label: "combo", value: "Combo"},
-                    {label: "control", value: "Control"}
-                ]
-            }
-        }
-    }
-});
+// Schemas.DecksArchetypesType = new SimpleSchema({
+//     type : {
+//         type : String,
+//         allowedValues : ["aggro", "combo", "control"],
+//         autoform : {
+//             type : "select",
+//             options : function (){
+//                 return [
+//                     {label: "aggro", value: "Aggro"},
+//                     {label: "combo", value: "Combo"},
+//                     {label: "control", value: "Control"}
+//                 ]
+//             }
+//         }
+//     }
+// });

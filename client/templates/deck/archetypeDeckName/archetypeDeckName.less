@@ -1,37 +1,86 @@
 .archetypeDeckName {
+  .archetypeInfo {
+    background-color: white;
+    margin-bottom: 0px;
     text-align: center;
-  .firstline{
-    margin: 0px 0px 0px 0px;
-    padding: 0px;
+    .firstline{
+      margin: 0px 0px 0px 0px;
+      padding: 0px;
 
-    h1 {
-      margin: 0px;
-      display: inline;
+      h1 {
+        margin: 0px;
 
-      small {
+        display: inline;
+      }
 
+      .archetypeMana {
+        display: inline;
+        .mana {
+          height: 20px;
+          width: 20px;
+        }
       }
     }
 
-    .archetypeMana {
-      display: inline;
-      .mana {
-        height: 20px;
-        width: 20px;
+    .information {
+      .type {
+        display: inline;
+        font-size: 24px;
+
+      }
+
+      .price {
+        display: inline;
+        //float: right;
       }
     }
   }
 
-  .information {
-    .type {
-      display: inline;
+  .decksOptions {
 
+    .archetypedecksBar {
+      .sectionName {
+
+      }
     }
 
-    .price {
-      display: inline;
-      //float: right;
+    .decksOwl {
+      padding: 10px;
+      background-color: white;
+
+      #owl-deckOption{
+        .deckBox {
+          margin: 0px 5px;
+          padding: 8px;
+          border: 1px solid lightgrey;
+          a {
+            background-color: white;
+            margin-bottom: 6px;
+            .firstLine {
+              display: block;
+              .deckName {
+                font-size: 18px;
+              }
+            }
+
+            .secondLine {
+              display: block;
+              .deckMana {
+                .mana {
+                  height: 15px;
+                  width: 15px;
+                }
+                //display: inline-block;
+              }
+              .values {
+                //display: inline-block;
+              }
+            }
+          }
+        }
+      }
+      }
     }
-  }
+
 
 }

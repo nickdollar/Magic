@@ -1,7 +1,11 @@
 Template.EventsTables.helpers({
-    mtgoEvents : function(){
+    eventsSmallSelector : function(){
+        return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$lt : 16} }
+    },
+    eventsBigSelector : function(){
+        return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$gte : 16}}
+    },
 
-    }
 });
 
 Template.EventsTables.events({

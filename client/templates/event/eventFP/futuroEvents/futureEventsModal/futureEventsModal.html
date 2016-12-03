@@ -5,62 +5,43 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add a event</h4>
+                        <h4 class="modal-title" id="myModalLabel">Add a Event</h4>
                     </div>
                     <div class="modal-body">
+                        <!--{{>quickForm schema=EventsCalendar id="eventsCalendar"}}-->
 
-                        <!--form-->
-                        <div class="futureEventsForm">
-                            <form class="form-horizontal" id="futureEventForm" role="form" data-toggle="validator">
-                                <fieldset>
-                                    <div class="form-group">
-                                        <label for="eventName" class="control-label">Event Name: </label>
-                                        <input type="text" name="eventName" class="form-control" id="eventName" placeholder="Event Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputEmail3" class="control-label">Event Source Url</label>
-                                        <input type="url" class="form-control" id="eventSourceUrl" name="eventSourceUrl" placeholder="Event Source Url">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputEmail3" class="control-label">Twitch Channel Name</label>
-                                        <input class="form-control" name="twitchChannelName" id="twitchChannelName" placeholder="Twitch Channel Name">
-                                    </div>
-                                    <div class="form-group formatCheckBoxes">
-                                        <div class="checkBoxes">
-                                            <label class="checkbox-inline"><input name="format" type="checkbox" value="standard">Standard</label>
-                                            <label class="checkbox-inline"><input name="format" type="checkbox" value="modern">Modern</label>
-                                            <label class="checkbox-inline"><input name="format" type="checkbox" value="legacy">Legacy</label>
-                                            <label class="checkbox-inline"><input name="format" type="checkbox" value="vintage">Vintage</label>
-                                            <label class="checkbox-inline"><input name="format" type="checkbox" value="others">Others</label>
-                                        </div>
-                                        <label for="format" class="error block"></label>
-                                    </div>
-                                    <div class="form-group ">
-                                        <label class="control-label">Date/Time</label>
-                                        <div class="dateTime">
-                                            <div class="col-sm-4">
-                                                <div class="row">
-                                                    <input class="set-due-date form-control " onkeydown="return false" id="eventTime" type="text" placeholder="time"/>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <div class="row">
-                                                    {{>timezones}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="submit" class="btn btn-primary saveChanges" value="Submit">
-                                    </div>
-                                </fieldset>
-                            </form>
-                        </div>
+                            {{#autoForm id="addEventCalendar" schema=EventsCalendar type="method" meteormethod="addEvents"}}
+                            <fieldset>
+                                {{> afQuickField name='title'}}
+                                {{> afQuickField name='eventSourceUrl'}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="streamed-toggle"> Streamed
+                                    </label>
+                                </div>
+                                {{#if streamed}}
+                                    {{> afQuickField name='twitchChannelName'}}
+                                {{/if}}
+
+                                {{> afQuickField name='formats'}}
+                                {{> afQuickField name="start"}}
+                                {{> afQuickField name="end"}}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="recurring-toggle"> Weekly Recurring
+                                    </label>
+                                </div>
+                                {{#if recurring}}
+                                    {{> afQuickField name='dow'}}
+                                {{/if}}
+                                {{> afQuickField name="description"}}
+                                <div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="reset" class="btn btn-default">Reset</button>
+                                </div>
+                            </fieldset>
+                        {{/autoForm}}
                     </div>
-                    <!--<div class="modal-footer">-->
-                        <!--&lt;!&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;&gt;-->
-                        <!--<button type="submit" class="btn btn-primary saveChanges">Save changes</button>-->
-                    <!--</div>-->
                 </div>
             </div>
         </div>

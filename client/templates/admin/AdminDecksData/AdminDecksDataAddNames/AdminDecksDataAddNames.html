@@ -1,0 +1,103 @@
+<template name="AdminDecksdataAddNames">
+
+    <form>
+        <label class="radio-inline">
+            <input type="radio" name="format" role="radio" value="standard" checked="checked">
+            Standard
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="format" role="radio" value="modern">
+            Modern
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="format" role="radio" value="legacy">
+            Legacy
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="format" role="radio" value="vintage">
+            Vintage
+        </label>
+    </form>
+
+    <button class="js-addNameToDecks">addNameToDecks</button>
+
+    {{> tabular table=TabularTables.allDecksWithoutName class="table table-sm" selector=allDecksWithoutnameSelector}}
+    {{#if deckCheck}}
+        <div>
+            {{#autoForm id="AdminDecksArchetypesEditName3" schema=editName doc=DecksDataValue type="method" meteormethod="methodAddNameToDeck"}}
+                <fieldset>
+
+                    {{> afQuickField name="DecksNames_id" options=decksNamesOptions}}
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Update</button>
+            {{/autoForm}}
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>%</th>
+                            <th>Con.</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each percentage}}
+                            <tr>
+                                <td>{{name}}</td>
+                                <td>{{prettifyPercentage result}}</td>
+                                <td><span class="js-confirmDeck">Con.</span></td>
+                            </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="deckBlock">
+                        <div class="newDeckColumn">
+                            {{#each cardType}}
+                                <div class="typeHeader">{{name}} ({{quantity}})</div>
+                                {{#each cards block}}
+                                    <div class="cardLine">
+                                        <div class="name js-nameMouseOver">{{quantity}} {{name}}</div>
+                                        <div class="cardInfo">
+                                            <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            {{#autoForm schema=DecksNamesSchema id="adminNewsDeckNames4" type="method" meteormethod="createNewDecksNames"}}
+                <fieldset>
+                    <legend>Add a DecksNames</legend>
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="format" value=format}}
+                    {{#if currentFieldValue}}
+                        {{> afQuickField name="DecksArchetypes_id"}}
+                    {{/if}}
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Insert</button>
+            {{/autoForm}}
+
+            {{#autoForm schema=DecksArchetypesSchema id="addPlaylist5" type="method" meteormethod="createNewDecksArchetype"}}
+                <fieldset>
+                    <legend>Add a Archetype</legend>
+                    {{> afQuickField name="name"}}
+                    {{> afQuickField name="format" value=format}}
+                    {{> afQuickField name="type"}}
+                    <!--{{> afArrayField name="DecksNames"}}-->
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Insert</button>
+            {{/autoForm}}
+        </div>
+    {{/if}}
+
+
+</template>

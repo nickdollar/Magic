@@ -84,7 +84,7 @@ Template.selectADeck.onRendered(function(){
                     return data;
                 }
                 else if (type === 'display') {
-                    var html = '<span><a href="/decks/' + FlowRouter.getParam("format") + '/' + row.name.replace(/[ &']/g, "-") + '">'+ row.name + '</a></span>';
+                    var html = '<span><a href="/decks/' + FlowRouter.getParam("format") + '/' + replaceTokenWithDash(row.name) + '">'+ row.name + '</a></span>';
                     return html;
                 }
                 // 'sort', 'type' and undefined all just use the integer

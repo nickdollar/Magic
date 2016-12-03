@@ -1,14 +1,15 @@
 import React from 'react' ;
 
-export default class AdminCardsFullDataFix extends React.Component {
+export default class AdminCardsFullDataUpdateWholeCollection extends React.Component {
 
     myClick (){
-
+        console.log("BBBBBBBBfsdfBBBBBBB");
+        Meteor.call("createCardsFullData");
     }
 
     render() {
         return (
-            <button onClick={this.myClick} className="button sm">Update Whole Database</button>
-    )
+            <button onClick={this.myClick} className="button sm">Update Whole Collection</button>
+        )
     }
 }

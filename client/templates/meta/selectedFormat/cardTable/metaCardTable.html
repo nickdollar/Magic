@@ -6,6 +6,8 @@
                     <button type="submit" class="btn btn-default btn-xs options" style="display: inline;">Options<span class="caret"></span></button>
                 </div>
             </div>
+            <div class="metaTitle"><span><h4>Cards Breakdown</h4></span></div>
+
         </div>
         <div class="content">
             <div class="custom-column">
@@ -17,19 +19,19 @@
                     </li>
                 </ul>
             </div>
-            <!--<div class="custom-column">-->
-                <!--<div>Daily</div>-->
-                <!--<ul class="list-unstyled optionsList">-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="daily4_0" class="eventTypes" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>-->
-                        <!--<label for="daily4_0">4-0</label>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<input type="checkbox" name="daily3_1" class="eventTypes" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>-->
-                        <!--<label for="daily3_1">3-1</label>-->
-                    <!--</li>-->
-                <!--</ul>-->
-            <!--</div>-->
+            <div class="custom-column">
+                <div>Daily</div>
+                <ul class="list-unstyled optionsList">
+                    <li>
+                        <input type="checkbox" name="daily4_0" class="eventTypes" id="daily4_0" value="daily4_0" role="checkbox" aria-checked="false" checked>
+                        <label for="daily4_0">4-0</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" name="daily3_1" class="eventTypes" id="daily3_1"  value="daily3_1" role="checkbox" aria-checked="false" checked>
+                        <label for="daily3_1">3-1</label>
+                    </li>
+                </ul>
+            </div>
             <!--<div class="custom-column">-->
                 <!--<div class="optionListName">PTQ</div>-->
                 <!--<ul class="list-unstyled optionsList">-->
@@ -90,9 +92,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="newMetaTable js-appendTableMetaCardsNames">
-        <table id="metaCardsNames" class="display" cellspacing="0" width="100%"></table>
+        <div class="metaCardTableTable js-appendTableMetaCardTableTable">
+            <table id="metaCardTableTable" class="table table-sm" cellspacing="0" width="100%"></table>
+        </div>
     </div>
 </template>
 

@@ -2,95 +2,83 @@ Template.dataTableNewMetaTable.onCreated(function(){
     this.options = new ReactiveDict();
 
     // this.options.set("eventTypes, ["league5_0", "daily4_0", "daily3_1", "ptqTop8", "ptqTop9_16", "ptqTop17_32"]);
-    this.options.set("eventTypes", ["league5_0"]);
+    this.options.set("eventTypes", ["league5_0", "daily4_0", "daily3_1"]);
     this.options.set("decksMetaSpan", "month");
     this.options.set("decksOrArchetypes", "archetypes");
     this.options.set("positionChange", "week");
-
-
-    this.metaDecksNames = new ReactiveVar();
-    this.metaArchetypes = new ReactiveVar();
-
-
-    this.options.set("meta", false);
-    this.options.set("decksNames", false);
-    this.options.set("decksArchetypes", false);
-
     var that = this;
-
     this.autorun(function(){
-        console.log("testMeta");
-        that.options.set("meta", false);
-        that.subscribe('metaFormatTimeSpanOptions',
-            Router.current().params.format,
-            that.options.get("decksMetaSpan"),
-            that.options.get("eventTypes"),
-            {
-                onReady : function(){
-                    console.log("testDecksData");
-                    that.options.set("meta", true);
-                }
+        that.options.set("metaFormatTimeSpanOptionsNonReactive", false);
+        
+        that.subscribe("metaFormatTimeSpanOptionsNonReactive", FlowRouter.getParam("format"), that.options.get("decksMetaSpan"), that.options.get("eventTypes"), {
+            onReady : function(){
+                that.options.set("metaFormatTimeSpanOptionsNonReactive", true)
             }
-        );
-    });
+        })
+    })
+});
 
-    this.autorun(function(){
-        console.log("decksNames");
-        that.options.set("decksNames", false);
-        that.subscribe('testDecksNames', Router.current().params.format,
-            {
-                onReady : function(){
-                    that.options.set("decksNames", true);
-                }
-            }
-        );
-    });
 
-    this.autorun(function(){
-        console.log("decksArchetypes");
-        that.options.set("decksArchetypes", false);
-        that.subscribe('testDecksArchetypes', Router.current().params.format,
-            {
-                onReady : function(){
-                    that.options.set("decksArchetypes", true);
-                }
-            }
-        );
-    });
+
+Template.dataTableNewMetaTable.onRendered(function(){
+    var that = this;
 
 
     this.autorun(function() {
-        if(that.options.get("decksArchetypes") && that.options.get("decksNames") && that.options.get("meta"))
-        {
 
-            if ($.fn.DataTable.isDataTable("#metaDecksNames")) {
-                console.log("Destroy Table");
-                $('#metaDecksNames').DataTable().clear();
-                $('#metaDecksNames').DataTable().destroy({
-                    remove : true
-                });
-                var $table = $("<table>", {id : "metaDecksNames", class : "display", cellSpacing: 0, width : "100%"});
-                $(".js-appendTableMetaDecksNames").append($table);
-            }
+        if ($.fn.DataTable.isDataTable("#dataTableNewMetaTableTable")) {
+            $('#dataTableNewMetaTableTable').DataTable().clear();
+            $('#dataTableNewMetaTableTable').DataTable().destroy({
+                remove : true
+            });
+            var $table = $("<table>", {id : "dataTableNewMetaTableTable", class : "table table-sm", cellSpacing: 0, width : "100%"});
+            $(".js-dataTableNewMetaTableTable").append($table);
+        }
+
+        if(that.options.get("metaFormatTimeSpanOptionsNonReactive")){
             if (that.options.get("decksOrArchetypes") == "archetypes") {
-                var data = null;
-                if(Meta.findOne()){
-                    data = Meta.findOne().DecksArchetypesMeta;
+                var preData = null;
+                if(Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false})){
+                    preData = Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).DecksArchetypesMeta;
                 }
-                $('#metaDecksNames').DataTable({
+
+                var data = [];
+                for(var i = 0; i < preData.length; i++){
+                    if(DecksArchetypes.findOne({_id : preData[i]._id})){
+                        data.push(preData[i]);
+                    }
+                }
+
+                $('#dataTableNewMetaTableTable').DataTable({
                     data:  data,
-                    pageLength: 20,
-                    order : [[0, "asc"]],
-                    dom :   "<'row'<'col-sm-12'tr>>" +
-                            "<'row'<'col-sm-12'i>>" +
-                            "<'row'<'col-sm-12'p>>",
+                    pageLength: 21,
+                    pagingType : "simple",
+                    order : [[1, "asc"]],
+                    dom :   "<'row'<'col-sm-12 tableHeight'tr>>" +
+                    "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                    columnDefs : [
+                        {
+                            className: "dt-center", targets: [3, 4]
+                        },
+                        {
+                            targets : 0,
+                            createdCell : function(td, cellData, rowData, row, col){
+                                $(td).addClass("details-control");
+                                $(td).attr("data-_id", rowData._id);
+                            }
+                        }],
                     columns: [
-                        {title: "", className: "AAAAA", width : "0px", render : function(data, type, row, meta){
+                        {title: "", orderable : false, width : "10px", data : function(data, type, row, meta){
+                            return "";
+                        }},
+                        {title: "", width : "0px", render : function(data, type, row, meta){
                             return row.position;
                         }},
-                        {title: "Name", render : function(data, type, row, meta){
+                        {title: "Name", width: "215px", render : function(data, type, row, meta){
                             var change = "";
-                            if(row.positions[that.options.get("positionChange")]==0){
+                            if(row.positions[that.options.get("positionChange")]==999){
+                                change = "";
+                            }else if(row.positions[that.options.get("positionChange")]==0){
                                 change = "square";
                             }else if(row.positions[that.options.get("positionChange")] >0){
                                 change = "upArrow";
@@ -98,17 +86,23 @@ Template.dataTableNewMetaTable.onCreated(function(){
                                 change = "downArrow";
                             }
                             var archetypeName = DecksArchetypes.findOne({_id : row._id}).name;
+
+                            var position = row.positions[that.options.get("positionChange")]
+                            if(row.positions[that.options.get("positionChange")]==999){
+                                position = "NEW";
+                            }
+
+
                             var html = "";
-                            html += '<span><a href="/decks/' + Router.current().params.format + '/' + archetypeName.replace(/[ &']/g, "-") + '">'+ archetypeName + '</a></span>';
-                            html += '<div class="positionChange"><span>' + row.positions[that.options.get("positionChange")] + '</span><span class="jj ' + change +'"></span></div>';
+                            html += '<span><a href="/decks/' + FlowRouter.getParam("format") + '/' + replaceTokenWithDash(archetypeName) + '">'+ archetypeName + '</a></span>';
+                            html += '<div class="positionChange"><span>' + position + '</span><span class="' + change +'"></span></div>';
                             return html;
-                            return DecksArchetypes.findOne({_id : row._id}).name;
                         }},
-                        {title: "percentage", data: "percentage", render: function (data, type, row, meta) {
-                            if(Meta.findOne({}).totalDecks == 0) return 0 +"%";
-                            return prettifyPercentage(row.quantity/Meta.findOne({}).totalDecks) + "%";
+                        {title: "percentage", orderable : false, data: "percentage", render: function (data, type, row, meta) {
+                            if(Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks == 0) return 0 +"%";
+                            return prettifyPercentage(row.quantity/Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks) + "%";
                         }},
-                        {title: "Colors", data: "colors", render: function (data, type, row, meta) {
+                        {title: "Colors",  width: "98px", orderable : false, data: "colors", render: function (data, type, row, meta) {
                             return getHTMLColorsFromArchetypes(row._id);
                         }},
                         {title : "Type", render : function(data, type, row, meta){
@@ -127,58 +121,90 @@ Template.dataTableNewMetaTable.onCreated(function(){
                         //     html += '</div>'
                         //     return html;
                         // }}
-                    ] 
+                    ]
 
                 });
+
+                var table = $("#dataTableNewMetaTableTable").DataTable();
+
+                $('#dataTableNewMetaTableTable tbody').on('click', 'td.details-control', function () {
+                    var decksArchetypes_id = $(this).attr("data-_id");
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+                    if ( row.child.isShown() ) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Open this row
+                        row.child($(formatDeckArchetypesMeta(decksArchetypes_id, that))).show();
+                        tr.addClass('shown');
+                    }
+                });
+
             }
             else {
-                var data = null;
-                if(Meta.findOne()){
-                    data = Meta.findOne().DecksNamesMeta;
+                var preData = null;
+                if(Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false})){
+                    preData = Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).DecksNamesMeta;
                 }
 
-                $('#metaDecksNames').DataTable({
+                var data = [];
+                for(var i = 0; i < preData.length; i++){
+                    if(DecksNames.findOne({_id : preData[i]._id})){
+                        data.push(preData[i]);
+                    }
+                }
+
+                $('#dataTableNewMetaTableTable').DataTable({
                     data: data,
-                    pageLength: 20,
+                    pageLength: 21,
+                    pagingType : "simple",
                     order : [[0, "asc"]],
                     dom :   "<'row'<'col-sm-12'tr>>" +
-                            "<'row'<'col-sm-12'i>>" +
-                            "<'row'<'col-sm-12'p>>",
+                    "<'row'<'col-sm-12'i>>" +
+                    "<'row'<'col-sm-12'p>>",
                     columns: [
                         {title: "", width: "30px", render : function(data, type, row, meta){
                             return row.position;
                         }},
                         {title: "Name", render : function(data, type, row, meta){
                             var change = "";
-                            if(row.positions[that.options.get("positionChange")]==0){
+                            if(row.positions[that.options.get("positionChange")]==0 ||row.positions[that.options.get("positionChange")]==999){
                                 change = "square";
                             }else if(row.positions[that.options.get("positionChange")] >0){
                                 change = "upArrow";
                             }else{
                                 change = "downArrow";
                             }
+
+                            var position = row.positions[that.options.get("positionChange")];
+                            if(row.positions[that.options.get("positionChange")]==999){
+                                position = "NEW";
+                            }
+
                             var html = "";
-                            html += '<span><a href="/decks/"' + Router.current().params.format + DecksNames.findOne({_id : row._id}).name + '</span>';
-                            html += '<div class="positionChange"><span>' + row.positions[that.options.get("positionChange")] + '</span><span class="jj ' + change +'"></span></div>';
+                            html += '<span><a href="/decks/' + FlowRouter.getParam("format") +'/'+ DecksNames.findOne({_id : row._id}).name +'">'+DecksNames.findOne({_id : row._id}).name+ '</a></span>';
+                            html += '<div class="positionChange"><span>' + position + '</span><span class="jj ' + change +'"></span></div>';
                             return html;
                         }},
                         {
                             title: "percentage", render: function (data, type, row, meta) {
-                            if(Meta.findOne({}).totalDecks == 0) return 0 +"%";
-                            return prettifyPercentage(row.quantity/Meta.findOne({}).totalDecks) + "%";
+                            if(Meta.findOne({timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks == 0) return 0 +"%";
+                            return prettifyPercentage(row.quantity/Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks) + "%";
                         }
                         },
                         {
                             title: "Colors", render: function (data, type, row, meta) {
-                                return getHTMLColors(DecksNames.findOne({_id : row._id}).colors)
-                            }
+                            return getHTMLColors(DecksNames.findOne({_id : row._id}).colors)
+                        }
                         },
                         {title : "Type", render : function(data, type, row, meta){
                             return DecksArchetypes.findOne({_id : DecksNames.findOne({_id : row._id}).DecksArchetypes_id}).type;
                         }
                         },
                         // {title : "Blocks", render : function(data, type, row, meta){
-                        //     var totalBlocks = Meta.findOne({}).totalDecksBlocks;
+                        //     var totalBlocks = Meta.findOne({timeSpan : that.options.get("decksMetaSpan")}).totalDecksBlocks;
                         //     var html = "";
                         //     html += '<div class="graph">';
                         //     for(var i = 1; i < row.blocks.length; ++i){
@@ -197,95 +223,14 @@ Template.dataTableNewMetaTable.onCreated(function(){
                 });
             }
         }
+
     });
-});
-
-format = function(archetype) {
-    var decksNameQuery = _deckArchetypes.findOne({archetype : archetype}).deckNames.map(function(obj){
-        return obj.name;
-    });
-    var deckQuery = _DeckNames.find({name : {$in : decksNameQuery}}).fetch();
-    var decksValuesQuery = _MetaValues.find({option : "deck", name : {$in : decksNameQuery}, date : Session.get('date'), type : Session.get("types")}, {sort : {percentage : -1}}).fetch();
-    var html = "";
-    decksValuesQuery.forEach(function(decksValuesOueryObj){
-        var deck = deckQuery.find(function( deckQueryObj ) {
-            return deckQueryObj.name == decksValuesOueryObj.name;
-            });
-        var deckInfo = _DeckNames.findOne({format : "modern", name : decksValuesOueryObj.name});
-        var upDownEqual = decksValuesOueryObj.positionUpDownEqual[decksValuesOueryObj.positionUpDownEqual.length - 1];
-        var positionWeekChange = decksValuesOueryObj.positionWeekChange[decksValuesOueryObj.positionWeekChange.length - 1];
-
-        html += '<tr>'+
-                '<td></td>'+
-                '<td class="tablePosition">' + decksValuesOueryObj.position +'</td>'+
-                '<td class="tableName"><span>' + decksValuesOueryObj.name +'</span>'+
-                '<div class="positionChange"><span>' + absoluteValue(positionWeekChange) + '</span><span class=' + upDownEqual + '></span></div>' +
-                '<td class="tableMana">';
-
-        var manas = getManaCss(deck.colors, "deck");
-        manas.forEach(function(mana){
-            html += "<span class='mana " + mana.mana + "'></span>";
-        });
-
-        html += '</td>'+
-                    '<td class="tablePercentage">' + prettifyPercentage(decksValuesOueryObj.percentage) +'%</td>'+
-                    '<td class="tablePrice"  colspan="2">$' + deck.price +'</td>' +
-                    '<td class="tablePrice">' + deck.type +'</td>';
-
-        var blocks = [];
-        for(var i = decksValuesOueryObj.weekAddChange.length - 5; i < decksValuesOueryObj.weekAddChange.length; i++ ){
-            blocks.push({color : decksValuesOueryObj.weekAddChange[i], change : prettifyPercentage(decksValuesOueryObj.weekAddNegPosChange[i], 2),  value : prettifyPercentage(decksValuesOueryObj.weekAddPercentage[i], 2), week : "AAA"});
-        }
-        html += "<td class='blocks'>" +
-                "<div class='graph'>";
-        blocks.forEach(function(blockObj){
-            html += "<div class='bar " + blockObj.color + "' data-change='" + blockObj.change + "' data-value='" + blockObj.value + "' data-week='" + blockObj.week + "' data-color='" + blockObj.color + "'></div>";
-        });
-
-        html += '</tr>';
-    });
-    return html;
-}
-
-Template.dataTableNewMetaTable.onRendered(function(){
-
-    // $('#metaDecksNames').DataTable({
-    //     data: null,
-    //     pageLength : 20,
-    //     columns : [
-    //         {title : "Name", data : "deckName"},
-    //         {title : "percentage", data : "percentage", render : function(data, type, row, meta){
-    //             return prettifyPercentage(data) + "%";
-    //         }},
-    //         {title : "Colors", data : "colors", render : function(data, type, row, meta){
-    //             return getCssManaFromDeck(data)
-    //         }},
-    //         // {title : "Type", data : "type"},
-    //     ]
-    // });
 
 });
 
 Template.dataTableNewMetaTable.events({
     'click .updateMeta' : function(evt, tmp){
 
-    },
-    'change input[role="checkbox"]' : function(evt, tmp){
-        var types = [];
-        var checkboxes = tmp.findAll('input[role="checkbox"].metaCheckBox:checked');
-
-        for(var i =0; i < checkboxes.length; i++){
-            types.push(checkboxes[i].value);
-        }
-
-        console.log(types);
-        Meteor.call('getDeckMeta', options, function (error, data) {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            Session.set("metaDecks", data);
-        });
     },
     'click .options' : function(evt,tmp){
         $header = $(evt.target);
@@ -309,7 +254,6 @@ Template.dataTableNewMetaTable.events({
             '    <span class="change '+$(evt.target).attr("data-color") +'">' + $(evt.target).attr("data-change") + '%</span>' +
             '    </div>' +
             '</div>';
-
         $(html).appendTo('body');
         $(".changePercentageBlock").show();
     },
@@ -329,10 +273,12 @@ Template.dataTableNewMetaTable.events({
         for(var i =0; i < checkboxes.length; i++){
             types.push(checkboxes[i].value);
         }
+        console.log(types);
         tmp.options.set("eventTypes", types);
     },
     'change input[name="decksMetaSpan"]' : function(evt, tmp){
         tmp.options.set("decksMetaSpan", $(evt.target).attr("value"));
+        console.log($(evt.target).attr("value"));
     },
     'change input[name="decksOrArchetypes"]' : function(evt, tmp){
         tmp.options.set("decksOrArchetypes", $(evt.target).attr("value"));
@@ -355,3 +301,67 @@ Template.dataTableNewMetaTable.events({
         });
     }
 });
+
+
+formatDeckArchetypesMeta = function(DecksArchetypes_id, Template) {
+
+    var that = Template;
+    var decksArchetypesQuery = DecksArchetypes.findOne({_id : DecksArchetypes_id});
+    var decksNameQuery = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
+
+    var html = '<table class="table table-sm metaDecksNamesChild">';
+
+    var decksPositions = [];
+
+    decksNameQuery.forEach(function(decksNamesObj) {
+        var test = Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).DecksNamesMeta.find(function (deckNameFindObj) {
+            return decksNamesObj._id == deckNameFindObj._id;
+        });
+        decksPositions.push(test);
+    });
+
+    decksPositions.sort(function(a, b){
+        return b.quantity - a.quantity
+    })
+
+    decksPositions.forEach(function(decksPositionsObj) {
+
+        var change = "";
+        if(decksPositionsObj.positions[that.options.get("positionChange")]==0){
+            change = "square";
+        }else if(decksPositionsObj.positions[that.options.get("positionChange")] >0){
+            change = "upArrow";
+        }else{
+            change = "downArrow";
+        }
+
+        html += '<tr>'+
+            '<td></td>'+
+            '<td>'+ decksPositionsObj.position +'</td>'+
+            '<td class="tableName">' +
+            '<span><a href="/decks/' + FlowRouter.getParam("format") +'/' + DecksArchetypes.findOne({_id : DecksArchetypes_id}).name +'/' +replaceTokenWithDash(DecksNames.findOne({_id : decksPositionsObj._id}).name) + '">'+ DecksNames.findOne({_id : decksPositionsObj._id}).name+'</a></span>'+
+            '<div class="positionChange"><span>' + decksPositionsObj.positions[that.options.get("positionChange")] + '</span><span class="jj ' + change +'"></span></div>'+
+            '</td>';
+
+        var percentage;
+        if(Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks == 0){
+            percentage = 0;
+        }else{
+            percentage = prettifyPercentage(decksPositionsObj.quantity/Meta.findOne({format : FlowRouter.getParam("format"), timeSpan : that.options.get("decksMetaSpan")}, {reactive : false}).totalDecks) + "%";
+        }
+
+        html +='<td>'+ percentage +'</td>';
+        html +='<td class="dt-center">';
+
+        var manas = getCssManaByNumberFromDeckNameById(decksPositionsObj._id);
+        manas.forEach(function(mana){
+            html += "<div class='mana " + mana.mana + "'></div>";
+        });
+        html += '<td class="tableType">' + decksArchetypesQuery.type +'</td>';
+        html += '</tr>';
+    });
+
+    html += "</table>";
+    return html;
+}
+

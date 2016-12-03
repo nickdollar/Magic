@@ -1,0 +1,33 @@
+<template name="eventsCalendar">
+    <div class="eventsCalendar">
+        <div class="sectionHeader">
+            <ul class="list-inline">
+                <li>
+                    <div class="sectionName">
+                        <h2>Events Calendar</h2>
+                    </div>
+                </li>
+                <li>
+                    <div class="getDaily optionName">
+                        <div data-toggle="modal" data-target="{{#if currentUser}}#addFutureEventsModal{{else}}#loginModal{{/if}}"><h4>Add a Event</h4></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="modal" id="eventCalendarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="js-eventName"></div>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="eventsRow">
+            <div id="eventsCalendar"></div>
+        </div>
+    </div>
+</template>

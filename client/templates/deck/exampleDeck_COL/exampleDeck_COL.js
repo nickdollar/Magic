@@ -1,124 +1,101 @@
 Template.exampleDeck_COL.onCreated(function(){
-    var that = this;
-    this.selectedDecksNames = new ReactiveVar();
     this.selectedDecksData = new ReactiveVar();
     this.checks = new ReactiveDict();
+    this.deckSelectedParamRegex = new ReactiveVar();
+    this.checks.set("deckName", true);
+    this.checks.set("test2", false);
 
-    this.autorun(function(){
-        that.selectedDecksData.set();
-        that.selectedDecksNames.set();
-        that.checks.set("deckName", false);
-        Router.current().params.deckSelected;
-        Meteor.setTimeout(function(){
-            that.subscribe("deckNamesDecksDataCardDatabase", DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id, {
-                onReady : function(){
-                    that.selectedDecksNames.set(DecksNames.findOne({_id : DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id}));
-                    that.selectedDecksData.set(
-                        DecksData.findOne({DecksNames_id : that.selectedDecksNames.get()._id}, {sort : {date : -1}})
-                    )
-                }
-            });
-        }, 50)
+    this.autorun(()=>{
+        this.deckSelectedParamRegex.set(new RegExp("^" + replaceDashWithDotForRegex(FlowRouter.getParam("deckSelected")) + "$", "i"));
+    })
 
-    });
-
-    this.autorun(function(){
-        if(that.checks.get("deckName")){
-            if(that.selectedDecksData.get()){
-                that.subscribe("deckSelectedAndCardDatabase", that.selectedDecksData.get()._id, {
-                    onReady : function(){
-                        that.selectedDecksData.set(DecksData.findOne({_id : that.selectedDecksData.get()._id}));
-                    }
-                });
+    this.autorun(()=>{
+        this.checks.set("deckdata", false);
+        this.subscribe("deckSelectedAndCardsData", this.selectedDecksData.get(), DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : this.deckSelectedParamRegex.get()}})._id, {
+            onReady : ()=>{
+                Meteor.setTimeout(()=>{
+                    this.checks.set("deckdata", true);
+                }, 200)
             }
-        }
+        });
     });
 });
 
 
 Template.exampleDeck_COL.helpers({
-    decksNames : function(){
-        return Template.instance().selectedDecksNames.get();
+    decksNames(){
+        return DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}});
     },
-    deck : function() {
-        if(!Template.instance().selectedDecksData.get()) return false;
-        if(!Template.instance().selectedDecksData.get().hasOwnProperty("main")) return false;
-        return Template.instance().selectedDecksData.get();
+    deck() {
+        if(Template.instance().checks.get("deckdata")){
+            return DecksData.findOne({main : {$exists: true}});
+        }
+        return false;
+
     },
-    cardType : function(){
+    cardType(){
         var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
         var types = [];
 
         for(var i = 0; i< blocks.length; i++){
-            var quantity = getQuantity3(blocks[i], false, Template.instance().selectedDecksData.get()._id);
+            var quantity = getQuantity3(blocks[i], false, DecksData.findOne({main : {$exists: true}})._id);
             if(quantity > 0){types.push({name : capitalizeFirstLetter(blocks[i]), quantity : quantity, block : blocks[i]});}
         }
         return types;
     },
-    cards : function(block){
-        var cardNames = _CardDatabase.find(typeOptions[block]).map(function(p) { return p.name });
-        var deck = DecksData.findOne({_id : Template.instance().selectedDecksData.get()._id});
+    cards(block){
+        var cardNames = CardsData.find(typeOptions[block]).map(function(p) { return p.name });
+        var deck = DecksData.findOne({_id : DecksData.findOne({main : {$exists: true}})._id});
 
         var newArray = deck.main.filter(function(obj1){
             return cardNames.find(function(obj2){
                 return obj1.name == obj2;
             });
         });
+        newArray.sort(function(a,b){
+            return b.quantity - a.quantity;
+
+        })
         return newArray;
     },
-    sideboard : function(){
-        // var names = _CardDatabase.find({}).map(function(p) { return p.name });
-        // var deck = _Deck.findOne({eventType: Session.get(SV_decksSelectedEventType)});
-        // return _DeckCards.find({_deckID : deck._id, sideboard : true, name : {$in : names}});
+    sideboard(){
+        return DecksData.findOne({main : {$exists : true}}).sideboard.sort(function(a,b){
+            return  b.quantity - a.quantity;
+        });
     },
-    sideboardQuantity: function() {
-        // return getQuantity2(null, true, Session.get(SV_decksSelectedEventType));
+    mainQuantity(){
+        return getQuantity3(null, false, DecksData.findOne({main : {$exists : true}})._id);
     },
-    test : function(test){
-
+    sideboardQuantity : function(){
+        return getQuantity3(null, true, DecksData.findOne({main : {$exists : true}})._id);
     },
-    event : function(_deckID) {
-        // var _eventID = _Deck.findOne({_id: _deckID})._eventID;
-        // return _Event.findOne({_id: _eventID}).eventType;
+    test(){
+        Template.instance().checks.set("test2", true);
     },
-    manaCost : function(card){
-        // return '';
+    test2(){
+        return Template.instance().checks.get("test2");
     },
-    smallSelector : function(){
-        return {format: Router.current().params.format, eventType :"league", DecksNames_id : DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id};
-    },
-    settings: function () {
-        return {
-            collection: _Deck,
-            rowsPerPage: 7,
-            showFilter: true,
-            fields: [{key : 'result', label : "Score", fn: function(value, object, key){
-                if(object.result.position != null){
-                    return object.result.position;
-                }
-                return object.result.victory +"-"+object.result.loss;
+    test3(){
+        $('.js-imagePopOver').popover({
+            html: true,
+            trigger: 'hover',
+            content: function () {
+                var cardName = encodeURI($(this).data('name'));
+                cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                var linkBase = "http://plex.homolka.me.uk:10080/";
+                var finalDirectory = linkBase+cardName+".full.jpg";
+                return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
             }
-            },
-                'player', 'name'],
-            showNavigator: true
-        };
+        });
+        Template.instance().checks.set("test2", false);
     },
-    ptq : function(){
-        return  Session.get("deckSelectedData").events.ptq;
+    smallSelector(){
+        return {format: FlowRouter.getParam("format"), eventType : {$in : ["league", "daily"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
     },
-    ptqSelector : function(){
-
-        // DecksNames.findOne({name : {$regex : Router.current().params.deckSelected}})._id
-
-        return {format: Router.current().params.format, name : {$regex : Router.current().params.deckSelected}};
-    },
-    selectedDeck : function(){
-        return Router.current().params.deckSelected;
+    largeSelector(){
+        return {format: FlowRouter.getParam("format"), eventType : {$in : ["GP"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
     }
-
 });
-
-
 
 Template.exampleDeck_COL.events({
     'click .js-deckSelected' : function(event, template){
@@ -128,7 +105,7 @@ Template.exampleDeck_COL.events({
         template.selectedDecksData.set();
         Meteor.setTimeout(function(){
                 template.checks.set("deckName", true);
-                template.selectedDecksData.set(rowData);
+                template.selectedDecksData.set(rowData._id);
         }, 100)
     }
 });
@@ -139,11 +116,4 @@ Template.exampleDeck_COL.onRendered(function(){
         window.document.location = $(this).data("href");
     });
 
-
 });
-
-// Template.exampleDeckHeader.helpers({
-//     deck : function() {
-//         return _Deck.findOne({eventType : Session.get(SV_decksSelectedEventType)});
-//     }
-// });

@@ -1,18 +1,4 @@
-/*
-TOP 8 DECKLISTS
-DECKLISTS 9-16
-(?:TOP|FINALS|DECKLISTS)? ?(?:\d{0,2}(?:TH|ND)? ?(?:TO|-)? ?\d{0,2}(?:TH|ND)?)? ?(?:DECKLISTS|DECKS|)?$
 
-TOP 9-32 DECKLISTS
-33-64 DECKLISTS
-9TH-32ND DECKS
-TOP 8 DECKS
-9TH TO 16TH DECKLISTS
-9-32 DECKLISTS
-TOP 32 DECKLISTS
-FINALS DECKLISTS
-9TH-32ND DECKLISTS
-*/
 
 import cheerio from "cheerio";
 
@@ -20,30 +6,48 @@ var monthValues = { jan : 0, january : 0, feb : 1, february : 1, mar : 2, march 
                         jul : 6, july : 6, aug : 7, august : 7, sep : 8, september : 8, oct : 9, october : 9, nov : 10, november : 10, dec : 11, december : 11
                     }
 
-getProTourLinks = function(){
-    var res = request.getSync("http://magic.wizards.com/en/events/coverage", {
-        encoding: null
-    });
-    if(res.response.statusCode == 200){
-        var buffer = res.body;
+
+
+
+
+getGPLinks = function(){
+
+    var res = Meteor.http.get("http://magic.wizards.com/en/events/coverage");
+
+    if(res.statusCode == 200){
+        var buffer = res.content;
         var $ = cheerio.load(buffer);
-        var html = $('#2015-2016-season h4:contains(Grand Prix) + p a');
+        var html = $('#2016-2017-season h4:contains(Grand Prix) + p a');
         var events = [];
         for(var i = 0; i < html.length; i++){
+
             var event = {};
             var eventCorrected = {};
             if($(html[i]).html() != null && $(html[i]).html() != ""){
                 event.city = $(html[i]).html();
-                event.value = $(html[i])[0].nextSibling.nodeValue;
+                event.DateFormat = $(html[i])[0].nextSibling.nodeValue;
+
             }else{
                 continue;
             }
 
-            if($(html[i]).next()[0].nextSibling.nodeValue != null){
-                event.value += $(html[i]).next()[0].nextSibling.nodeValue;
-            }
+            // if($(html[i]).next()[0].nextSibling.nodeValue != null){
+            //     event.date += $(html[i]).next()[0].nextSibling.nodeValue;
+            // }
+
             if($(html[i]).next().html() != null && $(html[i]).next().html() != ""){
                 event.edition = $(html[i]).next().html();
+            }
+
+
+            if(event.edition != null){
+                continue;
+            }
+
+
+            console.log(event);
+            if(!/(modern|legacy|standard|vintage)/i.test(event.DateFormat)){
+                continue;
             }
 
 
@@ -51,172 +55,216 @@ getProTourLinks = function(){
                 eventCorrected.city = event.city;
             }
 
-            if(event.value != null && event.value != ""){
-                var month = event.value.match(/\b(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|oct|october|nov|november|dec|december)\b/i)[0];
-                var day = event.value.match(/(?:\d{1,2})\b/i)[0];
-                var year = event.value.match(/(?:20\d{1,2})\b/i)[0];
+            console.log(eventCorrected);
+
+
+            if(event.DateFormat != null && event.DateFormat != ""){
+                var month = event.DateFormat.match(/\b(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|september|oct|october|nov|november|dec|december)\b/i)[0];
+                var day = event.DateFormat.match(/(?:\d{1,2})\b/i)[0];
+                var year = event.DateFormat.match(/(?:20\d{1,2})\b/i)[0];
                 eventCorrected.date = new Date(parseInt(year), monthValues[month.toLowerCase()],parseInt(day));
-                eventCorrected.format = event.value.match(/(?:modern|legacy|standard|limited|vintage)/i)[0];
+                eventCorrected.format = event.DateFormat.match(/(?:modern|legacy|standard|limited|vintage)/i)[0];
+                eventCorrected.format = eventCorrected.format.toLowerCase();
             }
-            if(event.edition != null && event.edition != ""){
-                eventCorrected.edition = event.edition;
-            }
+
+            // if(event.edition != null && event.edition != ""){
+            //     eventCorrected.edition = event.edition;
+            // }
 
             eventCorrected.url = "http://magic.wizards.com" + $(html[i]).attr("href");
             eventCorrected.eventType = "GP";
 
+            console.log(eventCorrected.url);
+
+            var eventRes = Meteor.http.get(eventCorrected.url);
+
+            console.log(eventRes.statusCode);
+
+            if (eventRes.statusCode == 200) {
+                var $htmlEvent = cheerio.load(eventRes.content);
+                var htmlEvent = $htmlEvent('#content');
+                var upsert = false;
+                if (htmlEvent.length == 0) {
+                    console.log("Page Doesn't exists");
+                } else {
+                    upsert = true;
+                    console.log("Page exists");
+                }
+            }
+
+            eventCorrected.validation = {exists : upsert};
+
             Events.update(
-                {city : eventCorrected.city, date : event.date},
+                {city : eventCorrected.city, date : eventCorrected.date},
                 {
                     $set : eventCorrected,
-                    $setOnInsert : eventCorrected
                 },
                 {upsert : true}
             )
+            console.log("end");
         }
     }
 }
 
+eventGPMainDownloadHTML = function(_id){
+    var event = Events.findOne({eventType : {eventType : "GP"}, _id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
 
-
-getProTourHtml = function() {
-    var gp = Events.findOne({});
-    var res = request.getSync(gp.url, {
-        encoding: null
-    });
-
-    if (res.response.statusCode == 200) {
-        var $ = cheerio.load(res.body);
-        var html = $('#content');
-        if (html.length == 0) {
-            console.log("Page Doesn't exists");
-        } else {
-            console.log("Page exists");
-            Events.update(
-                {city: gp.city, date: gp.date},
-                {
-                    $set : {html : $(html).html()}
-                },
-                {upsert: true}
-            );
-        }
-    }
-}
-
-
-/*
-TOP 8 DECKS
-FINALS DECKLISTS
-TOP 9-32 DECKLISTS
-9-32 DECKLISTS
-9TH-32ND DECKS
-9TH TO 16TH DECKLISTS
-9TH-32ND DECKLISTS
-TOP 32 DECKLISTS
-33-64 DECKLISTS
-*/
-
-getProTourDeckLinks = function(){
-    var gp = Events.findOne({html : {$exists : true}});
-    var $ = cheerio.load(gp.html);
-    var allDecksExists = false;
-    //Get Deck HTML
-    var htmlDecksLinkQuery = $("#full-coverage-archive a:icontains(TOP 8 DECKS), #full-coverage-archive a:icontains(FINALS DECKLISTS), #full-coverage-archive a:icontains(TOP 9-32 DECKLISTS), " +
-                 "#full-coverage-archive a:icontains(9-32 DECKLISTS), #full-coverage-archive a:icontains(9TH-32ND DECKS), #full-coverage-archive a:icontains(9TH-32ND DECKLISTS), " +
-                 "#full-coverage-archive a:icontains(TOP 32 DECKLISTS), #full-coverage-archive a:icontains(33-64 DECKLISTS)"
-                );
-    if(htmlDecksLinkQuery.length){
-        allDecksExists = true;
-    }
-    var alldecksHtmls = "";
-    var allDecksUrls = [];
-    for(var i = 0; i<htmlDecksLinkQuery.length; i++){
-        var res = request.getSync("http://magic.wizards.com" + $(htmlDecksLinkQuery[i]).attr("href"), {
-            encoding: null
-        });
-        allDecksUrls.push($(htmlDecksLinkQuery[i]).attr("href"));
-        var $deckHtml = cheerio.load(res.body);
-        alldecksHtmls += $deckHtml("#main-content");
-    }
-
-    Events.update(
-        {city: gp.city, date: gp.date},
-        {
-            $set : {allDecksUrls : allDecksUrls, alldecksHtmls : alldecksHtmls, allDecksExists : allDecksExists}
-        },
-        {upsert: true}
-    );
-}
-
-getProTourRankingsTableHtml = function(){
-    var gp = Events.findOne({html : {$exists : true}});
-    var $ = cheerio.load(gp.html);
-    var finalRanksExists = false;
-
-    //Get Final Ranks HTML
-    var standing = $(".final a")
-
-    var res = request.getSync($(standing).attr("href"), {
-        encoding: null
-    });
-    var $finalRanksHtml = cheerio.load(res.body);
-    var finalRankingsTableHtml = $finalRanksHtml("#content-detail-page-of-an-article table");
-
-
-
-    if(finalRankingsTableHtml.length){
-        finalRanksExists = true;
-    }
-
-    Events.update(
-        {city: gp.city, date: gp.date},
-        {
-            $set : {finalRanksUrl : $(".final a").attr("href"),finalRanksHtml : $finalRanksHtml(finalRankingsTableHtml).html(), finalRanksExists : finalRanksExists}
-        },
-        {upsert: true}
-    );
-}
-
-
-getProTourRankings = function(){
-    var gp = Events.findOne({html : {$exists : true}});
-
-    if(!gp.finalRanksExists){
+    if(event == null) {
         return;
     }
 
+    var res = Meteor.http.get(event.url);
 
-    var $ = cheerio.load(gp.finalRanksHtml);
 
-    var headerColumns = $("tr").first().find("td");
-    var options = [];
-    for(var i = 0; i < headerColumns.length; i++){
-        options.push($(headerColumns[i]).text());
+    if (res.statusCode == 200) {
+        var buffer = res.content;
+        var $ = cheerio.load(buffer);
+        var deckMeta = $('#main-content');
+        if(deckMeta.length == 0){
+            console.log("event not found");
+            Events.update(
+                {_id : _id},
+                {
+                    $set : {
+                        "validation.htmlDownloaded" : false
+                    }
+                }
+            );
+        }else{
+            console.log("event found");
+            EventsHtmls.update(
+                {Events_id : _id},
+                {
+                    $set : {
+                        html : $(deckMeta).html(),
+                    }
+                },
+                {upsert : true}
+            );
+
+            Events.update(
+                {_id : _id},
+                {
+                    $set : {
+                        "validation.htmlDownloaded" : true
+                    }
+                }
+            );
+        }
     }
+};
 
-    var rows = $("tr");
-    var rankings = [];
-    for(var i = 1; i < rows.length; i++){
-        var column = $(rows[i]).find("td");
-        var player = {};
-        options.forEach(function(obj, j){
-            if(isNaN(parseFloat($(column[j]).text()))){
-                player[obj] = $(column[j]).text();
+
+/*
+ TOP 8 DECKLISTS
+ DECKLISTS 9-16
+ (?:TOP|FINALS|DECKLISTS)? ?(?:\d{0,2}(?:TH|ND)? ?(?:TO|-)? ?\d{0,2}(?:TH|ND)?)? ?(?:DECKLISTS|DECKS|)?$
+
+ TOP 9-32 DECKLISTS
+ 33-64 DECKLISTS
+
+ 9TH-32ND DECKS
+ TOP 8 DECKS
+ 9TH TO 16TH DECKLISTS
+ 9-32 DECKLISTS
+ TOP 32 DECKLISTS
+ FINALS DECKLISTS
+ 9TH-32ND DECKLISTS
+
+ */
+
+/*
+TOP 8 DECKS
+TOP 8 DECKLISTS
+FINALS DECKLISTS
+TOP 16 DECKLISTS
+TOP 9-32 DECKLISTS
+9-32 DECKLISTS
+9-64 DECKLISTS
+9TH TO 64TH DECKLISTS
+9TH-32ND DECKS
+9TH-32ND DECKLISTS
+9TH - 32ND DECKLISTS
+9TH TO 16TH DECKLISTS
+TOP 32 DECKLISTS
+33-64 DECKLISTS
+33RD-64TH DECKLISTS
+33RD - 64TH DECKLISTS
+ TOP 64 DECKLISTS
+
+*/
+
+getProTourHTMLS = function(_id){
+    console.log("START: getProTourHTMLS");
+    var gp = Events.findOne({_id : _id});
+    var resMain = Meteor.http.get(gp.url);
+    var $ = cheerio.load(resMain.content);
+    console.log(resMain.statusCode);
+    if (resMain.statusCode == 200) {
+
+        var decksHtml = "";
+        var extrasURL = [];
+        var allDecksExists = false;
+        var checks = true;
+
+        //Get Deck HTML
+        var htmlDecksLinkQuery = $("#full-coverage-archive a:icontains(TOP 8 DECKS), #full-coverage-archive a:icontains(TOP 8 DECKLISTS), #full-coverage-archive a:icontains(FINALS DECKLISTS), " +
+            "#full-coverage-archive a:icontains(TOP 16 DECKLISTS), #full-coverage-archive a:icontains(TOP 9-32 DECKLISTS), " +
+            "#full-coverage-archive a:icontains(9-32 DECKLISTS), #full-coverage-archive a:icontains(9-64 DECKLISTS),  #full-coverage-archive a:icontains(9TH TO 64TH DECKLISTS), " +
+            "#full-coverage-archive a:icontains(9TH-32ND DECKS),  #full-coverage-archive a:icontains(9TH-32ND DECKLISTS), #full-coverage-archive a:icontains(9TH - 32ND DECKLISTS)," +
+            "#full-coverage-archive a:icontains(9TH TO 16TH DECKLISTS)," +
+            "#full-coverage-archive a:icontains(TOP 32 DECKLISTS), #full-coverage-archive a:icontains(33-64 DECKLISTS), #full-coverage-archive a:icontains(33RD-64TH DECKLISTS), " +
+            "#full-coverage-archive a:icontains(33RD - 64TH DECKLISTS), #full-coverage-archive a:icontains(TOP 64 DECKLISTS)"
+        );
+
+        for(var i = 0; i < htmlDecksLinkQuery.length; i++){
+            var resDecks = Meteor.http.get("http://magic.wizards.com" + $(htmlDecksLinkQuery[i]).attr("href"));
+            if(resDecks.statusCode == 200){
+                extrasURL.push({url : "http://magic.wizards.com" + $(htmlDecksLinkQuery[i]).attr("href"), worked : true});
+                var $resDecks = cheerio.load(resDecks.content);
+                decksHtml += $resDecks('#main-content').html();
             }else{
-                player[obj] = parseFloat($(column[j]).text());
+                extrasURL.push({url : "http://magic.wizards.com" + $(htmlDecksLinkQuery[i]).attr("href"), worked : false});
             }
-        });
-        rankings.push(player);
-    }
+        }
 
-    Events.update(
-        {city: gp.city, date: gp.date},
-        {
-            $set : {rankings : rankings}
-        },
-        {upsert: true}
-    );
+
+        var standingURL = $(".final a")
+        var finalStandingResponse = Meteor.http.get(standingURL.attr("href"));
+
+
+        console.log(standingURL.attr("href"));
+        if(finalStandingResponse.statusCode == 200){
+            var $finalStandingResponse = cheerio.load(finalStandingResponse.content);
+            var finalStandingHTML = $finalStandingResponse('#content-detail-page-of-an-article table');
+            if(finalStandingHTML.length){
+                extrasURL.push({url : standingURL.attr("href"), worked : true});
+                decksHtml += finalStandingHTML.html();
+            }
+        }else{
+            checks = false;
+            extrasURL.push({url : standingURL.attr("href"), worked : false});
+        }
+
+
+        EventsHtmls.update({Events_id : _id},
+            {
+                $set: {html : decksHtml}
+            },
+            {upsert: true}
+        );
+
+        Events.update(
+            {_id : _id},
+            {
+                $set: {"validation.htmlDownloaded" : checks, urls : extrasURL}
+            },
+            {upsert: true}
+        );
+    }
 }
+
+
 
 getPtTop8Bracket = function(){
 
@@ -268,55 +316,141 @@ getPtTop8Bracket = function(){
 }
 
 
-getProTourDecks = function(event){
+eventPTExtractDecks = function(_id){
+    console.log("START: eventPTExtractDecks");
+    console.log(_id);
 
-    var gp = Events.findOne({html : {$exists : true}});
-    var $ = cheerio.load(gp.alldecksHtmls);
+    var event = Events.findOne({_id : _id, "validation.exists" : true, "validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
+    if(event == null) return;
+    console.log("FOUND EVENT");
+    DecksData.remove({Events_id : event._id});
+
+    var html = EventsHtmls.findOne({Events_id : _id}).html;
+    var $ = cheerio.load(html);
+    var names = $("td:nth-child(2)");
+    var rankings = [];
+
+
+    var rows = $("tr");
+    var rankings = [];
+    for(var i = 1; i < rows.length && i < 65; i++){
+        var position = parseInt($(rows[i]).find("td:nth-child(1)").html());
+        var player = $(rows[i]).find("td:nth-child(2)").html();
+        player = fixNames(player);
+        var firstNamePatt = new RegExp(/(?:[^ ,]+ +)*?(?:\S*)(?= \[| $|$)/i);
+        var secondNamePatt = new RegExp(/(?=[a-zA-Z]).*?(?=,)/i);
+        var firstName = player.match(firstNamePatt)[0];
+        var secondName = player.match(secondNamePatt)[0];
+        var fullName = firstName + " " + secondName;
+        // console.log(fullName);
+        rankings.push({position : position, player : player, firstName : firstName, secondName : secondName, fullName : fullName});
+    }
+
     var decks = $('.bean--wiz-content-deck-list');
+    var count = 0;
 
+
+
+    console.log(decks.length );
     for(var i = 0 ; i < decks.length; i++){
-        var information = $(decks[i]).find('h4').html();
-        var namePatt = new RegExp(/.*(?=&apos;)/i);
-        var name = namePatt.exec(information)[0];
+        var information = getPTDeckInfo($(decks[i]).find('h4').html());
+        // console.log(i + " " + information.player);
 
-        var fullName = "";
-        var deckPositionTable = gp.rankings.find(function(obj){
-
-            var firstNamePatt = new RegExp(/\b[\w]+\b(?: .*)?(?= \[)/i);
-            var secondNamePatt = new RegExp(/.*(?=,)/i);
-            var firstName = firstNamePatt.exec(obj["Player Name"])[0];
-            var secondName = secondNamePatt.exec(obj["Player Name"])[0];
-
-            if(firstName == "Maxwell"){
-                return name == "Max " + secondName;
-            }
-            fullName = firstName + " " + secondName;
-
-            return name == fullName;
+        var result = rankings.filter(function(obj){
+            var lastNameCheck = new RegExp("\\b" +obj.secondName+"\\b", "i");
+            return lastNameCheck.test(information.player);
         });
 
+        if(result.length > 1){
+            // console.log("++++++++++++++++++++++++++++++++++++++");
+                result = rankings.find(function(obj){
+                var lastNameCheck = new RegExp("\\b" +obj.secondName+"\\b", "i");
+                var secondCheckName = new RegExp("\\b" + obj.firstName + "\\b", "i");
+                var secondCheckInitial = new RegExp("^" + obj.firstName[0], "i");
+                if(lastNameCheck.test(information.player)){
+                    // console.log("first check: " + lastNameCheck +" - "+ information.player + " - " + obj.fullName + " - "  + secondCheckName);
+
+                    if(secondCheckName.test(information.player)) {
+                        // console.log("second check");
+                        count++;
+                        return true;
+                    }
+                    // console.log("first check: " + lastNameCheck +" - "+ information.player + " - " + obj.fullName + " - "  + secondCheckInitial);
+
+                    if(secondCheckInitial.test(information.player)) {
+                        // console.log("second check");
+                        count++;
+                        return true;
+                    }
+
+                }
+                return false;
+            })
+            // console.log("---------------------------------------");
+        }else if(result.length == 1){
+            count++;
+            result = result[0];
+        }else{
+            result = null;
+        }
+
+
+        if( result == null){
+            console.log($(decks[i]).find('h4').html());
+            console.log(getPTDeckInfo($(decks[i]).find('h4').html()));
+
+            console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+        }
+        var position = null;
+        var player = null;
+
+
+        if(result){
+            console.log(result);
+            position = result.position;
+            player = result.fullName;
+        }
+
         var data = {
-            _eventID : gp._id,
-            date : gp.date,
-            eventType : gp.eventType,
-            player : fullName,
-            format : gp.format.toLowerCase(),
-            position : deckPositionTable.Finish
+            Events_id : event._id,
+            date : event.date,
+            eventType : event.eventType,
+            player : player,
+            format : event.format,
+            position : position
         };
 
+
         var cards = $(decks[i]).find('.sorted-by-overview-container .row');
-        var mainDeckQuantity = 0;
         var deckCards = {main : [], sideboard : []};
+        var mainDeckQuantity = 0;
         for(var j = 0; j < cards.length; j++){
             var quantity = parseInt($(cards[j]).find('.card-count').text());
             mainDeckQuantity += quantity;
             var name = $(cards[j]).find('.card-name').text();
-            deckCards.main.push(
-                {
-                    name : name,
-                    quantity : quantity
-                }
-            );
+            name = fixCards(name);
+
+            CardsData.find({ name : name});
+
+            if(CardsData.find({ name : name}).count()){
+                deckCards.main.push(
+                    {
+                        name : name,
+                        quantity : quantity
+                    }
+                );
+            }else{
+                deckCards.main.push(
+                    {
+                        name : name,
+                        quantity : quantity,
+                        wrongName : true
+                    }
+                );
+            }
+
+
         }
 
         var sideboard = $(decks[i]).find('.sorted-by-sideboard-container .row');
@@ -326,26 +460,145 @@ getProTourDecks = function(event){
             sideboardQuantity += quantity;
             var name = $(sideboard[j]).find('.card-name').text();
             name = fixCards(name);
-            deckCards.sideboard.push(
-                {
-                    name : name,
-                    quantity : quantity
-                }
-            );
+            if(CardsData.find({ name : name}).count()){
+                deckCards.sideboard.push(
+                    {
+                        name : name,
+                        quantity : quantity
+                    }
+                );
+            }else{
+                deckCards.sideboard.push(
+                    {
+                        name : name,
+                        quantity : quantity,
+                        wrongName : true
+                    }
+                );
+            }
         }
+
 
         data.totalMain = mainDeckQuantity;
         data.main = deckCards.main;
         data.totalSideboard = sideboardQuantity;
         data.sideboard = deckCards.sideboard;
-        data.colors = setUpColorForDeckName(deckCards);
-        DecksData.update(
-            {_eventID : data._eventID, player : data.player, position : data.position},
-            {
-                $setOnInsert : data,
-                $set : data
-            },
-            {upsert : true}
-        );
+        var colors = setUpColorForDeckName(deckCards);
+        data.colors = colors;
+        DecksData.insert(data);
+
+        var cardsOnMain = [];
+
+        data.main.forEach(function(obj){
+            cardsOnMain.push(obj.name)
+        });
+
     }
+
+    Events.update(
+        {_id : event._id},
+        {
+            $set : {
+                "validation.extractDecks" : true, decks : decks.length
+            }
+        }
+    );
+    console.log(count);
+}
+
+getPTDeckInfo = function(information){
+    information = fixNames(information);
+    var temp = {};
+    var namePatt = new RegExp(/(?:\b\S+\b +)+?\b\S+\b(?=(?:'s?| -| U\/W| R\/W))/i);
+    temp.player = information.match(namePatt)[0];
+    return temp;
+}
+
+getProTourRankings = function(){
+    var gp = Events.findOne({html : {$exists : true}});
+
+    if(!gp.finalRanksExists){
+        return;
+    }
+
+
+
+    var $ = cheerio.load(gp.finalRanksHtml);
+
+    var headerColumns = $("tr").first().find("td");
+    var options = [];
+    for(var i = 0; i < headerColumns.length; i++){
+        options.push($(headerColumns[i]).text());
+    }
+
+    var rows = $("tr");
+    var rankings = [];
+    for(var i = 1; i < rows.length; i++){
+        var column = $(rows[i]).find("td");
+        var player = {};
+        options.forEach(function(obj, j){
+            if(isNaN(parseFloat($(column[j]).text()))){
+                player[obj] = $(column[j]).text();
+            }else{
+                player[obj] = parseFloat($(column[j]).text());
+            }
+        });
+        rankings.push(player);
+    }
+
+    Events.update(
+        {city: gp.city, date: gp.date},
+        {
+            $set : {rankings : rankings}
+        },
+        {upsert: true}
+    );
+}
+
+
+fixNames = function(name){
+    name = name.replace(/[^\u0000-\u007F]/g, ".");
+    name = name.replace(/&apos;/ig, "'");
+    name = name.replace(/&#x2013;/ig, "-");
+    name = name.replace(/&#xED;/ig, "i");
+    name = name.replace(/&#xE9;/ig, "e");
+    name = name.replace(/&#xEB;/ig, "e");
+    name = name.replace(/&#x16f;/ig, "u");
+    name = name.replace(/&#xe1;/ig, "a");
+    name = name.replace(/&#xc3;/ig, "a");
+    name = name.replace(/&#xa9;/ig, "c");
+    name = name.replace(/&#xfa;/ig, "u");
+
+    name = name.replace(/\bninzansky\b/ig, "niznansky");
+    name = name.replace(/\bdickman\b/ig, "dickmann");
+    name = name.replace(/\brottman\b/ig, "Rottmann");
+    name = name.replace(/\bMcgrgeor\b/ig, "mcgregor");
+    name = name.replace(/\bKAKLAUSKUS\b/ig, "kaklauskas");
+    name = name.replace(/\bgarrido sanchez\b/ig, "sanchez garrido");
+    name = name.replace(/\bKRZYSTOF\b/ig, "krzysztof");
+    name = name.replace(/\bmarek krzysztof\b/ig, "Krzysztof marek");
+    name = name.replace(/\bni chang wie shen\b/ig, "wei shen ni chang");
+    name = name.replace(/\bBoulinguiez Mike\b/ig, "Mike Boulinguiez");
+
+    name = name.replace(/\broz\b/ig, "ros");
+    name = name.replace(/\bmser\b/ig, "musser");
+    name = name.replace(/\bpleasant\b/ig, "pleasants");
+    name = name.replace(/\bMorifuji\b/ig, "Morofuji");
+
+    name = name.replace(/\bpacrez\b/ig, "perez" );
+    name = name.replace(/\bolivera\b/ig, "oliveira");
+    name = name.replace(/\bgesez\b/ig, "gerez");
+    name = name.replace(/\bcao\b/ig, "chao");
+    name = name.replace(/\brong\b/ig, "Choong");
+
+
+
+
+
+
+
+    name = name.toLowerCase();
+
+
+    return name;
 }

@@ -1,31 +1,31 @@
 <template name="archetypeDeckName">
     <div class="archetypeDeckName">
-        {{#with thisarchetype}}
-            <div class="firstline">
-                <h1>
-                    {{name}}
-                </h1>
-                <div class="archetypeMana">
-                    {{#each colors}}<div class="mana mana-{{mana}}"></div>{{/each}}
+        <div class="archetypeInfo">
+            {{#with thisarchetype}}
+                <div class="firstline">
+                    <h1>
+                        {{name}}
+                    </h1>
+                    <div class="archetypeMana">
+                        {{#each colors}}<div class="mana {{mana}}"></div>{{/each}}
+                    </div>
+                </div>
+                <div class="information">
+
+                    <div class="type">{{type}}</div>
+                    <!--<div class="price">${{min}}-${{max}}</div>-->
+                </div>
+            {{/with}}
+        </div>
+        <div class="decksOptions">
+            <div class="archetypedecksBar">
+                <div class="sectionName">
+                    <h2>Archetype Decks</h2>
                 </div>
             </div>
-            <div class="information">
-                <div class="type">{{type}}</div>
-                <div class="price">${{min}}-${{max}}</div>
+            <div class="decksOwl">
+                <div id="owl-deckOption"></div>
             </div>
-        {{/with}}
-    </div>
-        <div class="archetypedecksBar areaBar">
-            <ul class="list-inline">
-                <li>
-                    <div class="sectionName">
-                        Archetype Decks
-                    </div>
-                </li>
-            </ul>
         </div>
-    <div class="deckOptions">
-    <div id="owl-deckOption"></div>
     </div>
-    {{test}}
 </template>

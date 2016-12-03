@@ -1,77 +1,87 @@
 <template name="exampleDeck_COL">
-    <div class="col-xs-12">
+    <div class="col-xs-12 exampleDeck_COL">
         {{#if decksNames}}
             <div class="row">
-                <div class="eventBar areaBar">
-                    <ul class="list-inline">
-                        <li>
-                            <div class="sectionName">
-                                EVENTS {{testName}}
-                            </div>
-                        </li>
-                    </ul>
+                <div class="sectionName">
+                    <h2>Meta Decks</h2>
                 </div>
             </div>
-            <div class="row tnails">
+            <div class="row eventsTables">
                 <div class="col-xs-6">
-                    <div class="row">
-                        <div class="eventSmallTable">
-                            {{> tabular table=TabularTables.eventSmallTable selector=smallSelector class="table table-striped table-bordered table-condensed"}}
-                        </div>
+                    <div class="eventsDecksTable">
+                        {{> tabular table=TabularTables.smallEventsDecks selector=smallSelector class="table table-sm"}}
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <div class="row">
-                        <div class="eventPtqTable">
-                            {{> tabular table=TabularTables.eventLargeTable selector=ptqSelector class="table table-striped table-bordered table-condensed"}}
-                        </div>
+                    <div class="eventsDecksTable">
+                        {{> tabular table=TabularTables.largeEventsDecks selector=largeSelector class="table table-sm"}}
                     </div>
                 </div>
             </div>
         {{/if}}
-        {{#with deck}}
-            <div class="row">
-                <div class="exampleDeckHeader">
-                        <div class="col-sm-4 left">
-                            <div class="row">
-                                <div class="venue">MTGO - {{capitalizeEvents}}</div>
-                                <div class="tourneyType"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 center">
-                            <div class="row">
-                                <span class="venue">{{player}}</span>
-                                <span class="tournamentType">{{deckPosition}}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 right">
-                            <div class="row">
-                                <span class="tournamentType">{{prettifyDate date}}</span>
-                            </div>
-                        </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="deckBlock">
-                    <div class="newDeckColumn">
-                        {{#each cardType}}
-                            <div class="typeHeader">{{name}} ({{quantity}})</div>
-                            {{#each cards block}}
-                                <div class="cardLine">
-                                    <div class="name">{{quantity}} {{name}}</div>
-                                    <div class="cardInfo">
-                                        <div class="manaValue">{{#each getManaCss name}}<div class="mana mana-{{mana}}"></div>{{/each}}</div>
-                                        <div class="price">$118.74</div>
-                                    </div>
+        <div class="selectedDeck">
+            {{#with deck}}
+                    <div class="row">
+                        <div class="exampleDeckHeader">
+                            <div class="col-sm-4 left">
+                                <div class="row">
+                                    <div class="venue">MTGO - {{capitalizeEvents}}</div>
+                                    <div class="tourneyType"></div>
                                 </div>
-                            {{/each}}
-                        {{/each}}
+                            </div>
+
+                            <div class="col-sm-4 center">
+                                <div class="row">
+                                    <span class="venue">{{player}}</span>
+                                    <span class="tournamentType">{{deckPosition}}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 right">
+                                <div class="row">
+                                    <span class="tournamentType">{{prettifyDate date}}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        {{/with}}
+                    <div class="row">
+                        <div class="deckBlock">
+                            <div class="typeHeader">Main ({{mainQuantity}})</div>
+                            <div class="newDeckColumn">
+                                {{#each cardType}}
+                                    <div class="typeHeader">{{name}} ({{quantity}})</div>
+                                    {{#each cards block}}
+                                        <div class="cardLine">
+                                            <div class="name js-imagePopOver" data-name="{{name}}">{{quantity}} {{name}}</div>
+                                            <div class="cardInfo">
+                                                <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="deckBlock">
+                            <div class="typeHeader">Sideboard ({{sideboardQuantity}})</div>
+                            <div class="newDeckColumn">
+                                {{#each sideboard}}
+                                    <div class="cardLine">
+                                        <div class="name js-imagePopOver" data-name="{{name}}">{{quantity}} {{name}}</div>
+                                        <div class="cardInfo">
+                                            <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                {{test}}
+            {{/with}}
+        </div>
+
+        {{#if test2}}
+            {{test3}}
+        {{/if}}
 
     </div>
 </template>

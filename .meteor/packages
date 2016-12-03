@@ -4,46 +4,45 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-iron:router
 handlebars@1.0.7
 reywood:publish-composite
 templates:tabs
-less@2.7.5
-underscore@1.0.9
+less@2.7.7
+underscore@1.0.10
 manuel:reactivearray
 tmeasday:publish-counts
 mizzao:autocomplete
 froatsnook:request
 meteor-base@1.0.4
 mobile-experience@1.0.4
-mongo@1.1.12
+mongo@1.1.14
 blaze-html-templates@1.0.4
-session@1.1.6
-tracker@1.1.0
-logging@1.1.15
-reload@1.1.10
+session@1.1.7
+tracker@1.1.1
+logging@1.1.16
+reload@1.1.11
 random@1.0.10
-ejson@1.0.12
+ejson@1.0.13
 spacebars@1.0.12
-check@1.2.3
-#nemo64:bootstrap
+check@1.2.4
 twbs:bootstrap
-http
+http@1.2.10
 cfs:standard-packages
 cfs:gridfs
 cfs:filesystem
 percolate:synced-cron
 meteorhacks:fast-render
-jquery@1.11.9
-tsega:bootstrap3-datetimepicker
+jquery@1.11.2
+tsega:bootstrap3-datetimepicker@=3.1.3_3
 andrei:tablesorter
 mizzao:jquery-ui
 spacebars-compiler@1.0.12
-standard-minifier-css@1.2.0
-standard-minifier-js@1.2.0
+standard-minifier-css@1.3.2
+standard-minifier-js@1.2.1
 themeteorchef:jquery-validation
-ecmascript@0.5.8
-reactive-dict
+ecmascript@0.5.9
+reactive-dict@1.1.8
+rzymek:fullcalendar
 
 #cool things
 mrt:flash-messages
@@ -56,7 +55,7 @@ pagebakers:ionicons
 
 #template-management
 #aldeed:template-extension
-reactive-var@1.0.10
+reactive-var@1.0.11
 
 
 
@@ -65,9 +64,8 @@ meteortoys:allthings
 
 #accounts
 accounts-ui
-accounts-facebook@1.0.10
-accounts-google@1.0.10
 accounts-password
+accounts-base
 #accounts-github
 #accounts-twitter
 #accounts-meetup
@@ -75,9 +73,9 @@ accounts-password
 useraccounts:bootstrap
 #useraccounts:unstyled
 alanning:roles
+aldeed:autoform
 
 #dtables plugins
-aldeed:tabular
 aslagle:reactive-table
 
 
@@ -87,11 +85,21 @@ meteorhacks:aggregate
 
 
 #forms
-aldeed:autoform
 jamiecollinson:selectize-bootstrap
 comerc:autoform-selectize
 shell-server@0.2.1
-
-
+aldeed:autoform-bs-datetimepicker
+mpowaga:autoform-summernote
+fortawesome:fontawesome
+aldeed:collection2
 
 dburles:collection-helpers
+alizbeo:flow-db-admin
+#yogiben:admin
+aldeed:tabular
+
+
+kadira:blaze-layout
+kadira:flow-router
+arillo:flow-router-helpers
+react-template-helper

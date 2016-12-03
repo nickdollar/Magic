@@ -1,10 +1,12 @@
 <template name="AdminDecksDataEdit">
     {{#autoForm id="AdminDecksArchetypesEditName" schema=editName doc=documentValue type="method" meteormethod="methodAddNameToDeck"}}
         <fieldset>
-            {{> afQuickField name="DecksNames_id"}}
+            {{> afQuickField name="DecksNames_id" options=decksNamesOptions}}
         </fieldset>
         <button type="submit" class="btn btn-primary">Update</button>
     {{/autoForm}}
+
+
     <div style="height: 500px">
         <div class="row">
             <div class="col-xs-12">
@@ -38,7 +40,7 @@
                                 <div class="cardLine">
                                     <div class="name js-nameMouseOver">{{quantity}} {{name}}</div>
                                     <div class="cardInfo">
-                                        <div class="manaValue">{{#each getManaCss name}}<div class="mana mana-{{mana}}"></div>{{/each}}</div>
+                                        <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
                                     </div>
                                 </div>
                             {{/each}}
@@ -48,7 +50,7 @@
             </div>
         </div>
     </div>
-    {{#autoForm schema=DecksNamesSchema id="adminNewsDeckNames2" type="method" meteormethod="createNewDecksNames"}}
+    {{#autoForm schema=DecksNamesSchema id="adminNewsDeckNames3" type="method" meteormethod="createNewDecksNames"}}
         <fieldset>
             <legend>Add a DecksNames</legend>
             {{> afQuickField name="name"}}

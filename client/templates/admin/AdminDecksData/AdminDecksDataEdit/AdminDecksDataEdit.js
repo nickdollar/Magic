@@ -3,7 +3,7 @@ Template.AdminDecksDataEdit.onCreated(function(){
     this.selectedDecksData = new ReactiveVar;
     that.deckPercentage = new ReactiveVar;
     this.autorun(function(){
-        Meteor.call("methodFindDeckComparison", Router.current().params._id, function(error, data){
+        Meteor.call("methodFindDeckComparison", FlowRouter.getParam("_id"), function(error, data){
             if (error) {
                 console.log(error);
                 return;
@@ -21,14 +21,14 @@ Template.AdminDecksDataEdit.helpers({
         var types = [];
 
         for(var i = 0; i< blocks.length; i++){
-            var quantity = getQuantity3(blocks[i], false, Router.current().params._id);
+            var quantity = getQuantity3(blocks[i], false, FlowRouter.getParam("_id"));
             if(quantity > 0){types.push({name : capitalizeFirstLetter(blocks[i]), quantity : quantity, block : blocks[i]});}
         }
         return types;
     },
     cards : function(block){
         var cardNames = CardsData.find(typeOptions[block]).map(function(p) { return p.name });
-        var deck = DecksData.findOne({_id : Router.current().params._id});
+        var deck = DecksData.findOne({_id : FlowRouter.getParam("_id")});
 
         var newArray = deck.main.filter(function(obj1){
             return cardNames.find(function(obj2){
@@ -40,9 +40,6 @@ Template.AdminDecksDataEdit.helpers({
     decksWithoutNamesAddNameToDeckSchema : function(){
         return Schemas.decksWithoutNamesAddNameToDeck;
     },
-    options : function () {
-
-    },
     percentage : function(){
         return Template.instance().deckPercentage.get();
     },
@@ -53,7 +50,7 @@ Template.AdminDecksDataEdit.helpers({
         return Schemas.DecksData;
     },
     documentValue : function(){
-        return DecksData.findOne({_id : Router.current().params._id});
+        return DecksData.findOne({_id : FlowRouter.getParam("_id")});
     },
     DecksData : function(){
         return Schemas.DecksData;
@@ -66,7 +63,19 @@ Template.AdminDecksDataEdit.helpers({
     },
     currentFieldValue : function(){
         return AutoForm.getFieldValue("format", "adminNewsDeckNames2");
-    }
+    },
+    decksNamesOptions : function(){
+        var decks = DecksNames.find({format : DecksData.findOne({_id : FlowRouter.getParam("_id")}).format}).map(function(obj){
+            return {label : obj.name, value : obj._id};
+        });
+        decks.sort(function(a, b){
+            if(a.label < b.label) return -1;
+            if(a.label > b.label) return 1;
+            return 0;
+        });
+        console.log(decks);
+        return decks;
+    },
 });
 
 Template.AdminDecksDataEdit.events({
@@ -85,7 +94,7 @@ Template.AdminDecksDataEdit.events({
         Meteor.call('methodAddNameToDeck',
             {
                 DeckName : this.name,
-                DecksData_id : Router.current().params._id,
+                DecksData_id : FlowRouter.getParam("_id"),
                 format : Template.instance().selectedDecksData.get().format
             },
             function(err, data){
@@ -101,8 +110,7 @@ var hooksObject = {
     before: {
         // Replace `formType` with the form `type` attribute to which this hook applies
         method: function(doc) {
-            console.log(Router.current().params);
-            doc._id = Router.current().params._id;
+            doc._id = FlowRouter.getParam("_id");
             return doc;
         }
     },

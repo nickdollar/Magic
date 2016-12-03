@@ -10,29 +10,34 @@ Template.registerHelper("getManaCss", function(value) {
     return getManaCss(value);
 });
 
+
+Template.registerHelper("getCssManaFromDeck", function(colors) {
+    return getCssManaFromDeck(colors);
+});
+
 getCssManaFromDeck = function(colors){
-    var str = [];
+    var manaInitials = [];
     for(var obj in colors){
-             if(obj === "B" && colors[obj]){str.push('b')}
-        else if(obj === "G" && colors[obj]){str.push('g')}
-        else if(obj === "C" && colors[obj]){str.push('c')}
-        else if(obj === "R" && colors[obj]){str.push('r')}
-        else if(obj === "U" && colors[obj]){str.push('u')}
-        else if(obj === "W" && colors[obj]){str.push('w')}
+             if(obj === "B" && colors[obj]){manaInitials.push('sb')}
+        else if(obj === "G" && colors[obj]){manaInitials.push('sg')}
+        else if(obj === "C" && colors[obj]){manaInitials.push('scl')}
+        else if(obj === "R" && colors[obj]){manaInitials.push('sr')}
+        else if(obj === "U" && colors[obj]){manaInitials.push('su')}
+        else if(obj === "W" && colors[obj]){manaInitials.push('sw')}
     }
-    return str;
+    return manaInitials;
 }
 
 
 getHTMLColors = function(colors){
     var html = '<td class="tableMana">';
     for(var obj in colors){
-        if(obj === "B" && colors[obj]){html += '<span class="mana mana-b"></span>'}
-        else if(obj === "G" && colors[obj]){html += '<span class="mana mana-g"></span>'}
-        else if(obj === "C" && colors[obj]){html += '<span class="mana mana-c"></span>'}
-        else if(obj === "R" && colors[obj]){html += '<span class="mana mana-r"></span>'}
-        else if(obj === "U" && colors[obj]){html += '<span class="mana mana-u"></span>'}
-        else if(obj === "W" && colors[obj]){html += '<span class="mana mana-w"></span>'}
+        if(obj === "B" && colors[obj]){html +=      '<span class="mana sb"></span>'}
+        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
+        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
+        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
+        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
+        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
     }
     return html;
 }
@@ -43,15 +48,16 @@ getCssManaByNumberFromDeckNameById = function(DecksNames_id){
     if(deckName == null) return;
     var str = [];
     for(var obj in deckName.colors){
-        if(obj === "B" && deckName.colors[obj]){str.push( {mana :'b' })}
-        else if(obj === "G" && deckName.colors[obj]){str.push( {mana :'g' })}
-        else if(obj === "C" && deckName.colors[obj]){str.push( {mana :'c' })}
-        else if(obj === "R" && deckName.colors[obj]){str.push( {mana :'r' })}
-        else if(obj === "U" && deckName.colors[obj]){str.push( {mana :'u' })}
-        else if(obj === "W" && deckName.colors[obj]){str.push( {mana :'w' })}
+        if(obj === "B" && deckName.colors[obj]){str.push( {mana :'sb' })}
+        else if(obj === "G" && deckName.colors[obj]){str.push( {mana :'sg' })}
+        else if(obj === "C" && deckName.colors[obj]){str.push( {mana :'scl' })}
+        else if(obj === "R" && deckName.colors[obj]){str.push( {mana :'sr' })}
+        else if(obj === "U" && deckName.colors[obj]){str.push( {mana :'su' })}
+        else if(obj === "W" && deckName.colors[obj]){str.push( {mana :'sw' })}
     }
     return str;
 }
+
 
 getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
     var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
@@ -67,23 +73,41 @@ getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
 
     var html = '<td class="tableMana">';
     for(var obj in colors){
-        if(obj === "B" && colors[obj]){html += '<span class="mana mana-b"></span>'}
-        else if(obj === "G" && colors[obj]){html += '<span class="mana mana-g"></span>'}
-        else if(obj === "C" && colors[obj]){html += '<span class="mana mana-c"></span>'}
-        else if(obj === "R" && colors[obj]){html += '<span class="mana mana-r"></span>'}
-        else if(obj === "U" && colors[obj]){html += '<span class="mana mana-u"></span>'}
-        else if(obj === "W" && colors[obj]){html += '<span class="mana mana-w"></span>'}
+        if(obj === "B" && colors[obj]){html += '<span class="mana sb"></span>'}
+        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
+        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
+        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
+        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
+        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
+    }
+    return html;
+}
+
+getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
+    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
+
+    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
+        for(var color in obj.colors){
+            colors[color] += obj.colors[color];
+        }
+    });
+
+    var html = '<td class="tableMana">';
+    for(var obj in colors){
+        if(obj === "B" && colors[obj]){html += '<span class="mana sb"></span>'}
+        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
+        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
+        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
+        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
+        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
     }
     return html;
 }
 
 getCssColorsFromArchetypes = function(DecksArchetypes_id){
-    var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
     var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
-    if(deckArchetype.DecksNames == null) return;
-    if(!deckArchetype.DecksNames.length) return;
 
-    DecksNames.find({$or : deckArchetype.DecksNames}).forEach(function(obj){
+    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
         for(var color in obj.colors){
             colors[color] += obj.colors[color];
         }
@@ -91,7 +115,28 @@ getCssColorsFromArchetypes = function(DecksArchetypes_id){
 
     var str = [];
     for(var obj in colors){
-             if(obj === "B" && colors[obj]){str.push( {mana :'b' })}
+             if(obj === "B" && colors[obj]){str.push( {mana :'sb' })}
+        else if(obj === "G" && colors[obj]){str.push( {mana :'sg' })}
+        else if(obj === "C" && colors[obj]){str.push( {mana :'scl' })}
+        else if(obj === "R" && colors[obj]){str.push( {mana :'sr' })}
+        else if(obj === "U" && colors[obj]){str.push( {mana :'su' })}
+        else if(obj === "W" && colors[obj]){str.push( {mana :'sw' })}
+    }
+    return str;
+}
+
+getColorsListFromArchetypes = function(DecksArchetypes_id){
+    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
+
+    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
+        for(var color in obj.colors){
+            colors[color] += obj.colors[color];
+        }
+    });
+
+    var str = [];
+    for(var obj in colors){
+        if(obj === "B" && colors[obj]){str.push( {mana :'b' })}
         else if(obj === "G" && colors[obj]){str.push( {mana :'g' })}
         else if(obj === "C" && colors[obj]){str.push( {mana :'c' })}
         else if(obj === "R" && colors[obj]){str.push( {mana :'r' })}
@@ -101,65 +146,65 @@ getCssColorsFromArchetypes = function(DecksArchetypes_id){
     return str;
 }
 
-
 getManaCss = function(value){
-    var manacost = _CardDatabase.findOne({name : value}).manacost;
-    var manaRegex = new RegExp("(?:B|G|R|U|W)?\/?(?:X|P|B|G|R|U|W|\\d+)(?=})", 'g');
+    var manacost = CardsData.findOne({name : value}).manacost;
+    var manaRegex = new RegExp("(?:B|C|G|R|U|W)?\/?(?:X|P|B|C|G|R|U|W|\\d+)(?=})", 'g');
 
     var str = [];
     var res;
 
     while((res = manaRegex.exec(manacost)) !== null) {
-        if(res[0] === "X"      ) {str.push({mana :'x' }) }
-        else if(res[0] === "1" ) {str.push({mana :'1' }) }
-        else if(res[0] === "2" ) {str.push({mana :'2' }) }
-        else if(res[0] === "3" ) {str.push({mana :'3' }) }
-        else if(res[0] === "4" ) {str.push({mana :'4' }) }
-        else if(res[0] === "5" ) {str.push({mana :'5' }) }
-        else if(res[0] === "6" ) {str.push({mana :'6' }) }
-        else if(res[0] === "7" ) {str.push({mana :'7' }) }
-        else if(res[0] === "8" ) {str.push({mana :'8' }) }
-        else if(res[0] === "9" ) {str.push({mana :'9' }) }
-        else if(res[0] === "10") {str.push({mana :'10'}) }
-        else if(res[0] === "11") {str.push({mana :'11'}) }
-        else if(res[0] === "12") {str.push({mana :'12'}) }
-        else if(res[0] === "13") {str.push({mana :'13'}) }
-        else if(res[0] === "14") {str.push({mana :'14'}) }
-        else if(res[0] === "15") {str.push({mana :'15'}) }
-        else if(res[0] === "16") {str.push({mana :'16'}) }
-        else if(res[0] === "17") {str.push({mana :'17'}) }
-        else if(res[0] === "18") {str.push({mana :'18'}) }
-        else if(res[0] === "19") {str.push({mana :'19'}) }
-        else if(res[0] === "20") {str.push({mana :'20'}) }
+        if(res[0] === "X"      ) {str.push({mana :'sx' }) }
+        else if(res[0] === "1" ) {str.push({mana :'s1' }) }
+        else if(res[0] === "2" ) {str.push({mana :'s2' }) }
+        else if(res[0] === "3" ) {str.push({mana :'s3' }) }
+        else if(res[0] === "4" ) {str.push({mana :'s4' }) }
+        else if(res[0] === "5" ) {str.push({mana :'s5' }) }
+        else if(res[0] === "6" ) {str.push({mana :'s6' }) }
+        else if(res[0] === "7" ) {str.push({mana :'s7' }) }
+        else if(res[0] === "8" ) {str.push({mana :'s8' }) }
+        else if(res[0] === "9" ) {str.push({mana :'s9' }) }
+        else if(res[0] === "10") {str.push({mana :'s10'}) }
+        else if(res[0] === "11") {str.push({mana :'s11'}) }
+        else if(res[0] === "12") {str.push({mana :'s12'}) }
+        else if(res[0] === "13") {str.push({mana :'s13'}) }
+        else if(res[0] === "14") {str.push({mana :'s14'}) }
+        else if(res[0] === "15") {str.push({mana :'s15'}) }
+        else if(res[0] === "16") {str.push({mana :'s16'}) }
+        else if(res[0] === "17") {str.push({mana :'s17'}) }
+        else if(res[0] === "18") {str.push({mana :'s18'}) }
+        else if(res[0] === "19") {str.push({mana :'s19'}) }
+        else if(res[0] === "20") {str.push({mana :'s20'}) }
 
-        else if(res[0] === "B" ) {str.push({mana :'b' }) }
-        else if(res[0] === "G" ) {str.push({mana :'g' }) }
-        else if(res[0] === "R" ) {str.push({mana :'r' }) }
-        else if(res[0] === "U" ) {str.push({mana :'u' }) }
-        else if(res[0] === "W" ) {str.push({mana :'w' }) }
+        else if(res[0] === "B" ) {str.push({mana :'sb' }) }
+        else if(res[0] === "C" ) {str.push({mana :'scl'}) }
+        else if(res[0] === "G" ) {str.push({mana :'sg' }) }
+        else if(res[0] === "R" ) {str.push({mana :'sr' }) }
+        else if(res[0] === "U" ) {str.push({mana :'su' }) }
+        else if(res[0] === "W" ) {str.push({mana :'sw' }) }
 
-        else if(res[0] === "2B") {str.push({mana :'2b'}) }
-        else if(res[0] === "2G") {str.push({mana :'2g'}) }
-        else if(res[0] === "3R") {str.push({mana :'3r'}) }
-        else if(res[0] === "2U") {str.push({mana :'2u'}) }
-        else if(res[0] === "2W") {str.push({mana :'2w'}) }
+        else if(res[0] === "2B") {str.push({mana :'s2b'}) }
+        else if(res[0] === "2G") {str.push({mana :'s2g'}) }
+        else if(res[0] === "3R") {str.push({mana :'s3r'}) }
+        else if(res[0] === "2U") {str.push({mana :'s2u'}) }
+        else if(res[0] === "2W") {str.push({mana :'s2w'}) }
 
-        else if(res[0] === "B/P"){str.push({mana :'bp'}) }
-        else if(res[0] === "G/P"){str.push({mana :'gp'}) }
-        else if(res[0] === "R/P"){str.push({mana :'rp'}) }
-        else if(res[0] === "U/P"){str.push({mana :'up'}) }
-        else if(res[0] === "W/P"){str.push({mana :'wp'}) }
+        else if(res[0] === "B/P"){str.push({mana :'sbp'}) }
+        else if(res[0] === "G/P"){str.push({mana :'sgp'}) }
+        else if(res[0] === "R/P"){str.push({mana :'srp'}) }
+        else if(res[0] === "U/P"){str.push({mana :'sup'}) }
+        else if(res[0] === "W/P"){str.push({mana :'swp'}) }
 
-        else if(res[0] === "B/G"){str.push({mana :'bg'}) }
-        else if(res[0] === "B/R"){str.push({mana :'br'}) }
-        else if(res[0] === "G/U"){str.push({mana :'gu'}) }
-        else if(res[0] === "G/W"){str.push({mana :'gw'}) }
-        else if(res[0] === "R/G"){str.push({mana :'rg'}) }
-        else if(res[0] === "R/W"){str.push({mana :'rw'}) }
-        else if(res[0] === "U/B"){str.push({mana :'ub'}) }
-        else if(res[0] === "U/R"){str.push({mana :'ur'}) }
-        else if(res[0] === "W/B"){str.push({mana :'wb'}) }
-        else if(res[0] === "W/U"){str.push({mana :'wu'}) }
+        else if(res[0] === "B/G"){str.push({mana :'sbg'}) }
+        else if(res[0] === "B/R"){str.push({mana :'sbr'}) }
+        else if(res[0] === "G/U"){str.push({mana :'sgu'}) }
+        else if(res[0] === "G/W"){str.push({mana :'sgw'}) }
+        else if(res[0] === "R/G"){str.push({mana :'srg'}) }
+        else if(res[0] === "R/W"){str.push({mana :'srw'}) }
+        else if(res[0] === "U/B"){str.push({mana :'sub'}) }
+        else if(res[0] === "U/R"){str.push({mana :'sur'}) }
+        else if(res[0] === "W/B"){str.push({mana :'swb'}) }
+        else if(res[0] === "W/U"){str.push({mana :'swu'}) }
     }
     return str;
 }
@@ -178,17 +223,17 @@ Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
 });
 
 Template.registerHelper("fixForLink", function() {
-    var phrase = this.name ? this.name.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+    var phrase = this.name ? replaceTokenWithDash(this.name) : replaceTokenWithDash(this.archetype);
     return phrase;
 });
 
 Template.registerHelper("fixForLinkArchetype", function() {
-    var phrase = this.name ? this.name.replace(/ /g, "-") : this.name.replace(/ /g, "-");
+    var phrase = this.name ? replaceTokenWithDash(this.name) : replaceTokenWithDash(this.name);
     return phrase;
 });
 
 Template.registerHelper("replaceSpaceForHyphen", function() {
-    var phrase = this.archetype ? this.archetype.replace(/ /g, "-") : this.archetype.replace(/ /g, "-");
+    var phrase = this.archetype ? replaceTokenWithDash(this.archetype) : replaceTokenWithDash(this.archetype);
     return phrase;
 });
 
@@ -246,11 +291,11 @@ Template.registerHelper('capitalizeEvents', function(){
 });
 
 Template.registerHelper('deckPosition', function(){
-    if(this.eventType == "ptq"){
+    if(this.position){
         var s=["th","st","nd","rd"],
             v=this.position%100;
         return this.position+(s[(v-20)%10]||s[v]||s[0]);
-    } else if(this.eventType == "daily"){
+    } else{
         return this.victory + "-" + this.loss;
     }
 
@@ -286,4 +331,12 @@ Template.registerHelper('toFixed', function(string){
 
 absoluteValue = function(string){
     return Math.abs(parseFloat(string));
+}
+
+replaceTokenWithDash = function(string){
+    return string.replace(/[ &']/g, "-");
+}
+
+replaceDashWithDotForRegex = function(string){
+    return string.replace(/[-']/g, ".");
 }

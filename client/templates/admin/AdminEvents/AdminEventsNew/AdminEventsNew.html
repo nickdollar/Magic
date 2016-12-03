@@ -1,7 +1,53 @@
 <template name="AdminEventsNew">
-    <button class="js-addOldEvents">Get 5 More Days</button>
+
+    <form>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="standard" checked="checked">
+                Standard
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="modern">
+                Modern
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="legacy">
+                Legacy
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="format" role="radio" value="vintage">
+                Vintage
+            </label>
+        </div>
+    </form>
+
+    <button class="js-addOldLeagueEvents">Get 2 More Days League</button>
     <button class="js-getNew">get new</button>
-    <button class="js-fixAllThings">fixall</button>
+    <button class="js-fixAllThingsLeagueDaily">fixall league/daily by format</button>
+    <button class="js-fixOldEvents">fixOldEventsWizards</button>
+
+
+    <div>
+        <button class="js-addOldMTGOPTQEvents">Get 30 More Days PTQ</button>
+        <button class="js-fixAllMTGOPTQThings">fixall MTGOPTQ</button>
+
+    </div>
+
+    <div>
+        <button class="js-addGPEvents">Get ALL pro tour More Days PTQ</button>
+        <button class="js-fixAllGPEvents">fixall Events GP EVENTS</button>
+    </div>
+    <div>
+        <button class="js-addStarCityGamesEvents">Get starcitygames by format</button>
+        <button class="js-fixAllStarCityGamesByFormat">Fix all Starcitygames by Format</button>
+    </div>
+
 
     {{> tabular table=TabularTables.events selector=selector class="table table-striped table-bordered table-condensed"}}
 

@@ -1,18 +1,5 @@
 import cheerio from "cheerio";
 
-fixAllEvents = function(){
-    var decksWithoutHtml = Events.find({$or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
-
-    decksWithoutHtml.forEach(function(obj){
-        eventLeagueDownloadHTML(obj._id);
-    });
-
-    var decksWithoutDecks = Events.find({"validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
-
-    decksWithoutDecks.forEach(function(obj){
-        eventLeagueExtractDecks(obj._id);
-    });
-};
 
 
 eventLeagueGetInfoOld = function(format, days){
@@ -30,7 +17,16 @@ eventLeagueGetInfoOld = function(format, days){
         return;
     }
 
-    var event = Events.findOne({eventType : "league"}, {sort : {date : 1}, limit : 1});
+    var eventType = "";
+
+    if(format == 'vintage'){
+        eventType = "daily";
+    }else{
+        eventType = "league";
+    }
+
+    var event = Events.findOne({format : format, eventType : eventType}, {sort : {date : 1}, limit : 1});
+
     var date = null;
     if(event==null){
         date = new Date();
@@ -42,21 +38,20 @@ eventLeagueGetInfoOld = function(format, days){
     date.setHours(0,0,0,0);
 
     for(var i = 0; i < days ; i++){
-
         var day = pad(date.getDate());
         var month = pad(date.getMonth()+1);
         var year = date.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = Meteor.http.get(url)
+        var res = Meteor.http.get(url);
 
         Events.update(
-            {type : "league", date : date, format : format},
+            {type : eventType, date : date, format : format},
             {
                 $setOnInsert : {
                     date: date,
                     format : format,
                     eventName : leagueTypes[format],
-                    eventType: "league",
+                    eventType: eventType,
                     url : url
                 }
             },
@@ -71,12 +66,12 @@ eventLeagueGetInfoOld = function(format, days){
             if(deckMeta.length == 0){
                 console.log("Page Doesn't exists");
             }else{
+                console.log("page exists");
                 upsert = true;
             }
-            console.log("page exists");
         }
         Events.update(
-            {eventType : "league", date : date, format : format},
+            {eventType : eventType, date : date, format : format},
             {
                 $set : {
                     "validation.exists" : upsert
@@ -87,7 +82,7 @@ eventLeagueGetInfoOld = function(format, days){
     }
 }
 
-eventLeagueGetInfoNew = function(format){
+eventLeagueGetNewEvents = function(format){
     if(format == null){
         console.log("format null");
         return;
@@ -98,8 +93,15 @@ eventLeagueGetInfoNew = function(format){
         return;
     }
 
+    var eventType = "";
 
-    var event = Events.findOne({eventType : "league"}, {sort : {date : -1}, limit : 1});
+    if(format == 'vintage'){
+        eventType = "daily";
+    }else{
+        eventType = "league";
+    }
+
+    var event = Events.findOne({eventType : eventType}, {sort : {date : -1}, limit : 1});
     var date = null;
     if(event==null){
         date = new Date();
@@ -118,13 +120,13 @@ eventLeagueGetInfoNew = function(format){
         var res = Meteor.http.get(url);
 
         Events.update(
-            {type : "league", date : date, format : format},
+            {type : eventType, date : date, format : format},
             {
                 $setOnInsert : {
                     date: date,
                     format : format,
                     eventName : leagueTypes[format],
-                    eventType: "league",
+                    eventType: eventType,
                     url : url
                 }
             },
@@ -144,7 +146,7 @@ eventLeagueGetInfoNew = function(format){
                 console.log("page exists");
             }
             Events.update(
-                {eventType : "league", date : date, format : format},
+                {eventType : eventType, date : date, format : format},
                 {
                     $set : {
                         "validation.exists" : upsert
@@ -155,8 +157,8 @@ eventLeagueGetInfoNew = function(format){
         }
 }
 
-eventLeagueDownloadHTML = function(_id){
-    var event = Events.findOne({_id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
+eventLeagueDailyDownloadHTML = function(_id){
+    var event = Events.findOne({eventType : {$in : ["league", "daily"]}, _id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
 
     if(event == null) {
         return;
@@ -172,7 +174,7 @@ eventLeagueDownloadHTML = function(_id){
         if(deckMeta.length == 0){
             console.log("event not found");
             Events.update(
-                {type : "league", date : event.date, format : event.format},
+                {_id : _id},
                 {
                     $set : {
                         "validation.htmlDownloaded" : false
@@ -181,11 +183,20 @@ eventLeagueDownloadHTML = function(_id){
             );
         }else{
             console.log("event found");
-            Events.update(
-                {type : "league", date : event.date, format : event.format},
+            EventsHtmls.update(
+                {Events_id : _id},
                 {
                     $set : {
                         html : $(deckMeta).html(),
+                    }
+                },
+                {upsert : true}
+            );
+
+            Events.update(
+                {_id : _id},
+                {
+                    $set : {
                         "validation.htmlDownloaded" : true
                     }
                 }
@@ -194,10 +205,15 @@ eventLeagueDownloadHTML = function(_id){
     }
 };
 
-eventLeagueExtractDecks = function(_id){
+eventLeagueDailyExtractDecks = function(_id){
     var event = Events.findOne({_id : _id, "validation.exists" : true, "validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
+
+
     if(event == null) return;
-    var $ = cheerio.load(event.html);
+    DecksData.remove({Events_id : event._id});
+
+    var eventHtml = EventsHtmls.findOne({Events_id : _id});
+    var $ = cheerio.load(eventHtml.html);
     var decks = $('.bean--wiz-content-deck-list');
 
     for(var i = 0 ; i < decks.length; i++){
@@ -213,57 +229,74 @@ eventLeagueExtractDecks = function(_id){
             draw : information.score.draw
         };
 
-        var cards = $(decks[i]).find('.sorted-by-overview-container .row');
-        var deckCards = {main : [], sideboard : []};
-        var mainDeckQuantity = 0;
-        for(var j = 0; j < cards.length; j++){
-            var quantity = parseInt($(cards[j]).find('.card-count').text());
-            mainDeckQuantity += quantity; 
-            var name = $(cards[j]).find('.card-name').text();
+        var mainCards = $(decks[i]).find('.sorted-by-overview-container .row');
+        var main = [];
+        var totalMain = 0;
+        for(var j = 0; j < mainCards.length; j++){
+            var quantity = parseInt($(mainCards[j]).find('.card-count').text());
+            totalMain += quantity;
+            var name = $(mainCards[j]).find('.card-name').text();
             name = fixCards(name);
-            deckCards.main.push(
-                {
-                    name : name,
-                    quantity : quantity
-                }
-            );
+            if(CardsData.find({ name : name}).count()){
+                main.push(
+                    {
+                        name : name,
+                        quantity : quantity
+                    }
+                );
+            }else{
+                main.push(
+                    {
+                        name : name,
+                        quantity : quantity,
+                        wrongName : true
+                    }
+                );
+            }
         }
 
-        var sideboard = $(decks[i]).find('.sorted-by-sideboard-container .row');
-        var sideboardQuantity = 0;
-        for(j = 0; j < sideboard.length; j++){
-            var quantity = parseInt($(sideboard[j]).find('.card-count').text());
-            sideboardQuantity += quantity;
-            var name = $(sideboard[j]).find('.card-name').text();
+        var sideboardCards = $(decks[i]).find('.sorted-by-sideboard-container .row');
+        var totalSideboard = 0;
+        var sideboard = [];
+        for(j = 0; j < sideboardCards.length; j++){
+            var quantity = parseInt($(sideboardCards[j]).find('.card-count').text());
+            totalSideboard += quantity;
+            var name = $(sideboardCards[j]).find('.card-name').text();
             name = fixCards(name);
-            deckCards.sideboard.push(
-                {
-                    name : name,
-                    quantity : quantity
-                }
-            );
+            if(CardsData.find({ name : name}).count()){
+                sideboard.push(
+                    {
+                        name : name,
+                        quantity : quantity
+                    }
+                );
+            }else{
+                sideboard.push(
+                    {
+                        name : name,
+                        quantity : quantity,
+                        wrongName : true
+                    }
+                );
+            }
         }
-        data.totalMain = mainDeckQuantity;
-        data.main = deckCards.main;
-        data.totalSideboard = sideboardQuantity;
-        data.sideboard = deckCards.sideboard;
-        var colors = setUpColorForDeckName(deckCards);
+
+
+        data.totalMain = totalMain;
+        data.main = main;
+        data.totalSideboard = totalSideboard;
+        data.sideboard = sideboard;
+        var colors = setUpColorForDeckName(main);
         data.colors = colors;
-        DecksData.update(
-            {Events_id : data.Events_id, player : data.player},
-            {
-                $setOnInsert : data,
-                $set : data
-            },
-            {upsert : true}
-        );
+        DecksData.insert(data);
+
     }
 
     Events.update(
-        {type : "league", date : event.date, format : event.format},
+        {_id : event._id},
         {
             $set : {
-                "validation.extractDecks" : true
+                "validation.extractDecks" : true, decks : decks.length
             }
         }
     );
@@ -273,6 +306,25 @@ var leagueTypes = {
     modern : "competitive-modern-constructed-league",
     standard : "competitive-standard-constructed-league",
     pauper : "pauper-constructed-league",
+    legacy : "competitive-legacy-constructed-league",
     vintage : "vintage-daily",
-    legacy : "vintage-daily"
+}
+
+
+getDeckInfo = function(information){
+    var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
+    var playerPatt = /^(.*?) \(/;
+    var digitPatt = /\d+/g;
+    var temp = {};
+    var score = information.match(scorePatt)[0];
+    var results = score.match(digitPatt);
+    temp.player = information.match(playerPatt)[1];
+
+    if(results.length==2){
+        temp.score = {victory : parseInt(results[0]), loss : parseInt(results[1]), draw : 0}
+    }else if(results.length==3){
+        temp.score = {victory : parseInt(results[0]), draw : parseInt(results[1]), loss : parseInt(results[2])}
+    }
+    console.log(temp);
+    return temp;
 }

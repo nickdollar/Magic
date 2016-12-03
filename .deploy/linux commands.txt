@@ -1,0 +1,24 @@
+#!/bin/bash
+# Delete all containers
+docker rm $(docker ps -a -q)
+# Delete all images
+docker rmi $(docker images -q)
+
+
+sudo usermod -aG docker $USER
+docker run hello-world
+sudo groupadd docker
+
+
+
+4d690fa98655: Pull complete
+a3ed95caeb02: Pull complete
+0638f01c6191: Pull complete
+086f3bb36259: Extracting 
+
+service --status-all
+
+
+docker exec -it [container-id] bash
+
+Usage:  docker stop [OPTIONS] 10b193c369e5

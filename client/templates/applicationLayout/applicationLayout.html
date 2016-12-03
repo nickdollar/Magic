@@ -1,24 +1,31 @@
 <template name="ApplicationLayout">
-    <div class="header">
-        {{>topMenu}}
-        {{>typeMenu}}
-    </div>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
-    <div class="container content">
-        {{>yield}}
-        {{>modals}}
-    </div>
+    {{#if subscriptionsReady}}
+        <div class="header">
+            {{>topMenu}}
+            {{>typeMenu}}
+        </div>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
+        <div class="container content">
+            {{> Template.dynamic template=main}}
+            {{>modals}}
+        </div>
+    {{/if}}
+
+    <!--<div>{{> React component=UserAvatar}}</div>-->
+
 </template>
 
-<!--<template name="audit">-->
-    <!--<div class="row">-->
-        <!--<div class="col-xs-12">-->
-            <!--<div class="row">-->
-                <!--{{>auditEventsTable}}-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</template>-->
+<template name="main">
+    <div class="row">
+        {{>sevenDayCalendar}}
+    </div>
+    <div class="row">
+        {{>latestAddedPlaylist}}
+    </div>
+    <div class="row">
+        {{>latestDecks}}
+    </div>
+</template>
 
 <template name="modals">
     {{>pastEventsVodModal}}
@@ -28,137 +35,28 @@
 </template>
 
 <template name="metaFP">
-    <div class="row">
-        {{>metaAllHeader}}
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            {{#each metas}}
-                <div class="row">
-                    {{> metaFormatHeader format=this}}
-                </div>
-                <div class="row boxesSections">
-                    <div class="col-xs-4">
-                        <div class="row">
-                            {{>deckMetaBox this}}
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="row">
-                            {{>cardMetaBox this}}
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="row">
-                            {{>eventMetaBox this}}
-                        </div>
-                    </div>
-                    <!--<div class="col-xs-3">-->
-                        <!--<div class="row">-->
-                            <!--{{>lastestMetaBox this}}-->
-                        <!--</div>-->
-                    <!--</div>-->
-                </div>
-            {{/each}}
-        </div>
-    </div>
+    <h1>META: Select a Format</h1>
 </template>
 
 <template name="deckFP">
-    {{#each metas}}
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    {{>decksFormatChanges format = this}}
-                </div>
-                <div class="row">
-                   <div class="col-xs-4">
-                        {{>newPlayLists}}
-                    </div>
-                    <div class="col-xs-4">
-                        {{>newArticles}}
-                    </div>
-                    <div class="col-xs-4">
-                        {{>newPrimesAndUpdates}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {{/each}}
-</template>
-
-<template name="selectADeck">
-    <div class="row">
-        <div class="col-xs-2">
-            <div class="row">
-                {{>narrowSearch}}
-            </div>
-        </div>
-        <div class="col-xs-10">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
-                        {{#if deckOrArchetype}}
-                            {{>deckList}}
-                        {{else}}
-                            {{>archetypesList}}
-                        {{/if}}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="row">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1>Select a Format</h1>
 </template>
 
 <template name="deckSelected">
-    <div class="deckSelected">
+    <div class="row">
+        {{>archetypeDeckName}}
+    </div>
+    {{#if isSelected}}
         <div class="row">
-            {{>archetypeDeckName}}
-        </div>
-        {{#if isSelected}}
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="row">
-                    {{>exampleDeck_COL}}
-                </div>
-            </div>
-        </div>
+            {{>exampleDeck_COL}}
+         </div>
         <div class="row">
             <div class="col-xs-12">
                 {{>deckPlayList}}
             </div>
         </div>
-        <!--<div class="row">-->
-            <!--<div class="col-xs-12">-->
-                <!--<div class="row">-->
-                    <!--{{>deckcardchangesBar}}-->
-                <!--</div>-->
-                <!--<div class="row">-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<div class="row">-->
-                            <!--{{>cardsPercentageMain}}-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-6">-->
-                        <!--<div class="row">-->
-                            <!--{{>cardsPercentageSideboard}}-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        {{/if}}
-    </div>
+    {{/if}}
 </template>
-
-
 
 <template name="selectedMeta">
     <div class="row">
@@ -168,14 +66,8 @@
             </div>
         </div>
         <div class="col-xs-4" >
-            <!--<div class="row">-->
-                <!--{{>eventsTableHeader}}-->
-            <!--</div>-->
-            <!--<div class="row">-->
-                <!--{{>eventsTable}}-->
-            <!--</div>-->
             <div class="row">
-                {{>cardTable}}
+                {{>metaCardTable}}
             </div>
             <div class="row">
                 {{>newsTable}}
@@ -184,154 +76,16 @@
     </div>
 </template>
 
-<template name="searchedDeck">
-    <div class="col-xs-12">
-        <div class="row">
-            <button type="submit" class="btn btn-default getEvents" style="display: inline;">getEvents</button>
-        </div>
-        <div class="row">
-            <div class="col-xs-3 col-md-2">
-                {{>LISTdeckwithoutname_COL}}
-            </div>
-            <div class="col-xs-9 col-md-10">
-                {{#if selectedDeck}}
-                    <div class="row">
-                        <div class="col-xs-12 col-md-9">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    {{>deckList_COL}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                {{>deckPercentageOptions_COL}}
-                            </div>
-                        </div>
-                        <div class="hidden-xs hidden-sm col-md-3">
-                            <div class="row">
-                                {{>deckPicture_COL}}
-                            </div>
-                        </div>
-                    </div>
-                {{/if}}
-            </div>
-        </div>
-    </div>
+<template name="eventsFP">
+    <h1>Select a Format</h1>
 </template>
-
 
 <template name="events">
     <div class="row">
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-12" id="pastEvents">
-                    <div class="row">
-                        {{>pastStreamedEventsHeader}}
-                    </div>
-                    <div class="row">
-                        {{>pastStreamedEventsTable}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-12" id="#futuroEvents">
-                    <div class="row">
-                        {{>futureEventsHeader}}
-                    </div>
-                    <div class="row">
-                        {{>futureEventsTable}}
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{>EventsTables}}
     </div>
     <div class="row">
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-12" id="pastEvents">
-                    <div class="row">
-                        {{>MTGOEventsHeader}}
-                    </div>
-                    <div class="row">
-                        {{>MTGOEventsTable}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-12" id="#futuroEvents">
-                    <div class="row">
-                        {{>othersEventsHeader}}
-                    </div>
-                    <div class="row">
-                        {{>othersEventsTable}}
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{>eventsCalendar}}
     </div>
 </template>
 
-<template name="selectedEvent">
-    <div id="eventInfoBar" class="row">
-        {{>eventInfoBar}}
-    </div>
-    <div id="selectedEvents" class="row">
-        <div class="col-xs-3">
-            <div class="row">
-                {{>selectedEventBar}}
-            </div>
-        </div>
-        <div class="col-xs-9">
-            <div class="row">
-                {{>selectedEventDeck}}
-            </div>
-        </div>
-    </div>
-</template>
-
-<template name="dashBoard">
-    <div class="row">
-        <div class="col-xs-12">
-            {{>eventAuditHeader}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            {{>eventsAudit}}
-        </div>
-    </div>
-
-</template>
-
-<template name="dBArchetypes">
-    <div class="row">
-        <div class="col-xs-12">
-            {{>organizeArchetypes}}
-        </div>
-    </div>
-</template>
-
-<template name="dBDeckNames">
-    <div class="row">
-        <div class="col-xs-12">
-            {{>dbDecksNames}}
-        </div>
-    </div>
-    <!--<div class="row">-->
-        <!--<div class="col-xs-12">-->
-            <!--{{>decksWithoutNames}}-->
-        <!--</div>-->
-    <!--</div>-->
-
-</template>
-
-<template name="deckWithoutNames">
-    <div class="row">
-        <div class="col-xs-12">
-            {{>decksWithoutNames}}
-        </div>
-    </div>
-</template>

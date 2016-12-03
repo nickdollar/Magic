@@ -5,6 +5,6 @@ Template.AdminCardsDataEdit.helpers({
         return Schemas.CardsData;
     },
     documentValue : function(){
-        return CardsData.findOne({_id : Router.current().params._id});
+        return CardsData.findOne({_id : FlowRouter.getParam("_id")});
     }
 });

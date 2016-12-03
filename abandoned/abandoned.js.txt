@@ -2907,3 +2907,367 @@ Router.route('deckWithoutNames', {
     }
 });
 
+ "click .upVote" : function(evt, tmp){
+        var that = this;
+        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
+            return currentValue._id == that._id
+        });
+
+        if(Template.instance().playlistsInfo.get()[indexThat].likes == null){
+            Template.instance().playlistsInfo.get()[indexThat].likes = [];
+        }
+
+        if(Template.instance().playlistsInfo.get()[indexThat].dislikes == null){
+            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
+        }
+
+        Template.instance().playlistsInfo.get()[indexThat].likes.push({_id : Meteor.user()._id});
+        Template.instance().playlistsInfo.get()[indexThat].likeCount++;
+
+
+        if(Template.instance().playlistsInfo.get()[indexThat].dislikes.length == 1){
+            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
+            Template.instance().playlistsInfo.get()[indexThat].likeCount++;
+        }
+        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
+        Meteor.call("upADeckPlayListVote", this);
+    },
+    "click .removeUpVote" : function(evt, tmp){
+        var that = this;
+        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
+            return currentValue._id == that._id
+        });
+
+        Template.instance().playlistsInfo.get()[indexThat].likes = [];
+        Template.instance().playlistsInfo.get()[indexThat].likeCount--;
+
+        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
+        Meteor.call("removeUpADeckPlayListVote", this);
+    },
+    "click .downVote" : function(evt, tmp){
+        var that = this;
+        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
+            return currentValue._id == that._id
+        });
+
+        if(Template.instance().playlistsInfo.get()[indexThat].likes == null){
+            Template.instance().playlistsInfo.get()[indexThat].likes = [];
+        }
+
+        if(Template.instance().playlistsInfo.get()[indexThat].dislikes == null){
+            Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
+        }
+
+        Template.instance().playlistsInfo.get()[indexThat].dislikes.push({_id : Meteor.user()._id});
+        Template.instance().playlistsInfo.get()[indexThat].likeCount--;
+
+
+        if(Template.instance().playlistsInfo.get()[indexThat].likes.length == 1){
+            Template.instance().playlistsInfo.get()[indexThat].likes = [];
+            Template.instance().playlistsInfo.get()[indexThat].likeCount--;
+        }
+        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
+        Meteor.call("downADeckPlayListVote", this);
+    },
+    "click .removeDownVote" : function(evt, tmp){
+
+        var that = this;
+        var indexThat = Template.instance().playlistsInfo.get().findIndex(function(currentValue, index, arr){
+            return currentValue._id == that._id
+        });
+
+        Template.instance().playlistsInfo.get()[indexThat].dislikes = [];
+        Template.instance().playlistsInfo.get()[indexThat].likeCount++;
+
+        Template.instance().playlistsInfo.set(Template.instance().playlistsInfo.get());
+
+        Meteor.call("removeDownADeckPlayListVote", this);
+    }
+
+        upADeckPlayListVote : function(playlist){
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    dislikes : {_id : Meteor.user()._id}
+                },{
+                    $inc : {likeCount : 1},
+                    $pull : {dislikes : {_id : Meteor.user()._id}}
+                }
+            )
+
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    likes : {$ne : Meteor.user()._id}
+                },{
+                    $inc : {likeCount : 1},
+                    $push : {likes : {_id : Meteor.user()._id}}
+                }
+            )
+        },
+        removeUpADeckPlayListVote : function(playlist){
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    likes : {_id : Meteor.user()._id}
+                },{
+                    $inc : {likeCount : -1},
+                    $pull : {likes : {_id : Meteor.user()._id}}
+                }
+            )
+        },
+        downADeckPlayListVote : function(playlist){
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    likes : {_id : Meteor.user()._id}
+                },{
+                    $inc : {likeCount : -1},
+                    $pull : {likes : {_id : Meteor.user()._id}}
+                }
+            )
+
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    dislikes : {$ne : {_id : Meteor.user()._id}}
+                },{
+                    $inc : {likeCount : -1},
+                    $push : {dislikes : {_id : Meteor.user()._id}}
+                }
+            )
+        },
+        removeDownADeckPlayListVote : function(playlist){
+            DecksNamesPlaylists.update(
+                {
+                    _id : playlist._id,
+                    dislikes : {_id : Meteor.user()._id}
+                },{
+                    $inc : {likeCount : 1},
+                    $pull : {dislikes : {_id : Meteor.user()._id}}
+                }
+            )
+        },
+
+
+        insertANewVideo = function(youtubeLink){
+            var idRegex = new RegExp('(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})', 'i');
+            var id = youtubeLink.match(idRegex)[1];
+
+            var snippet = getVideoInfo(id).items[0].snippet;
+
+            var information = {};
+            information.channel = snippet.channelTitle;
+            information.title = snippet.title;
+            information.date = new Date(snippet.publishedAt);
+            information.link = youtubeLink;
+            information.thumbnail = snippet.thumbnails.medium.url;
+
+            Images.insert(information.thumbnail, function (err, fileObj) {
+                // Inserted new doc with ID fileObj._id, and kicked off the data upload using HTTP
+            });
+        }
+
+
+        makeDeck = function(){
+            console.log("Make meta start");
+            var decksQuery = _Deck.find({}).fetch();
+
+            decksQuery.forEach(function(decksObj){
+                var totalMain = 0;
+                var totalSideboard = 0;
+                var mainDeckQuery = _DeckCards.find({_deckID : decksObj._id, sideboard : false}).map(function(deckCardsObj){
+                    totalMain += parseInt(deckCardsObj.quantity);
+                    return {name : deckCardsObj.name, quantity : parseInt(deckCardsObj.quantity)};
+                });
+                var sideboardsQuery = _DeckCards.find({_deckID : decksObj._id, sideboard : true}).map(function(deckCardsObj){
+                    totalSideboard += parseInt(deckCardsObj.quantity);
+                    return {name : deckCardsObj.name, quantity : parseInt(deckCardsObj.quantity)};
+                });
+
+                var baseId = {_eventID : decksObj._eventID, date : decksObj.date, player : decksObj.player, eventType : decksObj.eventType };
+                var results = {
+                    format : decksObj.format, colors : decksObj.colors, name : decksObj.name, totalMain : totalMain,
+                    totalSideboard: totalSideboard, main : mainDeckQuery, sideboard : sideboardsQuery
+                };
+                var allResults = {};
+                for(var key in baseId){
+                    allResults[key] = baseId[key];
+                }
+
+                for(var key in results){
+                    allResults[key] = results[key];
+                }
+
+                if(typeof decksObj.position !== "undefined"){
+                    results["position"] = decksObj.position;
+                }else{
+                    results["victory"] = decksObj.victory;
+                    results["draw"] = decksObj.draw;
+                    results["loss"] = decksObj.loss;
+                }
+                _eventDecks.update(baseId,
+                    {
+                        $set : results,
+                        $setOnInsert : allResults
+                    },
+                    {
+                        upsert : true
+                    }
+                );
+            });
+        };
+
+        weeklyCardChange = function(){
+
+            console.log("WeeklyDeckChange Start");
+            var options = {types : ["daily4_0", "daily3_1", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]},
+                typesCombinations = positionCombinationsOptions(options.types),
+                dates = getDateSyntax(options.dates),
+                format = "modern";
+
+            dates.forEach(function(datesObj){
+                typesCombinations.forEach(function(typesCombinationsObj){
+                    var allDecksQuery = _eventDecks.find({format : format, $or : typesCombinationsObj.values, date : {$gte : datesObj.date }}).fetch();
+                    var cardsValueMainboard = [];
+                    var cardsValueSideboard = [];
+                    allDecksQuery.forEach(function(allDecksObj){
+                        allDecksObj.main.forEach(function(mainObj){
+                            var card = cardsValueMainboard.find(function(mainObjObj){
+                                return mainObjObj.name === mainObj.name;
+                            });
+                            if(card == null){
+                                cardsValueMainboard.push({name : mainObj.name, quantity : mainObj.quantity, inDecks : 1});
+                            }else{
+                                card.quantity += mainObj.quantity;
+                                card.inDecks += 1;
+                            }
+                        });
+
+                        allDecksObj.sideboard.forEach(function(mainObj){
+                            var card = cardsValueMainboard.find(function(mainObjObj){
+                                return mainObjObj.name === mainObj.name;
+                            });
+                            if(card == null){
+                                cardsValueMainboard.push({name : mainObj.name, quantity : mainObj.quantity, inDecks : 1});
+                            }else{
+                                card.quantity += mainObj.quantity;
+                                card.inDecks += 1;
+                            }
+                        });
+
+                    });
+
+
+
+
+                    cardsValueMainboard.forEach(function(cardsValueMainboardObj){
+                        cardsValueMainboardObj.percentage = cardsValueMainboardObj.inDecks/allDecksQuery.length;
+                        cardsValueMainboardObj.perDeck = cardsValueMainboardObj.quantity/cardsValueMainboardObj.inDecks;
+                    });
+
+
+                    cardsValueSideboard.forEach(function(cardsValueSideboardObj){
+                        cardsValueSideboardObj.percentage = cardsValueSideboardObj.inDecks/allDecksQuery.length;
+                        cardsValueSideboardObj.perDeck = cardsValueSideboardObj.quantity/cardsValueSideboardObj.inDecks;
+                    });
+
+                    cardsValueMainboard.sort(function(a,b){
+                        return b.percentage - a.percentage;
+                    });
+
+                    cardsValueSideboard.sort(function(a,b){
+                        return b.percentage - a.percentage;
+                    });
+
+
+                    var base = 999;
+                    var position = 0;
+                    cardsValueMainboard.forEach(function(cardsValuesMinaboardObj){
+                        var percentage = cardsValuesMinaboardObj.percentage;
+                        if(percentage < base){
+                            position++;
+                            cardsValuesMinaboardObj.position = position;
+                            base = percentage
+
+                        }else if(percentage == base){
+                            cardsValuesMinaboardObj.position = position;
+                        }
+                    });
+
+                    base = 999;
+                    position = 0;
+                    cardsValueSideboard.forEach(function(cardsValueSideboardObj){
+                        var percentage = cardsValueSideboardObj.percentage;
+                        if(percentage < base){
+                            position++;
+                            cardsValueSideboardObj.position = position;
+                            base = percentage
+
+                        }else if(percentage == base){
+                            cardsValueSideboardObj.position = position;
+                        }
+                    });
+
+
+                    var baseId = {date : datesObj.type, typesCombinations : typesCombinationsObj.toString, format : format};
+                    var results = {
+                        decksQuantity : allDecksQuery.length, mainboard : cardsValueMainboard, sideboard : cardsValueSideboard
+                    };
+                    var allResults = {};
+                    for(var key in baseId){
+                        allResults[key] = baseId[key];
+                    }
+
+                    for(var key in results){
+                        allResults[key] = results[key];
+                    }
+
+                    _metaCards.update(baseId,
+                        {
+                            $set : results,
+                            $setOnInsert : allResults
+                        },
+                        {
+                            upsert : true
+                        }
+                    );
+                });
+            });
+            console.log("WeeklyDeckChange End");
+
+        };
+
+
+
+// titleCaps = function(title){
+//     var small = "(a|an|and|as|at|from|but|by|en|for|if|in|of|on|or|the|to|v[.]?|via|vs[.]?)";
+//     var punct = "([!\"#$%&'()*+,./:;<=>?@[\\\\\\]^_`{|}~-]*)";
+//
+//     var parts = [], split = /[:.;?!] |(?: |^)["�]/g, index = 0;
+//
+//     while (true) {
+//         var m = split.exec(title);
+//
+//         parts.push( title.substring(index, m ? m.index : title.length)
+//             .replace(/\b([A-Za-z][a-z.'�]*)\b/g, function(all){
+//                 return /[A-Za-z]\.[A-Za-z]/.test(all) ? all : upper(all);
+//             })
+//             .replace(RegExp("\\b" + small + "\\b", "ig"), lower)
+//             .replace(RegExp("^" + punct + small + "\\b", "ig"), function(all, punct, word){
+//                 return punct + upper(word);
+//             })
+//             .replace(RegExp("\\b" + small + punct + "$", "ig"), upper));
+//
+//         index = split.lastIndex;
+//
+//         if ( m ) parts.push( m[0] );
+//         else break;
+//     }
+//
+//     return parts.join("").replace(/ V(s?)\. /ig, " v$1. ")
+//         .replace(/(['�])S\b/ig, "$1s")
+//         .replace(/\b(AT&T|Q&A)\b/ig, function(all){
+//             return all.toUpperCase();
+//         });
+// };

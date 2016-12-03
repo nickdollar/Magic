@@ -3,6 +3,6 @@ Template.AdminEventsCalendarEdit.helpers({
         return Schemas.EventsCalendar;
     },
     documentValue : function(){
-        return EventsCalendar.findOne({_id : Router.current().params._id});
+        return EventsCalendar.findOne({_id : FlowRouter.getParam("_id")});
     }
 });

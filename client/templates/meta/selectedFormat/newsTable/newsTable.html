@@ -1,5 +1,8 @@
 <template name="newsTable">
-    <div class="metaTableOptions">
+    <div class="newsTable">
+        <div class="metaHeader">
+            <div class="newsTitle"><h4>Last 20 added to Meta</h4></div>
+        </div>
         <!--<div class="optionsHeader">-->
             <!--<div class="buttonsContainer">-->
                 <!--<div class="optionButton">-->
@@ -10,21 +13,21 @@
         <!--<div class="content">-->
             <!--aaasdfsdfsdf-->
         <!--</div>-->
-    <div class="custom-column">
-        <label class="checkbox-inline">
-            <input type="checkbox" role="typeNewCardCheckbox" value="archetypes" checked> Archetypes
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox"  role="typeNewCardCheckbox" value="decks" checked> Deck
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" role="typeNewCardCheckbox" value="cards" checked> Cards
-        </label>
-    </div>
-    </div>
-    <div>
-        <div class="newMetaTable js-appendNewestTable">
-            <table id="newestTable" class="display" cellspacing="0" width="100%"></table>
+        <div class="custom-column">
+            <label class="checkbox-inline">
+                <input type="checkbox" role="typeNewCardCheckbox" value="archetypes" checked> Archetypes
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox"  role="typeNewCardCheckbox" value="decks" checked> Deck
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" role="typeNewCardCheckbox" value="cards" checked> Cards
+            </label>
+        </div>
+        <div>
+            <div class="newsTableTable js-newsTableTable">
+                <table id="newsTableTable" class="table table-sm" cellspacing="0" width="100%"></table>
+            </div>
         </div>
     </div>
 </template>

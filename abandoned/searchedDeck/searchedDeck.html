@@ -1,117 +1,117 @@
-<template name="deckPercentageOptions_COL">
-    {{#if deckName}}
-    <h4 class="modal-title">{{deckName.id}}</h4>
+<!--<template name="deckPercentageOptions_COL">-->
+    <!--{{#if deckName}}-->
+    <!--<h4 class="modal-title">{{deckName.id}}</h4>-->
 
-    <input type="text" name="" class="deckname">
+    <!--<input type="text" name="" class="deckname">-->
 
-    <a href="#" class="btn btn-xs btn-default addNewDeck" >Add New Deck</a>
+    <!--<a href="#" class="btn btn-xs btn-default addNewDeck" >Add New Deck</a>-->
 
-    <table class="deckTable">
-        <tr>
-            {{#each deckName.results}}
-                <td>
-                    <table class="decktableRow">
-                        <tr><td>
-                            {{_deckNameID}}
-                        </td></tr>
-                        <tr><td><a href="#" class="btn btn-xs btn-default selectDeckType" data-deck-name={{this.name}}>
-                            {{name}}:{{value}}%
-                        </a></td></tr>
-                        {{#each matches.positive}}
-                            <tr><td><a class="matchPositive" >{{this}}</a></td></tr>
-                        {{/each}}
-                        {{#each matches.negative}}
-                            <tr><td><a class="matchNegative">{{this}}</a></td></tr>
-                        {{/each}}
-                    </table>
-                </td>
-            {{/each}}
-        </tr>
-    </table>
-        {{else}}
-        loading...
-    {{/if}}
-</template>
+    <!--<table class="deckTable">-->
+        <!--<tr>-->
+            <!--{{#each deckName.results}}-->
+                <!--<td>-->
+                    <!--<table class="decktableRow">-->
+                        <!--<tr><td>-->
+                            <!--{{_deckNameID}}-->
+                        <!--</td></tr>-->
+                        <!--<tr><td><a href="#" class="btn btn-xs btn-default selectDeckType" data-deck-name={{this.name}}>-->
+                            <!--{{name}}:{{value}}%-->
+                        <!--</a></td></tr>-->
+                        <!--{{#each matches.positive}}-->
+                            <!--<tr><td><a class="matchPositive" >{{this}}</a></td></tr>-->
+                        <!--{{/each}}-->
+                        <!--{{#each matches.negative}}-->
+                            <!--<tr><td><a class="matchNegative">{{this}}</a></td></tr>-->
+                        <!--{{/each}}-->
+                    <!--</table>-->
+                <!--</td>-->
+            <!--{{/each}}-->
+        <!--</tr>-->
+    <!--</table>-->
+        <!--{{else}}-->
+        <!--loading...-->
+    <!--{{/if}}-->
+<!--</template>-->
 
-<template name="LISTdeckwithoutname_COL">
-    <div class="LISTdeckwithoutname">
-        {{#each deckOptions}}
-                <div class="row">
-                    <div class="playerName {{#if isActive}}active{{/if}}">
-                        <div>
-                            <a class="noNameDeckID" href="{{pathFor 'debug' format = format deckID = _id }}">{{_id}}</a>
-                        </div>
-                        <div>
-                            <a class="noNameDeckName">{{player}}</a>
-                        </div>
-                    </div>
-                </div>
-        {{/each}}
-    </div>
-</template>
+<!--<template name="LISTdeckwithoutname_COL">-->
+    <!--<div class="LISTdeckwithoutname">-->
+        <!--{{#each deckOptions}}-->
+                <!--<div class="row">-->
+                    <!--<div class="playerName {{#if isActive}}active{{/if}}">-->
+                        <!--<div>-->
+                            <!--<a class="noNameDeckID" href="{{pathFor 'debug' format = format deckID = _id }}">{{_id}}</a>-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--<a class="noNameDeckName">{{player}}</a>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+        <!--{{/each}}-->
+    <!--</div>-->
+<!--</template>-->
 
-<template name="deckList_COL">
-    <div class="row">
-        <div class="newDeckColumn bottom-separator">
-            {{#each cardType}}
-                <div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>
-                {{#each cards options}}
-                    <div class="row no-gutters">
-                        <!--<div class="quantity col-xs-1"></div>-->
-                        <div class="col-xs-7">
-                            <span class="quantity">{{quantity}}</span>
-                            <span class="name">{{name}}</span>
-                        </div>
-                        <div class="col-xs-3">
-                            {{#each getManaCss name ""}}
-                                <div class="mana {{mana}}"></div>
-                            {{/each}}
-                        </div>
-                        <div class="col-xs-1">
-                            $8.74
-                        </div>
-                    </div>
-                {{/each}}
-            {{/each}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="verticalSideboard top-separator">
-            {{#if sideboardQuantity}}
-                <div class="deckBlock">
-                    <div class="col-xs-12">
-                        <div class="row">
-                            <span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>
-                        </div>
-                        <div class="newDeckColumn">
-                            {{#each sideboard}}
-                                <div class="row no-gutters">
-                                    <!--<div class="quantity col-xs-1"></div>-->
-                                    <div class="name col-xs-7">
-                                        <span class="quantity">{{quantity}}</span>
-                                        <span class="name">{{name}}</span>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        {{#each getManaCss name ""}}
-                                            <div class="mana {{mana}}"></div>
-                                        {{/each}}
-                                    </div>
-                                    <div class="col-xs-1">
-                                        $8.74
-                                    </div>
-                                </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-            {{/if}}
-        </div>
-    </div>
-</template>
+<!--<template name="deckList_COL">-->
+    <!--<div class="row">-->
+        <!--<div class="newDeckColumn bottom-separator">-->
+            <!--{{#each cardType}}-->
+                <!--<div class="row no-gutters typeHeader">{{name}} ({{quantity}})</div>-->
+                <!--{{#each cards options}}-->
+                    <!--<div class="row no-gutters">-->
+                        <!--&lt;!&ndash;<div class="quantity col-xs-1"></div>&ndash;&gt;-->
+                        <!--<div class="col-xs-7">-->
+                            <!--<span class="quantity">{{quantity}}</span>-->
+                            <!--<span class="name">{{name}}</span>-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-3">-->
+                            <!--{{#each getManaCss name ""}}-->
+                                <!--<div class="mana {{mana}}"></div>-->
+                            <!--{{/each}}-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-1">-->
+                            <!--$8.74-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--{{/each}}-->
+            <!--{{/each}}-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="verticalSideboard top-separator">-->
+            <!--{{#if sideboardQuantity}}-->
+                <!--<div class="deckBlock">-->
+                    <!--<div class="col-xs-12">-->
+                        <!--<div class="row">-->
+                            <!--<span class="typeHeader">Sideboard ({{sideboardQuantity}})</span>-->
+                        <!--</div>-->
+                        <!--<div class="newDeckColumn">-->
+                            <!--{{#each sideboard}}-->
+                                <!--<div class="row no-gutters">-->
+                                    <!--&lt;!&ndash;<div class="quantity col-xs-1"></div>&ndash;&gt;-->
+                                    <!--<div class="name col-xs-7">-->
+                                        <!--<span class="quantity">{{quantity}}</span>-->
+                                        <!--<span class="name">{{name}}</span>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-xs-3">-->
+                                        <!--{{#each getManaCss name ""}}-->
+                                            <!--<div class="mana {{mana}}"></div>-->
+                                        <!--{{/each}}-->
+                                    <!--</div>-->
+                                    <!--<div class="col-xs-1">-->
+                                        <!--$8.74-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--{{/each}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--{{/if}}-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->
 
-<template name="deckPicture_COL">
-        <div class="deckPicture"></div>
-</template>
+<!--<template name="deckPicture_COL">-->
+        <!--<div class="deckPicture"></div>-->
+<!--</template>-->
 
 
 

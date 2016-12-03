@@ -2,120 +2,28 @@ Template.metaCardTable.onCreated(function(){
     this.options = new ReactiveDict();
 
     // this.options.set("options", ["league5_0", "daily4_0", "daily3_1", "ptqTop8", "ptqTop9_16", "ptqTop17_32"]);
-    this.options.set("eventTypes", ["league5_0"]);
+    this.options.set("eventTypes", ["league5_0", "daily4_0", "daily3_1"]);
     this.options.set("timeSpan", "month");
     this.options.set("mainSideboard", "main");
 
-
-    this.metaDecksNames = new ReactiveVar();
-    this.metaArchetypes = new ReactiveVar();
-
     var that = this;
-
     this.autorun(function(){
         that.options.set("metaCards", false);
         that.subscribe('MetaByFormatTimeSpanOptions',
-                        Router.current().params.format,
-                        that.options.get("timeSpan"),
-                        that.options.get("eventTypes"),
-                        {
-                            onReady : function(){
-                                that.options.set("metaCards", true);
-                                console.log("ready");
-                            }
-                        }
+            FlowRouter.getParam("format"),
+            that.options.get("timeSpan"),
+            that.options.get("eventTypes"),
+            {
+                onReady : function(){
+                    that.options.set("metaCards", true);
+                }
+            }
         );
-    })
-
-    this.autorun(function() {
-
-        if(that.options.get("metaCards"))
-        {
-            if ($.fn.DataTable.isDataTable("#metaCardTable")) {
-                console.log("Destroy Table");
-                $('#metaCardTable').DataTable().clear();
-                $('#metaCardTable').DataTable().destroy({
-                    remove : true
-                });
-                var $table = $("<table>", {id : "metaCardsNames", class : "display", cellSpacing: 0, width : "100%"});
-                $(".js-appendTableMetaCardTable").append($table);
-            }
-
-            var data = null;
-            if(MetaCards.findOne()){
-                data = MetaCards.findOne()[that.options.get("mainSideboard")];
-            }
-
-            // $('#metaCardsNames').DataTable();
-
-
-            $('#metaCardsNames').on( 'draw.dt', function () {
-                $('.js-imagePopOverCards').popover({
-                    html: true,
-                    trigger: 'hover',
-                    placement : "auto right",
-                    content: function () {
-                        var cardName = encodeURI($(this).data('name'));
-                        cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                        var linkBase = "http://plex.homolka.me.uk:10080/";
-                        var finalDirectory = linkBase+cardName+".full.jpg";
-                        console.log(finalDirectory);
-                        // return '<div style="min-height: 200px"><img src="'+finalDirectory + '" /></div>';
-                        return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px" />';
-                    }
-                });
-            })
-            .DataTable({
-                data:  data,
-                pageLength: 10,
-                pagingType: "simple",
-                order : [[1, "desc"]],
-                dom :   "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-12'i>>" +
-                        "<'row'<'col-sm-12'p>>",
-                columns: [
-                    {
-                        title: "Name", render : function(data, type, row, meta){
-                        return '<div class="name js-imagePopOverCards" data-name="' + row._id + '">'+row._id+'</div>'
-                        ;
-                    }},
-                    {
-                        title: "%", render: function (data, type, row, meta) {
-                        return prettifyPercentage(row.count/(MetaCards.findOne().totalDecks));
-                    }
-                    },
-                    {
-                        title: "AVG", render: function (data, type, row, meta) {
-                        return Math.round(row.total/row.count * (10))/10;
-                    }
-                    },
-
-                ]
-            });
-
-        }
     });
 });
 
 Template.metaCardTable.helpers({
-    metaPerWeek : function() {
-        return _metaCards.findOne({typesCombinations : "daily4_0,daily3_1,ptqTop8,ptqTop9_16,ptqTop17_32", date : "year"}).mainboard;
 
-    },
-    previousDisabled : function(){
-        if(Session.get(SV_metaCardListPagination) == 0){
-            return "disabled";
-        }else{
-            return "";
-        }
-    },
-    nextDisabled : function(){
-        if(Session.get(SV_metaCardListPagination) + 10 > Session.get(SV_metaCardLength)){
-            return "disabled";
-        }else{
-            return "";
-        }
-    }
 });
 
 
@@ -174,49 +82,73 @@ Template.metaCardTable.events({
 });
 
 Template.metaCardTable.onRendered(function(){
-    var table = $('#cardTable').DataTable({
-        pageLength : 8,
-        dom: "t",
-        sort : false
-        //"columns": [
-        //    {
-        //        "orderable": false,
-        //        className : "details-control"
-        //    },
-        //    null,
-        //    null,
-        //    { "orderable": false },
-        //    null,
-        //    null,
-        //    null,
-        //    null,
-        //    { "orderable": false }
-        //],
-        //order : [2, 'asc']
+    var that = this;
+    this.autorun(function() {
+
+        if(that.options.get("metaCards"))
+        {
+            if ($.fn.DataTable.isDataTable("#metaCardTableTable")) {
+                console.log("Destroy Table");
+                $('#metaCardTableTable').DataTable().clear();
+                $('#metaCardTableTable').DataTable().destroy({
+                    remove : true
+                });
+                var $table = $("<table>", {id : "metaCardTableTable", class : "table table-sm", cellSpacing: 0, width : "100%"});
+                $(".js-appendTableMetaCardTableTable").append($table);
+            }
+
+            var data = null;
+            if(MetaCards.findOne()){
+                data = MetaCards.findOne({timeSpan : that.options.get("timeSpan")})[that.options.get("mainSideboard")];
+            }
+
+            $('#metaCardTableTable').on( 'draw.dt', function () {
+                $('.js-imagePopOverCards').popover({
+                    html: true,
+                    trigger: 'hover',
+                    placement : "auto right",
+                    content: function () {
+                        var cardName = encodeURI($(this).data('name'));
+                        cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                        var linkBase = "http://plex.homolka.me.uk:10080/";
+                        var finalDirectory = linkBase+cardName+".full.jpg";
+                        // return '<div style="min-height: 200px"><img src="'+finalDirectory + '" /></div>';
+                        return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px" />';
+                    }
+                });
+            })
+                .DataTable({
+                    data:  data,
+                    language : {
+                        //Showing 1 to 10 of 40 entries
+                        info : "_START_ to _END_ of _TOTAL_"
+                    },
+                    pageLength: 8,
+                    pagingType: "simple",
+                    order : [[1, "desc"]],
+                    dom :   "<'row'<'col-sm-12 tableHeight'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    columns: [
+                        {
+                            title: "Name", render : function(data, type, row, meta){
+                            return '<div class="name js-imagePopOverCards" data-name="' + row._id + '">'+row._id+'</div>'
+                                ;
+                        }},
+                        {
+                            title: "%", render: function (data, type, row, meta) {
+                            return prettifyPercentage(row.count/(MetaCards.findOne({timeSpan : that.options.get("timeSpan")}).totalDecks));
+                        }
+                        },
+                        {
+                            title: "AVG", render: function (data, type, row, meta) {
+                            return Math.round(row.total/row.count * (10))/10;
+                        }
+                        },
+
+                    ]
+                });
+
+        }
     });
-    //
-    //$('#example2 tbody').on('click', 'td.details-control', function () {
-    //    var archetypeName = $(this).attr("data-name"),
-    //        tr = $(this).closest('tr'),
-    //        row = table.row( tr );
-    //    if ( row.child.isShown() ) {
-    //        // This row is already open - close it
-    //        row.child.hide();
-    //        tr.removeClass('shown');
-    //    } else {
-    //        // Open this row
-    //        row.child($(format(archetypeName))).show();
-    //        tr.addClass('shown');
-    //    }
-    //});
-    //
-    //$(".metaTableOptions .deckPagination[value=prev]").click(function(){
-    //    table.page('previous').draw(false);
-    //});
-    //
-    //$(".metaTableOptions .deckPagination[value=next]").click(function(){
-    //    table.page('next').draw(false);
-    //});
-    //
-    //$('#example2').show()
+
 });

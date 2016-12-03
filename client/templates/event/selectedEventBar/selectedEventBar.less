@@ -1,41 +1,121 @@
-.selectedEventBar {
-  height: 400px;
-  position: relative;
-  background-color: white;
+.selectedEvent {
+  .selectedDeckHeader {
+    background-color: white;
+    margin-bottom: 15px;
 
-  .table {
+    table {
+      width: 100%;
 
-    thead {
-      display: none;
-    }
-
-    tbody {
-      tr {
-        max-height: 40px;
-        &.player {
-
-        }
-
-        &:first-child td{
-        border-top: none;
+      .eventInfoBarMana {
+        width: 20px ;
+        height: 20px;
       }
 
-        &.activated {
-          background-color: lightgrey;
-        }
-        td {
-          padding: 2px;
-          .firstLine {
-            .position {
-              float: left;
-              width: 25px;
+      tr {
+
+
+        &.eventInfoBar-top-row {
+          height: 60px;
+          td{
+
+            &.eventTab {
+
+            }
+
+            &.deckTab {
+              font-size: 24px;
               text-align: center;
             }
-            .eventBarDeckName {
 
+            &.deckInfoTab {
+              text-align: right;
+            }
+
+            .eventType {
+              font-size: 24px;
             }
           }
-          .secondLine {
+        }
+        &.eventInfoBar-bottow-row {
+          td {
+            &.options {
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .deckListAndPlayersList {
+    .playersTable {
+      background-color: white;
+
+      .tableHeight {
+        min-height: 470px;
+      }
+
+      table#playersTable {
+
+
+
+        thead {
+          display: none;
+        }
+        tbody {
+          tr {
+            & > td {
+              //padding-bottom: 4em;
+            }
+            &.deckSelected {
+              background-color: #d9edf7;
+            }
+          }
+
+        }
+      }
+    }
+
+    .selectedDeck {
+      background-color: white;
+      margin-left: 15px;
+      padding: 5px;
+      .deckBlock {
+        .typeHeader {
+          font-weight: bold;
+          font-size: 14px;
+        }
+
+        .newDeckColumn {
+          -webkit-column-count: 2;
+          -moz-column-count: 2;
+          column-count: 2;
+          padding-bottom: 10px;
+          background-color: white;
+
+          .cardLine{
+            margin-left: 5px;
+            .name {
+              display: inline-block;
+            }
+
+            .cardInfo{
+
+              float: right;
+              .manaValue {
+                text-align: right;
+                width: 70px;
+                display: inline-block;
+              }
+
+              .price {
+                display: inline-block;
+                font-size: 14px;
+                width: 60px;
+                text-align: right;
+              }
+            }
+
 
           }
 
@@ -44,31 +124,10 @@
     }
   }
 
-  .tableInfo {
-    position: absolute;
-    bottom: 0;
 
-    .dtInfo {
-      font-size: 12px;
-    }
 
-    .dtPaginate {
-
-      .dataTables_paginate {
-        text-align: right;
-        ul {
-          li{
-            a{
-              font-size: 12px;
-              border: none;
-              padding: 3px 5px;
-            }
-          }
-        }
-      }
-
-    }
-
-  }
 
 }
+
+
+
