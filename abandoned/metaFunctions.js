@@ -1,17 +1,3 @@
-createTestMeta = function() {
-    console.log("START");
-    var start = new Date().getTime();
-
-    weeklyDeckChange();
-    weeklyArchetypeChange();
-
-    var end = new Date().getTime();
-    var time = end - start;
-    //console.log(time);
-    //console.log("END");
-};
-
-
 optionPosition = function(decks){
 
     decks.sort(function(a, b){
@@ -136,31 +122,3 @@ positionCombinationsOptions = function(x){
     }
     return finalValues;
 }
-
-testMetaTest = function(){
-
-    var options = {types : ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"], dates : ["twoWeeks", "sixWeeks", "year"]};
-
-    var dates = getDateSyntax(options.dates);
-    var positionCombinations = positionCombinationsOptions(options.types);
-    var formatDecks = _DeckNames.find({format : "modern"}).map(function(deckName){ return {name : deckName.name, quantity : 0}});
-
-    var results = {};
-    for(var h = 0; h < dates.length; h++){
-        var date = dates[h];
-        for(var i = 0; i < positionCombinations.length; i++){
-            var positions = positionCombinations[i];
-            var positionQuantity = _Deck.find({format : "modern", $or : positions.values, date : {$gte : date.date }}).count();
-            for(var j = 0; j < formatDecks.length; j++ ){
-                formatDecks[j].quantity = _Deck.find({name : formatDecks[j].name, format : "modern", $or : positions.values, date : {$gte : date.date }}).count();
-                if(formatDecks[j].quantity > 0){
-                    if (typeof results[date.type] === 'undefined') { results[date.type] = {} }
-                    if (typeof results[date.type][positions.positions] === 'undefined') { results[date.type][positions.positions] = {quantity : positionQuantity, decks : {}} }
-                    if (typeof results[date.type][positions.positions]["decks"][formatDecks[j].name] === 'undefined') { results[date.type][positions.positions]["decks"][formatDecks[j].name] = 0 }
-                    results[date.type][positions.positions]["decks"][formatDecks[j].name] = formatDecks[j].quantity;
-                }
-            }
-        }
-    }
-};
-

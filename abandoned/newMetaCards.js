@@ -1,11 +1,10 @@
-createDeckCardsMeta2 = function(format, startDate, endDate){
-
-    console.log("start create meta 2");
-    // var optionsTypes = ["league5_0", "daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"];
+createDeckCardsMeta = function(format, startDate, endDate){
+    console.log("start createDeckCardsMeta2");
+    var optionsTypes = ["league5_0", "daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"];
     var optionsTypes = ["league5_0"];
     var optionsTimeSpan = ["month", "twoMonths", "sixMonths"];
 
-
+    MetaCards.remove({format : format});
     var permComb = permutationAndCombination(optionsTypes);
     permComb.forEach(function(optionsTypesObj, optionsTypesIndex){
         console.log(optionsTypesObj.length, optionsTypesIndex)
@@ -20,22 +19,20 @@ createDeckCardsMeta2 = function(format, startDate, endDate){
             for(var i = 0; i < optionsTypes.length; ++i){
                 thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
             }
-            metaTotalDecksCards("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-
-            metaCardsMain("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaCardsSideboard("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaCardsMainSideboard("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
+            metaTotalDecksCards(format, timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
+            metaCardsMain(format, timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
+            metaCardsSideboard(format, timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
+            metaCardsMainSideboard(format, timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
         });
-    })
+    });
     metaCardsSortArrays();
-
-
+    console.log("end create meta 2");
 }
 
 
 
 metaTotalDecksCards = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    var totalDecks = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$ne : null}, $or : thatOptions}).count();
+    var totalDecks = DecksData.find({format : format, date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$ne : null}, $or : thatOptions}).count();
 
     MetaCards.update(
         {options : options, timeSpan : timeSpan, format : format},
@@ -114,6 +111,7 @@ metaCardsSideboard = function(format, timeSpan, startDate, endDate, options, tha
 };
 
 metaCardsMainSideboard = function(format, timeSpan, startDate, endDate, options, thatOptions){
+
     var mainSideboard = DecksData.aggregate(
         [
             {$match : {date: {$gte: startDate, $lte: endDate}, format : format, $or: thatOptions, DecksNames_id : {$ne : null}}},
@@ -126,6 +124,8 @@ metaCardsMainSideboard = function(format, timeSpan, startDate, endDate, options,
         ]
     );
 
+
+    console.log(mainSideboard);
     for(var i = 0; i < mainSideboard.length; ++i){
         if(MetaCards.find({options : options, timeSpan : timeSpan, format : format, "mainSideboard._id" : mainSideboard[i]._id }).count()){
             MetaCards.update(

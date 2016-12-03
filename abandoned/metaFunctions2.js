@@ -1,100 +1,82 @@
-createMeta2 = function(){
-    console.log("start create meta 2");
+createMetaSLOW = function(format){
+    console.log("START: createMeta2");
+    Meta.remove({format : format});
     // var optionsTypes = ["league5_0", "daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"];
-    var optionsTypes = ["league5_0"];
+    var optionsTypes = ["league5_0", "daily3_1", "daily4_0"];
     var optionsTimeSpan = ["month", "twoMonths", "sixMonths"];
 
-    var startDate = new Date();
-    var endDate = new Date();
+
     var permComb = permutationAndCombination(optionsTypes);
-    console.log(permComb);
     permComb.forEach(function(optionsTypesObj, optionsTypesIndex){
-        console.log(optionsTypesObj.length, optionsTypesIndex)
+        var startDate = new Date();
+        var endDate = new Date();
         optionsTimeSpan.forEach(function(timeSpanObj, timeSpanObjIndex){
             // console.log(timeSpanObj.length, timeSpanObjIndex);
             var days = optionsTimeSpanQuery[timeSpanObj];
 
             startDate.setDate(startDate.getDate() - days);
-
             var thatOptions = [];
             for(var i = 0; i < optionsTypes.length; ++i){
                 thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
             }
 
-            metaTotalDecks("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaTotalDecksBlocks("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
+            metaTotalDecks(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
 
-            metaDecksNamesMeta("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksNamesMetaBlocks("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksNamesMetaPosition("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksNamesMetaPositionChange("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            //
-            metaDecksArchetypesMeta("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksArchetypesMetaBlocks("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksArchetypesMetaPosition("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            metaDecksArchetypesMetaPositionChange("modern", timeSpanObj, startDate, endDate, optionsTypes, thatOptions);
-            // console.log("end createMeta2");
+
+            metaDecksNamesMeta(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            // metaTotalDecksBlocks(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            metaDecksNamesMetaPosition(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            metaDecksNamesMetaPositionChange(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+
+
+
+            metaDecksArchetypesMeta(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            // metaDecksArchetypesMetaBlocks(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            metaDecksArchetypesMetaPosition(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
+            metaDecksArchetypesMetaPositionChange(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
         });
-    })
+    });
+    console.log("END: createMeta2");
 }
 
-
-deckNameAndArchetype = function(str) {
-    str = str.replace("uw ", "UW ");
-    str = str.replace("uwx ", "UWx ");
-    str = str.replace("rb ", "RB ");
-    str = str.replace("ub ", "UB ");
-    str = str.replace("brgw ", "BRGW ");
-    str = str.replace("ur ", "UR ");
-    str = str.replace("4c ", "4C ");
-    str = str.replace("rug ", "rug ");
-    str = str.replace("urg ", "RUG ");
-    str = str.replace("rg ", "RG ");
-    str = str.replace("rw ", "RW ");
-    str = str.replace("ug ", "UG ");
-    str = str.replace("gw ", "GW ");
-    str = str.replace("w/u ", "W/U ");
-    str = str.replace("ugr ", "RUG ");
-
-
-
-    words = str.split(' ');
-
-
-
-    for(var i = 0; i < words.length; i++) {
-        var letters = words[i].split('');
-        letters[0] = letters[0].toUpperCase();
-        words[i] = letters.join('');
-    }
-    return words.join(' ');
-}
 
 metaTotalDecks = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    var totalDecks = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$ne : null}, $or : thatOptions}).count();
 
+    var totalAggregation = DecksNames.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$group : {_id : "$format", total : {$sum : 1}}}
+    ]);
 
     Meta.update(
         {options : options, timeSpan : timeSpan, format : format},
         {
-            $set : {totalDecks : totalDecks},
+            $set : {totalDecks : totalAggregation[0].total},
         },
         {
             upsert : true
         }
     );
+
+    // var totalDecks = DecksData.find({format : format, date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$ne : null}, $or : thatOptions}).count();
 };
 
-
-
 metaDecksNamesMeta = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    console.log("creating decks and blocks positions Change");
-    var decksNames = DecksNames.find({format : format}, {fields : {_id : 1 , name : 1}}).fetch();
-    var DecksNamesMeta = [];
-    for(var i = 0; i < decksNames.length; ++i){
-        var queryDeck = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : decksNames[i]._id, $or : thatOptions}).count();
-        DecksNamesMeta.push({_id : decksNames[i]._id, quantity : queryDeck});
-    }
+    console.log("creating DecksNames Meta");
+
+    var DecksNamesMeta = DecksNames.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType", DecksData : "$DecksData"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$project : {quantity : {$size : "$DecksData"}}}
+    ]);
+
 
 
     for(var i = 0; i<DecksNamesMeta.length; ++i){
@@ -160,44 +142,43 @@ metaDecksNamesMetaBlocks = function(format, timeSpan, startDate, endDate, option
 
 metaDecksNamesMetaPosition = function(format, timeSpan, startDate, endDate, options, thatOptions){
     console.log("metaDecksNamesMetaPosition");
-    var decksNames = DecksNames.find({format : format}, {fields : {_id : 1}}).fetch();
-    var DecksNamesMetaFirstDate = [];
-    for(var j = 0; j < decksNames.length; ++j){
-        var queryDeck = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : decksNames[j]._id, $or : thatOptions}).count();
-        DecksNamesMetaFirstDate.push({_id : decksNames[j]._id, quantity : queryDeck});
-    }
-
-    //sorting
-    DecksNamesMetaFirstDate.sort(function(a, b){
-        return b.quantity - a.quantity;
-    });
+    var positions = DecksNames.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$group : {_id : "$_id",quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
 
     //give Positions
     var currentQuantity = 9999;
     var position = 0;
-    DecksNamesMetaFirstDate.forEach(function(DecksNamesMetaFirstDateObj){
-        if(DecksNamesMetaFirstDateObj.quantity < currentQuantity){
+    positions.forEach(function(positionObj){
+        if(positionObj.quantity < currentQuantity){
             position++;
-            currentQuantity = DecksNamesMetaFirstDateObj.quantity;
-            DecksNamesMetaFirstDateObj.position = position;
+            currentQuantity = positionObj.quantity;
+            positionObj.position = position;
         }else{
-            DecksNamesMetaFirstDateObj.position = position;
+            positionObj.position = position;
         }
     });
 
-    for(var i = 0; i < DecksNamesMetaFirstDate.length; ++i){
-        if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksNamesMeta._id" : DecksNamesMetaFirstDate[i]._id }).count()){
+    for(var i = 0; i < positions.length; ++i){
+        if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksNamesMeta._id" : positions[i]._id }).count()){
             Meta.update(
-                {options : options, timeSpan : timeSpan, format : format, "DecksNamesMeta._id" : DecksNamesMetaFirstDate[i]._id},
+                {options : options, timeSpan : timeSpan, format : format, "DecksNamesMeta._id" : positions[i]._id},
                 {
-                    $set : { "DecksNamesMeta.$.position" : DecksNamesMetaFirstDate[i].position},
+                    $set : { "DecksNamesMeta.$.position" : positions[i].position},
                 }
             );
         }else{
             Meta.update(
                 {options : options, timeSpan : timeSpan, format : format},
                 {
-                    $push : { DecksNamesMeta : DecksNamesMetaFirstDate[i]},
+                    $push : { DecksNamesMeta : positions[i]},
                 },
                 {
                     upsert : true
@@ -207,40 +188,42 @@ metaDecksNamesMetaPosition = function(format, timeSpan, startDate, endDate, opti
     }
 };
 
+
 metaDecksNamesMetaPositionChange = function(format, timeSpan, startDate, endDate, options, thatOptions){
     console.log("metaDecksNamesMetaPositionChange");
-    var decksNames = DecksNames.find({format : format}, {fields : {_id : 1}}).fetch();
-    var optionsDays = [ {name : "week", days : 7}, {name : "twoWeeks", days : 14}, {name : "month", days : 30}];
+    var optionsDays = [ {name : "week", days : 7}, {name : "twoWeeks", days : 14},
+        // {name : "month", days : 30}
+    ];
+
 
     optionsDays.forEach(function(optionsDaysObj){
-        var DecksNamesMetaFirstDate = [];
-        for(var j = 0; j < decksNames.length; ++j){
-            var queryDeck = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : decksNames[j]._id, $or : thatOptions}).count();
-            DecksNamesMetaFirstDate.push({_id : decksNames[j]._id, quantity : queryDeck});
-        }
-
+        var DecksNamesMetaFirstDate = DecksNames.aggregate([
+            {$project : {"format" : 1}},
+            {$match : {format : format}},
+            {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+            {$unwind : "$DecksData"},
+            {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+            {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+            {$group : {_id : "$_id",quantity : {$sum : 1}}},
+            {$sort : {quantity : -1}}
+        ]);
 
 
 
         //old date query
         var endDateBeforeDate = new Date(endDate.getTime());
         endDateBeforeDate.setDate(endDateBeforeDate.getDate() - optionsDaysObj.days);
-        var DecksNamesMetaBeforeDate = [];
-        for(var j = 0; j < decksNames.length; ++j){
-            var queryDeck = DecksData.find({date : {$gte : startDate, $lte : endDateBeforeDate}, DecksNames_id : decksNames[j]._id, $or : thatOptions}).count();
 
-            DecksNamesMetaBeforeDate.push({_id : decksNames[j]._id, quantity : queryDeck});
-        }
-
-
-        //sorting
-        DecksNamesMetaFirstDate.sort(function(a, b){
-            return b.quantity - a.quantity;
-        });
-        DecksNamesMetaBeforeDate.sort(function(a, b){
-            return b.quantity - a.quantity;
-        });
-
+        var DecksNamesMetaBeforeDate = DecksNames.aggregate([
+            {$project : {"format" : 1}},
+            {$match : {format : format}},
+            {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData" }},
+            {$unwind : "$DecksData"},
+            {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+            {$match : {date : {$gte : startDate, $lte : endDateBeforeDate},$or : thatOptions}},
+            {$group : {_id : "$_id", quantity : {$sum : 1}}},
+            {$sort : {quantity : -1}}
+        ]);
 
         //give Positions
         var currentQuantity = 9999;
@@ -255,6 +238,7 @@ metaDecksNamesMetaPositionChange = function(format, timeSpan, startDate, endDate
             }
         });
 
+
         currentQuantity = 9999;
         position = 0;
         DecksNamesMetaBeforeDate.forEach(function(DecksNamesMetaBeforeDateObj){
@@ -267,6 +251,8 @@ metaDecksNamesMetaPositionChange = function(format, timeSpan, startDate, endDate
             }
         });
 
+
+
         var DecksNamesPositionChange = [];
 
         DecksNamesMetaFirstDate.forEach(function(DecksNamesMetaFirstDateObj){
@@ -274,16 +260,16 @@ metaDecksNamesMetaPositionChange = function(format, timeSpan, startDate, endDate
                 return DecksNamesMetaBeforeDateObj._id == DecksNamesMetaFirstDateObj._id;
             });
 
-
-            var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaFirstDateObj.position;
-
+            if(DecksNamesMetaBeforeDateQuery){
+                var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaFirstDateObj.position;
+            }else{
+                var change = 999;
+            }
             DecksNamesPositionChange.push({_id : DecksNamesMetaFirstDateObj._id, change : change});
         });
 
-
         for(var i = 0; i < DecksNamesPositionChange.length; ++i){
             if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksNamesMeta._id" : DecksNamesPositionChange[i]._id }).count()){
-
                 var setUpdate = {};
                 setUpdate["DecksNamesMeta.$.positions."+ optionsDaysObj.name] = DecksNamesPositionChange[i].change;
                 Meta.update(
@@ -314,16 +300,20 @@ metaDecksNamesMetaPositionChange = function(format, timeSpan, startDate, endDate
 
 metaDecksArchetypesMeta = function(format, timeSpan, startDate, endDate, options, thatOptions){
     console.log("Start Archetypes Meta");
-    var DecksArchetypesMeta = [];
-    var decksArchetypes = DecksArchetypes.find({format : format}).fetch();
-    for (var i = 0; i < decksArchetypes.length; ++i) {
-        var decksNames_ids = DecksNames.find({DecksArchetypes_id : decksArchetypes[i]._id}).map(function(obj){
-            return obj._id;
-        });
-        var quantity = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$in : decksNames_ids}, $or : thatOptions}).count();
-        DecksArchetypesMeta.push({_id : decksArchetypes[i]._id, quantity : quantity});
-    }
 
+    var DecksArchetypesMeta = DecksArchetypes.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+        {$unwind : "$DecksNames"},
+        {$project : {DecksNames_id : "$DecksNames._id"}},
+        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$group : {	_id : "$_id", quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
 
     for(var i = 0; i<DecksArchetypesMeta.length; ++i){
         if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksArchetypesMeta._id" : DecksArchetypesMeta[i]._id }).count()){
@@ -397,45 +387,46 @@ metaDecksArchetypesMetaPosition = function(format, timeSpan, startDate, endDate,
     console.log("metaDecksArchetypesMetaPositionChange");
     var decksArchetypes = DecksArchetypes.find({format : format}, {fields : {_id : 1}}).fetch();
 
-    var DecksArchetypesMetaFirstDate = [];
-    for (var i = 0; i < decksArchetypes.length; ++i) {
-        var decksNames_ids = DecksNames.find({DecksArchetypes_id : decksArchetypes[i]._id}).map(function(DecksNamesObj){
-            return DecksNamesObj._id;
-        });
-        var quantity = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$in : decksNames_ids}, $or : thatOptions}).count();
-        DecksArchetypesMetaFirstDate.push({_id : decksArchetypes[i]._id, quantity : quantity});
-    }
-    //sorting
-    DecksArchetypesMetaFirstDate.sort(function(a, b){
-        return b.quantity - a.quantity;
-    });
+    var DecksArchetypesMeta = DecksArchetypes.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+        {$unwind : "$DecksNames"},
+        {$project : {DecksNames_id : "$DecksNames._id"}},
+        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$group : {	_id : "$_id", quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
 
     //give Positions
     var currentQuantity = 9999;
     var position = 0;
-    DecksArchetypesMetaFirstDate.forEach(function(DecksArchetypesMetaFirstDateObj){
-        if(DecksArchetypesMetaFirstDateObj.quantity < currentQuantity){
+    DecksArchetypesMeta.forEach(function(DecksArchetypesMetaObj){
+        if(DecksArchetypesMetaObj.quantity < currentQuantity){
             position++;
-            currentQuantity = DecksArchetypesMetaFirstDateObj.quantity;
-            DecksArchetypesMetaFirstDateObj.position = position;
+            currentQuantity = DecksArchetypesMetaObj.quantity;
+            DecksArchetypesMetaObj.position = position;
         }else{
-            DecksArchetypesMetaFirstDateObj.position = position;
+            DecksArchetypesMetaObj.position = position;
         }
     });
 
-    for(var i = 0; i < DecksArchetypesMetaFirstDate.length; ++i){
-        if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksArchetypesMeta._id" : DecksArchetypesMetaFirstDate[i]._id }).count()){
+    for(var i = 0; i < DecksArchetypesMeta.length; ++i){
+        if(Meta.find({options : options, timeSpan : timeSpan, format : format, "DecksArchetypesMeta._id" : DecksArchetypesMeta[i]._id }).count()){
             Meta.update(
-                {options : options, timeSpan : timeSpan, format : format, "DecksArchetypesMeta._id" : DecksArchetypesMetaFirstDate[i]._id},
+                {options : options, timeSpan : timeSpan, format : format, "DecksArchetypesMeta._id" : DecksArchetypesMeta[i]._id},
                 {
-                    $set : { "DecksArchetypesMeta.$.position" : DecksArchetypesMetaFirstDate[i].position},
+                    $set : { "DecksArchetypesMeta.$.position" : DecksArchetypesMeta[i].position},
                 }
             );
         }else{
             Meta.update(
                 {options : options, timeSpan : timeSpan, format : format},
                 {
-                    $push : { DecksArchetypesMeta : DecksArchetypesMetaFirstDate[i]},
+                    $push : { DecksArchetypesMeta : DecksArchetypesMeta[i]},
                 },
                 {
                     upsert : true
@@ -445,44 +436,45 @@ metaDecksArchetypesMetaPosition = function(format, timeSpan, startDate, endDate,
     }
 };
 
-
 metaDecksArchetypesMetaPositionChange = function(format, timeSpan, startDate, endDate, options, thatOptions){
     console.log("metaDecksArchetypesMetaPositionChange");
-    var decksArchetypes = DecksArchetypes.find({format : format}, {fields : {_id : 1}}).fetch();
-    var optionsDays = [ {name : "week", days : 7}, {name : "twoWeeks", days : 14}, {name : "month", days : 30}];
+    var optionsDays = [ {name : "week", days : 7}, {name : "twoWeeks", days : 14},
+        // {name : "month", days : 30}
+    ];
 
 
     optionsDays.forEach(function(optionsDaysObj){
-        var DecksArchetypesMetaFirstDate = [];
-        for (var i = 0; i < decksArchetypes.length; ++i) {
-            var decksNames_ids = DecksNames.find({DecksArchetypes_id : decksArchetypes[i]._id}).map(function(DecksNamesObj){
-                return DecksNamesObj._id;
-            });
-            var quantity = DecksData.find({date : {$gte : startDate, $lte : endDate}, DecksNames_id : {$in : decksNames_ids}, $or : thatOptions}).count();
-            DecksArchetypesMetaFirstDate.push({_id : decksArchetypes[i]._id, quantity : quantity});
-        }
+        var DecksArchetypesMetaFirstDate  = DecksArchetypes.aggregate([
+            {$project : {"format" : 1}},
+            {$match : {format : format}},
+            {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+            {$unwind : "$DecksNames"},
+            {$project : {DecksNames_id : "$DecksNames._id"}},
+            {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+            {$unwind : "$DecksData"},
+            {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+            {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+            {$group : {	_id : "$_id", quantity : {$sum : 1}}},
+            {$sort : {quantity : -1}}
+        ]);
 
         //old date query
         var endDateBeforeDate = new Date(endDate.getTime());
         endDateBeforeDate.setDate(endDateBeforeDate.getDate() - optionsDaysObj.days);
 
-        var DecksArchetypesMetaBeforeDate = [];
-        for (var i = 0; i < decksArchetypes.length; ++i) {
-            var decksNames_ids = DecksNames.find({DecksArchetypes_id : decksArchetypes[i]._id}).map(function(DecksNamesObj){
-                return DecksNamesObj._id;
-            });
-            var quantity = DecksData.find({date : {$gte : startDate, $lte : endDateBeforeDate}, DecksNames_id : {$in : decksNames_ids}, $or : thatOptions}).count();
-            DecksArchetypesMetaBeforeDate.push({_id : decksArchetypes[i]._id, quantity : quantity});
-        }
-
-        //sorting
-        DecksArchetypesMetaFirstDate.sort(function(a, b){
-            return b.quantity - a.quantity;
-        });
-        DecksArchetypesMetaBeforeDate.sort(function(a, b){
-            return b.quantity - a.quantity;
-        });
-
+        var DecksArchetypesMetaBeforeDate = DecksArchetypes.aggregate([
+            {$project : {"format" : 1}},
+            {$match : {format : format}},
+            {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+            {$unwind : "$DecksNames"},
+            {$project : {DecksNames_id : "$DecksNames._id"}},
+            {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+            {$unwind : "$DecksData"},
+            {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+            {$match : {date : {$gte : startDate, $lte : endDateBeforeDate}, $or : thatOptions}},
+            {$group : {	_id : "$_id", quantity : {$sum : 1}}},
+            {$sort : {quantity : -1}}
+        ]);
 
         //give Positions
         var currentQuantity = 9999;
@@ -515,7 +507,11 @@ metaDecksArchetypesMetaPositionChange = function(format, timeSpan, startDate, en
             var DecksArchetypesMetaBeforeDateQuery = DecksArchetypesMetaBeforeDate.find(function(DecksNamesMetaBeforeDateObj){
                 return DecksNamesMetaBeforeDateObj._id == DecksArchetypesMetaFirstDateObj._id;
             });
-            var change = DecksArchetypesMetaBeforeDateQuery.position - DecksArchetypesMetaFirstDateObj.position;
+            if(DecksArchetypesMetaBeforeDateQuery){
+                var change = DecksArchetypesMetaBeforeDateQuery.position - DecksArchetypesMetaFirstDateObj.position;
+            }else{
+                var change = 999;
+            }
             DecksArchetypesPositionChange.push({_id : DecksArchetypesMetaFirstDateObj._id, change : change});
         });
 

@@ -1,5 +1,4 @@
-Template.SelectADeck.onCreated(function(){
-    var that = this;
+Template.selectADeck.onCreated(function(){
     this.options = new ReactiveDict();
 });
 
@@ -12,7 +11,7 @@ formatDeckArchetypes = function(DecksArchetypes_id) {
     decksNameQuery.forEach(function(decksNamesObj){
         html += '<tr>'+
             '<td></td>'+
-            '<td class="tableName"><a href="/decks/' + Router.current().params.format + '/' + DecksArchetypes.findOne({_id : DecksArchetypes_id}).name+'/'+ decksNamesObj.name +'">'+decksNamesObj.name+'</a></td>'+
+            '<td class="tableName"><a href="/decks/' + FlowRouter.getParam("format") + '/' + DecksArchetypes.findOne({_id : DecksArchetypes_id}).name+'/'+ decksNamesObj.name +'">'+decksNamesObj.name+'</a></td>'+
             '<td class="tableMana">';
 
         var manas = getCssManaByNumberFromDeckNameById(decksNamesObj._id);
@@ -27,7 +26,7 @@ formatDeckArchetypes = function(DecksArchetypes_id) {
     return html;
 }
 
-Template.SelectADeck.onRendered(function(){
+Template.selectADeck.onRendered(function(){
     $( "#slider-range" ).slider({
         range: true,
         min: 0,
@@ -43,87 +42,89 @@ Template.SelectADeck.onRendered(function(){
     $("#minAmount").text($( "#slider-range" ).slider( "values", 0 ));
     $("#maxAmount").text($( "#slider-range" ).slider( "values", 1 ));
 
-    var that = this;
 
-    this.autorun(function() {
-        if ($.fn.DataTable.isDataTable("#archetypeListTable")) {
-            $('#archetypeListTable').DataTable().clear();
-            $('#archetypeListTable').DataTable().destroy({
-                remove : true
-            });
-            var $table = $("<table>", {id : "archetypeListTable", class : "table table-sm", cellSpacing: 0, width : "100%"});
 
-            // var test = '<table id = ""class="cell-border">';
-            $(".js-archetypeListTable").append($table);
-        }
-        // debugger
-        $('#archetypeListTable').DataTable({
-            data: DecksArchetypes.find({format : Router.current().params.format}).fetch(),
-            pageLength: 20,
-            order: [[ 1, "asc" ]],
-            pagingType: "simple",
-            dom :   "<'row'<'col-sm-12 tableHeight'tr>>" +
-            "<'row'<'col-sm-6'i><'col-sm-6'p>>",
-            columnDefs : [{
-                targets : 0,
-                createdCell : function(td, cellData, rowData, row, col){
-                    $(td).addClass("details-control");
-                    $(td).attr("data-_id", rowData._id);
+    if ($.fn.DataTable.isDataTable("#archetypeListTable")) {
+        $('#archetypeListTable').DataTable().clear();
+        $('#archetypeListTable').DataTable().destroy({
+            remove : true
+        });
+        var $table = $("<table>", {id : "archetypeListTable", class : "table table-sm", cellSpacing: 0, width : "100%"});
+
+        // var test = '<table id = ""class="cell-border">';
+        $(".js-archetypeListTable").append($table);
+    }
+    // debugger
+    $('#archetypeListTable').DataTable({
+        pageLength: 20,
+        data: DecksArchetypes.find({format : FlowRouter.getParam("format")}).fetch(),
+        order: [[ 1, "asc" ]],
+        pagingType: "simple",
+        dom :   "<'row'<'col-sm-12 tableHeight'tr>>" +
+        "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+        columnDefs : [{
+            targets : 0,
+            createdCell : function(td, cellData, rowData, row, col){
+                $(td).addClass("details-control");
+                $(td).attr("data-_id", rowData._id);
+            }
+        },
+            {
+                orderable : false, targets : "_all"
+            }],
+        columns: [
+            {
+                width : "10px", data : function(row, type, val, meta){
+                return "";
+            }
+            },
+            {
+                width : "200px",title: "name", data: "name", render : function(data, type, row, meta){
+                if (type === 'filter') {
+                    return data;
+                }
+                else if (type === 'display') {
+                    var html = '<span><a href="/decks/' + FlowRouter.getParam("format") + '/' + row.name.replace(/[ &']/g, "-") + '">'+ row.name + '</a></span>';
+                    return html;
+                }
+                // 'sort', 'type' and undefined all just use the integer
+                return data;
+
+            },
+                createdCell: function (td, cellData, rowData, row, col) {
+
                 }
             },
-                {
-                    orderable : false, targets : "_all"
-                }],
-            columns: [
-                {
-                    width : "10px", data : function(row, type, val, meta){
-                    return "";
+            {
+                title: "colors", render : function(data, type, row, meta){
+                if (type === 'display') {
+                    return getHTMLColorsFromArchetypes(row._id);
                 }
-                },
-                {
-                    width : "200px",title: "name", data: "name", render : function(data, type, row, meta){
-                    if (type === 'filter') {
-                        return data;
-                    }
-                    else if (type === 'display') {
-                        var html = '<span><a href="/decks/' + Router.current().params.format + '/' + row.name.replace(/[ &']/g, "-") + '">'+ row.name + '</a></span>';
-                        return html;
-                    }
-                    // 'sort', 'type' and undefined all just use the integer
-                    return data;
 
-                },
-                    createdCell: function (td, cellData, rowData, row, col) {
+                var manas = "";
+                getColorsListFromArchetypes(row._id).forEach(function(manaObj){
+                    manas += manaObj.mana;
+                });
+                return manas;
+            }},
+            {
+                title: "Type", data: "type"
+            }
+        ]
+    });
 
-                    }
-                },
-                {
-                    title: "colors", render : function(data, type, row, meta){
-                    if (type === 'display') {
-                        return getHTMLColorsFromArchetypes(row._id);
-                    }
+    this.autorun(()=>{
+        $('#archetypeListTable').DataTable().clear()
+            .rows.add(DecksArchetypes.find({format : FlowRouter.getParam("format")}).fetch())
 
-                    var manas = "";
-                    getCssColorsFromArchetypes(row._id).forEach(function(manaObj){
-                        manas += manaObj.mana;
-                    });
-                    return manas;
-                }},
-                {
-                    title: "Type", data: "type"
-                }
-            ]
-        });
-
-
+            .draw();
         var table = $("#archetypeListTable").DataTable();
 
         $('#archetypeListTable tbody').on('click', 'td.details-control', function () {
             var decksArchetypes_id = $(this).attr("data-_id");
             var tr = $(this).closest('tr');
             var row = table.row(tr);
-
-            if ( row.child.isShown() ) {
+            if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
@@ -133,17 +134,18 @@ Template.SelectADeck.onRendered(function(){
                 tr.addClass('shown');
             }
         });
-    });
+    })
+
 });
 
-Template.SelectADeck.events({
-    'change #colorsOption input': function (evt, tmp) {
+Template.selectADeck.events({
+    'change .js-colorsOption input': function (evt, tmp) {
         tableColorsSearch();
     },
-    'change #typeOptions input': function (evt, tmp) {
+    'change .js-typeOptions input': function (evt, tmp) {
         tableTypeSearch();
     },
-    'change #deckOrArchetype input': function (evt, tmp) {
+    'change .js-deckOrArchetype input': function (evt, tmp) {
         if($(evt.target).val() == "decks"){
             Session.set("deckOrArchetype", true);
         }else{
@@ -165,7 +167,7 @@ tableColorsSearch = function(){
         var colorsRegex = "(";
         var colorsArray = [];
         for(var key in colorsOptions){
-            if($("input:checked[role=checkbox][value="+key+"]").exists()){
+            if($("input:checked[role=checkbox][value="+key+"]:checked").length > 0){
                 quantity++;
                 colorsArray.push(key);
             }
@@ -174,7 +176,7 @@ tableColorsSearch = function(){
         colorsRegex += ")";
     }else{
         for(var key in colorsOptions){
-            if($("input:checked[role=checkbox][value="+key+"]").exists()){
+            if($("input:checked[role=checkbox][value="+key+"]:checked").length > 0){
                 quantity++;
                 colorsRegex += "(?=.*" + key + ")";
             }
@@ -190,8 +192,6 @@ tableColorsSearch = function(){
         .column(2)
         .search(colorsRegex, true)
         .draw();
-
-
 };
 
 tableTypeSearch = function(){
@@ -206,7 +206,7 @@ tableTypeSearch = function(){
     var typesOptions = ["aggro", "combo", "control"];
     var typeSelectedOptions = [];
     for(var i = 0; i < typesOptions.length; i++){
-        if($("input:checked[role=checkbox][value=" + typesOptions[i] + "]").exists()) {
+        if($("input:checked[role=checkbox][value=" + typesOptions[i] + "]:checked").length) {
             typeSelectedOptions.push(typesOptions[i]);
         }
     }
