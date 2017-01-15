@@ -187,7 +187,6 @@ tableColorsSearch = function(){
     if(quantity==0){
         colorsRegex = "^$";
     }
-
     table
         .column(2)
         .search(colorsRegex, true)

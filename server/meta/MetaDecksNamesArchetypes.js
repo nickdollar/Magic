@@ -1,17 +1,23 @@
 createMeta = function(format){
-    console.log("START: createMeta2");
+    console.log("START: createMeta");
     Meta.remove({format : format});
-    // var optionsTypes = ["league5_0", "daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"];
-    var optionsTypes = ["league5_0", "daily3_1", "daily4_0"];
-    var optionsTimeSpan = ["month", "twoMonths", "sixMonths"];
+    var optionsTypes = ["league5_0", "daily3_1", "daily4_0", "MTGOPTQ", "MTGOPTQ9-16", "MTGOPTQ17+", "GP1-8", "GP9-16", "GP17+", "SCGSuperIQ", "SCGOpen1-8", "SCGOpen9-16", "SCGOpen17+", "InviQualifier", "SCGInvitational", "SCGClassic1-8", "SCGClassic9+", "LegacyChamps", "WorldMagicCup"];
+    var optionsTimeSpan = ["month", "twoMonths"];
+
 
 
     var permComb = permutationAndCombination(optionsTypes);
-    permComb.forEach(function(optionsTypesObj, optionsTypesIndex){
+    console.log(permComb.length * optionsTimeSpan.length);
+    var count = 0;
+    permComb.forEach(function(optionsTypesObj){
+
+
         var startDate = new Date();
         var endDate = new Date();
-        optionsTimeSpan.forEach(function(timeSpanObj, timeSpanObjIndex){
-            // console.log(timeSpanObj.length, timeSpanObjIndex);
+        optionsTimeSpan.forEach(function(timeSpanObj){
+            count++;
+            console.log(count);
+
             var days = optionsTimeSpanQuery[timeSpanObj];
 
             startDate.setDate(startDate.getDate() - days);
@@ -19,7 +25,6 @@ createMeta = function(format){
             for(var i = 0; i < optionsTypes.length; ++i){
                 thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
             }
-
 
             var metaObj = {};
             metaObj = metaDecksNamesMetaPositionONESHOT(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
@@ -31,11 +36,11 @@ createMeta = function(format){
             Meta.insert(metaObj);
         });
     })
-    console.log("END: createMeta2");
+    console.log("END: createM eta");
 }
 
 metaDecksNamesMetaPositionONESHOT = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    console.log("creating DecksNames Meta ONESHOT ");
+    // console.log("creating DecksNames Meta ONESHOT  ");
 
     var DecksNamesMeta = DecksNames.aggregate([
         {$project : {"format" : 1}},
@@ -121,8 +126,88 @@ metaDecksNamesMetaPositionONESHOT = function(format, timeSpan, startDate, endDat
     return {totalDecks : total, DecksNamesMeta : DecksNamesMeta};
 };
 
-metaDecksArchetypesMetaONESHOT = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    console.log("Start Archetypes Meta");
+
+getMetaDecksNamesFromArchetypeONESHOT = function(format, timeSpan, startDate, endDate, options, thatOptions, DecksArchetypes_id, positionChange){
+    // console.log("creating DecksNames Meta ONESHOT  ");
+
+    var DecksNamesMeta = DecksNames.aggregate([
+        {$match : {DecksArchetypes_id : DecksArchetypes_id}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
+        {$group : {_id : "$_id",quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
+
+    var total = DecksNamesMeta.reduce((previousValue, current)=>{
+        return current.quantity + previousValue;
+    }, 0);
+
+    //give Positions
+    var currentQuantity = 9999;
+    var position = 0;
+    DecksNamesMeta.forEach(function(DecksNamesMetaObj){
+        if(DecksNamesMetaObj.quantity < currentQuantity){
+            position++;
+            currentQuantity = DecksNamesMetaObj.quantity;
+            DecksNamesMetaObj.position = position;
+        }else{
+            DecksNamesMetaObj.position = position;
+        }
+    });
+
+    var optionsDays = {week : 7, twoWeeks : 14};
+
+    //old date query
+    var endDateBeforeDate = new Date(endDate.getTime());
+    endDateBeforeDate.setDate(endDateBeforeDate.getDate() - optionsDays[positionChange]);
+
+    var DecksNamesMetaBeforeDate = DecksNames.aggregate([
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData" }},
+        {$unwind : "$DecksData"},
+        {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDateBeforeDate},$or : thatOptions}},
+        {$group : {_id : "$_id", quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
+
+    //give Positions
+    var currentQuantity = 9999;
+    var position = 0;
+
+    DecksNamesMetaBeforeDate.forEach(function(DecksNamesMetaBeforeDateObj){
+        if(DecksNamesMetaBeforeDateObj.quantity < currentQuantity){
+            position++;
+            currentQuantity = DecksNamesMetaBeforeDateObj.quantity;
+            DecksNamesMetaBeforeDateObj.position = position;
+        }else{
+            DecksNamesMetaBeforeDateObj.position = position;
+        }
+    });
+
+    DecksNamesMeta.forEach(function(DecksNamesMetaObj){
+        var DecksNamesMetaBeforeDateQuery = DecksNamesMetaBeforeDate.find(function(DecksNamesMetaBeforeDateObj){
+            return DecksNamesMetaBeforeDateObj._id == DecksNamesMetaObj._id;
+        });
+
+        if(DecksNamesMetaBeforeDateQuery){
+            var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaObj.position;
+        }else{
+            var change = 999;
+        }
+        if(!DecksNamesMetaObj.positionChange){
+            DecksNamesMetaObj.positionChange = {};
+        }
+        DecksNamesMetaObj.positionChange = change;
+    });
+
+    return {totalDecks : total, DecksNamesMeta : DecksNamesMeta};
+};
+
+metaDecksArchetypesMetaONESHOT = function(format, timeSpan, startDate, endDate, options, thatOptions, positionChange){
+    console.log("START: metaDecksArchetypesMetaONESHOT");
 
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"format" : 1}},
@@ -138,6 +223,10 @@ metaDecksArchetypesMetaONESHOT = function(format, timeSpan, startDate, endDate, 
         {$sort : {quantity : -1}}
     ]);
 
+    var total = DecksArchetypesMeta.reduce((previousValue, current)=>{
+        return current.quantity + previousValue;
+    }, 0);
+
     //give Positions
     var currentQuantity = 9999;
     var position = 0;
@@ -152,62 +241,53 @@ metaDecksArchetypesMetaONESHOT = function(format, timeSpan, startDate, endDate, 
     });
 
 
-    var optionsDays = [ {name : "week", days : 7}, {name : "twoWeeks", days : 14},
-        // {name : "month", days : 30}
-    ];
+    var optionsDays = {week : 7, twoWeeks : 14};
 
+    var endDateBeforeDate = new Date(endDate.getTime());
+    endDateBeforeDate.setDate(endDateBeforeDate.getDate() - optionsDays[positionChange].days);
 
-    optionsDays.forEach(function(optionsDaysObj){
-        //old date query
-        var endDateBeforeDate = new Date(endDate.getTime());
-        endDateBeforeDate.setDate(endDateBeforeDate.getDate() - optionsDaysObj.days);
+    var DecksArchetypesMetaBeforeDate = DecksArchetypes.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+        {$unwind : "$DecksNames"},
+        {$project : {DecksNames_id : "$DecksNames._id"}},
+        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$match : {date : {$gte : startDate, $lte : endDateBeforeDate}, $or : thatOptions}},
+        {$group : {	_id : "$_id", quantity : {$sum : 1}}},
+        {$sort : {quantity : -1}}
+    ]);
 
-        var DecksArchetypesMetaBeforeDate = DecksArchetypes.aggregate([
-            {$project : {"format" : 1}},
-            {$match : {format : format}},
-            {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-            {$unwind : "$DecksNames"},
-            {$project : {DecksNames_id : "$DecksNames._id"}},
-            {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
-            {$unwind : "$DecksData"},
-            {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
-            {$match : {date : {$gte : startDate, $lte : endDateBeforeDate}, $or : thatOptions}},
-            {$group : {	_id : "$_id", quantity : {$sum : 1}}},
-            {$sort : {quantity : -1}}
-        ]);
+    //give Positions
+    var currentQuantity = 9999;
+    var position = 0;
 
-        //give Positions
-        var currentQuantity = 9999;
-        var position = 0;
-
-        DecksArchetypesMetaBeforeDate.forEach(function(DecksArchetypesMetaBeforeDateObj){
-            if(DecksArchetypesMetaBeforeDateObj.quantity < currentQuantity){
-                position++;
-                currentQuantity = DecksArchetypesMetaBeforeDateObj.quantity;
-                DecksArchetypesMetaBeforeDateObj.position = position;
-            }else{
-                DecksArchetypesMetaBeforeDateObj.position = position;
-            }
-        });
-
-        DecksArchetypesMeta.forEach(function(DecksNamesMetaObj){
-            var DecksNamesMetaBeforeDateQuery = DecksArchetypesMetaBeforeDate.find(function(DecksNamesMetaBeforeDateObj){
-                return DecksNamesMetaBeforeDateObj._id == DecksNamesMetaObj._id;
-            });
-
-            if(DecksNamesMetaBeforeDateQuery){
-                var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaObj.position;
-            }else{
-                var change = 999;
-            }
-            if(!DecksNamesMetaObj["positions"]){
-                DecksNamesMetaObj["positions"] = {};
-            }
-            DecksNamesMetaObj["positions"][optionsDaysObj.name] = change;
-        });
+    DecksArchetypesMetaBeforeDate.forEach(function(DecksArchetypesMetaBeforeDateObj){
+        if(DecksArchetypesMetaBeforeDateObj.quantity < currentQuantity){
+            position++;
+            currentQuantity = DecksArchetypesMetaBeforeDateObj.quantity;
+            DecksArchetypesMetaBeforeDateObj.position = position;
+        }else{
+            DecksArchetypesMetaBeforeDateObj.position = position;
+        }
     });
 
-    return DecksArchetypesMeta;
+    DecksArchetypesMeta.forEach(function(DecksNamesMetaObj){
+        var DecksNamesMetaBeforeDateQuery = DecksArchetypesMetaBeforeDate.find(function(DecksNamesMetaBeforeDateObj){
+            return DecksNamesMetaBeforeDateObj._id == DecksNamesMetaObj._id;
+        });
+
+        if(DecksNamesMetaBeforeDateQuery){
+            var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaObj.position;
+        }else{
+            var change = 999;
+        }
+        DecksNamesMetaObj.positionChange = change;
+    });
+
+    return {DecksArchetypesMeta : DecksArchetypesMeta, total : total};
 };
 
 function combinations(str) {
@@ -247,28 +327,30 @@ permutationAndCombination = function(a) {
     return all;
 };
 
-
-optionsTypeQuery = {
-    "league5_0": {victory: 5, loss: 0, eventType: "league"},
-    "daily4_0": {victory: 4, loss: 0, eventType: "daily"},
-    "daily3_1": {victory: 3, loss: 1, eventType: "daily"},
-    "ptqTop8": {position: {$gte: 1, $lte: 8}, eventType: "ptq"},
-    "ptqTop9_16": {position: {$gte: 9, $lte: 16}, eventType: "ptq"},
-    "ptqTop17_32": {position: {$gte: 17, $lte: 32}, eventType: "ptq"}
-}
-
 optionsTimeSpanQuery = {
     "month" : 30,
     "twoMonths" : 60,
     "sixMonths" : 180
 }
 
-
-
-
-// var league = {type : "league", options : { victory : 5, loss : 0, eventType : "league"}};
-// var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, eventType : "daily"}};
-// var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, eventType : "daily"}};
-// var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, eventType : "ptq"}};
-// var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, eventType : "ptq"}};
-// var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, eventType : "ptq"}};
+optionsTypeQuery = {
+    "league5_0": {victory: 5, loss: 0, eventType: "league"},
+    "daily4_0": {victory: 4, loss: 0, eventType: "daily"},
+    "daily3_1": {victory: 3, loss: 1, eventType: "daily"},
+    "MTGOPTQ1-8": {position: {$gte: 1, $lte: 8}, eventType: "MTGOPTQ"},
+    "MTGOPTQ9-16": {position: {$gte: 9, $lte: 16}, eventType: "MTGOPTQ"},
+    "MTGOPTQ17+": {position: {$gte: 17}, eventType: "MTGOPTQ"},
+    "GP1-8": {position: {$gte: 1, $lte: 8}, eventType: "GP"},
+    "GP9-16": {position: {$gte: 9, $lte: 16}, eventType: "GP"},
+    "GP17+": {position: {$gte: 17}, eventType: "GP"},
+    "SCGSuperIQ" : {eventTYpe : "SCGSuperIQ"},
+    "SCGOpen1-8": {position: {$gte: 1, $lte: 8}, eventType: "ptq"},
+    "SCGOpen9-16": {position: {$gte: 9, $lte: 16}, eventType: "ptq"},
+    "SCGOpen17+": {position: {$gte: 17}, eventType: "ptq"},
+    "InviQualifier": {eventType: "inviQualifier"},
+    "SCGInvitational": {eventType: "SCGInvitational"},
+    "SCGClassic1-8": {position: {$gte: 1, $lte: 8}, eventType: "SCGClassic"},
+    "SCGClassic9+": {position: {$gte: 9}, eventType: "SCGClassic"},
+    "LegacyChamps": {eventType: "LegacyChamps"},
+    "WorldMagicCup": {eventType: "WorldMagicCup"},
+}

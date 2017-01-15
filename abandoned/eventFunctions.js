@@ -1,9 +1,9 @@
 // downloadEvents = function(eventType){
-//     _Event.find({eventType : eventType, deckStored : {$exists : false}}).forEach(function(event){
-//         if(!event.hasOwnProperty('deckStored')){
+//     _Event.find({eventType : eventType, deckStored : {$exists : false}}).forEach(function(Events){
+//         if(!Events.hasOwnProperty('deckStored')){
 //             console.log("Added Event");
-//             getEventDeckInformation(event);
-//             _Event.update({ _id : event._id},
+//             getEventDeckInformation(Events);
+//             _Event.update({ _id : Events._id},
 //                 {
 //                     $set : {
 //                         deckStored : true
@@ -17,8 +17,8 @@
 //
 //
 // //extractCardsFromLeague = function(){
-// //    var event = Events.findOne({});
-// //    var buffer = event.value;
+// //    var Events = Events.findOne({});
+// //    var buffer = Events.value;
 // //    var $ = cheerio.load(buffer);
 // //    var decks = $('.bean--wiz-content-deck-list');
 // //
@@ -40,11 +40,11 @@
 // //
 // //        var information = getDeckInfo($(decks[i]).find('h4').html());
 // //        var data = {
-// //            _eventID : event._id,
-// //            date : event.date,
-// //            eventType : event.eventType,
+// //            _eventID : Events._id,
+// //            date : Events.date,
+// //            eventType : Events.eventType,
 // //            player : information.player,
-// //            format : event.format,
+// //            format : Events.format,
 // //            victory : information.victory,
 // //            draw : information.draw,
 // //            loss : information.loss
@@ -102,16 +102,16 @@
 //     return quantity;
 // }
 //
-// getEventDeckInformation = function(event){
-//     if(event.eventType === "ptq" | event.eventType === "premier" | event.eventType === "mocs"){
-//         getTop8(event);
+// getEventDeckInformation = function(Events){
+//     if(Events.eventType === "ptq" | Events.eventType === "premier" | Events.eventType === "mocs"){
+//         getTop8(Events);
 //     }else{
-//         getDaily(event);
+//         getDaily(Events);
 //     }
 // }
 //
-// getTop8 = function(event){
-//     var result = request.getSync(event.httpAddress, {
+// getTop8 = function(Events){
+//     var result = request.getSync(Events.httpAddress, {
 //         encoding: null
 //     });
 //
@@ -130,17 +130,17 @@
 //
 //     var top8Information = getTop8Table($, top8Table);
 //
-//     _Event.update({_id : event._id},{
+//     _Event.update({_id : Events._id},{
 //         $set : {top8Table : top8Information}
 //     });
 //
 //     for(var i = 0 ; i < decks.length; i++){
 //         var information = getDeckInfoFromTop8($(decks[i]).find('h4').html());
 //         var data = {
-//             _eventID : event._id,
-//             date : event.date,
-//             eventType : event.eventType,
-//             format : event.format,
+//             _eventID : Events._id,
+//             date : Events.date,
+//             eventType : Events.eventType,
+//             format : Events.format,
 //             player : information.player,
 //             position : information.position
 //         };
@@ -252,8 +252,8 @@
 // }
 //
 //
-// getDaily = function(event){
-//     var result = request.getSync(event.httpAddress, {
+// getDaily = function(Events){
+//     var result = request.getSync(Events.httpAddress, {
 //         encoding: null
 //     });
 //
@@ -277,11 +277,11 @@
 //     for(var i = 0 ; i < decks.length; i++){
 //         var information = getDeckInfo($(decks[i]).find('h4').html());
 //         var data = {
-//             _eventID : event._id,
-//             date : event.date,
-//             eventType : event.eventType,
+//             _eventID : Events._id,
+//             date : Events.date,
+//             eventType : Events.eventType,
 //             player : information.player,
-//             format : event.format,
+//             format : Events.format,
 //             victory : information.victory,
 //             draw : information.draw,
 //             loss : information.loss
@@ -329,13 +329,13 @@
 //
 //         if(mainDeckQuantity < 60){
 //             console.log("Deck With less than 60: " + _deckID + " " + mainDeckQuantity);
-//             console.log(event.httpAddress);
+//             console.log(Events.httpAddress);
 //             console.log(information.player);
 //             _Deck.update({_id : _deckID}, {$set : {missingCards : true}});
 //         }
 //         if(sideboardQuantity < 15){
 //             console.log("Deck With less than 15: " + _deckID + " " + sideboardQuantity);
-//             console.log(event.httpAddress);
+//             console.log(Events.httpAddress);
 //             console.log(information.player);
 //         }
 //     }

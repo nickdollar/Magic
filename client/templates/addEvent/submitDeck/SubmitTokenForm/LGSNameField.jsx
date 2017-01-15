@@ -4,23 +4,10 @@ import React from "react";
 class LGSInput extends React.Component{
     constructor() {
         super();
-        navigator.geolocation.getCurrentPosition((location)=> {
-            this.state = {
-                subscription: {
-                    LGS: Meteor.subscribe("LGS", [location.coords.longitude ,location.coords.latitude])
-                },
-                coords : [location.coords.longitude, location.coords.latitude],
-                inputValue : 0
-            }
-        });
     }
 
     clearInput(){
         this.setState({inputValue : 0});
-    }
-
-    componentWillUnmount(){
-        this.state.subscription.LGS.stop();
     }
 
     isValid() {
@@ -54,8 +41,7 @@ class LGSInput extends React.Component{
         $(this.refs["input"]).select2({
             placeholder: 'Select an option'
         }).on("change", (e)=>{
-            this.setState({inputValue : e.target.value})
-            this.isValid(e.target.name);
+            this.isValid();
         });
     }
 
@@ -65,6 +51,7 @@ class LGSInput extends React.Component{
                 <label> {this.props.title} </label>
                 <div>
                     <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control">
+                        <option value=""></option>
                         {LGS.find({}).map((LGSObjects)=>{
                             return <option key={LGSObjects._id} value={LGSObjects._id}>{LGSObjects.name} ({LGSObjects.location.city})</option>
                         })}

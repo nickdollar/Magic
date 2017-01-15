@@ -1,17 +1,22 @@
 import React from "react";
+import moment from "moment";
+
 
 class EventDateInput extends React.Component{
     constructor() {
         super();
+        var date = new Date()
+        date.setHours(0,0,0,0);
         this.state = {
-            inputValue : ""
+            inputValue : date
         }
     }
 
     isValid() {
         var input = this.refs["input"];
         var error = this.refs["error"];
-        if (input.value === "") {
+
+        if (this.state.inputValue === "") {
             input.classList.add('error');
             error.textContent = this.props.errorMessage;
             return false;
@@ -30,21 +35,30 @@ class EventDateInput extends React.Component{
 
     getCorrectedValue(){
         var object = {};
-        object[this.props.objectName] = this.refs["input"].value;
+        object[this.props.objectName] = this.state.inputValue;
         return object;
     }
 
     handleChange(e){
-        this.setState({inputValue : e.target.value});
-        this.isValid(e.target.name);
+
     }
 
     componentDidMount() {
         if (this.props.onComponentMounted) {
             this.props.onComponentMounted(this);
         }
+        var date = new Date();
 
-        $(this.refs["input"]).datetimepicker({});
+        date.setHours(0,0,0,0);
+        $(this.refs["input"]).datetimepicker({
+            format: 'L',
+            defaultDate : date
+        }).on("dp.change", (e)=>{
+            console.log("GGGGGGGGGGGG");
+            console.log(e);
+            this.setState({inputValue : new Date(e.timeStamp)});
+            this.isValid();
+        });
 
     }
 
@@ -53,7 +67,6 @@ class EventDateInput extends React.Component{
             <div className="form-group">
                 <label> {this.props.title} </label>
                 <input type={"text"}
-                       value={this.state.inputValue}
                        ref={"input"}
                        className='form-control'
                        onChange={this.handleChange.bind(this)} />

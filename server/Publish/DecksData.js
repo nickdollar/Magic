@@ -2,8 +2,12 @@ Meteor.publish('DecksDataOnlyDecksNames_id', function() {
     return DecksData.find({}, {DecksNames_id : 1});
 });
 
+Meteor.publish('DecksDataBy_id', function(DecksData_id) {
+    return DecksData.find({_id : DecksData_id});
+});
+
 Meteor.publish('DecksDataFromEvent_idSimplified', function(Events_id) {
-    return DecksData.find({Events_id : Events_id}, {sort : {position : 1}, fields : {player : 1, DecksNames_id : 1, victory : 1, loss : 1, colors : 1, position : 1}});
+    return DecksData.find({Events_id : Events_id}, {sort : {position : 1}, fields : {main : 0, sideboard : 0}});
 });
 
 function arrayUnique(array) {
@@ -17,14 +21,6 @@ function arrayUnique(array) {
     return a;
 }
 
-Meteor.publish("_temp2", function(){
-    return DecksData.find();
-});
-
-Meteor.publish('_temp2FieldsName_eventID', function(){
-    return DecksData.find({}, {fields : {name : 1, events_id : 1}});
-});
-
 Meteor.publish("DecksData", function(){
     return DecksData.find({});
 });
@@ -32,7 +28,7 @@ Meteor.publish("DecksData", function(){
 Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id){
     return {
         find : function() {
-            return DecksData.find({_id : DecksData_id}, {limit : 1});
+            return DecksData.find({_id : DecksData_id});
         },
         children : [
             {
@@ -101,9 +97,6 @@ Meteor.publishComposite("deckSelectedID", function(_id) {
     }
 });
 
-
-
-
 Meteor.publishComposite('dashBoardDecksTables', function(tableName, ids, fields) {
     return {
         find: function () {
@@ -118,7 +111,6 @@ Meteor.publishComposite('dashBoardDecksTables', function(tableName, ids, fields)
             }
         ]
     };
-
 });
 
 Meteor.publishComposite('dacksWithoutNameTable', function(tableName, ids, fields) {
@@ -143,7 +135,6 @@ Meteor.publishComposite("deckSelectedAndCardsData", function(_id, DecksNames_id)
     return {
         find: function () {
 
-            console.log(_id, DecksNames_id);
             if(_id){
                 return DecksData.find({_id : _id});
             }else{
@@ -172,6 +163,88 @@ Meteor.publish('deckSelectedGetNewestDeck', function(DecksNames_id){
     return DecksData.find({DecksNames_id : DecksNames_id});
 });
 
+Meteor.publish('DecksWithoutNamesQuantity', function(format){
+    return  DecksData.find({
+            format: format,
+            DecksNames_id: null,
+        },
+        {
+            fields : {DecksNames_id : 1, format : 1, eventType : 1, autoNaming : 1, autoPercentage : 1}
+        })
+});
+
+Meteor.publish('DecksWithoutNamesComplete', function(format){
+    return  DecksData.find({
+            format: format,
+            DecksNames_id: null,
+        },
+        {
+            fields : {main : 0, sideboard : 0}
+        })
+});
+
+Meteor.publish('DecksAutoPercentage100AutoNamingQuantity', function(format){
+    return  DecksData.find({
+            format: format,
+            eventType : {$in : ["league", "daily"]},
+            autoPercentage : 1,
+            autoNaming : true,
+        },
+        {
+            fields : {DecksNames_id : 1, format : 1, eventType : 1, autoNaming : 1, autoPercentage : 1}
+        })
+});
+
+Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameQuantity', function(format){
+    return  DecksData.find({
+            format: format,
+            eventType : {$in : ["league", "daily"]},
+            $or : [
+                    {"main.wrongName" : true},
+                    {"sideboard.wrongName" : true}
+                    ]
+
+        },
+        {
+            fields : {DecksNames_id : 1, format : 1, eventType : 1, autoNaming : 1, autoPercentage : 1, main : 1, sideboard: 1}
+        })
+});
+
+Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameComplete', function(format){
+    return  DecksData.find({
+            format: format,
+            eventType : {$in : ["league", "daily"]},
+            $or : [
+                {"main.wrongName" : true},
+                {"sideboard.wrongName" : true}
+            ]
+
+        })
+});
+
+Meteor.publish('DecksAutoPercentageLessThan100LeagueDailyQuantity', function(format){
+    console.log(format);
+    return  DecksData.find({
+            format: format,
+            eventType : {$in : ["league", "daily"]},
+            autoPercentage: {$lt : 1},
+        },
+        {
+            fields : {DecksNames_id : 1, format : 1, eventType : 1, autoNaming : 1, autoPercentage : 1}
+        })
+});
+
+Meteor.publish('DecksAutoPercentageLessThan100LeagueDailyComplete', function(format){
+    return  DecksData.find({
+            format: format,
+            eventType : {$in : ["league", "daily"]},
+            autoPercentage: {$lt : 1},
+        },
+        {
+            fields : {main : 0, sideboard : 0}
+        })
+});
+
 Meteor.publishComposite("deckSelectedGetDeckDataAndCardData", function(DecksNames_id) {
     return {
         find: function () {
@@ -186,6 +259,8 @@ Meteor.publishComposite("deckSelectedGetDeckDataAndCardData", function(DecksName
         ]
     }
 });
+
+
 
 function arrayUnique(array) {
     var a = array.concat();

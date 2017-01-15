@@ -2,134 +2,9 @@ import cheerio from "cheerio";
 
 
 Meteor.methods({
-    fixAllThingsLeagueDaily: function (format) {
-        var decksWithoutHtml = Events.find({
-            eventType : {$in : ["league", "daily"]},
-            format : format,
-            "validation.exists": true,
-            $or: [{"validation.htmlDownloaded": {$exists: false}}, {"validation.htmlDownloaded": false}]
-        });
 
-        decksWithoutHtml.forEach(function (obj) {
-            eventLeagueDailyDownloadHTML(obj._id);
-        });
-
-        var decksWithoutDecks = Events.find({
-            format : format,
-            "validation.htmlDownloaded": true,
-            $or: [{"validation.extractDecks": {$exists: false}}, {"validation.extractDecks": false}]
-        });
-
-        decksWithoutDecks.forEach(function (obj) {
-            eventLeagueDailyExtractDecks(obj._id);
-        });
-    },
-    fixAllMTGOPTQEvents: function (format) {
-
-        var decksWithoutHtml = Events.find({
-            format : format,
-            eventType : "MTGOPTQ",
-            "validation.exists": true,
-            $or: [{"validation.htmlDownloaded": {$exists: false}}, {"validation.htmlDownloaded": false}]
-        });
-        console.log(decksWithoutHtml.fetch());
-
-        decksWithoutHtml.forEach(function (obj) {
-            eventMTGOPTQDownloadHTML(obj._id);
-        });
-
-        var decksWithoutDecks = Events.find({
-            format : format,
-            "validation.htmlDownloaded": true,
-            $or: [{"validation.extractDecks": {$exists: false}}, {"validation.extractDecks": false}]
-        });
-
-        decksWithoutDecks.forEach(function (obj) {
-            eventMTGOPTQExtractDecks(obj._id);
-        });
-    },
-    fixAllStarCityGamesByFormat: function (format) {
-        console.log("START: fixAllStarCityGamesByFormat");
-
-        var decksWithoutHtml = Events.find({
-            eventType : {$in : ["SCG Super IQ", "Invi Qualifier", "SCG Invitational", "SCG Classic", "SCG Open", "grand Prix", "Legacy Champs", "World Magic Cup"]},
-            format : format,
-            "validation.exists": true,
-            $or: [{"validation.htmlDownloaded": {$exists: false}}, {"validation.htmlDownloaded": false}]
-        });
-
-        decksWithoutHtml.forEach(function (obj) {
-            getStarCityGamesEventsDownloadHTMLS(obj._id);
-        });
-
-        var decksWithoutDecks = Events.find({
-            format : format,
-            eventType : {$in : ["SCG Super IQ", "Invi Qualifier", "SCG Invitational", "SCG Classic", "SCG Open", "grand Prix", "Legacy Champs", "World Magic Cup"]},
-            "validation.htmlDownloaded": true,
-            $or: [{"validation.extractDecks": {$exists: false}}, {"validation.extractDecks": false}]
-        });
-
-        decksWithoutDecks.forEach(function (obj) {
-            getStarCityGamesExtractDecks(obj._id);
-        });
-        console.log("END: fixAllStarCityGamesByFormat");
-    },
-    fixAllGPEvents: function () {
-
-        var decksWithoutHtml = Events.find({
-            eventType : "GP",
-            "validation.exists": true,
-            $or: [{"validation.htmlDownloaded": {$exists: false}}, {"validation.htmlDownloaded": false}]
-        });
-
-        decksWithoutHtml.forEach(function (obj) {
-            getProTourHTMLS(obj._id);
-        });
-
-        var decksWithoutDecks = Events.find({
-            eventType : "GP",
-            "validation.htmlDownloaded": true,
-            $or: [{"validation.extractDecks": {$exists: false}}, {"validation.extractDecks": false}]
-        }).fetch();
-
-        for(var i = 0; i < decksWithoutDecks.length; i++){
-            console.log("EVENT :" + i);
-            console.log(decksWithoutDecks[i]);
-            eventPTExtractDecks(decksWithoutDecks[i]._id);
-        }
-    },
-    fixOldEventsWizards : function(format){
-        var decksWithoutHtml = Events.find({format : format, "validation.exists": false });
-
-        decksWithoutHtml.forEach(function(decksWithoutHtmlObj){
-            var res = Meteor.http.get(decksWithoutHtmlObj.url);
-
-            if (res.statusCode == 200) {
-                var buffer = res.content;
-                var $ = cheerio.load(buffer);
-                var deckMeta = $('#main-content');
-                var upsert = false;
-                if(deckMeta.length == 0){
-                    console.log("Page Doesn't exists");
-                }else{
-                    upsert = true;
-                }
-                console.log("page exists");
-            }
-            Events.update(
-                {_id : decksWithoutHtmlObj._id},
-                {
-                    $set : {
-                        "validation.exists" : upsert
-                    }
-                }
-            );
-        })
-    },
-    
-    
-    getStarCityGamesEvents : function(format){
-        getStarCityGamesEvents(format);
+    getStarCityGamesEvents : function(data){
+        getStarCityGamesEvents(data.format);
     },
     fixEventsStandard : function(){
         fixEventsStandard();
@@ -137,17 +12,71 @@ Meteor.methods({
     methodEventLeagueGetNewEvents : function(format){
         eventLeagueGetNewEvents(format);
     },
-    methodEventLeagueGetInfoOld : function(format){
-        eventLeagueGetInfoOld(format, 2);
+    methodEventLeagueGetInfoOld : function(data){
+        eventLeagueGetInfoOld(data.format, data.days);
     },
-    methodEventMTGOPTQGetInfoOld : function(format){
-        getMTGOPtqEventsOLD(format, 30);
+    methodEventMTGOPTQGetInfoOld : function(data){
+        getMTGOPtqEventsOLD(data.format, data.days);
     },
-    methodGPGetInfoOld : function(){
-        getGPLinks();
+    methodGetGPEvents : function(){
+        getGPEvents();
     },
-})
+    addALGSEvent(event){
+        var eventQuery = Events.findOne({LGS_id : event.LGS_id, token : event.token});
+        if(eventQuery){
+            return false;
+        }
 
+        Object.assign(event, {type : "lgs"});
+
+        console.log(event.email);
+        var email = event.email;
+        console.log(email);
+        delete event.email;
+        console.log(email);
+        var _id = Events.insert(event);
+        Object.assign(event, {Event_id : _id});
+        Meteor.call("sendConfirmationFromNewEvent", email, event);
+
+        return event;
+    },
+    checkIfEventExists(data){
+        console.log(data);
+        var eventFound = Events.findOne({LGS_id : data.LGS_id, token : data.token});
+        if(eventFound){
+            return eventFound;
+        }
+        return false;
+
+    },
+    checkIfEventPasswordIsRight(data){
+        if(Events.find({password : data.password, _id : data._id}, {limit : 1}).count()){
+            return true;
+        }
+        return false;
+    },
+    publishLGSEvent(Event_id){
+        console.log(Event_id);
+        Events.update({_id : Event_id},
+            {
+                $set : {"validation.published" : true,
+                    "validation.published" : true}
+            }
+        )
+
+    },
+    checkForValidationExtractDecks(){
+        console.log("START: checkForValidationExtractDecks");
+
+
+
+        console.log(allEventsWithDeckWithoutNames);
+        console.log(allEventsWithDeckWithoutNames.length);
+
+
+    },
+
+})
 
 fixEventsStandard = function(){
     console.log("START: fixEventsStandard");
@@ -188,7 +117,6 @@ fixEventsStandard = function(){
                               }
                           },
             );
-            console.log(events[i]._id);
             DecksData.update({Events_id :  events[i]._id},
                             {
                                 $set : { format : "oldStandard"}

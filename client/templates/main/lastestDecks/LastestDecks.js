@@ -101,9 +101,11 @@ Template.latestDecks.onRendered(function(){
                     content: function () {
                         var cardName = encodeURI($(this).data('name'));
                         cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                        var linkBase = "http://plex.homolka.me.uk:10080/";
-                        var finalDirectory = linkBase+cardName+".full.jpg";
-                        return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px" />';
+                        var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                        var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+
+                        var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                        return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
                     }
                 });
             }).DataTable({

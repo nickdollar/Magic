@@ -1,6 +1,14 @@
-import myComponent from "/client/react/components/app.jsx";
-import DropDown from "/client/react/components/ffff.jsx";
+import AddEvent from "/client/templates/addEvent/AddEvent.jsx";
+import AdminEvent from "/client/templates/AdminEvent/AdminEvent.jsx";
+import LGS from "/client/templates/LGS/LGS.jsx";
+import MetaDeckListComponent from "/client/templates/deck/MetaDeckList/MetaDeckListComponent.jsx";
+import CustomAdmin from "/client/templates/customAdmin/CustomAdmin.jsx";
+import CustomEventsAdmin from "/client/templates/customAdmin/CustomEventsAdmin/CustomEventsAdmin.jsx";
 
+
+navigator.geolocation.getCurrentPosition((location)=> {
+    Session.set("position", [location.coords.longitude ,location.coords.latitude]);
+});
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
@@ -42,23 +50,6 @@ Template.ApplicationLayout.helpers({
     }
 });
 
-Template.metaFP.helpers({
-
-});
-
-Template.metaFP.onRendered(function(){
-
-});
-
-
-Template.selectedMeta.helpers({
-
-});
-
-Template.deckSelected.onCreated(function(){
-
-});
-
 Template.deckSelected.helpers({
    isSelected : function(){
        return FlowRouter.getParam("deckSelected");
@@ -71,11 +62,9 @@ Template.selectADeck.helpers({
     }
 })
 
-
 Template.selectADeck.onRendered(function(){
     Session.set("deckOrArchetype", false);
 });
-
 
 Template.selectedMeta.onRendered(function(){
 
@@ -118,7 +107,6 @@ Template.selectedMeta.onRendered(function(){
     //var table = $('#example2').DataTable({});
     //
     //$('#example2 tbody').on('click', 'td.details-control', function () {
-    //    console.log(this);
     //    var tr = $(this).closest('tr');
     //    var row = table.row( tr );
     //    console.log("AVVVVVVVVVVVVVVV");
@@ -147,5 +135,42 @@ Template.events.helpers({
     }
 });
 
+Template.decks.helpers({
+    MetaDeckList(){
+        return MetaDeckListComponent;
+    }
+});
+
+
 Template.events.onRendered(function(){
  });
+
+Template.lgs.helpers({
+    LGS(){
+        return LGS;
+    }
+});
+
+Template.addEvent.helpers({
+    AddEvent(){
+        return AddEvent;
+    },
+});
+
+Template.adminEvent.helpers({
+    AdminEvent(){
+        return AdminEvent;
+    },
+});
+
+Template.admin.helpers({
+    CustomAdmin(){
+        return CustomAdmin;
+    },
+});
+
+Template.CustomEventsAdmin.helpers({
+    CustomAdmin(){
+        return CustomEventsAdmin;
+    },
+});

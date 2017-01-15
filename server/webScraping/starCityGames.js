@@ -6,6 +6,7 @@ getStarCityGamesEvents = function(format) {
     var url = "http://www.starcitygames.com/";
     var resMainPage = Meteor.http.get(url);
     if (resMainPage.statusCode == 200) {
+        console.log("GGGGGGGGGGGGG");
         var $resMainPage = cheerio.load(resMainPage.content, {decodeEntities : false});
         var eventsLinks = $resMainPage("#content_decks_" + format + " li a");
 
@@ -18,22 +19,33 @@ getStarCityGamesEvents = function(format) {
             if(eventPatternMatch == null){
                 continue
             };
-            event.date = new Date(eventPatternMatch[1] + "/2016");
-            event.eventType = eventPatternMatch[2].replace(/\s/g, "");
+            event.date = new Date(eventPatternMatch[1] + "/2017");
+            event.eventType = "SCG" + eventPatternMatch[2].replace(/\s/g, "");
             event.city = eventPatternMatch[3];
             event.country = eventPatternMatch[4];
             event.url = $resMainPage(eventsLinks[i]).attr("href").replace(/limit=\d{1,3}/i, "limit=100");
-            event.validation = {};
+            event.state = "startProduction";
+
+            if(Events.findOne({city : event.city, event : event.date, format : format, eventType : event.eventType}))
+            {
+                return;
+            }
+
+            Events.update({city : event.city, event : event.date, format : format, eventType : event.eventType},
+                {$set : event},
+                {upsert : true}
+            );
+
             var resEventPage = Meteor.http.get(event.url);
             if(resEventPage.statusCode == 200){
 
                 var $resEventPage = cheerio.load(resEventPage.content, {decodeEntities : false});
                 var decksLinks = $resEventPage('a[href*="DeckID"]');
-                var exists = false;
+                var state = "notFound";
                 if(decksLinks.length){
-                    exists = true;
+                    state = "exists";
                 }
-                event.validation.exists = exists;
+                event.state = state;
 
                 Events.update({city : event.city, event : event.date, format : format, eventType : event.eventType},
                     {$set : event},
@@ -45,8 +57,34 @@ getStarCityGamesEvents = function(format) {
     console.log("END: getStarCityGamesEvents");
 }
 
-getStarCityGamesEventsDownloadHTMLS = function(_id) {
-    console.log("START: getStarCityGamesEventsDownloadHTMLS");
+SCGnotFound = function(Events_id){
+
+    var event = Events.findOne({Events_id : "notFound"});
+
+    if(!event){
+        return;
+    }
+
+    var resEventPage = Meteor.http.get(event.url);
+
+    if(resEventPage.statusCode == 200){
+
+        var $resEventPage = cheerio.load(resEventPage.content, {decodeEntities : false});
+        var decksLinks = $resEventPage('a[href*="DeckID"]');
+        var state = "notFound";
+        if(decksLinks.length){
+            state = "exists";
+        }
+        event.state = state;
+
+        Events.update({_id : Events_id},
+            {$set : {}}
+        );
+    }
+}
+
+SCGEventExists = function(_id) {
+    console.log("START: SCGEventExists");
 
     var event = Events.findOne({_id : _id});
 
@@ -66,6 +104,8 @@ getStarCityGamesEventsDownloadHTMLS = function(_id) {
             var html = "";
             var urls = [];
             var urlChecked = false;
+
+            var wrong = 0;
             for(var j = 0; j < decksLinks.length; j++){
                 var resDeckHTML = Meteor.http.get($resEventPage(decksLinks[j]).attr("href"));
 
@@ -76,31 +116,56 @@ getStarCityGamesEventsDownloadHTMLS = function(_id) {
                         html += $resDeckHTML(deckListing[0]).html();
                         urlChecked = true;
                     }
+                }else{
+                    wrong ++;
                 }
                 urls.push({url : $resEventPage(decksLinks[j]).attr("href"), worked : urlChecked });
             }
+
+            var state;
+
+            if(wrong==0){
+                state="HTML"
+            }else{
+                state="HTMLPartial"
+            }
+
             Events.update({_id : _id},
                           {$set :   {
-                                      "validation.htmlDownloaded" : true,
-                                      urls : urls
+                                      state : state,
                                     }
                           }
             )
-            EventsHtmls.insert({Events_id : _id, html : html})
+            EventsHtmls.insert({Events_id : _id, html : html, urls : urls})
         }
+    }else{
+        Events.update({_id : _id},
+            {$set :   {
+                state : "HTMLFail"
+            }
+            }
+        )
     }
-    console.log("END: getStarCityGamesEventsDownloadHTMLS");
+    console.log("END: SCGEventExists");
 }
 
-getStarCityGamesExtractDecks = function(_id){
+SCGEventHTML = function(_id){
+
+
+    console.log("START: SCGEventHTML");
     DecksData.remove({Events_id : _id});
-    var event = Events.findOne({_id : _id});
+    var event = Events.findOne({_id : _id, state : "HTML"});
+    if(!event){
+        return;
+    }
+
     var html = EventsHtmls.findOne({Events_id : _id}).html;
 
     var $decksBlocks = cheerio.load(html, {decodeEntities : false});
     var decks = $decksBlocks("#article_content");
 
 
+    var decksCount = 0;
     for(var i = 0; i < decks.length; i++){
         var positionPatt = /\d+(?=st|nd|rd|th)/i;
 
@@ -146,11 +211,36 @@ getStarCityGamesExtractDecks = function(_id){
                 sideboard.push({name : cardName, quantity : quantity, wrongName : true});
             }
         }
+
         data.totalMain = totalMain;
         data.main = main;
         data.totalSideboard = totalSideboard;
         data.sideboard = sideboard;
+        data.colors = setUpColorForDeckName(main);
+
         DecksData.insert(data);
+        decksCount++;
 
     }
+    if(decksCount == decks.length){
+        Events.update(
+            {_id : _id},
+            {
+                $set : {
+                    state : "decks", decks : decks.length
+                }
+            }
+        );
+    }else{
+        Events.update(
+            {_id : _id},
+            {
+                $set : {
+                    state : "decks", decks : decks.length
+                }
+            }
+        );
+    }
+
+    console.log("END: SCGEventHTML");
 }

@@ -10,6 +10,7 @@ class PlayerNameInput extends React.Component{
 
     handleChange (e) {
         this.setState({inputValue : e.target.value})
+        this.isValid();
     }
 
     isValid() {
@@ -18,7 +19,7 @@ class PlayerNameInput extends React.Component{
         var error = this.refs["error"];
         if (this.state.inputValue === "") {
             input.classList.add('error');
-            error.textContent = "Name is Required";
+            error.textContent = this.props.errorMessage;
             return false;
         }
         else {
@@ -34,7 +35,9 @@ class PlayerNameInput extends React.Component{
     }
 
     getCorrectedValue(){
-        return {title : this.state.inputValue};
+        var object = {};
+        object[this.props.objectName] = this.refs["input"].value;
+        return object;
     }
 
     componentDidMount() {
@@ -46,7 +49,7 @@ class PlayerNameInput extends React.Component{
     render() {
         return (
             <div className="form-group">
-                <label> Event Name: </label>
+                <label> {this.props.title}: </label>
                 <input type={"text"}
                        value={this.state.inputValue}
                        ref={"input"}

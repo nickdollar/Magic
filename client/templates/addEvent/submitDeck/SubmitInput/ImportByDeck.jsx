@@ -29,6 +29,7 @@ class ImportByDeck extends React.Component{
                 <label htmlFor="example-search-input" className="col-xs-2 col-form-label">import from deck</label>
                 <div className="col-xs-10">
                     <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control">
+                        <option></option>
                         {this.props.DecksNames.map((DeckName)=>{
                             return <option key={DeckName._id} value={DeckName._id}>{DeckName.name}</option>
                         })}

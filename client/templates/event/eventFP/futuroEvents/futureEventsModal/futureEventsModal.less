@@ -1,5 +1,72 @@
 .futureEventsModal {
+    .af-map-search-box {
+        margin-top: 8px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
 
+    #locationField, #controls {
+        position: relative;
+    }
+    #autocomplete {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .label {
+        text-align: right;
+        font-weight: bold;
+        width: 100px;
+        color: #303030;
+    }
+    #address {
+        border: 1px solid #000090;
+        background-color: #f0f0ff;
+        width: 480px;
+        padding-right: 2px;
+    }
+    #address td {
+        font-size: 10pt;
+    }
+    .field {
+        width: 99%;
+    }
+    .slimField {
+        width: 80px;
+    }
+    .wideField {
+        width: 200px;
+    }
+    #locationField {
+        height: 20px;
+        margin-bottom: 2px;
+    }
+
+    .af-map-search-box {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 350px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+    }
+
+    .af-map-search-box:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 401px;
+    }
+
+    .af-map-search-box-hidden {
+        display: none;
+    }
 
     .futureEventsForm {
         padding: 0px 20px;
@@ -16,7 +83,20 @@
 }
 
 
+.pac-container {
+    background-color: #FFF;
+    z-index: 1051;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
 
+#eventCalendarModal{
+    z-index: 20;
+}
+.modal-backdrop{
+    z-index: 10;
+}​
 
 body.modal-open {
     padding-right: 0px !important;

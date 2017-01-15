@@ -77,8 +77,8 @@
 //
 // Template.dbDecksNames.events({
 //     "click .js-DecksNames_id" : function(){
-//         var row = $(event.target).closest('tr').get(0);
-//         var dataTable = $(event.target).closest('table').DataTable();
+//         var row = $(Events.target).closest('tr').get(0);
+//         var dataTable = $(Events.target).closest('table').DataTable();
 //         var rowData = dataTable.row(row).data();
 //         if (!rowData) return; // Won't be data if a placeholder row is clicked
 //         $('#decksIdsPercentage').DataTable().clear();
@@ -99,9 +99,9 @@
 //             });
 //         }, 5);
 //     },
-//     "click .js-DecksData_id" : function(event, template){
-//         var row = $(event.target).closest('tr').get(0);
-//         var dataTable = $(event.target).closest('table').DataTable();
+//     "click .js-DecksData_id" : function(Events, template){
+//         var row = $(Events.target).closest('tr').get(0);
+//         var dataTable = $(Events.target).closest('table').DataTable();
 //         var rowData = dataTable.row(row).data();
 //         Template.instance().DecksData_id.set();
 //         var thatTemplate = Template.instance();
@@ -207,9 +207,9 @@
 // // });
 // //
 // // Template.decksPercentageTable.events({
-// //     "click .js-selectDeck_id" : function(event, template){
-// //         var row = $(event.target).closest('tr').get(0);
-// //         var dataTable = $(event.target).closest('table').DataTable();
+// //     "click .js-selectDeck_id" : function(Events, template){
+// //         var row = $(Events.target).closest('tr').get(0);
+// //         var dataTable = $(Events.target).closest('table').DataTable();
 // //         var rowData = dataTable.row(row).data();
 // //         Template.instance().selectedDeck_id.set();
 // //         var thatTemplate = Template.instance();

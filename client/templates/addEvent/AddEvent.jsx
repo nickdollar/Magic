@@ -1,28 +1,18 @@
 import React from 'react' ;
 import SubmitDeck from './submitDeck/SubmitDeck.jsx';
+import CreateEvent from './createEvent/CreateEvent.jsx';
 
-class SubmitDeckFP extends React.Component{
+
+class AddEvent extends React.Component{
 
 
     constructor(props){
         super();
-        this.state = {inputValue : this.text(props.deck)};
+        this.state = {};
     }
 
     componentDidMount(){
 
-    }
-
-    componentWillUnmount(){
-        this.convertTextToDeck();
-    }
-
-    onChangeOnArea(e){
-        this.setState({inputValue : e.target.value})
-    }
-
-    componentWillReceiveProps(nextProps){
-        this.setState({inputValue : this.text(nextProps.deck)});
     }
 
     render(){
@@ -30,9 +20,10 @@ class SubmitDeckFP extends React.Component{
         return (
             <div >
                 <SubmitDeck />
+                <CreateEvent />
             </div>
         )
     }
 }
 
-export default SubmitDeckFP;
+export default AddEvent;

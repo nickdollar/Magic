@@ -1,14 +1,15 @@
-setUpColorForDeckName = function(deckCards){
+setUpColorForDeckName = function(main){
     var manaRegex = new RegExp("(?:B|C|G|R|U|W)?\/?(?:P|B|C|G|R|U|W)(?=})", 'g');
     var tempMana = {B : 0, C: 0, G : 0, R : 0, U: 0, W : 0,
                     "B/G" : 0, "B/R" : 0, "G/U" : 0, "G/W" : 0, "R/G" : 0,
                     "R/W" : 0, "U/B" : 0, "U/R" : 0, "W/B" : 0, "W/U" : 0,
                     "B/P" : 0, "G/P" : 0, "R/P" : 0, "U/P" : 0, "W/P" : 0};
-    deckCards.main.forEach(function(card){
-        if(CardsData.findOne({name : card.name}) != null ){
+    main.forEach(function(card){
+        var cardQuery = CardsData.findOne({name : card.name});
+        if(cardQuery){
             var mana = CardsData.findOne({name : card.name}).manacost;
             var result;
-            while((result = manaRegex.exec(mana)) !== null) {
+            while(result = manaRegex.exec(mana)) {
                 if      (result[0] == "B")   {tempMana["B"]++}
                 else if (result[0] == "C")   {tempMana["C"]++}
                 else if (result[0] == "G")   {tempMana["G"]++}
@@ -35,6 +36,8 @@ setUpColorForDeckName = function(deckCards){
     });
     return tempMana;
 }
+
+
 
 pad = function(n) {
     return (n < 10) ? ("0" + n) : n;

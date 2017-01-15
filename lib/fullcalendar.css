@@ -438,7 +438,7 @@ a[data-goto]:hover {
 	z-index: 1;
 }
 
-/* highlighting cells & background event skeleton */
+/* highlighting cells & background Events skeleton */
 
 .fc-row .fc-bgevent-skeleton,
 .fc-row .fc-highlight-skeleton {
@@ -491,7 +491,7 @@ temporary rendered events).
 
 .fc-row .fc-content-skeleton tbody td, /* cells with events inside (so NOT the day number cell) */
 .fc-row .fc-helper-skeleton tbody td {
-	/* don't put a border between event cells */
+	/* don't put a border between Events cells */
 	border-top: 0;
 }
 
@@ -543,7 +543,7 @@ temporary rendered events).
 }
 
 .fc-not-allowed, /* causes a "warning" cursor. applied on body */
-.fc-not-allowed .fc-event { /* to override an event's custom cursor */
+.fc-not-allowed .fc-event { /* to override an Events's custom cursor */
 	cursor: not-allowed;
 }
 
@@ -695,7 +695,7 @@ temporary rendered events).
 
 /* DayGrid events
 ----------------------------------------------------------------------------------------------------
-We use the full "fc-day-grid-event" class instead of using descendants because the event won't
+We use the full "fc-day-grid-Events" class instead of using descendants because the Events won't
 be a descendant of the grid when it is being dragged.
 */
 
@@ -705,7 +705,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 tr:first-child > td > .fc-day-grid-event {
-	margin-top: 2px; /* a little bit more space before the first event */
+	margin-top: 2px; /* a little bit more space before the first Events */
 }
 
 .fc-day-grid-event.fc-selected:after {
@@ -1063,7 +1063,7 @@ a.fc-more:hover {
 	z-index: 5;
 }
 
-.fc-time-grid .fc-helper-container { /* also is fc-event-container */
+.fc-time-grid .fc-helper-container { /* also is fc-Events-container */
 	position: relative;
 	z-index: 6;
 }
@@ -1151,7 +1151,7 @@ a.fc-more:hover {
 
 /* TimeGrid Event Styling
 ----------------------------------------------------------------------------------------------------
-We use the full "fc-time-grid-event" class instead of using descendants because the event won't
+We use the full "fc-time-grid-Events" class instead of using descendants because the Events won't
 be a descendant of the grid when it is being dragged.
 */
 
@@ -1160,7 +1160,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .fc-time-grid-event.fc-selected {
-	/* need to allow touch resizers to extend outside event's bounding box */
+	/* need to allow touch resizers to extend outside Events's bounding box */
 	/* common fc-selected styles hide the fc-bg, so don't need this anyway */
 	overflow: visible;
 }
@@ -1339,7 +1339,7 @@ be a descendant of the grid when it is being dragged.
 .fc-rtl .fc-list-heading-main { float: right; }
 .fc-rtl .fc-list-heading-alt { float: left; }
 
-/* event list items */
+/* Events list items */
 
 .fc-list-item.fc-has-url {
 	cursor: pointer; /* whole row will be clickable */
@@ -1355,12 +1355,12 @@ be a descendant of the grid when it is being dragged.
 	width: 1px;
 }
 
-/* make the dot closer to the event title */
+/* make the dot closer to the Events title */
 .fc-ltr .fc-list-item-marker { padding-right: 0; }
 .fc-rtl .fc-list-item-marker { padding-left: 0; }
 
 .fc-list-item-title a {
-	/* every event title cell has an <a> tag */
+	/* every Events title cell has an <a> tag */
 	text-decoration: none;
 	color: inherit;
 }

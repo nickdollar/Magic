@@ -61,9 +61,9 @@
 // }
 //
 // extractInfoFromMtgoDaily = function(format){
-//     var event = Events.findOne({});
+//     var Events = Events.findOne({});
 //
-//     var $ = cheerio.load(event.html);
+//     var $ = cheerio.load(Events.html);
 //     var decks = $('.bean--wiz-content-deck-list');
 //
 //     var rows = $(".even, .odd");
@@ -79,7 +79,7 @@
 //         rankingsTable.push(table);
 //     }
 //
-//     _Event.update({_id : event._id},{
+//     _Event.update({_id : Events._id},{
 //         $set : {rankings : rankingsTable}
 //     });
 //
@@ -87,11 +87,11 @@
 //
 //         var information = getDeckInfo($(decks[i]).find('h4').html());
 //         var data = {
-//             _eventID : event._id,
-//             date : event.date,
-//             eventType : event.eventType,
+//             _eventID : Events._id,
+//             date : Events.date,
+//             eventType : Events.eventType,
 //             player : information.player,
-//             format : event.format,
+//             format : Events.format,
 //             score : {victory : information.victory, draw : information.draw, loss : information.loss}
 //         };
 //

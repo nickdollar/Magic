@@ -1,6 +1,9 @@
 Meteor.methods({
-    methodsCardsData: function () {
+    methodsCardsData(){
         makeCardsData()
+    },
+    getAutoComplete(term){
+        var regex = new RegExp("^" + term.term, "i");
+        return CardsData.find({name : {$regex : regex}}, {limit : 6, fields : {name : 1}}).fetch();
     }
 });
-

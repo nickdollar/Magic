@@ -5,8 +5,7 @@ import EventEmailInput from "./CreateEventFormInputs/EventEmailInput.jsx";
 import FormatsInput from "./CreateEventFormInputs/FormatsInput.jsx";
 import EventToken from "./CreateEventFormInputs/EventToken.jsx";
 import EventPasswordInput from "./CreateEventFormInputs/EventPasswordInput.jsx";
-
-
+import EventDateInput from "./CreateEventFormInputs/EventDateInput.jsx";
 
 
 class LGSAddNewStoreForm extends React.Component{
@@ -41,10 +40,14 @@ class LGSAddNewStoreForm extends React.Component{
                     return;
                 }
 
+                if(!data){
+                    this.refs["serverMessage"].textContent = "Token Already Exists for that Store";
+                    return;
+                }
+                this.refs["serverMessage"].textContent = "";
+
                 this.props.receiveCreatedEventInfo(data);
-                // this.state.Fields.forEach((field)=>{
-                //     field.clearInput();
-                // });
+
             });
         }
     }
@@ -61,15 +64,16 @@ class LGSAddNewStoreForm extends React.Component{
         return (
             <div>
                 <form name="contactForm" noValidate  onSubmit={this.handleSubmit.bind(this)}>
-                    <LGSNameFieldContainer onComponentMounted={this.register.bind(this)} objectName={"lgs_id"} title={"LGS"} errorMessage="Select A Store."/>
+                    <LGSNameFieldContainer onComponentMounted={this.register.bind(this)} objectName={"LGS_id"} title={"LGS"} errorMessage="Select A Store."/>
                     <EventNameField onComponentMounted={this.register.bind(this)} objectName={"eventName"} title={"Event Name"}  errorMessage="Name Required."/>
                     <EventToken onComponentMounted={this.register.bind(this)} objectName={"token"} title={"Event Token (No spaces, code that will be used to submit decks)"}  errorMessage="Token is Required."/>
+                    <EventDateInput onComponentMounted={this.register.bind(this)} objectName={"date"} title={"Date"}  errorMessage="Missing Date"/>
                     <EventEmailInput onComponentMounted={this.register.bind(this)} objectName={"email"} title={"Email to send token and link, and password. (Optional)"}  errorMessage="E-mail is not Valid."/>
                     <FormatsInput onComponentMounted={this.register.bind(this)} objectName={"format"} title={"Format: "}  errorMessage="Format is Needed."/>
                     <EventPasswordInput onComponentMounted={this.register.bind(this)} objectName={"password"} title={"Password: "}  errorMessage="Password is needed."/>
 
                     <button type="submit" className="btn btn-default">Submit</button>
-                    <p className="servermessage">{this.state.ServerMessage}</p>
+                    <div ref="serverMessage"></div>
                 </form>
             </div>
         );

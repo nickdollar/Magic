@@ -111,6 +111,8 @@ Template.AdminDecksdataAddNames.events({
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(row).data();
         tmp.selectedDeck.set();
+        tmp.deckPercentage.set();
+
         Meteor.setTimeout(function(){
             tmp.selectedDeck.set(rowData._id);
         }, 200);

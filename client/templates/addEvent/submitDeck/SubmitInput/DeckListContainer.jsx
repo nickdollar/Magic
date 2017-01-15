@@ -1,11 +1,10 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import DeckList from './DeckList.jsx';
 
-export default DecklistContainer = createContainer(({deck, setDeck, changeCardDeck, removeCardDeck, addCardDeck}) => {
+export default DecklistContainer = createContainer(({deck}) => {
     var cards = deck.main.map((card)=>{
         return card.name
     })
-    
     cards = cards.concat(deck.sideboard.map((card)=>{
         return card.name
     }))
@@ -16,11 +15,6 @@ export default DecklistContainer = createContainer(({deck, setDeck, changeCardDe
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        CardsData: CardsData.find().fetch(),
-        deck : deck,
-        setDeck : setDeck,
-        changeCardDeck : changeCardDeck,
-        removeCardDeck : removeCardDeck,
-        addCardDeck : addCardDeck
+
     };
 }, DeckList);

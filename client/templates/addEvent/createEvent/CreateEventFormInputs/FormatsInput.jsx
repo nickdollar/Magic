@@ -27,10 +27,9 @@ class formatInput extends React.Component{
     isValid() {
         var input = this.refs["input"];
         var error = this.refs["error"];
-        console.log(this.state.inputValue);
         if (this.state.inputValue.length == 0) {
             input.classList.add('error'); //add class error
-            error.textContent = "Choose a format";
+            error.textContent = this.props.errorMessage;
             return false;
         }
         else {
@@ -41,7 +40,9 @@ class formatInput extends React.Component{
     }
 
     getCorrectedValue(){
-        return {formats : this.state.inputValue};
+        var object = {};
+        object[this.props.objectName] = $(this.refs["input"]).find(":checked")[0].value;
+        return object;
     }
 
     componentDidMount() {
@@ -52,15 +53,15 @@ class formatInput extends React.Component{
 
     render() {
         var formatCheckboxes = formats.map((format)=>{
-            return <label className="checkbox-inline" key={format} >
-                <input type="checkbox" name="days" value={format}/>{format}
-            </label>
+            return <label className="radio-inline" key={format} >
+                    <input type="radio" name="days" value={format}/>{format}
+                </label>
         });
 
         return (
             <div className="form-group">
-                <label> Formats: </label>
-                <div onChange={this.handleChange.bind(this)} ref={"input"} required={this.props.isRequired}>
+                <label> {this.props.title} </label>
+                <div className="form-control" onChange={this.handleChange.bind(this)} ref={"input"} required={this.props.isRequired}>
                     {formatCheckboxes.map((daysObj)=>{
                         return daysObj
                     })}

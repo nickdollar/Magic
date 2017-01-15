@@ -14,8 +14,13 @@ Meteor.publish("DecksNames", function(){
     return DecksNames.find({});
 });
 
+Meteor.publish("DecksNamesByFormat", function(format){
+    return DecksNames.find({format : format, DecksArchetypes_id : {$ne : null}});
+});
+
+
 Meteor.publish("DecksNamesGlobal", function(){
-    return DecksNames.find({}, {fields : {DecksData : 0, main : 0}});
+    return DecksNames.find({}, {fields : {DecksData : 0}});
 });
 
 Meteor.publish("DecksNamesFormatNotReactive", function(format){
@@ -30,7 +35,6 @@ Meteor.publish('deckSelectedSelectedName', function(format, name){
     format = format.replace(/-/g, ".");
     name = name.replace(/-/g, ".");
     var nameRegex = new RegExp(name, "g");
-    console.log(nameRegex);
     return DecksNames.find({format : format, name : {$regex : nameRegex}});
 });
 

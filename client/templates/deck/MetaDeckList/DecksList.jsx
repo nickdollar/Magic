@@ -1,6 +1,6 @@
 import React from "react";
 
-class MetaDeckList extends React.Component{
+class DecksList extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -10,10 +10,10 @@ class MetaDeckList extends React.Component{
     render() {
         return (
             <div className="row">
-                deckMetaList
+                DecksList
             </div>
         )
     }
 }
 
-export default MetaDeckList;
+export default DecksList;

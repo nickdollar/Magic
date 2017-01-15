@@ -1,6 +1,6 @@
 import React from 'react' ;
 
-export default class AdminCardsFullDataFix extends React.Component {
+class AdminCardsFullDataFix extends React.Component {
 
     myClick (){
         
@@ -12,3 +12,5 @@ export default class AdminCardsFullDataFix extends React.Component {
         )
     }
 }
+
+export default AdminCardsFullDataFix;

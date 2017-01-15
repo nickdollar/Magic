@@ -1,6 +1,5 @@
 Meteor.methods({
-    addEvents : function(form){
+    addCalendarEvents : function(form){
         EventsCalendar.insert(form);
-        console.log(form);
     },
 })

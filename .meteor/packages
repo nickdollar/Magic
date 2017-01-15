@@ -7,7 +7,7 @@
 handlebars@1.0.7
 reywood:publish-composite
 templates:tabs
-less@2.7.7
+less@2.7.8
 underscore@1.0.10
 manuel:reactivearray
 tmeasday:publish-counts
@@ -16,7 +16,7 @@ froatsnook:request
 meteor-base@1.0.4
 mobile-experience@1.0.4
 mongo@1.1.14
-blaze-html-templates@1.0.4
+blaze-html-templates
 session@1.1.7
 tracker@1.1.1
 logging@1.1.16
@@ -32,18 +32,17 @@ cfs:gridfs
 cfs:filesystem
 percolate:synced-cron
 meteorhacks:fast-render
-jquery@1.11.2
-tsega:bootstrap3-datetimepicker@=3.1.3_3
+jquery@1.11.10
 andrei:tablesorter
 mizzao:jquery-ui
 spacebars-compiler@1.0.12
 standard-minifier-css@1.3.2
 standard-minifier-js@1.2.1
 themeteorchef:jquery-validation
-ecmascript@0.5.9
+ecmascript@0.6.1
 reactive-dict@1.1.8
 rzymek:fullcalendar
-
+mdg:geolocation
 #cool things
 mrt:flash-messages
 
@@ -63,9 +62,10 @@ reactive-var@1.0.11
 meteortoys:allthings
 
 #accounts
-accounts-ui
-accounts-password
-accounts-base
+accounts-ui@1.1.9
+accounts-password@1.3.3
+accounts-base@1.2.14
+accounts-facebook
 #accounts-github
 #accounts-twitter
 #accounts-meetup
@@ -74,6 +74,8 @@ useraccounts:bootstrap
 #useraccounts:unstyled
 alanning:roles
 aldeed:autoform
+email@1.1.18
+
 
 #dtables plugins
 aslagle:reactive-table
@@ -89,17 +91,21 @@ jamiecollinson:selectize-bootstrap
 comerc:autoform-selectize
 shell-server@0.2.1
 aldeed:autoform-bs-datetimepicker
+tsega:bootstrap3-datetimepicker@=3.1.3_3
 mpowaga:autoform-summernote
 fortawesome:fontawesome
 aldeed:collection2
 
 dburles:collection-helpers
-alizbeo:flow-db-admin
-#yogiben:admin
+#alizbeo:flow-db-admin
 aldeed:tabular
-
 
 kadira:blaze-layout
 kadira:flow-router
 arillo:flow-router-helpers
 react-template-helper
+dburles:google-maps
+lukemadera:autoform-googleplace
+ultimatejs:tracker-react@=1.0.5
+react-meteor-data
+force-ssl

@@ -4,20 +4,25 @@ Template.exampleDeck_COL.onCreated(function(){
     this.deckSelectedParamRegex = new ReactiveVar();
     this.checks.set("deckName", true);
     this.checks.set("test2", false);
+    this.checks.set("waitForFirstPass", true);
+
+
 
     this.autorun(()=>{
         this.deckSelectedParamRegex.set(new RegExp("^" + replaceDashWithDotForRegex(FlowRouter.getParam("deckSelected")) + "$", "i"));
     })
 
     this.autorun(()=>{
-        this.checks.set("deckdata", false);
-        this.subscribe("deckSelectedAndCardsData", this.selectedDecksData.get(), DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : this.deckSelectedParamRegex.get()}})._id, {
-            onReady : ()=>{
-                Meteor.setTimeout(()=>{
-                    this.checks.set("deckdata", true);
-                }, 200)
-            }
-        });
+        if(this.checks.get("waitForFirstPass")){
+            this.checks.set("deckdata", false);
+            this.subscribe("deckSelectedAndCardsData", this.selectedDecksData.get(), DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : this.deckSelectedParamRegex.get()}})._id, {
+                onReady : ()=>{
+                    Meteor.setTimeout(()=>{
+                        this.checks.set("deckdata", true);
+                    }, 200)
+                }
+            });
+        }
     });
 });
 
@@ -82,8 +87,10 @@ Template.exampleDeck_COL.helpers({
             content: function () {
                 var cardName = encodeURI($(this).data('name'));
                 cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                var linkBase = "http://plex.homolka.me.uk:10080/";
-                var finalDirectory = linkBase+cardName+".full.jpg";
+                var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+
+                var finalDirectory = linkBase+cardName+".full.jpg" + key;
                 return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
             }
         });
@@ -102,10 +109,12 @@ Template.exampleDeck_COL.events({
         var row = $(event.target).closest('tr').get(0);
         var dataTable = $(event.target).closest('table').DataTable();
         var rowData = dataTable.row(row).data();
+        template.checks.set("waitForFirstPass", false);
         template.selectedDecksData.set();
         Meteor.setTimeout(function(){
                 template.checks.set("deckName", true);
                 template.selectedDecksData.set(rowData._id);
+                template.checks.set("waitForFirstPass", true);
         }, 100)
     }
 });

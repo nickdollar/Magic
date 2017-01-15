@@ -1,11 +1,16 @@
 import React from "react";
 
-class LGSNameField extends React.Component{
+
+class LGSInput extends React.Component{
     constructor() {
         super();
         this.state = {
-            inputValue : ""
+            inputValue : false
         }
+    }
+
+    clearInput(){
+        this.setState({inputValue : 0});
     }
 
     isValid() {
@@ -13,7 +18,7 @@ class LGSNameField extends React.Component{
         var error = this.refs["error"];
         if (input.value === "") {
             input.classList.add('error');
-            error.textContent = "Add Name To Store";
+            error.textContent = this.props.errorMessage;
             return false;
         }
         else {
@@ -21,42 +26,44 @@ class LGSNameField extends React.Component{
             error.textContent  = "";
 
         }
+
         return true;
     }
 
-    clearInput(){
-        this.setState({inputValue : ""});
-    }
-
     getCorrectedValue(){
-        return {LGS_id : this.refs["input"].value};
-
-    }
-
-    handleChange(e){
-        this.setState({inputValue : e.target.value});
-        this.isValid(e.target.name);
+        var object = {};
+        object[this.props.objectName] = this.refs["input"].value;
+        return object;
     }
 
     componentDidMount() {
         if (this.props.onComponentMounted) {
             this.props.onComponentMounted(this);
         }
+
+        $(this.refs["input"]).select2({
+            placeholder: 'Select an option'
+        }).on("change", (e)=>{
+            this.isValid();
+        });
     }
 
     render() {
         return (
             <div className="form-group">
-                <label> LGS Name: </label>
-                    <input type={"text"}
-                              value={this.state.inputValue}
-                              ref={"input"}
-                              className='form-control'
-                              onChange={this.handleChange.bind(this)} />
+                <label> {this.props.title} </label>
+                <div>
+                    <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control">
+                        <option></option>
+                        {LGS.find({}).map((LGSObjects)=>{
+                            return <option key={LGSObjects._id} value={LGSObjects._id}>{LGSObjects.name} ({LGSObjects.location.city})</option>
+                        })}
+                    </select>
+                </div>
                 <span ref="error" className="error"></span>
             </div>
         )
     }
 }
 
-export default LGSNameField;
+export default LGSInput;

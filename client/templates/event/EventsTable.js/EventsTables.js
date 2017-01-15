@@ -1,3 +1,5 @@
+
+
 Template.EventsTables.helpers({
     eventsSmallSelector : function(){
         return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$lt : 16} }
@@ -5,6 +7,10 @@ Template.EventsTables.helpers({
     eventsBigSelector : function(){
         return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$gte : 16}}
     },
+    geoLocation : function(){
+        var location = Geolocation.latLng() || { lat: 0, lng: 0 };
+        return Geolocation.latLng() || { lat: 0, lng: 0 };
+    }
 
 });
 

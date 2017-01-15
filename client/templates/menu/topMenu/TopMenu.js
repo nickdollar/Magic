@@ -1,3 +1,4 @@
+Session.set("distance", 20);
 Template.topMenu.helpers({
     format : function(){
         return Session.get("selectedMenuFormat");
@@ -10,9 +11,17 @@ Template.topMenu.helpers({
 });
 
 Template.topMenu.events({
+    "change .distanceNumber" (evt){
+        Session.set("distance", evt.target.value);
+    }
+});
+
+Template.topMenu.events({
     "click .logout" : function(){
         AccountsTemplates.logout()
     }
 });
 
-
+Template.topMenu.onRendered(function(){
+    $(".distanceNumber").val(Session.get("distance"));
+});

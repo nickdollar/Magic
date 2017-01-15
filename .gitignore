@@ -46,3 +46,4 @@ Temporary Items
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 node_modules
+**/.deploy/ssl.pem

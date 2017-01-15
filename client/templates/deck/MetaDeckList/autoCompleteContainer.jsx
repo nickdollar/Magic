@@ -1,12 +1,11 @@
 import { createContainer } from 'meteor/react-meteor-data';
-import CreatedEventInfo from './CreatedEventInfo.jsx';
+import AutoComplete from './AutoComplete.jsx';
 
-export default CreatedEventInfoContainer = createContainer(({eventInfo}) => {
+export default AutoCompleteContainer = createContainer(({}) => {
     var handle = Meteor.subscribe("LGSByLocationDistance", Session.get("position"), Session.get("distance"));
 
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        eventInfo : eventInfo
     };
-}, CreatedEventInfo);
+}, AutoComplete);

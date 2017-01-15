@@ -3,7 +3,6 @@ import React from 'react' ;
 export default class AdminCardsFullDataUpdateWholeCollection extends React.Component {
 
     myClick (){
-        console.log("BBBBBBBBfsdfBBBBBBB");
         Meteor.call("createCardsFullData");
     }
 

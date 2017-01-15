@@ -1,16 +1,13 @@
 import React from 'react' ;
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import LGSEventsCalendarContainer from "./LGSEventsCalendar/LGSEventsCalendarContainer.jsx";
 
-class List extends TrackerReact(React.Component) {
+class LGSTableList extends React.Component {
 
     constructor(){
         super();
-        var location;
-
-    }
-
-    componentWillUnmount(){
-        this.state.subscription.LGS.stop();
+        this.state = {
+            LGS : []
+        }
     }
 
     LGS(){
@@ -38,28 +35,84 @@ class List extends TrackerReact(React.Component) {
         return deg * (Math.PI/180)
     }
 
+
+    componentWillReceiveProps(newProps){
+
+        var arraysOfLGS = this.state.LGS.concat();
+
+        arraysOfLGS.forEach((LGSObj)=>{
+            LGSObj.showing = false;
+        });
+
+        if(newProps.LGS){
+            newProps.LGS.forEach((LGSObj)=>{
+
+                var index = arraysOfLGS.findIndex((obj)=>{
+                    return obj._id == LGSObj._id;
+                })
+
+                if(index == -1){
+                    arraysOfLGS.push({_id : LGSObj._id, checked : true, showing : true});
+                }else{
+                    arraysOfLGS[index].showing = true;
+                }
+            });
+            this.setState({LGS : arraysOfLGS});
+        }
+    }
+
+    checkedOrNotChecked(_id){
+        if(!this.state.LGS.find((LGSObj)=>{ return _id == LGSObj._id})){
+            return true;
+        }
+
+        return this.state.LGS.find((LGSObj)=>{ return _id == LGSObj._id}).checked;
+    }
+
+    checkEvent(e){
+        var arrayImu = this.state.LGS.concat();
+
+        var obj = arrayImu.find((arrayImuOby)=>{
+            return e.target.getAttribute("data-_id") == arrayImuOby._id;
+        })
+
+        if(obj.checked == true){
+            obj.checked = false;
+        }else{
+            obj.checked = true;
+        }
+        this.setState({LGS : arrayImu});
+    }
+
     render(){
         return(
-            <table className="table table-sm">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Distance</th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.props.LGS.map((lgs)=>{
-                    return <tr key={lgs._id}>
-                        <td>{lgs.name} ({lgs.location.city})</td>
-                        <td>{lgs.location.formatedAddress}</td>
-                        <td>{this.getDistanceFromLatLonInKm(lgs.location.coords.coordinates[0], lgs.location.coords.coordinates[1])} Miles</td>
+            <div className="LGSTableList">
+                <h3>LGS List</h3>
+                <table className="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Events</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Distance</th>
                     </tr>
-                })}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {this.props.LGS.map((lgs)=>{
+                        return <tr key={lgs._id}>
+                            <td><input type="checkbox" data-_id={lgs._id} checked={this.checkedOrNotChecked(lgs._id)} onChange={this.checkEvent.bind(this)}/></td>
+                            <td>{lgs.name} ({lgs.location.city})</td>
+                            <td>{lgs.location.formatedAddress}</td>
+                            <td>{this.getDistanceFromLatLonInKm(lgs.location.coords.coordinates[0], lgs.location.coords.coordinates[1])} Miles</td>
+                        </tr>
+                    })}
+                    </tbody>
+                </table>
+                <LGSEventsCalendarContainer LGS={this.state.LGS}/>
+            </div>
+
         );
     }
 }
 
-export default List;
+export default LGSTableList;

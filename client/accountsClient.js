@@ -1,4 +1,3 @@
-
 var mySubmitFunc = function(error, state){
     if (!error) {
         if (state === "signIn") {

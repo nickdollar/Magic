@@ -3,6 +3,7 @@
 makeCardsData = function(){
     console.log("START: makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllCards.json'));
+    CardsData.remove({});
 
     for (var key in myobject) {
 

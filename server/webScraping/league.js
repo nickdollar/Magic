@@ -52,7 +52,8 @@ eventLeagueGetInfoOld = function(format, days){
                     format : format,
                     eventName : leagueTypes[format],
                     eventType: eventType,
-                    url : url
+                    url : url,
+                    state : "startProduction"
                 }
             },
             {upsert : true}
@@ -62,22 +63,24 @@ eventLeagueGetInfoOld = function(format, days){
             var buffer = res.content;
             var $ = cheerio.load(buffer);
             var deckMeta = $('#main-content');
-            var upsert = false;
+            var state = "notFound";
             if(deckMeta.length == 0){
                 console.log("Page Doesn't exists");
             }else{
                 console.log("page exists");
-                upsert = true;
+                state = "exists";
             }
-        }
-        Events.update(
-            {eventType : eventType, date : date, format : format},
-            {
-                $set : {
-                    "validation.exists" : upsert
+
+            Events.update(
+                {eventType : eventType, date : date, format : format},
+                {
+                    $set : {
+                        state : state
+                    }
                 }
-            }
-        );
+            );
+        }
+
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
@@ -137,11 +140,11 @@ eventLeagueGetNewEvents = function(format){
             var buffer = res.content;
             var $ = cheerio.load(buffer);
             var deckMeta = $('#main-content');
-            var upsert = false;
+            var state = "pre";
             if(deckMeta.length == 0){
                 console.log("Page Doesn't exists");
             }else{
-                upsert = true;
+                state = "exist";
             }
                 console.log("page exists");
             }
@@ -149,7 +152,7 @@ eventLeagueGetNewEvents = function(format){
                 {eventType : eventType, date : date, format : format},
                 {
                     $set : {
-                        "validation.exists" : upsert
+                        "state" : state
                     }
                 }
             );
@@ -157,8 +160,53 @@ eventLeagueGetNewEvents = function(format){
         }
 }
 
+notFoundEvent = function(Event_id){
+    console.log("START: checkIfOldDailyLeagueEventsExists");
+    var eventNotFound = Events.findOne({_id : Event_id, state : "notFound"});
+
+    if(!eventNotFound){return};
+    var res = Meteor.http.get(eventNotFound.url);
+
+    if (res.statusCode == 200) {
+        var buffer = res.content;
+        var $ = cheerio.load(buffer);
+        var deckMeta = $('#main-content');
+        if(deckMeta.length == 0){
+            console.log("Page Doesn't exists");
+        }else{
+            console.log("page exists");
+            Events.update(
+                {_id : eventNotFound._id},
+                {
+                    $set : {
+
+                        state : "exists"
+                    }
+                }
+            );
+        }
+
+
+    }else{
+        var days = 10*24*60*60*1000;
+        if((new Date) - Events.findOne({_id : "RaXQGbAdNHkHSC7dj"}).date > days){
+            Events.update(
+                {_id : Event_id},
+                {
+                    $set : {
+                        state : "notFoundOld"
+                    }
+                }
+            );
+        }
+    }
+
+    console.log("END: checkIfOldDailyLeagueEventsExists");
+}
+
 eventLeagueDailyDownloadHTML = function(_id){
-    var event = Events.findOne({eventType : {$in : ["league", "daily"]}, _id : _id, "validation.exists" : true, $or : [{"validation.htmlDownloaded" : {$exists : false}}, {"validation.htmlDownloaded" : false}]});
+    console.log("START: eventLeagueDailyDownloadHTML");
+    var event = Events.findOne({_id : _id, state : {$in : ["exists", "HTMLFail"]}});
 
     if(event == null) {
         return;
@@ -172,17 +220,16 @@ eventLeagueDailyDownloadHTML = function(_id){
         var $ = cheerio.load(buffer);
         var deckMeta = $('#main-content');
         if(deckMeta.length == 0){
-            console.log("event not found");
+            console.log("Events not found");
             Events.update(
                 {_id : _id},
                 {
                     $set : {
-                        "validation.htmlDownloaded" : false
+                        state : "HTMLFail"
                     }
                 }
             );
         }else{
-            console.log("event found");
             EventsHtmls.update(
                 {Events_id : _id},
                 {
@@ -197,17 +244,17 @@ eventLeagueDailyDownloadHTML = function(_id){
                 {_id : _id},
                 {
                     $set : {
-                        "validation.htmlDownloaded" : true
+                        state : "HTML"
                     }
                 }
             );
         }
     }
+    console.log("END: eventLeagueDailyDownloadHTML");
 };
 
 eventLeagueDailyExtractDecks = function(_id){
-    var event = Events.findOne({_id : _id, "validation.exists" : true, "validation.htmlDownloaded" : true, $or : [{"validation.extractDecks" : {$exists : false}}, {"validation.extractDecks" : false}]});
-
+    var event = Events.findOne({_id : _id, state : "HTML"});
 
     if(event == null) return;
     DecksData.remove({Events_id : event._id});
@@ -286,8 +333,7 @@ eventLeagueDailyExtractDecks = function(_id){
         data.main = main;
         data.totalSideboard = totalSideboard;
         data.sideboard = sideboard;
-        var colors = setUpColorForDeckName(main);
-        data.colors = colors;
+        data.colors = setUpColorForDeckName(main);
         DecksData.insert(data);
 
     }
@@ -296,7 +342,8 @@ eventLeagueDailyExtractDecks = function(_id){
         {_id : event._id},
         {
             $set : {
-                "validation.extractDecks" : true, decks : decks.length
+                state : "decks",
+                decks : decks.length
             }
         }
     );

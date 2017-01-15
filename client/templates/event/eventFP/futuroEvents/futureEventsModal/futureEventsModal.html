@@ -8,12 +8,12 @@
                         <h4 class="modal-title" id="myModalLabel">Add a Event</h4>
                     </div>
                     <div class="modal-body">
-                        <!--{{>quickForm schema=EventsCalendar id="eventsCalendar"}}-->
-
-                            {{#autoForm id="addEventCalendar" schema=EventsCalendar type="method" meteormethod="addEvents"}}
+                            {{#autoForm id="addEventCalendar" schema=EventsCalendar type="method" meteormethod="addCalendarEvents"}}
                             <fieldset>
                                 {{> afQuickField name='title'}}
                                 {{> afQuickField name='eventSourceUrl'}}
+                                {{> afQuickField name="location" type="googlePlaces"}}
+
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" class="streamed-toggle"> Streamed
@@ -46,7 +46,11 @@
             </div>
         </div>
     </div>
+
 </template>
+
+
+
 
 
 <template name="timezones">

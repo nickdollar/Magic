@@ -1,23 +1,54 @@
-deckNameAndArchetype = function(str) {
+deckNameAndArchetypeFix = function(str) {
 
-    str = str.toLowerCase();
-    str = str.replace("^uw ", "UW ");
-    str = str.replace("tron", "Tron");
-    str = str.replace("^uwx ", "UWx ");
-    str = str.replace("^rb ", "RB ");
-    str = str.replace("^ub ", "UB ");
-    str = str.replace("^brgw ", "BRGW ");
-    str = str.replace("^ur ", "UR ");
-    str = str.replace("^4c ", "4C ");
-    str = str.replace("^rug ", "rug ");
-    str = str.replace("^urg ", "RUG ");
-    str = str.replace("^rg ", "RG ");
-    str = str.replace("^rw ", "RW ");
-    str = str.replace("^ug ", "UG ");
-    str = str.replace("^gw ", "GW ");
-    str = str.replace("^w/u ", "W/U ");
-    str = str.replace("^ugr ", "RUG ");
+    str = str.toTitleCase();
+    str = str.replace(/^uw /i, "UW ");
+    str = str.replace(/^wu /i, "UW ");
 
-    return upperFirstLetters(str);
+    str = str.replace(/^rb /i, "RB ");
+    str = str.replace(/^br /i, "RB ");
+
+    str = str.replace(/^ub /i, "UB ");
+    str = str.replace(/^bu /i, "UB ");
+
+    str = str.replace(/^uwx /i, "UWx ");
+
+    str = str.replace(/^rug /i, "RUG ");
+    str = str.replace(/^urg /i, "RUG ");
+    str = str.replace(/^ugr /i, "RUG ");
+
+    str = str.replace(/^gb /i, "GB ");
+    str = str.replace(/^bg /i, "GB ");
+
+    str = str.replace(/^brgw /i, "BRGW ");
+
+
+    str = str.replace(/^bgru /i, "BGRU ");
+
+
+    str = str.replace(/^ur /i, "UR ");
+    str = str.replace(/^ru /i, "UR ");
+
+    str = str.replace(/^bw /i, "WB ");
+    str = str.replace(/^wb /i, "WB ");
+
+    str = str.replace(/^4c /i, "4C ");
+
+    str = str.replace(/^rg /i, "RG ");
+    str = str.replace(/^gr /i, "RG ");
+
+    str = str.replace(/^rw /i, "RW ");
+    str = str.replace(/^wr /i, "RW ");
+
+
+    str = str.replace(/^ug /i, "UG ");
+    str = str.replace(/^gu /i, "UG ");
+
+
+    str = str.replace(/^gw /i, "GW ");
+    str = str.replace(/^wg /i, "GW ");
+
+    str = str.replace(/tron/i, "Tron");
+    return str;
+
 }
 

@@ -17,7 +17,7 @@ class TextDeck extends React.Component{
     }
     
     convertTextToDeck(){
-        var linePatt = /(sb:+)?\s*(\d+)?x?\s*(?:\s\[.*\])? *((?:[a-zA-Z',-])+(?:\s[a-zA-Z',-]*)*)(?:\r|\n|$)/i;
+        var linePatt = /(sb:+)?\s*(\d+)?x?\s*(?:\s\[.*\])? *((?:[a-zA-Z',-])+(?:\s(?:\/\/)?[a-zA-Z',-]*)*)(?:\r|\n|$)/i;
         var sideboardPatt = /sideboard/i;
         var lines = this.refs["textInput"].value.split('\n');
         var main = [];

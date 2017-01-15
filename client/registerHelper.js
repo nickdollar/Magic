@@ -258,6 +258,10 @@ Template.registerHelper("prettifyDate", function(timestamp) {
     return dateString;
 });
 
+Template.registerHelper("MathRound", function(number) {
+    return Math.round(number);
+});
+
 Template.registerHelper("getLinkAddress", function(cardName) {
     cardName = encodeURI(cardName);
     cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");

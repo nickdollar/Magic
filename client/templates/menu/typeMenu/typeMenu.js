@@ -5,7 +5,7 @@ Template.typeMenu.helpers({
        if(FlowRouter.getRouteName() == "metaFP"){
            return "selectedMeta";
        }else if (FlowRouter.getRouteName() == "deckFP"){
-           return "selectADeck";
+           return "decks";
        }else if(FlowRouter.getRouteName() == "eventsFP"){
            return "events";
        }

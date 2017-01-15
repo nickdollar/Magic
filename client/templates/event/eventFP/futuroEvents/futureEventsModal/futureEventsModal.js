@@ -15,6 +15,26 @@ Template.futuroEventsModal.events({
     },
     'change .recurring-toggle': function (evt, template) {
         template.options.set("recurring", !template.options.get("recurring"));
+    },
+
+
+    'keydown #autocomplete' : function(evt, tmp, test){
+        // if (type == "keydown") {
+        //     var orig_listener = evt;
+        //     evt = function(Events) {
+        //         console.log(Events);
+        //         var suggestion_selected = $(".pac-item-selected").length > 0;
+        //         if (Events.which == 13 && !suggestion_selected) {
+        //             var simulated_downarrow = $.Event("keydown", {
+        //                 keyCode: 40,
+        //                 which: 40
+        //             });
+        //             orig_listener.apply(input, [simulated_downarrow]);
+        //         }
+        //
+        //         orig_listener.apply(input, [Events]);
+        //     };
+        // }
     }
 });
 
@@ -30,11 +50,21 @@ Template.futuroEventsModal.helpers({
     },
     recurring : function(){
         return Template.instance().options.get("recurring");
+    },
+    optsGoogleplace: function() {
+        return {
+            // type: 'googleUI',
+            // stopTimeoutOnKeyup: false,
+            // googleOptions: {
+            //   componentRestrictions: { country:'us' }
+            // }
+        }
     }
 });
 
 Template.futuroEventsModal.onRendered(function(){
-    $('#eventTime').datetimepicker({
+
+   $('#eventTime').datetimepicker({
         minDate : new Date()
     });
 
@@ -128,13 +158,8 @@ Template.futuroEventsModal.onRendered(function(){
 
 });
 
-Template.futuroEventsModal.events({
-    "keyup #eventName" : function(event){
-
-    }
-});
-
 Template.timezones.onRendered(function(){
+
 
     var tz = jstz.determine();
     var jquerya = this.$("option[value='"+ tz.name()+"']");
@@ -172,91 +197,11 @@ Template.timezones.onRendered(function(){
 
 });
 
-
-
-Template.timezones.onRendered(function(){
-
-});
-
-
 if (typeof Schemas === 'undefined' || Schemas === null) {
     Schemas = {};
 }
 
-
-Schemas.addEventCalendar = new SimpleSchema({
-    title: {
-        type: String,
-        label : "Event Name:"
-    },
-    eventSourceUrl: {
-        type: String,
-        regEx : SimpleSchema.RegEx.Url,
-        label : "Event Source Url:"
-    },
-    streamed : {
-        optional : true,
-        type : Boolean,
-        label : "Streamed?"
-    },
-    twitchChannelName: {
-        type: String,
-        optional : true,
-        custom : function(){
-            var streamedFieldSelected = this.field('streamed').value;
-            if(streamedFieldSelected){
-                if(!this.isSet){
-                    return "required";
-                }
-            }
-        },
-        regEx : /(^http(s)?:\/\/)?((www|en-es|en-gb|secure|beta|ro|www-origin|en-ca|fr-ca|lt|zh-tw|he|id|ca|mk|lv|ma|tl|hi|ar|bg|vi|th)\.)?twitch.tv\/(?!directory|p|user\/legal|admin|login|signup|jobs)(\w+)/,
-        label : "Twitch Channel URL:",
-    },
-    formats: {
-        type: [String],
-        label : "Formats:",
-        autoform : {
-            type : "select-checkbox-inline",
-            options : [
-                {label: "modern", value: "modern"},
-                {label: "standard", value: "standard"},
-                {label: "legacy", value: "legacy"},
-                {label: "vintage", value: "vintage"},
-                {label: "others", value: "others"}
-            ]
-        }
-    },
-    start: {
-        type: Date,
-        label : "Start Time",
-        autoform: {
-            type: "bootstrap-datetimepicker"
-        }
-    },
-    description: {
-        type : String,
-        label : "Description (Optional)",
-        optional : true,
-        autoform: {
-            afFieldInput:{
-                type : "summernote",
-                settings : {
-                    height: 180
-                }
-            }
-        }
-    }
-    // end: {
-    //     type: Date,
-    //     label : "End Time",
-    //     autoform: {
-    //         type: "bootstrap-datetimepicker"
-    //     }
-    // }
-});
-
-Schemas.addEventCalendar.messages({
+Schemas.EventsCalendar.messages({
     required: "[label] is required",
     passwordMismatch: "Passwords do not match",
     regEx: [
@@ -265,25 +210,26 @@ Schemas.addEventCalendar.messages({
     ]
 });
 
-
-
-// Schemas.addEventCalendar.messages({
-//     "twitch" : "GGGGGGGGGGGGG"
-// });
-// Schemas.reportPlaylist = new SimpleSchema({
-//     reportString: {
-//         type: String,
-//         optional: false,
-//         label : "Report",
-//         autoform: {
-//             type : "select-radio",
-//             options: [
-//                 {label: "Bad Playlist", value: "bad"},
-//                 {label: "Wrong Deck", value: "wrong"}
-//             ]
-//         }
-//     },
-//     _id : {
-//         type: String
-//     }
-// });
+AutoForm.hooks({
+    addEventCalendar: {
+        before: {
+            // Replace `formType` with the form `type` attribute to which this hook applies
+            method: function (doc) {
+                console.log(doc);
+                return doc;
+                // Then return it or pass it to this.result()
+                //return doc; (synchronous)
+                //return false; (synchronous, cancel)
+                //this.result(doc); (asynchronous)
+                //this.result(false); (asynchronous, cancel)
+            }
+        },
+    },
+    onError: function(formType, error) {
+        console.log("error");
+        console.log(error)
+    },
+    onSuccess: function(formType, result) {
+        console.log("SUCCESS");
+    },
+});

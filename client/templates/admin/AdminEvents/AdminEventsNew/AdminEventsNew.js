@@ -25,8 +25,11 @@ Template.AdminEventsNew.events({
     "click .js-fixAllThingsLeagueDaily" : function(evt, tmp){
         Meteor.call("fixAllThingsLeagueDaily", tmp.options.get("format"));
     },
-    "click .js-fixOldEventsWizards" : function(evt, tmp){
-        Meteor.call("fixOldEventsWizards", tmp.options.get("format"));
+    "click .js-checkIfOldDailyLeagueEventsExists" : function(evt, tmp){
+        Meteor.call("checkIfOldDailyLeagueEventsExists", tmp.options.get("format"));
+    },
+    "click .js-checkIfOldMTGOPTQEventsExists" : function(evt, tmp){
+        Meteor.call("checkIfOldMTGOPTQEventsExists", tmp.options.get("format"));
     },
 
     //MTGO PTQ

@@ -1,10 +1,10 @@
 module.exports = {
   servers: {
     one: {
-      host: '138.197.202.193',
+      host: '104.131.155.67',
       username: 'root',
       // pem:
-      password: 'F0caliz4r'
+      password: 'MagicSit3!'
       // or leave blank for authenticate from ssh-agent
     }
   },
@@ -16,7 +16,9 @@ module.exports = {
     servers: {
       one: {}
     },
-	
+	volumes : {
+		"/root/images":"/bundle/bundle/programs/web.browser/app/cards/"
+	},
 	docker: {
       image: 'abernix/meteord:base'
 	},
@@ -24,10 +26,15 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://www.crowdmtg.com',
+      ROOT_URL: 'https://www.crowdmtg.com',
       MONGO_URL: 'mongodb://localhost.com/meteor'
     },
-    deployCheckWaitTime: 600
+    deployCheckWaitTime: 600,
+	ssl: {
+		port: 443,
+        crt: "./bundle.crt",
+		key: "./private.key"
+    },
   },
 
   mongo: {
