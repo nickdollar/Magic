@@ -1,0 +1,20 @@
+#!/bin/bash
+# Delete all containers
+docker rm $(docker ps -a -q)
+# Delete all images
+docker rmi $(docker images -q)
+
+
+sudo usermod -aG docker $USER
+docker run hello-world
+sudo groupadd docker
+
+service --status-all
+
+
+docker exec -it [container-id] bash
+
+Usage:  docker stop [OPTIONS] 10b193c369e5
+
+
+MagicSite!
