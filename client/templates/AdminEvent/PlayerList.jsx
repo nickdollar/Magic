@@ -1,6 +1,6 @@
 import React from 'react' ;
-import DeckListContainer from './DeckListContainer' ;
-
+import DeckListContainer from '/client/dumbReact/DeckEdit/DeckEditContainer.jsx' ;
+import Moment from "moment";
 
 class PlayerList extends React.Component {
     constructor(){
@@ -11,20 +11,20 @@ class PlayerList extends React.Component {
 
     }
 
-    removeDeck(e){
-        Meteor.call("removeDeckFromLGSEvent", e.target.getAttribute("data-_id"));
+    removeDeck(DecksData_id){
+        Meteor.call("removeDeckFromLGSEvent", DecksData_id);
     }
 
     updateResults(){
     console.log($(this.refs["table"]).find("tr"));
 }
 
-    addRowBelow(e){
-        console.log(e.target.getAttribute("data-_id"));
+    addRowBelow(DecksData_id){
+        console.log(DecksData_id);
     }
 
-    addRemoveBelow(e){
-        console.log(e.target.getAttribute("data-_id"));
+    addRemoveBelow(DecksData_id){
+        console.log(DecksData_id);
     }
 
     componentWillReceiveProps(nextProps){
@@ -32,36 +32,22 @@ class PlayerList extends React.Component {
     }
 
 
-    addDeckToShowList(e){
-
-        var DecksData_id = e.target.getAttribute("data-_id");
-
+    toggleShowDeck(DecksData_id){
 
         var index = this.state.showDecks.findIndex((showDeckObj)=>{
             return showDeckObj == DecksData_id;
         });
 
-        if(index != -1){
-            return;
-        }
-
-
-        var deckList = this.state.showDecks.concat([DecksData_id]);
-        this.setState({showDecks : deckList});
-    }
-
-    removeDeckToShowList(e){
-        var DecksData_id = e.target.getAttribute("data-_id");
-
-
-        var index = this.state.showDecks.findIndex((showDeckObj)=>{
-            return showDeckObj == DecksData_id;
-        });
+        var showDecks = this.state.showDecks.concat();
 
         if(index > -1){
-            var deckList = this.state.showDecks.concat();
-            deckList.splice(index, 1);
-            this.setState({showDecks : deckList});
+            console.log(index);
+            console.log(showDecks.splice(index, 1));
+            console.log(showDecks);
+            this.setState({showDecks : showDecks});
+        }else{
+            showDecks = this.state.showDecks.concat([DecksData_id]);
+            this.setState({showDecks : showDecks});
         }
     }
 
@@ -97,12 +83,7 @@ class PlayerList extends React.Component {
                     return showDeckObj == DeckData._id;
                 })
             var eventDeck;
-            if(index == -1){
-                eventDeck = <span data-_id={DeckData._id} onClick={this.addDeckToShowList.bind(this)}>Deck </span>
-
-            }else {
-                eventDeck = <span data-_id={DeckData._id} onClick={this.removeDeckToShowList.bind(this)}>Deck </span>
-            }
+            eventDeck = <span onClick={this.toggleShowDeck.bind(this, DeckData._id)}> {index == -1 ? "Show" : "Hide"}</span>
 
             var rowInfo = <tr>
                             <td>
@@ -124,10 +105,10 @@ class PlayerList extends React.Component {
                                 <input type="number" className="inputNumber" min="0" defaultValue={DeckData.draw == null ? 0 : DeckData.draw }/>
                             </td>
                             <td>
-                                <button data-_id={DeckData._id} onClick={this.confirm.bind(this)}>Confirm</button>
+                                <button onClick={this.confirm.bind(this)}>Confirm</button>
                             </td>
                             <td>
-                                <button data-_id={DeckData._id} onClick={this.removeDeck.bind(this)}>remove</button>
+                                <button onClick={this.removeDeck.bind(this, DeckData._id)}>remove</button>
                             </td>
 
                         </tr>
@@ -143,14 +124,20 @@ class PlayerList extends React.Component {
                         {rowInfo}
                     </tbody>
         })
-
         return (
                 <div>
                     <div>
-                        
-                    </div>
-                    <div>
-                        <button onClick={this.publish.bind(this)}>Publish Event</button> <span>You still Can modify for the 48 hours. Will be published after Mod Confirm</span>
+                        {this.props.event.state == "prePublish" ? <div>Published At : {Moment(this.props.event.publishedDate).format("L")}</div> :
+                            <div><button disabled={this.props.event.state == "published" ? true : false}
+                                    className="btn btn-xs"
+                                    onClick={this.publish.bind(this)}>Publish Event</button>
+                                 <span> You still Can modify for the 48 hours. Will be published after Mod Confirm</span>
+                            </div>
+                        }
+
+
+
+
                     </div>
                     <table ref="table" className="table table-sm">
                         <thead>

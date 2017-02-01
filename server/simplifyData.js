@@ -143,11 +143,11 @@ metaValue = function() {
 
 lastCardValues = function(){
 
-    var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, eventType : "daily"}};
-    var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, eventType : "daily"}};
-    var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, eventType : "ptq"}};
-    var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, eventType : "ptq"}};
-    var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, eventType : "ptq"}};
+    var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, type : "daily"}};
+    var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, type : "daily"}};
+    var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, type : "ptq"}};
+    var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, type : "ptq"}};
+    var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, type : "ptq"}};
 
     var options = ["daily3_1", "daily4_0", "ptqTop8", "ptqTop9_16", "ptqTop17_32"];
 
@@ -228,8 +228,8 @@ lastEvents = function(){
     var formats = ["modern", "standard", "legacy", "vintage"];
 
     for(var a = 0; a< formats.length; a++) {
-        var ptq = _Event.find({format: formats[a], eventType: "ptq", date: {$gte: date}}, {sort: {date: -1}}).fetch();
-        var daily = _Event.find({format: formats[a], eventType: "daily", date: {$gte: date}}, {limit: 15, sort: {date: -1}}).fetch();
+        var ptq = _Event.find({format: formats[a], type: "ptq", date: {$gte: date}}, {sort: {date: -1}}).fetch();
+        var daily = _Event.find({format: formats[a], type: "daily", date: {$gte: date}}, {limit: 15, sort: {date: -1}}).fetch();
         var events = ptq.concat(daily);
 
         _simplifiedTables.update({format: formats[a]},

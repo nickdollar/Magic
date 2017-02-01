@@ -748,9 +748,9 @@ getLastEvents = function(){
                     date: events[i].date,
                     _eventNumber: events[i]._eventNumber,
                     format : events[i].format,
-                    eventType: events[i].eventType,
-                    set: events[i].eventType,
-                    boosterQuantity: events[i].eventType,
+                    type: events[i].type,
+                    set: events[i].type,
+                    boosterQuantity: events[i].type,
                     httpAddress : events[i].httpAddress
                 });
             }else{
@@ -759,7 +759,7 @@ getLastEvents = function(){
                     date: events[i].date,
                     _eventNumber: events[i]._eventNumber,
                     format : events[i].format,
-                    eventType: events[i].eventType,
+                    type: events[i].type,
                     httpAddress : events[i].httpAddress
                 });
             }
@@ -776,14 +776,14 @@ getLastEvents = function(){
 //    var _eventNumberPatt = /#[0-9]*/;
 //    var dataPatt = /(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/;
 //    var formatPatt = /standard|pauper|modern|legacy|vintage|sealed/i;
-//    var eventTypePatt = /daily|ptq|judge open|champs|champs|premier|mocs|block champ qual/i;
+//    var typePatt = /daily|ptq|judge open|champs|champs|premier|mocs|block champ qual/i;
 //    //var blockTypePatt = /(?:sealed )(\w*)/i;
 //    var setPatt = /(?:\S+\s+){1}(\S+)/i;
 //
 //    var eventInformation = {};
 //
 //    eventInformation.format = event.match(formatPatt)[0].toLowerCase();
-//    eventInformation.eventType = event.match(eventTypePatt)[0].toLowerCase();
+//    eventInformation.type = event.match(typePatt)[0].toLowerCase();
 //    eventInformation._eventNumber = dateAndNumber.match(_eventNumberPatt)[0];
 //    eventInformation.date = new Date(dateAndNumber.match(dataPatt)[0]);
 //    eventInformation.httpAddress = httpAddress;
@@ -2555,7 +2555,7 @@ getEventQuantityOfBooters = function(address, callback){
 }
 
 getEventDeckInformation = function(event){
-    if(event.eventType === "ptq" | event.eventType === "premier" | event.eventType === "mocs"){
+    if(event.type === "ptq" | event.type === "premier" | event.type === "mocs"){
         getTop8(event);
     }else{
         getDaily(event);
@@ -2591,7 +2591,7 @@ getTop8 = function(event){
         var data = {
             _eventID : event._id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             format : event.format,
             player : information.player,
             position : information.position
@@ -2733,7 +2733,7 @@ getDaily = function(event){
         var data = {
             _eventID : event._id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             player : information.player,
             format : event.format,
             victory : information.victory,
@@ -3085,7 +3085,7 @@ Router.route('deckWithoutNames', {
                     return {name : deckCardsObj.name, quantity : parseInt(deckCardsObj.quantity)};
                 });
 
-                var baseId = {_eventID : decksObj._eventID, date : decksObj.date, player : decksObj.player, eventType : decksObj.eventType };
+                var baseId = {_eventID : decksObj._eventID, date : decksObj.date, player : decksObj.player, type : decksObj.type };
                 var results = {
                     format : decksObj.format, colors : decksObj.colors, name : decksObj.name, totalMain : totalMain,
                     totalSideboard: totalSideboard, main : mainDeckQuery, sideboard : sideboardsQuery

@@ -5,34 +5,30 @@ class StartInput extends React.Component{
     constructor() {
         super();
         this.state = {
-            inputValue : "12:00"
+            outputValue : "12:00"
         }
     }
 
     handleChange (e) {
-        this.state = {
-            inputValue : e.value.target
-        }
-         this.isValid();
-
+        this.setState({outputValue : e.target.value})
     }
 
     clearInput(){
-        this.setState({inputValue : "12:00"});
-
+        this.setState({outputValue : "12:00"});
     }
 
     isValid() {
         var input = this.refs["input"];
         var error = this.refs["error"];
-        if (input.value === "") {
+        if (this.state.outputValue === "") {
             input.classList.add('error');
-            error.textContent = "Choose a Hour";
+            error.textContent = this.props.errorMessage;
             return false;
         }
         else {
             input.classList.remove('error');
             error.textContent  = "";
+
         }
         return true;
     }
@@ -43,24 +39,24 @@ class StartInput extends React.Component{
     }
 
     getCorrectedValue(){
-        return {start : this.refs["input"].value};
+        var object = [];
+        object[this.props.objectName] = this.state.outputValue;
+        return object
     }
 
     componentDidMount() {
-        if (this.props.onComponentMounted) {
-            this.props.onComponentMounted(this);
-        }
+        this.props.register(this);
+
     }
 
     render() {
         return (
             <div className="form-group">
-                <label> Day of Week: </label>
+                <label> {this.props.title} </label>
                 <input type={"time"}
-                       value={this.state.inputValue}
+                       value={this.state.outputValue}
                        ref={"input"}
                        className='form-control'
-                       required={this.props.required}
                        onChange={this.handleChange.bind(this)} />
                 <span ref="error" className="error"></span>
             </div>

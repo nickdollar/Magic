@@ -47,7 +47,7 @@
 //         {$match : {format : format}},
 //         {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //         {$unwind : "$DecksData"},
-//         {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//         {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //         {$group : {_id : "$format", total : {$sum : 1}}}
 //     ]);
@@ -72,7 +72,7 @@
 //         {$project : {"format" : 1}},
 //         {$match : {format : format}},
 //         {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
-//         {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType", DecksData : "$DecksData"}},
+//         {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type", DecksData : "$DecksData"}},
 //         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //         {$project : {quantity : {$size : "$DecksData"}}}
 //     ]);
@@ -147,7 +147,7 @@
 //         {$match : {format : format}},
 //         {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //         {$unwind : "$DecksData"},
-//         {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//         {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //         {$group : {_id : "$_id",quantity : {$sum : 1}}},
 //         {$sort : {quantity : -1}}
@@ -202,7 +202,7 @@
 //             {$match : {format : format}},
 //             {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //             {$unwind : "$DecksData"},
-//             {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//             {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //             {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //             {$group : {_id : "$_id",quantity : {$sum : 1}}},
 //             {$sort : {quantity : -1}}
@@ -219,7 +219,7 @@
 //             {$match : {format : format}},
 //             {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData" }},
 //             {$unwind : "$DecksData"},
-//             {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//             {$project : {date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //             {$match : {date : {$gte : startDate, $lte : endDateBeforeDate},$or : thatOptions}},
 //             {$group : {_id : "$_id", quantity : {$sum : 1}}},
 //             {$sort : {quantity : -1}}
@@ -309,7 +309,7 @@
 //         {$project : {DecksNames_id : "$DecksNames._id"}},
 //         {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //         {$unwind : "$DecksData"},
-//         {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//         {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //         {$group : {	_id : "$_id", quantity : {$sum : 1}}},
 //         {$sort : {quantity : -1}}
@@ -395,7 +395,7 @@
 //         {$project : {DecksNames_id : "$DecksNames._id"}},
 //         {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //         {$unwind : "$DecksData"},
-//         {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//         {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //         {$group : {	_id : "$_id", quantity : {$sum : 1}}},
 //         {$sort : {quantity : -1}}
@@ -452,7 +452,7 @@
 //             {$project : {DecksNames_id : "$DecksNames._id"}},
 //             {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //             {$unwind : "$DecksData"},
-//             {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//             {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //             {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
 //             {$group : {	_id : "$_id", quantity : {$sum : 1}}},
 //             {$sort : {quantity : -1}}
@@ -470,7 +470,7 @@
 //             {$project : {DecksNames_id : "$DecksNames._id"}},
 //             {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
 //             {$unwind : "$DecksData"},
-//             {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+//             {$project : {DecksNames_id : "$DecksNames_id", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
 //             {$match : {date : {$gte : startDate, $lte : endDateBeforeDate}, $or : thatOptions}},
 //             {$group : {	_id : "$_id", quantity : {$sum : 1}}},
 //             {$sort : {quantity : -1}}
@@ -605,12 +605,12 @@
 //
 //
 // optionsTypeQuery = {
-//     "league5_0": {victory: 5, loss: 0, eventType: "league"},
-//     "daily4_0": {victory: 4, loss: 0, eventType: "daily"},
-//     "daily3_1": {victory: 3, loss: 1, eventType: "daily"},
-//     "ptqTop8": {position: {$gte: 1, $lte: 8}, eventType: "ptq"},
-//     "ptqTop9_16": {position: {$gte: 9, $lte: 16}, eventType: "ptq"},
-//     "ptqTop17_32": {position: {$gte: 17, $lte: 32}, eventType: "ptq"}
+//     "league5_0": {victory: 5, loss: 0, type: "league"},
+//     "daily4_0": {victory: 4, loss: 0, type: "daily"},
+//     "daily3_1": {victory: 3, loss: 1, type: "daily"},
+//     "ptqTop8": {position: {$gte: 1, $lte: 8}, type: "ptq"},
+//     "ptqTop9_16": {position: {$gte: 9, $lte: 16}, type: "ptq"},
+//     "ptqTop17_32": {position: {$gte: 17, $lte: 32}, type: "ptq"}
 // }
 //
 // optionsTimeSpanQuery = {
@@ -622,9 +622,9 @@
 //
 //
 //
-// // var league = {type : "league", options : { victory : 5, loss : 0, eventType : "league"}};
-// // var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, eventType : "daily"}};
-// // var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, eventType : "daily"}};
-// // var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, eventType : "ptq"}};
-// // var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, eventType : "ptq"}};
-// // var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, eventType : "ptq"}};
+// // var league = {type : "league", options : { victory : 5, loss : 0, type : "league"}};
+// // var daily3_1 = {type : "daily3_1", options : { victory : 3, loss : 1, type : "daily"}};
+// // var daily4_0 = {type : "daily4_0", options : { victory : 4, loss : 0, type : "daily"}};
+// // var ptqTop8 = {type : "ptqTop8", options : { position : {$gte : 1, $lte : 8}, type : "ptq"}};
+// // var ptqTop9_16 = {type : "ptqTop9_16", options : { position : {$gte : 9, $lte : 16}, type : "ptq"}};
+// // var ptqTop17_32 = {type : "ptqTop17_32", options : { position : {$gte : 17, $lte : 32}, type : "ptq"}};

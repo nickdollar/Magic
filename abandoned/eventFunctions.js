@@ -1,5 +1,5 @@
-// downloadEvents = function(eventType){
-//     _Event.find({eventType : eventType, deckStored : {$exists : false}}).forEach(function(Events){
+// downloadEvents = function(type){
+//     _Event.find({type : type, deckStored : {$exists : false}}).forEach(function(Events){
 //         if(!Events.hasOwnProperty('deckStored')){
 //             console.log("Added Event");
 //             getEventDeckInformation(Events);
@@ -42,7 +42,7 @@
 // //        var data = {
 // //            _eventID : Events._id,
 // //            date : Events.date,
-// //            eventType : Events.eventType,
+// //            type : Events.type,
 // //            player : information.player,
 // //            format : Events.format,
 // //            victory : information.victory,
@@ -103,7 +103,7 @@
 // }
 //
 // getEventDeckInformation = function(Events){
-//     if(Events.eventType === "ptq" | Events.eventType === "premier" | Events.eventType === "mocs"){
+//     if(Events.type === "ptq" | Events.type === "premier" | Events.type === "mocs"){
 //         getTop8(Events);
 //     }else{
 //         getDaily(Events);
@@ -139,7 +139,7 @@
 //         var data = {
 //             _eventID : Events._id,
 //             date : Events.date,
-//             eventType : Events.eventType,
+//             type : Events.type,
 //             format : Events.format,
 //             player : information.player,
 //             position : information.position
@@ -279,7 +279,7 @@
 //         var data = {
 //             _eventID : Events._id,
 //             date : Events.date,
-//             eventType : Events.eventType,
+//             type : Events.type,
 //             player : information.player,
 //             format : Events.format,
 //             victory : information.victory,

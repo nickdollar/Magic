@@ -1,38 +1,10 @@
-.deckEdit {
+.deckContainer {
 
-  .wrongCardNumber {
-    color: red
+  margin: 10px 0px 0px 10px;
+  background-color: white;
+  .mainSide {
+    font-size: 24px;
   }
-
-  .addLine {
-    margin-left: 5px;
-    .addToMainButtonWrapper {
-      display: inline-block;
-      background-color: darkcyan;
-
-    }
-  }
-
-  .cardQuantityAndNameWrapper {
-    display: inline-block;
-    width: 100%;
-
-    .removeCardButtonWrapper {
-      display: inline-block;
-      margin-right: 3px;
-    }
-
-    .nameSelectedWrapper {
-      display: inline-block;
-      .cardNameSelect {
-        width: 230px;
-      }
-    }
-    .quantityInput {
-      width: 40px;
-    }
-  }
-
   .deckBlock {
 
 
@@ -50,18 +22,28 @@
         font-weight: bold;
       }
 
-      .cardLine{
-        margin-left: 5px;
-        width: 100%;
 
+
+      .cardLine{
+        margin-right: 5px;
+        width: 100%;
+        overflow:hidden;
+        .cardQuantityAndNameWrapper {
+          float: left;
+          .quantity {
+            padding-right: 5px;
+          }
+
+          .name {
+
+          }
+        }
 
         .cardInfo{
-          display: inline-block;
           float: right;
+          margin-right: 5px;
           .manaValue {
             text-align: right;
-            width: 75px;
-            display: inline-block;
           }
 
         }

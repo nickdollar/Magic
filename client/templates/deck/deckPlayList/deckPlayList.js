@@ -198,7 +198,7 @@ SimpleSchema.messages(
 
 var addPlaylistHooks = {
     //before: {
-    //    // Replace `formType` with the form `type` attribute to which this hook applies
+    //    // Replace `formType` with the FormValidate `type` attribute to which this hook applies
     //    formType: function(doc) {
     //        // Potentially alter the doc
     //        doc.foo = 'bar';
@@ -215,13 +215,13 @@ var addPlaylistHooks = {
     // The same as the callbacks you would normally provide when calling
     // collection.insert, collection.update, or Meteor.call
     //after: {
-    //    // Replace `formType` with the form `type` attribute to which this hook applies
+    //    // Replace `formType` with the FormValidate `type` attribute to which this hook applies
     //    formType: function(error, result) {
     //        console.log("after");
     //    }
     //},
 
-    // Called when form does not have a `type` attribute
+    // Called when FormValidate does not have a `type` attribute
     onSubmit: function(insertDoc, updateDoc, currentDoc) {
         console.log("onSubmit");
         // You must call this.done()!
@@ -243,7 +243,7 @@ var addPlaylistHooks = {
         console.log("onError");
     },
 
-    // Called every time an insert or typeless form
+    // Called every time an insert or typeless FormValidate
     // is revalidated, which can be often if keyup
     // validation is used.
     //formToDoc: function(doc) {
@@ -253,7 +253,7 @@ var addPlaylistHooks = {
     //    // return doc;
     //},
 
-    // Called every time an update or typeless form
+    // Called every time an update or typeless FormValidate
     // is revalidated, which can be often if keyup
     // validation is used.
     //formToModifier: function(modifier) {
@@ -262,11 +262,11 @@ var addPlaylistHooks = {
     //},
 
     // Called whenever `doc` attribute reactively changes, before values
-    // are set in the form fields.
+    // are set in the FormValidate fields.
     //docToForm: function(doc, ss) {},
 
     // Called at the beginning and end of submission, respectively.
-    // This is the place to disable/enable buttons or the form,
+    // This is the place to disable/enable buttons or the FormValidate,
     // show/hide a "Please wait" message, etc. If these hooks are
     // not defined, then by default the submit button is disabled
     // during submission.

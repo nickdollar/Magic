@@ -1,19 +1,38 @@
 import React from 'react' ;
 import CustomEventsAdmin from './CustomEventsAdmin/CustomEventsAdmin.jsx';
+import CustomCardsDatabaseAdmin from './CustomCardsDatabaseAdmin/CustomCardsDatabaseAdmin.jsx';
+import CustomDecksNamesAdmin from './CustomDecksNamesAdmin/CustomDecksNamesAdmin.jsx';
+import CustomDecksArchetypesAdmin from './CustomDecksArchetypesAdmin/CustomDecksArchetypesAdmin.jsx';
+import CustomDecksDataAdmin from './CustomDecksDataAdmin/CustomDecksDataAdmin.jsx';
+import CustomDecksDatabaseAdmin from './CustomDecksDatabaseAdmin/CustomDecksDatabaseAdmin.jsx';
+import CustomLGSAdmin from './CustomLGSAdmin/CustomLGSAdmin.jsx';
+import CustomLGSEventsAdmin from './CustomLGSEventsAdmin/CustomLGSEventsAdmin.jsx';
 
 
 
 export default class CustomAdmin extends React.Component{
-
-
     constructor(props){
         super();
-        this.state = {};
+        this.state = {format : "standard"};
     }
 
     routes(route){
-        if(route=="events"){
-            return <CustomEventsAdmin/>
+        if(route=="Events"){
+            return <CustomEventsAdmin format={this.state.format}/>
+        }else if (route=="CardsDatabase"){
+            return <CustomCardsDatabaseAdmin format={this.state.format}/>
+        }else if (route=="DecksNames"){
+            return <CustomDecksNamesAdmin format={this.state.format}/>
+        }else if (route=="DecksArchetypes"){
+            return <CustomDecksArchetypesAdmin format={this.state.format}/>
+        }else if (route=="DecksData"){
+            return <CustomDecksDataAdmin format={this.state.format}/>
+        }else if (route=="CardsDatabase"){
+            return <CustomDecksDatabaseAdmin format={this.state.format}/>
+        }else if (route=="LGS"){
+            return <CustomLGSAdmin format={this.state.format}/>
+        }else if (route=="LGSEvents"){
+            return <CustomLGSEventsAdmin format={this.state.format}/>
         }
     }
 
@@ -22,19 +41,39 @@ export default class CustomAdmin extends React.Component{
         console.log("close");
     }
 
-    render(){
 
-        var collections = ["events"];
+    defaultRadio(opt){
+        if(opt == this.state.format){
+            return true
+        }
+        return false;
+    }
+
+    formatChange(e){
+        this.setState({format : e});
+    }
+
+    render(){
+        var formats = ["standard", "modern", "legacy", "vintage"];
+        var collections = ["Events", "CardsDatabase", "DecksNames", "DecksArchetypes", "DecksData", "LGS", "LGSEvents"];
+        collections.sort()
         return (
             <div className="row">
                 <div ref="mySideNav" className="sidenav col-xs-2">
                     <a href={FlowRouter.path("admin")}>Main</a>
                     {collections.map((collection)=>{
-                        return <a key="collection" href={FlowRouter.path("admin", {collection : collection})}>{collection}</a>
+                        return <a key={collection} href={FlowRouter.path("admin", {collection : collection})}>{collection}</a>
                     })}
                 </div>
                 <div className="col-xs-10">
-                    {this.routes(FlowRouter.getParam("collection"))}
+                    <div className="row">
+                        {formats.map((opt)=>{
+                            return <label key={opt} className="radio-inline"><input onChange={this.formatChange.bind(this, opt)}
+                                                                                    checked={this.defaultRadio(opt)} type="radio"
+                                                                                    value={opt}/>{opt}</label>
+                        })}
+                        {this.routes(FlowRouter.getParam("collection"))}
+                    </div>
                 </div>
             </div>
         )

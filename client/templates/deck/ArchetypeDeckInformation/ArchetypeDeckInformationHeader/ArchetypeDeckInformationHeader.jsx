@@ -24,7 +24,6 @@ export default class ArchetypeDeckInformationHeader extends React.Component {
             return <div>Loading...</div>
         }
 
-
         return(
             <div className="ArchetypeDeckInformationHeaderComponent">
                 <div className="archetypeInfo">

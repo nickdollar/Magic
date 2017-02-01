@@ -1,13 +1,13 @@
 import { createContainer } from 'meteor/react-meteor-data';
-import DecksDataStates from './DecksDataStates.jsx';
+import StateList from './StateList.jsx';
 
-export default DecksDataStatesContainer = createContainer(({query, projection}) => {
-    var handle = Meteor.subscribe("DecksData2", query, projection);
+export default StateListContainer = createContainer(({collection, subscription, notState, states, format}) => {
+    var handle = Meteor.subscribe(subscription, notState);
 
     return {
         currentUser: Meteor.user(),
         collectionsLoading: !handle.ready(),
-        DecksData: DecksData.find(query).fetch()
+        objects: global[collection].find({state : {$nin : notState}}).fetch()
 
     };
-}, DecksDataStates);
+}, StateList);

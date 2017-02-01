@@ -17,15 +17,15 @@ eventLeagueGetInfoOld = function(format, days){
         return;
     }
 
-    var eventType = "";
+    var type = "";
 
     if(format == 'vintage'){
-        eventType = "daily";
+        type = "daily";
     }else{
-        eventType = "league";
+        type = "league";
     }
 
-    var event = Events.findOne({format : format, eventType : eventType}, {sort : {date : 1}, limit : 1});
+    var event = Events.findOne({format : format, type : type}, {sort : {date : 1}, limit : 1});
 
     var date = null;
     if(event==null){
@@ -45,15 +45,17 @@ eventLeagueGetInfoOld = function(format, days){
         var res = Meteor.http.get(url);
 
         Events.update(
-            {type : eventType, date : date, format : format},
+            {type : type, date : date, format : format},
             {
                 $setOnInsert : {
                     date: date,
                     format : format,
-                    eventName : leagueTypes[format],
-                    eventType: eventType,
+                    name : leagueTypes[format],
+                    type: type,
                     url : url,
-                    state : "startProduction"
+                    state : "startProduction",
+                    venue : "mtgo"
+
                 }
             },
             {upsert : true}
@@ -72,7 +74,7 @@ eventLeagueGetInfoOld = function(format, days){
             }
 
             Events.update(
-                {eventType : eventType, date : date, format : format},
+                {type : type, date : date, format : format},
                 {
                     $set : {
                         state : state
@@ -96,15 +98,15 @@ eventLeagueGetNewEvents = function(format){
         return;
     }
 
-    var eventType = "";
+    var type = "";
 
     if(format == 'vintage'){
-        eventType = "daily";
+        type = "daily";
     }else{
-        eventType = "league";
+        type = "league";
     }
 
-    var event = Events.findOne({eventType : eventType}, {sort : {date : -1}, limit : 1});
+    var event = Events.findOne({type : type}, {sort : {date : -1}, limit : 1});
     var date = null;
     if(event==null){
         date = new Date();
@@ -123,13 +125,13 @@ eventLeagueGetNewEvents = function(format){
         var res = Meteor.http.get(url);
 
         Events.update(
-            {type : eventType, date : date, format : format},
+            {type : type, date : date, format : format},
             {
                 $setOnInsert : {
                     date: date,
                     format : format,
-                    eventName : leagueTypes[format],
-                    eventType: eventType,
+                    name : leagueTypes[format],
+                    type: type,
                     url : url
                 }
             },
@@ -149,7 +151,7 @@ eventLeagueGetNewEvents = function(format){
                 console.log("page exists");
             }
             Events.update(
-                {eventType : eventType, date : date, format : format},
+                {type : type, date : date, format : format},
                 {
                     $set : {
                         "state" : state
@@ -161,7 +163,7 @@ eventLeagueGetNewEvents = function(format){
 }
 
 notFoundEvent = function(Event_id){
-    console.log("START: checkIfOldDailyLeagueEventsExists");
+    console.log("START: notFoundEvent");
     var eventNotFound = Events.findOne({_id : Event_id, state : "notFound"});
 
     if(!eventNotFound){return};
@@ -201,7 +203,7 @@ notFoundEvent = function(Event_id){
         }
     }
 
-    console.log("END: checkIfOldDailyLeagueEventsExists");
+    console.log("END: notFoundEvent");
 }
 
 eventLeagueDailyDownloadHTML = function(_id){
@@ -268,7 +270,7 @@ eventLeagueDailyExtractDecks = function(_id){
         var data = {
             Events_id : event._id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             player : information.player,
             format : event.format,
             victory : information.score.victory,
@@ -334,8 +336,8 @@ eventLeagueDailyExtractDecks = function(_id){
         data.totalSideboard = totalSideboard;
         data.sideboard = sideboard;
         data.colors = setUpColorForDeckName(main);
+        data.state = "scraped";
         DecksData.insert(data);
-
     }
 
     Events.update(

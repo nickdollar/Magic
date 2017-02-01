@@ -379,7 +379,7 @@
                     type: 'get',
                     cache: false,
                     data: {},
-                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    contentType: 'application/x-www-FormValidate-urlencoded; charset=UTF-8',
                     dataType: 'json',
                     async: true
                 };

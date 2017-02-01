@@ -206,10 +206,8 @@ export default class Deck extends React.Component{
     }
 
     render() {
-        if(!this.props.DeckSelected){return <div>Loading...</div>}
-        if(!this.props.DeckSelected.main){return <div>Loading...</div>}
-        if(!this.props.DeckSelected.sideboard){return <div>Loading...</div>}
 
+        if(this.props.listLoading){return <div>Loading...</div>};
 
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.DeckSelected.main);
         var resultMain = [];
@@ -221,8 +219,8 @@ export default class Deck extends React.Component{
             resultMain.push(
                 typesSeparated[type].map((card)=>{
                     return  <div className="cardLine" key={card.name}>
-                                <div className="name js-imagePopOver" data-name={card.name}>
-                                    <span className="quantity">{card.quantity}</span><span >{card.name}</span>
+                                <div className="cardQuantityAndNameWrapper" data-name={card.name}>
+                                    <span className="quantity">{card.quantity}</span><span data-name={card.name} className="js-imagePopOver">{card.name}</span>
                                 </div>
                                 <div className="cardInfo">
                                     <div className="manaValue">
@@ -241,8 +239,8 @@ export default class Deck extends React.Component{
 
         var resultSideboard = sideboardCards.map((card)=>{
         return <div className="cardLine" key={card.name}>
-                <div className="name js-imagePopOver" data-name={card.name}>
-                    <span className="quantity">{card.quantity}</span><span >{card.name}</span>
+                <div className="cardQuantityAndNameWrapper" data-name={card.name}>
+                    <span className="quantity">{card.quantity}</span><span className="name js-imagePopOver" data-name={card.name}>{card.name}</span>
                 </div>
                 <div className="cardInfo">
                     <div className="manaValue">
@@ -257,8 +255,9 @@ export default class Deck extends React.Component{
         })
 
            return (
-            <div>
+            <div className="deckContainer">
                 <span ref={"error"} className="error"></span>
+                <div className="mainSide">Main</div>
                 <div className="deckBlock">
                     <div className="newDeckColumn">
                         {resultMain.map((obj)=>{
@@ -266,6 +265,8 @@ export default class Deck extends React.Component{
                         })}
                     </div>
                 </div>
+
+                <div className="mainSide">Sideboard</div>
                 <div className="deckBlock" key="sideboard">
                     <div className="newDeckColumn">
 

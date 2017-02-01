@@ -9,8 +9,8 @@ Meteor.methods({
     fixEventsStandard : function(){
         fixEventsStandard();
     },
-    methodEventLeagueGetNewEvents : function(format){
-        eventLeagueGetNewEvents(format);
+    methodEventLeagueGetNewEvents : function(data){
+        eventLeagueGetNewEvents(data.format);
     },
     methodEventLeagueGetInfoOld : function(data){
         eventLeagueGetInfoOld(data.format, data.days);
@@ -26,56 +26,51 @@ Meteor.methods({
         if(eventQuery){
             return false;
         }
-
+        event.venue = "lgs";
         Object.assign(event, {type : "lgs"});
 
-        console.log(event.email);
         var email = event.email;
-        console.log(email);
         delete event.email;
-        console.log(email);
         var _id = Events.insert(event);
         Object.assign(event, {Event_id : _id});
         Meteor.call("sendConfirmationFromNewEvent", email, event);
 
         return event;
     },
-    checkIfEventExists(data){
-        console.log(data);
-        var eventFound = Events.findOne({LGS_id : data.LGS_id, token : data.token});
-        if(eventFound){
-            return eventFound;
-        }
-        return false;
+    checkIfEventExists(form){
 
+        console.log(form);
+        var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token});
+
+        console.log(eventFound);
+        if(eventFound){
+            if(DecksData.findOne({Events_id : eventFound._id, player : form.player})){
+                return "player";
+            }
+            return eventFound;
+        }else{
+            return "token";
+        }
     },
     checkIfEventPasswordIsRight(data){
+        console.log(data);
+        var result;
         if(Events.find({password : data.password, _id : data._id}, {limit : 1}).count()){
-            return true;
+            result = true;
+        }else{
+            result = false;
         }
-        return false;
+        console.log(result);
+        return result;
     },
     publishLGSEvent(Event_id){
-        console.log(Event_id);
+
         Events.update({_id : Event_id},
             {
-                $set : {"validation.published" : true,
-                    "validation.published" : true}
+                $set : {state : "prePublish", publishedDate : new Date()}
             }
         )
-
-    },
-    checkForValidationExtractDecks(){
-        console.log("START: checkForValidationExtractDecks");
-
-
-
-        console.log(allEventsWithDeckWithoutNames);
-        console.log(allEventsWithDeckWithoutNames.length);
-
-
-    },
-
+    }
 })
 
 fixEventsStandard = function(){

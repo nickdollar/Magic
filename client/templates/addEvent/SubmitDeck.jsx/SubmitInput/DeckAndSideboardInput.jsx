@@ -10,7 +10,8 @@ class DeckAndSideboardInput extends React.Component{
         this.state = {
             textOrList : "list",
             deck : props.deck,
-            event : props.event
+            event : props.event,
+            submitMessage : ""
         }
 
     }
@@ -132,10 +133,7 @@ class DeckAndSideboardInput extends React.Component{
         var mainSideboard = e.target.getAttribute("data-mainSideboard");
 
         var value = parseInt(e.target.value);
-        // if(value < 0) {
-        //     console.log("lower");
-        //     value = 0;
-        // }
+
         if(mainSideboard=="main")
         {
             var tempArray = this.state.deck.main.concat();
@@ -163,8 +161,10 @@ class DeckAndSideboardInput extends React.Component{
 
     submitDeck(){
         var submitDeck = Object.assign({}, this.state.deck, this.props.event);
-
-        Meteor.call("addALGSDecksData", submitDeck);
+        Meteor.call("addALGSDecksData", submitDeck, (err, data)=>{
+            console.log(data);
+            this.setState({submitMessage : data})
+        });
     }
 
     render(){
@@ -184,15 +184,12 @@ class DeckAndSideboardInput extends React.Component{
                 updateQuantity={this.updateQuantity.bind(this)}
                 submitDeck={this.submitDeck.bind(this)}
                 removeCardDeck={this.removeCardDeck.bind(this)}
-
-
-
+                submitMessage={this.state.submitMessage}
             />
         }
 
         return (
             <div className="form-group">
-
                 <div onChange={this.onChangeTextOrList.bind(this)}>
                     <label className="form-check-inline">
                         <input className="form-check-input" type="radio" name="listOrText" id="inlineRadio2" value="list" defaultChecked/> List

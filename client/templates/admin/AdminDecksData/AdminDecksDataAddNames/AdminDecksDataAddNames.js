@@ -128,7 +128,7 @@ Template.AdminDecksdataAddNames.events({
 
 var hooksObject = {
     before: {
-        // Replace `formType` with the form `type` attribute to which this hook applies
+        // Replace `formType` with the FormValidate `type` attribute to which this hook applies
         method: function(doc) {
             doc._id = Template.instance().parentTemplate(1).selectedDeck.get();
             return doc;

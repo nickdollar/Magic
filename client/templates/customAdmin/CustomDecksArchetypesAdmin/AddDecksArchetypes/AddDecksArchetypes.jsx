@@ -1,8 +1,8 @@
 import React from 'react';
 import FormValidate from "/client/dumbReact/FormValidate/FormValidate.jsx";
-import TextInput from "/client/dumbReact/FormValidate/inputs/textFormInput/textFormInput.jsx";
-import Select2Container from "/client/dumbReact/FormValidate/inputs/Select2/Select2Container.jsx";
-import Radio from "/client/dumbReact/FormValidate/inputs/Radios/Radio.jsx";
+import TextInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx";
+import Select2Container from "/client/dumbReact/FormValidate/Inputs/Select2/Select2Container.jsx";
+import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio.jsx";
 
 
 export default class AddArchetypeName extends React.Component{
@@ -18,21 +18,11 @@ export default class AddArchetypeName extends React.Component{
     render(){
         return (
             <div>
-                <FormValidate submitMethod="insertToCollection" collection="DecksNames">
+                <FormValidate submitMethod="insertToCollection" collection="DecksArchetypes">
                     <TextInput objectName={"name"}
                                title={"Deck Name"}
                                errorMessage="E-mail is not Valid."
                                required={true}
-                    />
-                    <Select2Container objectName={"DecksArchetypes_id"}
-                                      title={"Decks Archetype"}
-                                      errorMessage="Deck Archetype Missing"
-                                      subscription="DecksArchetypesQueryProjection"
-                                      query={{format : "modern"}}
-                                      projection={{fields : {_id : 1, name : 1}}}
-                                      fieldValue="_id"
-                                      fieldText="name"
-
                     />
                     <Radio  objectName={"format"}
                             title={"Format"}

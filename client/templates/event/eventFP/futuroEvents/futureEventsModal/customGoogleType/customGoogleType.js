@@ -40,7 +40,7 @@ initAutocomplete = function() {
         (document.getElementsByClassName('js-autocomplete')[0]),
         {types: ['geocode']});
     // When the user selects an address from the dropdown, populate the address
-    // fields in the form.
+    // fields in the FormValidate.
     // autocomplete.addListener('place_changed', fillInAddress);
 }
 

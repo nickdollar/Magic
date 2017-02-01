@@ -20,24 +20,11 @@ export default class DecksDataStates extends React.Component{
 
 
     render(){
-        console.log(this.props.collectionsLoading)
         if(this.props.collectionsLoading){
             return <div>Loading...</div>
         }
-        console.log("AAAAAAAAAAAAAAAA")
-
-        var states = ["lgs", "scrape", "auto", "autoNotPerfect", "manual"]
-        var formats = ["standard", "modern", "legacy", "vintage"];
-
         return (
             <div>
-                <div ref="input">
-                    {formats.map((opt)=>{
-                        return <label key={opt} className="radio-inline"><input onChange={this.formatChange.bind(this, opt)}
-                                                                                checked={this.defaultRadio(opt)} type="radio"
-                                                                                value={opt}/>{opt}</label>
-                    })}
-                </div>
                 <table className="table">
                     <thead>
                         <tr>
@@ -45,14 +32,16 @@ export default class DecksDataStates extends React.Component{
                             <th>Quantity</th>
                         </tr>
                     </thead>
-                    {states.map((state)=>{
+                    {this.props.states.map((state)=>{
                         return  <tbody key={state}>
                                     <tr>
                                         <td>
                                             {state}
                                         </td>
                                         <td>
-                                            {Events.find({state : state, format : this.state.format}).count()}
+                                            {this.props.format ? global[this.props.collection].find({state : state, format : this.props.format}).count() :
+                                                global[this.props.collection].find({state : state}).count()
+                                            }
                                         </td>
                                     </tr>
                                 </tbody>

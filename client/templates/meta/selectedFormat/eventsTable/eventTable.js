@@ -1,12 +1,12 @@
 Template.eventsTable.helpers({
     event : function(){
-        return _Event.find({format : Session.get(SV_metaEventsFormat), eventType : Session.get(SV_metaEventType)}, {sort : {date : -1}, limit : 5});
+        return _Event.find({format : Session.get(SV_metaEventsFormat), type : Session.get(SV_metatype)}, {sort : {date : -1}, limit : 5});
     }
 });
 
 Template.eventsTable.events({
-    "click .eventType" : function(evt, tmp){
-        Session.set(SV_metaEventType, evt.target.value);
+    "click .type" : function(evt, tmp){
+        Session.set(SV_metatype, evt.target.value);
     }
 });
 

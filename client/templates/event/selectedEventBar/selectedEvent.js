@@ -1,3 +1,5 @@
+import Deck from "/client/dumbReact/Deck/DeckContainer.jsx"
+
 Template.selectedEvent.onCreated(function(){
     this.checks = new ReactiveDict();
     this.checks.set("test2", false);
@@ -10,9 +12,6 @@ Template.selectedEvent.onCreated(function(){
         this.checks.set("DecksDataCardsDataByIdOrFirstOnEvents", false);
         this.subscribe("DecksDataCardsDataByIdOrFirstOnEvents",  FlowRouter.getParam("DecksData_id"), FlowRouter.getParam("Events_id"), {
             onReady : ()=>{
-                // Meteor.setTimeout(()=>{
-                //     this.checks.set("DecksDataCardsDataByIdOrFirstOnEvents", true);
-                // }, 50)
                 if ($.fn.DataTable.isDataTable("#playersTable")) {
                     $('#playersTable').DataTable().$('tr.deckSelected').removeClass('deckSelected');
                     $('#playersTable').DataTable().$('tr[id="'+FlowRouter.getParam("DecksData_id")+'"]').addClass('deckSelected');
@@ -40,6 +39,9 @@ Template.selectedEvent.helpers({
             return DecksData.findOne({main: {$exists: true}});
         }
     },
+    Deck (){
+        return Deck
+    },
     pos : function(){
         if(this.position !== undefined){
             return this.position;
@@ -52,10 +54,9 @@ Template.selectedEvent.helpers({
         }
         return position;
     },
-    activated : function(){
-        if(this._id == Session.get("selectedEvent__deckID")){
-            return true;
-        }
+
+    DecksData_id(){
+
     },
     cardType : function(){
         var blocks = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];

@@ -65,7 +65,7 @@ class LGSAddNewStoreForm extends React.Component{
             <div>
                 <form name="contactForm" noValidate  onSubmit={this.handleSubmit.bind(this)}>
                     <LGSNameFieldContainer onComponentMounted={this.register.bind(this)} objectName={"LGS_id"} title={"LGS"} errorMessage="Select A Store."/>
-                    <EventNameField onComponentMounted={this.register.bind(this)} objectName={"eventName"} title={"Event Name"}  errorMessage="Name Required."/>
+                    <EventNameField onComponentMounted={this.register.bind(this)} objectName={"name"} title={"Event Name"}  errorMessage="Name Required."/>
                     <EventToken onComponentMounted={this.register.bind(this)} objectName={"token"} title={"Event Token (No spaces, code that will be used to submit decks)"}  errorMessage="Token is Required."/>
                     <EventDateInput onComponentMounted={this.register.bind(this)} objectName={"date"} title={"Date"}  errorMessage="Missing Date"/>
                     <EventEmailInput onComponentMounted={this.register.bind(this)} objectName={"email"} title={"Email to send token and link, and password. (Optional)"}  errorMessage="E-mail is not Valid."/>

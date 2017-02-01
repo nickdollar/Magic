@@ -1,6 +1,6 @@
 import React from "react";
 
-class EventNameField extends React.Component{
+class nameField extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -61,4 +61,4 @@ class EventNameField extends React.Component{
     }
 }
 
-export default EventNameField;
+export default nameField;

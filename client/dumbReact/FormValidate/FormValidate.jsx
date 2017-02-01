@@ -1,6 +1,6 @@
 import React from "react";
 
-class LGSAddNewStoreForm extends React.Component{
+export default class FormValidate extends React.Component{
 
     constructor(props){
         super(props);
@@ -26,13 +26,16 @@ class LGSAddNewStoreForm extends React.Component{
                 form = Object.assign(form, field.getCorrectedValue())
             });
 
+            if(this.props.extraFields){
+                Object.assign(form, this.props.extraFields);
+            }
 
-            Meteor.call('addLGS', form , (error, data)=>{
+            Meteor.call(this.props.submitMethod, form, this.props.collection, (error, data)=>{
                 if(error){
                     console.log("Error Adding Store");
                     return;
                 }
-                console.log(data);
+
                 if(data!=true){
                     this.setState({
                         ServerMessage: data
@@ -40,10 +43,6 @@ class LGSAddNewStoreForm extends React.Component{
                 }else{
                     this.state.Fields.forEach((field)=>{
                         field.clearInput();
-                    });
-
-                    this.setState({
-                        ServerMessage: "LGS Added"
                     });
                 }
             });
@@ -58,19 +57,16 @@ class LGSAddNewStoreForm extends React.Component{
         })
     }
 
-    clone(){
-
+    clone(component){
+        return React.cloneElement(component, {register : this.register.bind(this)});
     }
 
     render() {
-        console.log(this);
         return (
             <div>
-                <form name="contactForm" noValidate  onSubmit={this.handleSubmit.bind(this)}>
-                    {/*<LGSNameField onComponentMounted={this.register.bind(this)} />*/}
-                    {/*<URLInput onComponentMounted={this.register.bind(this)} />*/}
-                    {/*<GoogleAutocompleteInput onComponentMounted={this.register.bind(this)} />*/}
-                    <button type="submit" className="btn btn-default">Submmit</button>
+                <form name="contactForm" noValidate onSubmit={this.handleSubmit.bind(this)}>
+                    {React.Children.map(this.props.children, this.clone.bind(this))}
+                    <button type="submit" className="btn btn-default">Submit</button>
                     <p ref="serverMessage" className="servermessage error">{this.state.ServerMessage}</p>
                 </form>
             </div>
@@ -78,4 +74,4 @@ class LGSAddNewStoreForm extends React.Component{
     }
 }
 
-export default LGSAddNewStoreForm;
+

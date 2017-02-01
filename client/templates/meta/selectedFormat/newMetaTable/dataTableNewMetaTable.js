@@ -1,6 +1,6 @@
 Template.dataTableNewMetaTable.onCreated(function(){
     this.options = new ReactiveDict();
-    this.options.set("eventTypes", ["league5_0", "daily3_1", "daily4_0", "MTGOPTQ1-8", "MTGOPTQ9-16", "MTGOPTQ17+", "GP1-8", "GP9-16", "GP17+", "SCGSuperIQ", "SCGOpen1-8", "SCGOpen9-16", "SCGOpen17+", "InviQualifier", "SCGInvitational", "SCGClassic1-8", "SCGClassic9+", "LegacyChamps", "WorldMagicCup"]);
+    this.options.set("types", ["league5_0", "daily3_1", "daily4_0", "MTGOPTQ1-8", "MTGOPTQ9-16", "MTGOPTQ17+", "GP1-8", "GP9-16", "GP17+", "SCGSuperIQ", "SCGOpen1-8", "SCGOpen9-16", "SCGOpen17+", "InviQualifier", "SCGInvitational", "SCGClassic1-8", "SCGClassic9+", "LegacyChamps", "WorldMagicCup"]);
     this.options.set("decksMetaSpan", "month");
     this.options.set("decksOrArchetypes", "archetypes");
     this.options.set("positionChange", "week");
@@ -9,7 +9,7 @@ Template.dataTableNewMetaTable.onCreated(function(){
 
     // this.autorun(()=>{
     //     this.options.set("metaFormatTimeSpanOptionsNonReactive", false);
-    //     this.subscribe("metaFormatTimeSpanOptionsNonReactive", FlowRouter.getParam("format"), this.options.get("decksMetaSpan"), this.options.get("eventTypes"), {
+    //     this.subscribe("metaFormatTimeSpanOptionsNonReactive", FlowRouter.getParam("format"), this.options.get("decksMetaSpan"), this.options.get("types"), {
     //         onReady : ()=>{
     //             this.options.set("metaFormatTimeSpanOptionsNonReactive", true)
     //         }
@@ -18,13 +18,13 @@ Template.dataTableNewMetaTable.onCreated(function(){
 
     this.autorun(()=>{
         this.options.set("values", false);
-        // this.subscribe("metaFormatTimeSpanOptionsNonReactive", FlowRouter.getParam("format"), this.options.get("decksMetaSpan"), this.options.get("eventTypes"), {
+        // this.subscribe("metaFormatTimeSpanOptionsNonReactive", FlowRouter.getParam("format"), this.options.get("decksMetaSpan"), this.options.get("types"), {
         //     onReady : function(){
         //         this.options.set("metaFormatTimeSpanOptionsNonReactive", true)
         //     }
         // })
 
-        Meteor.call("getMetaAllArchetypes", FlowRouter.getParam("format"), this.options.get("eventTypes"), this.options.get("decksMetaSpan"), this.options.get("positionChange"), (error, result)=>{
+        Meteor.call("getMetaAllArchetypes", FlowRouter.getParam("format"), this.options.get("types"), this.options.get("decksMetaSpan"), this.options.get("positionChange"), (error, result)=>{
             if(error){
                 console.log(error);
             }else{
@@ -64,7 +64,6 @@ Template.dataTableNewMetaTable.onRendered(function(){
                 return row.position;
             }},
             {title: "Name", width: "215px", render : (data, type, row, meta)=>{
-            console.log(row);
                 var change = "";
                 if(row.positionChange== 999){
                     change = "";
@@ -133,7 +132,7 @@ Template.dataTableNewMetaTable.onRendered(function(){
                     } else {
                         // Open this row
                         Meteor.call("getMetaDecksNamesFromArchetype", FlowRouter.getParam("format"),
-                            that.options.get("eventTypes"),
+                            that.options.get("types"),
                             that.options.get("decksMetaSpan"),
                             DecksArchetypes_id,
                             (error, data)=>{
@@ -287,7 +286,7 @@ Template.dataTableNewMetaTable.events({
             types.push(checkboxes[i].value);
         }
         console.log(types);
-        tmp.options.set("eventTypes", types);
+        tmp.options.set("types", types);
     },
     'change input[name="decksMetaSpan"]' : function(evt, tmp){
         tmp.options.set("decksMetaSpan", $(evt.target).attr("value"));
@@ -373,7 +372,7 @@ formatDeckArchetypesMetaOnDeck = function(DecksArchetypes_id, template, data) {
 formatDeckArchetypesMeta = function(DecksArchetypes_id, template) {
 
     // Meteor.call("getMetaDecksNamesFromArchetype", FlowRouter.getParam("format"),
-    //     template.options.get("eventTypes"),
+    //     template.options.get("types"),
     //     template.options.get("decksMetaSpan"),
     //     DecksArchetypes_id,template.options.get
     //

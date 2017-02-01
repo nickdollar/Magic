@@ -1,6 +1,5 @@
 import React from "react";
 import SearchOptions from "./SearchOptions.jsx";
-import DecksList from "./DecksList.jsx";
 import ArchetypeList from "./ArchetypeList.jsx";
 
 

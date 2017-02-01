@@ -53,7 +53,7 @@ export default class FixDecksWithoutNames extends React.Component{
             }],
             columns: [
                 {width : "200px", title: "_id", data: "_id"},
-                {title: "eventType", data: "eventType"},
+                {title: "type", data: "type"},
                 {title: "format", data: "format"},
 
                 {title: "Exists", data: "validation", render : (data, type, row, meta)=>{

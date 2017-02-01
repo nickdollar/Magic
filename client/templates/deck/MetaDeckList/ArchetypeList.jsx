@@ -45,16 +45,27 @@ class ArchetypeList extends React.Component{
     }
 
     cardsSearch(props, table){
-        var decks = DecksNames.find({"main.name" : { $all : props.cards}}).fetch();
-        var decksUnique = Array.from(new Set(decks.map(a =>{
-            return a.DecksArchetypes_id;
-        })));
-
-        var archetypes = decksUnique.join("|");
-        if(archetypes==""){
+        var archetypes;
+        if(props.cards.length == 0){
             archetypes = "";
+        }else{
+            var decks = DecksNames.find({"main.name" : { $all : props.cards}}).fetch();
+            console.log(decks);
+
+            if(decks.length == 0){
+                archetypes = "^$";
+            }else{
+                var decksUnique = Array.from(new Set(decks.map(a =>{
+                    return a.DecksArchetypes_id;
+                })));
+
+                var archetypes = decksUnique.join("|");
+                if(archetypes==""){
+                    archetypes = "";
+                }
+            }
         }
-        
+
         table
             .column(0)
             .search(archetypes, true)
@@ -195,9 +206,6 @@ class ArchetypeList extends React.Component{
             }
         });
         this.typesSearch(this.props, table);
-        // this.colorsSearch(this.props, table);
-        //
-        // this.cardsSearch(this.props, table);
     }
 
     render() {

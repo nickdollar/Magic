@@ -14,7 +14,6 @@ class AdminEvent extends React.Component {
                 return;
             }
             this.props.confirmPassword();
-
         })
     }
     render() {

@@ -2,7 +2,7 @@ Meteor.methods({
     fixLeagueDailyEvent(){
         console.log("START: fixLeagueDailyEvent");
 
-        Events.find({eventType : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        Events.find({type : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 console.log("notFound");
@@ -25,7 +25,7 @@ Meteor.methods({
     fixMTGOPTQEvent(){
         console.log("START: fixMTGOPTQEvent");
 
-        Events.find({eventType : "MTGOPTQ", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        Events.find({type : "MTGOPTQ", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 notFoundEventMTGOPTQ(event._id);
@@ -46,7 +46,7 @@ Meteor.methods({
     fixGPEvent(){
         console.log("START: fixGPEvent");
 
-        Events.find({eventType : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        Events.find({type : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 GPEventNotFound(event._id);
@@ -69,7 +69,7 @@ Meteor.methods({
     fixGPEvent(){
         console.log("START: fixGPEvent");
 
-        Events.find({eventType : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        Events.find({type : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 GPEventNotFound(event._id);
@@ -92,7 +92,7 @@ Meteor.methods({
     fixSCGEvent(){
         console.log("START: fixGPEvent");
 
-        Events.find({eventType : {$regex : /^SCG/}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        Events.find({type : {$regex : /^SCG/}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 SCGnotFound(event._id);

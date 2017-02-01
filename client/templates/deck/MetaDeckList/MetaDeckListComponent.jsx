@@ -1,7 +1,7 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import MetaDeckList from './MetaDeckList.jsx';
 
-export default AutoCompleteContainer = createContainer(({}) => {
+export default MetaDeckListComponent = createContainer(({}) => {
 
     return {
         currentUser: Meteor.user(),

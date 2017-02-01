@@ -11,7 +11,7 @@ module.exports = {
 
   meteor: {
     name: 'Magic',
-    path: 'C:/Users/Nicholas/sites/Magic',
+    path: 'C:/Magic',
 	
     servers: {
       one: {}
@@ -26,15 +26,15 @@ module.exports = {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'https://www.crowdmtg.com',
+      ROOT_URL: 'http://www.crowdmtg.com',
       MONGO_URL: 'mongodb://localhost.com/meteor'
     },
     deployCheckWaitTime: 600,
-	ssl: {
-		port: 443,
-        crt: "./bundle.crt",
-		key: "./private.key"
-    },
+	 ssl: {
+		crt: './bundle.crt', // this is a bundle of certificates
+		key: './private.key', // this is the private key of the certificate
+		port: 443 // 443 is the default value and it's the standard HTTPS port
+  }
   },
 
   mongo: {

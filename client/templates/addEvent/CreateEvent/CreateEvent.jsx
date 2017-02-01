@@ -10,7 +10,7 @@ class CreateEvent extends React.Component{
         this.state = {
             eventInfo : {
                 LGS : "",
-                eventName : "",
+                name : "",
                 token : "",
                 emailInput : "",
                 formatsInput : "",
@@ -39,7 +39,7 @@ class CreateEvent extends React.Component{
             {
                 eventInfo : {
                     LGS : "",
-                    eventName : "",
+                    name : "",
                     token : "",
                     emailInput : "",
                     formatsInput : "",

@@ -76,7 +76,7 @@ Template.eventsCalendar.onRendered(function(){
         eventClick:  function(event, jsEvent, view) {
             //set the values and open the modal
             // console.log(Events);
-            $(".js-eventName").html(event.title);
+            $(".js-name").html(event.title);
             var html = "";
             html += '<div><span class="rightTitle">When:</span><span class="leftInformation">'+moment(new Date(event.source.origArray[0].start)).format("llll");
             if(event.source.origArray[0].end){

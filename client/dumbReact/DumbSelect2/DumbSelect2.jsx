@@ -13,7 +13,7 @@ export default class DumbSelect2 extends React.Component{
         $('.js-select2').off("select2");
         $('.js-select2').select2({
             ajax : {
-                transport : function(params, sucess, failure){
+                transport : (params, sucess, failure)=>{
                     Meteor.call(this.props.call, {term : params.data.q}, (err, data)=>{
                         sucess(data.map((obj)=>{
                             return obj.name;
@@ -29,13 +29,19 @@ export default class DumbSelect2 extends React.Component{
                 }
             }
         });
+
+        $('.js-select2').off("select2:select");
+        $('.js-select2').on("select2:select", (evt)=> {
+            this.props.returnHandler(evt.params.data.text);
+        });
     }
+
+
 
     render() {
         return (
             <div className="ContainerDumbSelect2">
-                <select className="js-select2">
-                    <option></option>
+                <select className="js-select2" style={{width : "100%"}}>
                 </select>
             </div>
         )

@@ -9,15 +9,18 @@ export default class ReactTable extends React.Component {
     }
 
     render(){
+        if(this.props.listLoading){
+            return <div>Loading...</div>
+        }
+
+        console.log(this.props.rows);
         return(
             <div className="BootstrapTableComponent">
-                <div className="ListByStateTableComponent" >
-                    <BootstrapTable {...this.props.options}>
-                        {this.props.TableHeaderColumn.map((row)=>{
-                            return <column key={row.attr.dataField} {...row.attr}>{row.text}</column>
-                        })}
-                    </BootstrapTable>
-                </div>
+                <BootstrapTable {...this.props.options} data={this.props.rows}>
+                    {this.props.columns.map((row)=>{
+                        return <TableHeaderColumn key={row.attr.dataField} {...row.attr}>{row.text}</TableHeaderColumn>
+                    })}
+                </BootstrapTable>
             </div>
         );
     }

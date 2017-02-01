@@ -97,10 +97,10 @@ Template.exampleDeck_COL.helpers({
         Template.instance().checks.set("test2", false);
     },
     smallSelector(){
-        return {format: FlowRouter.getParam("format"), eventType : {$in : ["league", "daily"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
+        return {format: FlowRouter.getParam("format"), type : {$in : ["league", "daily"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
     },
     largeSelector(){
-        return {format: FlowRouter.getParam("format"), eventType : {$in : ["GP"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
+        return {format: FlowRouter.getParam("format"), type : {$in : ["GP"]}, DecksNames_id : DecksNames.findOne({format : FlowRouter.getParam("format"), name : {$regex : Template.instance().deckSelectedParamRegex.get()}})._id};
     }
 });
 

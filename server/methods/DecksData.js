@@ -18,29 +18,71 @@ Meteor.methods({
         })
 
         // console.log(deck);
-
-        if(Events.findOne({LGS_id : deck.LGS_id, token : deck.token})){
-            DecksData.insert({
-                Events_id : deck._id,
-                format : deck.format,
-                eventType : "lgs",
-                totalMain : totalMain,
-                main : deck.main,
-                colors : colors,
-                player : deck.player,
-                totalSideboard : totalSideboard,
-                sideboard : deck.sideboard,
-                date : deck.date
-            })
+        var message = "Deck Added";
+        if(DecksData.find({Events_id : deck._id, player : deck.player}, {limit : 1}).count()){
+            message = "Deck Updated"
         }
 
-        // if()
+        if(Events.findOne({LGS_id : deck.LGS_id, token : deck.token})){
+            console.log(DecksData.update({Events_id : deck._id, player : deck.player},
+                {
+                    $set : {
+                        Events_id : deck._id,
+                        format : deck.format,
+                        type : "lgs",
+                        totalMain : totalMain,
+                        main : deck.main,
+                        colors : colors,
+                        player : deck.player,
+                        totalSideboard : totalSideboard,
+                        sideboard : deck.sideboard,
+                        date : deck.date,
+                        state : "lgs"
+                    }
+                },
+                {
+                    upsert : true
+                }
+            ))
+        }
 
+        return message;
+    },
+    updateALGSDecksData: function (deck) {
+        var totalMain = deck.main.reduce((a, b)=>{
+            return a + b.quantity
+        }, 0);
 
+        var totalSideboard = deck.sideboard.reduce((a, b)=>{
+            return a + b.quantity
+        }, 0);
+
+        var colors = setUpColorForDeckName(deck.main);
+
+        deck.main = deck.main.map((card)=>{
+            return {name : card.name, quantity : card.quantity }
+        })
+        deck.sideboard = deck.sideboard.map((card)=>{
+            return {name : card.name, quantity : card.quantity }
+        })
+
+        if(Events.findOne({_id : deck.Events_id})){
+            DecksData.update({_id : deck._id},
+                {
+                    $set : {
+                        colors : colors,
+                        totalMain : totalMain,
+                        main : deck.main,
+                        totalSideboard : totalSideboard,
+                        sideboard : deck.sideboard,
+                        state : "admin"
+                    }
+                }
+            )
+        }
+        return "Deck Updated";
     },
     updateMainSide: function (mainSide, DecksData_id) {
-
-        console.log(mainSide);
 
         var main = mainSide.main.map((card)=>{
             var cardQuery = CardsData.findOne({name : card.name});
@@ -71,6 +113,7 @@ Meteor.methods({
         }, 0);
 
         var colors = setUpColorForDeckName(main);
+        console.log(DecksData_id);
         DecksData.update({_id : DecksData_id},
             {$set : {
                 totalMain : totalMain,
@@ -78,6 +121,7 @@ Meteor.methods({
                 totalSideboard : totalSideboard,
                 colors : colors,
                 sideboard : sideboard,
+                state : "lgs"
             }
         })
     },
@@ -102,7 +146,7 @@ Meteor.methods({
         addNameToDeck(DecksData_id, DecksNames_id);
         DecksData.update({_id : DecksData_id},
             {
-                $unset : {autoNaming : "", autoPercentage : ""}
+                $set : {state : "manual"}
             })
     },
     recheckDeckWithWrongCardName(format){
@@ -110,7 +154,7 @@ Meteor.methods({
             {
                 $match : {
                     format: format,
-                    eventType : {$in : ["league", "daily"]},
+                    type : {$in : ["league", "daily"]},
                     $or : [
                         {"main.wrongName" : true},
                         {"sideboard.wrongName" : true}

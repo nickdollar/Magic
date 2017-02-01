@@ -1,6 +1,6 @@
 import React from 'react' ;
-import SubmitDeck from './submitDeck/SubmitDeck.jsx';
-import CreateEvent from './createEvent/CreateEvent.jsx';
+import SubmitDeck from './SubmitDeck.jsx/SubmitDeck.jsx';
+import CreateEvent from './CreateEvent/CreateEvent.jsx';
 
 
 class AddEvent extends React.Component{

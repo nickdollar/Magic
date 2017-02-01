@@ -20,18 +20,19 @@ getStarCityGamesEvents = function(format) {
                 continue
             };
             event.date = new Date(eventPatternMatch[1] + "/2017");
-            event.eventType = "SCG" + eventPatternMatch[2].replace(/\s/g, "");
+            event.type = "SCG" + eventPatternMatch[2].replace(/\s/g, "");
             event.city = eventPatternMatch[3];
             event.country = eventPatternMatch[4];
             event.url = $resMainPage(eventsLinks[i]).attr("href").replace(/limit=\d{1,3}/i, "limit=100");
             event.state = "startProduction";
+            event.venue = "SCG";
 
-            if(Events.findOne({city : event.city, event : event.date, format : format, eventType : event.eventType}))
+            if(Events.findOne({city : event.city, event : event.date, format : format, type : event.type}))
             {
                 return;
             }
 
-            Events.update({city : event.city, event : event.date, format : format, eventType : event.eventType},
+            Events.update({city : event.city, event : event.date, format : format, type : event.type},
                 {$set : event},
                 {upsert : true}
             );
@@ -47,7 +48,7 @@ getStarCityGamesEvents = function(format) {
                 }
                 event.state = state;
 
-                Events.update({city : event.city, event : event.date, format : format, eventType : event.eventType},
+                Events.update({city : event.city, event : event.date, format : format, type : event.type},
                     {$set : event},
                     {upsert : true}
                 );
@@ -172,7 +173,7 @@ SCGEventHTML = function(_id){
         var data = {
             Events_id : _id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             player : $decksBlocks(decks[i]).find(".player_name a").html(),
             format : event.format,
             position :$decksBlocks(decks[i]).find(".deck_played_placed").html().match(positionPatt)[0]
@@ -218,6 +219,7 @@ SCGEventHTML = function(_id){
         data.sideboard = sideboard;
         data.colors = setUpColorForDeckName(main);
 
+        data.state = "scraped";
         DecksData.insert(data);
         decksCount++;
 

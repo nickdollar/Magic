@@ -9,11 +9,12 @@ export default class FixDecksWithoutNames extends React.Component{
 
     render(){
         return (
+
             <div>
-                {this.props.showModal
-                    ?
+                {this.props.showModal ?
                     <Modal
                         handleHideModal={this.props.handleHideModal}
+                        title={this.props.title}
                     >
                         {this.props.children}
                     </Modal>

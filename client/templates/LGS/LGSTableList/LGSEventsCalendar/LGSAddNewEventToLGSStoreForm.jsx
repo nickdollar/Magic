@@ -48,7 +48,7 @@ class LGSAddNewEventToLGSStoreForm extends React.Component{
                 }
             });
         }else{
-            console.log("form wrong");
+            console.log("FormValidate wrong");
         }
     }
 
@@ -64,7 +64,7 @@ class LGSAddNewEventToLGSStoreForm extends React.Component{
         return (
             <div>
                 <form name="contactForm" noValidate  onSubmit={this.handleSubmit.bind(this)}>
-                    <EventNameInput required={true} onComponentMounted={this.register.bind(this)} />
+                    {/*<EventNameInput required={true} onComponentMounted={this.register.bind(this)} />*/}
                     <LGSInput required={true} onComponentMounted={this.register.bind(this)} />
                     <PriceInput required={true} onComponentMounted={this.register.bind(this)} />
                     <RoundsInput required={true} onComponentMounted={this.register.bind(this)} />

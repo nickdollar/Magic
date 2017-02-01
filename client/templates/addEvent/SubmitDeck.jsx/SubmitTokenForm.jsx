@@ -28,16 +28,20 @@ class SubmitTokenForm extends React.Component{
         if(validForm) {
             var form = {};
             this.state.Fields.forEach((field)=>{
-                form = Object.assign(form, field.getCorrectedValue())
+                Object.assign(form, field.getCorrectedValue())
             });
 
-            Meteor.call("checkIfEventExists", {token : form.token, LGS_id : form.LGS_id}, (err, data)=>{
-
-                if(data == false){
-                    console.log(this.refs["serverMessage"]);
+            Meteor.call("checkIfEventExists", form, (err, data)=>{
+                if(data == "token"){
                     this.refs["serverMessage"].textContent = "Token doesn't exist for that Store."
                     return;
                 }
+
+                if(data == "player"){
+                    this.refs["serverMessage"].textContent = "Deck With Player Name Already Created. Create Another, or Ask Event Owner to Delete Deck."
+                    return;
+                }
+
                 Object.assign(data, form);
                 this.props.tokenConfirmed(data);
             })
@@ -69,7 +73,6 @@ class SubmitTokenForm extends React.Component{
                                 objectName={"player"}
                                 title={"Player Name"}
                                 errorMessage="Type Player Name."/>
-
                     <button type="submit" className="btn btn-default">Submit</button>
                     <span className="error" ref="serverMessage"></span>
                 </form>

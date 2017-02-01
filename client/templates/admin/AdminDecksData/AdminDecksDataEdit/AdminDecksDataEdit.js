@@ -108,7 +108,7 @@ Template.AdminDecksDataEdit.events({
 
 var hooksObject = {
     before: {
-        // Replace `formType` with the form `type` attribute to which this hook applies
+        // Replace `formType` with the FormValidate `type` attribute to which this hook applies
         method: function(doc) {
             doc._id = FlowRouter.getParam("_id");
             return doc;

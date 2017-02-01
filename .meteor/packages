@@ -75,6 +75,7 @@ useraccounts:bootstrap
 alanning:roles
 aldeed:autoform
 email@1.1.18
+service-configuration
 
 
 #dtables plugins

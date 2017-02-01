@@ -19,7 +19,6 @@ class SubmitDeckForm extends React.Component {
     }
 
     setDeck(deck){
-        console.log(deck);
         var temp = Object.assign({}, deck);
         this.setState({deck : temp})
     }

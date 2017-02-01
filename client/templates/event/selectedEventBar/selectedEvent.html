@@ -1,112 +1,72 @@
-<template name="selectedEvent">
-    <div class="row">
-        <div class="selectedEvent col-xs-12">
-            <div class="row">
-                <div class="selectedDeckHeader">
-                    <table>
-                        <tr class="eventInfoBar-top-row">
-                            {{#with event}}
-                                <td class="eventTab col-xs-3">
-                                    <div class="eventType">
-                                        <a href="{{url}}">{{capitalizeEvents type}} {{datePrettify date 'year'}}</a>
-                                    </div>
-                                    <div>
-                                        {{#if decks}} Top Decks Quantity {{decks}} {{else}} 99{{/if}}
-                                    </div>
-                                </td>
-                            {{/with}}
-                            {{#with deck}}
-                                <td class="deckTab col-xs-6">
-                                    <span infobar-deck-name>
-                                        {{player}}
-                                    </span>
-                                    <span infobar-deck-name>
-                                        ({{deckPosition}})
-                                    </span>
-                                    <span>
-                                        {{#each getCssManaFromDeck colors}}<div class="eventInfoBarMana mana {{this}}"></div>{{/each}}
-                                    </span>
-                                </td>
-                                <td class="deckInfoTab col-xs-3">
-                                    <div>
-                                        <!--TCGplayer 8985-->
-                                    </div>
-                                    <div>
-                                        <!--Tix 8985-->
-                                    </div>
-                                </td>
-                            {{/with}}
-                        </tr>
-                        <tr class="eventInfoBar-bottow-row">
-                            <td colspan="3" class="options">
-                                <ul class="list-inline">
-                                    <!--<li>Compare</li>-->
-                                    <!--<li>More Stats</li>-->
-                                    <!--<li>Download</li>-->
-                                    <!--<li>Sort</li>-->
-                                    <!--<li>Sample Hand</li>-->
-                                </ul>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 deckListAndPlayersList">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <div class="row">
-                                <div class=".js-appendPlayersTable playersTable">
-                                    <table id="playersTable" class="table table-hover"></table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-9">
-                            <div class="row">
-                                {{#with deck}}
-                                    <div class="selectedDeck">
-                                        <div class="deckBlock">
-                                            <div class="typeHeader">Main ({{mainQuantity}})</div>
-                                            <div class="newDeckColumn">
-                                                {{#each cardType}}
-                                                    <div class="typeHeader">{{name}} ({{quantity}})</div>
-                                                    {{#each cards block}}
-                                                        <div class="cardLine">
-                                                            <div class="name js-imagePopOver" data-name="{{name}}">{{quantity}} {{name}}</div>
-                                                            <div class="cardInfo">
-                                                                <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
-                                                                <!--<div class="price">$118.74</div>-->
-                                                            </div>
-                                                        </div>
-                                                    {{/each}}
-                                                {{/each}}
-                                            </div>
-                                        </div>
-                                        <div class="deckBlock">
-                                            <div class="typeHeader">Sideboard ({{sideboardQuantity}})</div>
-                                            <div class="newDeckColumn">
-                                                {{#each sideboard}}
-                                                    <div class="cardLine">
-                                                        <div class="name js-imagePopOver" data-name="{{name}}">{{quantity}} {{name}}</div>
-                                                        <div class="cardInfo">
-                                                            <div class="manaValue">{{#each getManaCss name}}<div class="mana {{mana}}"></div>{{/each}}</div>
-                                                            <!--<div class="price">$118.74</div>-->
-                                                        </div>
-                                                    </div>
-                                                {{/each}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{test}}
-                                {{/with}}
-                            </div>
-                            {{#if test2}}
-                                {{test3}}
-                            {{/if}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
+<!--<template name="selectedEvent">-->
+    <!--<div class="row">-->
+        <!--<div class="selectedEvent col-xs-12">-->
+            <!--<div class="row">-->
+                <!--<div class="selectedDeckHeader">-->
+                    <!--<table>-->
+                        <!--<tr class="eventInfoBar-top-row">-->
+                            <!--{{#with event}}-->
+                                <!--<td class="eventTab col-xs-3">-->
+                                    <!--<div class="type">-->
+                                        <!--<a href="{{url}}">{{capitalizeEvents type}} {{datePrettify date 'year'}}</a>-->
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <!--{{#if decks}} Top Decks Quantity {{decks}} {{else}} 99{{/if}}-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                            <!--{{/with}}-->
+                            <!--{{#with deck}}-->
+                                <!--<td class="deckTab col-xs-6">-->
+                                    <!--<span infobar-deck-name>-->
+                                        <!--{{player}}-->
+                                    <!--</span>-->
+                                    <!--<span infobar-deck-name>-->
+                                        <!--({{deckPosition}})-->
+                                    <!--</span>-->
+                                    <!--<span>-->
+                                        <!--{{#each getCssManaFromDeck colors}}<div class="eventInfoBarMana mana {{this}}"></div>{{/each}}-->
+                                    <!--</span>-->
+                                <!--</td>-->
+                                <!--<td class="deckInfoTab col-xs-3">-->
+                                    <!--<div>-->
+                                        <!--&lt;!&ndash;TCGplayer 8985&ndash;&gt;-->
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <!--&lt;!&ndash;Tix 8985&ndash;&gt;-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                            <!--{{/with}}-->
+                        <!--</tr>-->
+                        <!--<tr class="eventInfoBar-bottow-row">-->
+                            <!--<td colspan="3" class="options">-->
+                                <!--<ul class="list-inline">-->
+                                    <!--&lt;!&ndash;<li>Compare</li>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<li>More Stats</li>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<li>Download</li>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<li>Sort</li>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<li>Sample Hand</li>&ndash;&gt;-->
+                                <!--</ul>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+                <!--<div class="col-xs-12 deckListAndPlayersList">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-3">-->
+                            <!--<div class="row">-->
+                                <!--<div class=".js-appendPlayersTable playersTable">-->
+                                    <!--<table id="playersTable" class="table table-hover"></table>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-xs-9">-->
+                            <!--&lt;!&ndash;<div>{{> React component=Deck DecksData_id=DecksData_id}}</div>&ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</template>-->

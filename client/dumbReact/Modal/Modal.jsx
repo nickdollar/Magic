@@ -13,7 +13,7 @@ export default class FixDecksWithoutNames extends React.Component{
                     <div className="modal-content">
                         <div className="modal-header">
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 className="modal-title">Add Store. (Will be Added After Mods Confirms Information)</h4>
+                            <h4 className="modal-title">{this.props.title}</h4>
                         </div>
                         <div className="modal-body">
                             {this.props.children}

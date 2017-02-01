@@ -6,7 +6,7 @@
             {{>typeMenu}}
         </div>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
-        <div class="container content">
+        <div class="container">
             {{> Template.dynamic template=main}}
             {{>modals}}
         </div>
@@ -26,9 +26,9 @@
     <div class="row">
         {{>sevenDayCalendar}}
     </div>
-    <div class="row">
-        {{>latestAddedPlaylist}}
-    </div>
+    <!--<div class="row">-->
+        <!--{{>latestAddedPlaylist}}-->
+    <!--</div>-->
     <div class="row">
         {{>latestDecks}}
     </div>
@@ -119,4 +119,12 @@
 
 <template name="CustomEventsAdmin">
     <div>{{> React component=CustomEventsAdmin}}</div>
+</template>
+
+<template name="selectedEvent">
+    <div>{{> React component=selectedEvent}}</div>
+</template>
+
+<template name="ArchetypeDeckInformation">
+    <div>{{> React component=ArchetypeDeckInformation}}</div>
 </template>

@@ -1,10 +1,9 @@
 import React from 'react';
 import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
 import FormValidation from '/client/dumbReact/FormValidate/FormValidate.jsx'
-import textFormInput from '/client/dumbReact/FormValidate/inputs/textFormInput/textFormInput.jsx'
-import URLTextInput from '/client/dumbReact/FormValidate/inputs/URLTextInput/URLTextInput.jsx'
-import URLTextInput from '/client/dumbReact/FormValidate/inputs/URLTextInput/URLTextInput.jsx'
-import GoogleAddressAutoComplete from '/client/dumbReact/FormValidate/inputs/GoogleAddressAutoComplete/GoogleAddressAutoComplete.jsx'
+import TextFormInput from '/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx'
+import URLTextInput from '/client/dumbReact/FormValidate/Inputs/URLTextInput/URLTextInput.jsx'
+import GoogleAddressAutoComplete from '/client/dumbReact/FormValidate/Inputs/GoogleAddressAutoComplete/GoogleAddressAutoComplete.jsx'
 
 
 
@@ -14,10 +13,17 @@ export default class LGSAddNewStore extends React.Component {
     constructor(){
         super();
 
+        this.state = {
+            showModal : false
+        }
     }
 
     handleHideModal(){
         this.setState({showModal: false})
+    }
+
+    handleShowModal(){
+        this.setState({showModal: true})
     }
 
     render(){
@@ -29,19 +35,19 @@ export default class LGSAddNewStore extends React.Component {
                                 handleHideModal={this.handleHideModal.bind(this)}
 
                 >
-                    <FormValidation >
-                        <textFormInput
+                    <FormValidation submitMethod="addLGS">
+                        <TextFormInput
                             objectName={"name"}
-                            title="LGS Name"
-                            errorMessage="LGS Name is Missing"
+                            title={"LGS Name"}
+                            errorMessage={"LGS Name is Missing"}
                             required={true}
                         />
                         <URLTextInput
                             objectName={"url"}
-                            title="LGS Format"
+                            title="LGS URL with its calendar, (Need to add events to calendar)"
                             errorMessage="URL is not in right format."
                         />
-                        <GoogleAddressAutoComplete/>
+                        <GoogleAddressAutoComplete objectName="location"/>
 
                     </FormValidation>
                 </ModalFirstPage>

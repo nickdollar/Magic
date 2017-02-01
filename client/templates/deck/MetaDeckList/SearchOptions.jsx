@@ -1,7 +1,7 @@
 import React from "react";
-import AutoComplete from "./AutoComplete.jsx";
+import AutoComplete from "./Autocomplete.jsx";
 
-class SearchOptions extends React.Component{
+export default class SearchOptions extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -14,8 +14,9 @@ class SearchOptions extends React.Component{
     }
 
     typeChange(e){
-        var types = this.state.typeOptions.slice();
+        var types = this.state.typeOptions.concat();
 
+        console.log(e.target.value);
         var index = types.findIndex((typesObj)=>{
             return typesObj == e.target.value;
         })
@@ -31,11 +32,14 @@ class SearchOptions extends React.Component{
     }
 
     typesChecked(type){
+        console.log(type);
         var types = this.state.typeOptions.slice();
 
         var index = types.findIndex((typesObj)=>{
             return typesObj == type;
         })
+
+
 
         if(index != -1){
             return "checked";
@@ -75,6 +79,14 @@ class SearchOptions extends React.Component{
 
     }
 
+    getColors(color){
+        if("b" === color)       {return <span className="mana sb"></span>}
+        else if("g" === color)  {return <span className="mana sg"></span>}
+        else if("c" === color)  {return <span className="mana scl"></span>}
+        else if("r" === color)  {return <span className="mana sr"></span>}
+        else if("u" === color)  {return <span className="mana su"></span>}
+        else if("w" === color)  {return <span className="mana sw"></span>}
+    }
 
     containMatchChange(e){
         this.props.updateContainMatch(e.target.value);
@@ -109,85 +121,43 @@ class SearchOptions extends React.Component{
                     <div className="header">
                         Type
                     </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="aggro" onChange={this.typeChange.bind(this)} checked={this.typesChecked("aggro")}/>
-                                Aggro
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="combo" onChange={this.typeChange.bind(this)} checked={this.typesChecked("combo")} />
-                                Combo
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="control" onChange={this.typeChange.bind(this)} checked={this.typesChecked("control")} />
-                                Control
-                        </label>
-                    </div>
+                    {["aggro", "combo", "control"].map((option)=>{
+                        console.log(option);
+                        return  <div key={option} className="checkbox">
+                                    <label>
+                                        <input type="checkbox" role="checkbox" value={option} onChange={this.typeChange.bind(this)} checked={this.typesChecked(option)}/>
+                                        {option.toTitleCase()}
+                                    </label>
+                                </div>
+                    })}
                 </div>
                 <div className="optionsGroupName">
                     <div className="header">
                         Colors
-
                     </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="b" onChange={this.colorChange.bind(this)} checked={this.colorChecked("b")}/>
-                                Black
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="c" onChange={this.colorChange.bind(this)} checked={this.colorChecked("c")}/>
-                                Colorless
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="g" onChange={this.colorChange.bind(this)} checked={this.colorChecked("g")}/>
-                                Green
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="r" onChange={this.colorChange.bind(this)} checked={this.colorChecked("r")}/>
-                                Red
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="u" onChange={this.colorChange.bind(this)} checked={this.colorChecked("u")}/>
-                                Blue
-                        </label>
-                    </div>
-                    <div className="checkbox">
-                        <label>
-                            <input type="checkbox" role="checkbox" value="w" onChange={this.colorChange.bind(this)} checked={this.colorChecked("w")}/>
-                                White
-                        </label>
-                    </div>
-
-                    <div className="radio">
-                        <label><input type="radio" name="optionsRadio" value="contain" onChange={this.containMatchChange.bind(this)} checked={this.containMatchChecked("contain")} />Contain</label>
-                    </div>
-                    <div className="radio">
-                        <label><input type="radio" name="optionsRadio" value="match"  onChange={this.containMatchChange.bind(this)} checked={this.containMatchChecked("match")} />Match</label>
-                    </div>
-
-                    <div className="radio">
-                        <label><input type="radio" name="archetypesDecks" value="archetypes" onChange={this.containArchetypesDecksChange.bind(this)} checked={this.containArchetypesDecksChecked("archetypes")} />Archetypes</label>
-                    </div>
-                    <div className="radio">
-                        <label><input type="radio" name="archetypesDecks" value="decks"  onChange={this.containArchetypesDecksChange.bind(this)} checked={this.containArchetypesDecksChecked("decks")} />Decks</label>
-                    </div>
+                    {["b", "c", "g", "r", "u", "w"].map((option)=>{
+                        return  <div key={option} className="checkbox">
+                                    <label>
+                                        <input type="checkbox" role="checkbox" value={option.charAt(0)} onChange={this.colorChange.bind(this)} checked={this.colorChecked(option.charAt(0))}/>
+                                        {this.getColors(option)}
+                                    </label>
+                                </div>
+                    })}
+                    {["contain", "match"].map((option)=>{
+                        return  <div key={option} className="radio">
+                                    <label><input type="radio" name="optionsRadio" value={option} onChange={this.containMatchChange.bind(this)} checked={this.containMatchChecked(option)} />{option.toTitleCase()}</label>
+                                </div>
+                    })}
+                    {["archetypes", "decks"].map((option)=>{
+                        return  <div key={option} className="radio">
+                                    <label><input type="radio" name="archetypesDecks" value={option} onChange={this.containArchetypesDecksChange.bind(this)} checked={this.containArchetypesDecksChecked({option})} />{option.toTitleCase()}</label>
+                                </div>
+                    })}
                 </div>
+
                 <AutoComplete updateCards={this.props.updateCards}/>
             </div>
         )
     }
 }
 
-export default SearchOptions;

@@ -16,6 +16,10 @@ Meteor.publish('DecksArchetypesFormat', function(format) {
     return DecksArchetypes.find({format : format});
 });
 
+Meteor.publish('DecksArchetypesQueryProjection', function(query, projection) {
+    return DecksArchetypes.find(query, projection);
+});
+
 Meteor.publish('testDecksArchetypes', function(format, weeksSpan, types) {
     return DecksArchetypes.find({ format : format });
 });
@@ -26,6 +30,18 @@ Meteor.publish("DecksArchetypes", function(){
 
 Meteor.publish("DecksArchetypesThatHasDecksData", function(){
 
+});
+
+Meteor.publish("DecksArchetypesNameRegex", function(format, DecksArchetypes_name){
+    var DecksArchetypesRegex = new RegExp("^" + DecksArchetypes_name.replace(/[-']/g, ".") + "$", "i");
+
+
+    return DecksArchetypes.find({format : format, name : {$regex : DecksArchetypesRegex}}, {limit : 1})
+});
+
+Meteor.publish("DecksNamesList_DecksArchetypesNameRegex", function(format, DecksArchetypes){
+    var DecksArchetypesRegex = new RegExp("^" + DecksArchetypes.replace(/[-']/g, ".") + "$", "i");
+    return DecksNames.find({format : format, name : {$regex : DecksArchetypesRegex}}, {limit : 1})
 });
 
 Meteor.publish("DecksArchetypesMainPage", function(){

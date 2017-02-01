@@ -285,11 +285,11 @@ Template.registerHelper("convertToTemplate", function(color) {
 });
 
 Template.registerHelper('capitalizeEvents', function(){
-    if(this.eventType == "ptq"){
+    if(this.type == "ptq"){
         return "PTQ";
-    } else if(this.eventType == "daily"){
+    } else if(this.type == "daily"){
         return "Daily";
-    }else if(this.eventType == "league"){
+    }else if(this.type == "league"){
         return "League";
     }
 });
@@ -304,6 +304,14 @@ Template.registerHelper('deckPosition', function(){
     }
 
 });
+
+prettifyPosition = (position)=>{
+    position = parseInt(position);
+    var s=["th","st","nd","rd"],
+        v=position%100;
+    return position+(s[(v-20)%10]||s[v]||s[0]);
+}
+
 
 Template.registerHelper('initial', function(string){
     return string.charAt(0).toUpperCase();

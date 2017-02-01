@@ -1,13 +1,16 @@
 import { createContainer } from 'meteor/react-meteor-data';
-import ArchetypeDeckInformationExit from './ArchetypeDeckInformationExit.jsx';
+import ArchetypeDeckInformationExitContainer from './ArchetypeDeckInformationExitContainer.jsx';
 
-export default ArchetypeDeckInformationEntry = createContainer(({format, archetype}) => {
-    var handle = Meteor.subscribe("DecksArchetypesNameRegex", format, archetype);
+export default ArchetypeDeckInformationEntryContainer = createContainer(({format, archetype}) => {
+    console.log("ArchetypeDeckInformationEntryContainer");
     var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
+    var handle = Meteor.subscribe("DecksArchetypesNameRegex", format, archetype);
+
 
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        archetype: DecksArchetypes.findOne({format : format, name : {$regex : DecksArchetypesRegex}})
+        archetype: DecksArchetypes.findOne({format : format, name : {$regex : DecksArchetypesRegex}}),
+        flowRouterDeckSelected : FlowRouter.getParam("archetype")
     };
-}, ArchetypeDeckInformationExit);
+}, ArchetypeDeckInformationExitContainer);

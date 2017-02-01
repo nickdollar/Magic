@@ -19,7 +19,7 @@ class CreateEventInfo extends React.Component{
                     <span className="rightTitle">LGS: </span><span className="leftInformation">{this.storeName()}</span>
                 </div>
                 <div>
-                    <span className="rightTitle">Event name: </span><span className="leftInformation">{this.props.eventInfo.eventName}</span>
+                    <span className="rightTitle">Event name: </span><span className="leftInformation">{this.props.eventInfo.name}</span>
                 </div>
                 <div>
                     <span className="rightTitle">Date: </span><span className="leftInformation">{moment(this.props.date).format("LL")}</span>

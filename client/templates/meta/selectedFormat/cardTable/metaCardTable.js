@@ -1,7 +1,7 @@
 Template.metaCardTable.onCreated(function(){
     this.options = new ReactiveDict();
 
-    this.options.set("eventTypes", ["league5_0", "daily3_1", "daily4_0", "MTGOPTQ1-8", "MTGOPTQ9-16", "MTGOPTQ17+", "GP1-8", "GP9-16", "GP17+", "SCGSuperIQ", "SCGOpen1-8", "SCGOpen9-16", "SCGOpen17+", "InviQualifier", "SCGInvitational", "SCGClassic1-8", "SCGClassic9+", "LegacyChamps", "WorldMagicCup"]);
+    this.options.set("types", ["league5_0", "daily3_1", "daily4_0", "MTGOPTQ1-8", "MTGOPTQ9-16", "MTGOPTQ17+", "GP1-8", "GP9-16", "GP17+", "SCGSuperIQ", "SCGOpen1-8", "SCGOpen9-16", "SCGOpen17+", "InviQualifier", "SCGInvitational", "SCGClassic1-8", "SCGClassic9+", "LegacyChamps", "WorldMagicCup"]);
     this.options.set("timeSpan", "month");
     this.options.set("mainSideboard", "main");
     this.values = new ReactiveVar();
@@ -10,7 +10,7 @@ Template.metaCardTable.onCreated(function(){
         // this.subscribe('MetaByFormatTimeSpanOptions',
         //     FlowRouter.getParam("format"),
         //     this.options.get("timeSpan"),
-        //     this.options.get("eventTypes"),
+        //     this.options.get("types"),
         //     {
         //         onReady : function(){
         //             this.options.set("metaCards", true);
@@ -20,7 +20,7 @@ Template.metaCardTable.onCreated(function(){
 
 
 
-        Meteor.call("getMetaCards", FlowRouter.getParam("format"), this.options.get("eventTypes"), this.options.get("timeSpan"),this.options.get("mainSideboard"), (error, result)=>{
+        Meteor.call("getMetaCards", FlowRouter.getParam("format"), this.options.get("types"), this.options.get("timeSpan"),this.options.get("mainSideboard"), (error, result)=>{
             if(error){
                 console.log(error);
             }else{
@@ -38,12 +38,12 @@ Template.metaCardTable.helpers({
 
 Template.metaCardTable.events({
     'change input[role="typeCardCheckbox"]' : function(evt, tmp){
-        var eventTypes = [];
+        var types = [];
         var checkboxes = tmp.findAll('input[role="typeCardCheckbox"]:checked');
         for(var i = 0; i < checkboxes.length; i++){
-            eventTypes.push(checkboxes[i].value);
+            types.push(checkboxes[i].value);
         }
-        tmp.options.set("eventTypes", eventTypes);
+        tmp.options.set("types", types);
     },
     'click .options' : function(evt,tmp){
         $header = $(evt.target);

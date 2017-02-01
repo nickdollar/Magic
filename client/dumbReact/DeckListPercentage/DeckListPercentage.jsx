@@ -9,7 +9,6 @@ export default class DeckListPercentage extends React.Component{
 
     componentDidMount(){
         Meteor.call("methodFindDeckComparison", this.props.DecksData_id, (err, data)=>{
-            console.log(data);
             this.setState({decksPercentage : data})
         })
 

@@ -11,5 +11,10 @@ Meteor.methods({
         console.log("END: " + fixDecksNamesColorsAbbreviation);
 
     },
+    addDeckName(data){
+        data.name = data.name.toTitleCase();
+        DecksNames.update(data, {$set : data}, {upsert : true});
+        return true;
+    }
 })
 

@@ -4,6 +4,9 @@ import LGS from "/client/templates/LGS/LGS.jsx";
 import MetaDeckListComponent from "/client/templates/deck/MetaDeckList/MetaDeckListComponent.jsx";
 import CustomAdmin from "/client/templates/customAdmin/CustomAdmin.jsx";
 import CustomEventsAdmin from "/client/templates/customAdmin/CustomEventsAdmin/CustomEventsAdmin.jsx";
+import SelectedEvent from "/client/templates/event/SelectedEvent/SelectedEvent.jsx";
+import ArchetypeDeckInformation from "/client/templates/deck/ArchetypeDeckInformation/ArchetypeDeckInformation.jsx";
+
 
 
 navigator.geolocation.getCurrentPosition((location)=> {
@@ -172,5 +175,17 @@ Template.admin.helpers({
 Template.CustomEventsAdmin.helpers({
     CustomAdmin(){
         return CustomEventsAdmin;
+    },
+});
+
+Template.selectedEvent.helpers({
+    selectedEvent(){
+        return SelectedEvent;
+    },
+});
+
+Template.ArchetypeDeckInformation.helpers({
+    ArchetypeDeckInformation(){
+        return ArchetypeDeckInformation;
     },
 });

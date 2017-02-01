@@ -25,52 +25,10 @@ Meteor.methods({
         });
         DecksData.update({_id : data._id},
             {
-                $unset : {autoNaming : 1, autoPercentage : 1}
+                $set : {state : "manual"}
             },
             {multi : true}
         )
     },
-
-    methodAddNameToDeckAutomaticallyLessThan100 : function(format){
-        console.log("START: methodAddNameToDeckAutomaticallyLessThan100")
-
-        DecksData.find({format : format, eventType : {$in : ["league", "daily"]}, autoPercentage : {$lt : 1}}, {autoNaming : true}).forEach(function(deckData){
-            var bestResult = findBestResultDeckComparison(deckData._id);
-            console.log(deckData._id);
-            console.log(bestResult);
-
-            if(bestResult.result > 0.85 && bestResult.DecksNames_id){
-                removeNameFromDeck(deckData._id);
-                addNameToDeck(deckData._id, bestResult.DecksNames_id);
-                DecksData.update({_id : deckData._id},
-                    {
-                        $set : {autoNaming : true, autoPercentage : bestResult.result}
-                    })
-            }
-        });
-        console.log("END: methodAddNameToDeckAutomaticallyLessThan100")
-    },
-    methodAddNameToDeckWithoutNameAutomaticallyLeagueDaily : function(format){
-        console.log("START: methodAddNameToDeckWithoutNameAutomaticallyLeagueDaily")
-
-        // DecksData.find({format : format, eventsType : {$in : ["league", "daily"]}, DecksNames_id : null}).forEach(function(deckData){
-        //     var bestResult = findBestResultDeckComparison(deckData._id);
-        //     console.log(deckData._id);
-        //     console.log(bestResult);
-        //
-        //     if(bestResult.result > 0.85 && bestResult.DecksNames_id){
-        //         removeNameFromDeck(deckData._id);
-        //         addNameToDeck(deckData._id, bestResult.DecksNames_id);
-        //         DecksData.update({_id : deckData._id},
-        //             {
-        //                 $set : {autoNaming : true, autoPercentage : bestResult.result}
-        //             })
-        //     }
-        // });
-        console.log("END: methodAddNameToDeckWithoutNameAutomaticallyLeagueDaily")
-    },
-    createAllCardsAndInfoDatabase : function(){
-
-    }
 });
 

@@ -1,5 +1,5 @@
 import React from 'react' ;
-import EventsStatesContainer from "./EventsStates/EventsStatesContainer.jsx"
+import StateListContainer from "/client/dumbReact/StatesList/StateListContainer.jsx"
 import AddEventToCollection from "./AddEventToCollection/AddEventToCollection.jsx"
 
 export default class CustomAdmin extends React.Component{
@@ -15,8 +15,14 @@ export default class CustomAdmin extends React.Component{
     render(){
         return (
             <div>
-                <EventsStatesContainer/>
-                <AddEventToCollection/>
+
+                <StateListContainer collection="Events"
+                                    subscription="EventsQueryProjection"
+                                    notState={[]}
+                                    states={["startProduction", "notFound", "notFoundOld", "exists", "mainHTMLFail", "prePublish", "published", "HTMLFail", "HTMLMain", "HTMLPartial", "HTML", "decks", "names"]}
+                                    format={this.props.format}
+                />
+                <AddEventToCollection format={this.props.format}/>
 
             </div>
         )

@@ -18,7 +18,10 @@ Template.topMenu.events({
 
 Template.topMenu.events({
     "click .logout" : function(){
-        AccountsTemplates.logout()
+        // AccountsTemplates.logout()
+        Meteor.logout(()=> {
+            FlowRouter.go('/');
+        });
     }
 });
 

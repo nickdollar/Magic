@@ -11,7 +11,7 @@ getMTGOPtqEventsOLD = function(format, days){
     }
 
 
-    var event = Events.findOne({format : format, eventType : "MTGOPTQ"}, {sort : {date : 1}, limit : 1});
+    var event = Events.findOne({format : format, type : "MTGOPTQ"}, {sort : {date : 1}, limit : 1});
 
     var date = null;
     if(event==null){
@@ -35,8 +35,9 @@ getMTGOPtqEventsOLD = function(format, days){
                 $setOnInsert : {
                     date: date,
                     format : format,
-                    eventName : mtgoPtqTypes[format],
-                    eventType: "MTGOPTQ",
+                    venue : "MTGO",
+                    name : mtgoPtqTypes[format],
+                    type: "MTGOPTQ",
                     url : url,
                     state: "startProduction"
                 }
@@ -59,7 +60,7 @@ getMTGOPtqEventsOLD = function(format, days){
             }
             
             Events.update(
-                {eventType : "MTGOPTQ", date : date, format : format},
+                {type : "MTGOPTQ", date : date, format : format},
                 {
                     $set : {
                         state : state
@@ -73,7 +74,7 @@ getMTGOPtqEventsOLD = function(format, days){
 
 notFoundEventMTGOPTQ = function(Events_id) {
     console.log("START: notFoundEventMTGOPTQ");
-    var eventNotFound = Events.findOne({eventType: "EventsExists", _id: Events_id, state: "notFound"});
+    var eventNotFound = Events.findOne({type: "EventsExists", _id: Events_id, state: "notFound"});
 
     if (!eventNotFound) {
         return
@@ -119,7 +120,7 @@ notFoundEventMTGOPTQ = function(Events_id) {
 
 eventExistsMTGOPTQ = function(_id){
     
-    var event = Events.findOne({eventType : "MTGOPTQ", _id : _id, state : "exists"});
+    var event = Events.findOne({type : "MTGOPTQ", _id : _id, state : "exists"});
 
     if(event == null) {
         return;
@@ -184,7 +185,7 @@ eventHTMLMTGOPTQ = function(_id){
         var data = {
             Events_id : event._id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             player : information.player,
             format : event.format,
             position : information.position,
@@ -250,6 +251,7 @@ eventHTMLMTGOPTQ = function(_id){
         data.sideboard = deckCards.sideboard;
         var colors = setUpColorForDeckName(deckCards.main);
         data.colors = colors;
+        data.state = "scraped";
         DecksData.insert(data);
 
         var cardsOnMain = [];

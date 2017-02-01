@@ -45,7 +45,7 @@ metaTotalDecksCards = function(format, timeSpan, startDate, endDate, options, th
         {$match : {format : format}},
         {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
         {$unwind : "$DecksData"},
-        {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", eventType : "$DecksData.eventType"}},
+        {$project : {format : "$format", date : "$DecksData.date", victory : "$DecksData.victory", loss : "$DecksData.loss", type : "$DecksData.type"}},
         {$match : {date : {$gte : startDate, $lte : endDate}, $or : thatOptions}},
         {$group : {_id : "$format", total : {$sum : 1}}}
     ]);

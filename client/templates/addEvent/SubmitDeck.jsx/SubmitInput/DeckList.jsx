@@ -261,33 +261,33 @@ export default class Deck extends React.Component{
         var cardQuantity = {value : card.quantity};
 
         return  <div className="cardLine" key={card.name} >
-                    <div className="cardQuantityAndNameWrapper js-imagePopOver" {...cardDataName}>
-                        <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={this.props.removeCardDeck}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
-                        <input type="number" className="quantityInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.props.updateQuantity.bind(this)} {...cardQuantity}/>
-                        <div className="js-cardNameInput nameSelectedWrapper"
-                             {...cardDataName}
-                             {...selectors}
-                        >
-                            <select className="cardNameSelect js-select2"
-                                    type="text"
-                                    {...cardDataName}
-                                    {...selectors}
-                            >
-                                <option>{card.name}</option>
-                            </select>
-                        </div>
-                        {card ? <div className="cardInfo">
-                                <div className="manaValue">
-                                    {
-                                        this.getHTMLColors(card).map((mana)=>{
-                                            return <div key={mana.key} className={"mana " + mana.mana}></div>
-                                        })
-                                    }
-                                </div>
-                            </div>: null}
-
-                    </div>
+            <div className="cardQuantityAndNameWrapper js-imagePopOver" {...cardDataName}>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={this.props.removeCardDeck}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
+                <input type="number" className="quantityInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.props.updateQuantity.bind(this)} {...cardQuantity}/>
+                <div className="js-cardNameInput nameSelectedWrapper"
+                     {...cardDataName}
+                     {...selectors}
+                >
+                    <select className="cardNameSelect js-select2"
+                            type="text"
+                            {...cardDataName}
+                            {...selectors}
+                    >
+                        <option>{card.name}</option>
+                    </select>
                 </div>
+                {card ? <div className="cardInfo">
+                        <div className="manaValue">
+                            {
+                                this.getHTMLColors(card).map((mana)=>{
+                                    return <div key={mana.key} className={"mana " + mana.mana}></div>
+                                })
+                            }
+                        </div>
+                    </div>: null}
+
+            </div>
+        </div>
     }
 
     addRow(mainSideboard){
@@ -298,23 +298,23 @@ export default class Deck extends React.Component{
 
 
         return  <div className="addLine" key={mainSideboard}>
-                    <div className="cardQuantityAndNameWrapper js-imagePopOver">
-                        <input type="number" className="quantityInput" data-mainSideboard={mainSideboard} onChange={this.props.updateQuantity} {...cardQuantity}/>
-                        <div className="js-cardNameInput nameSelectedWrapper"
-                             {...selectors}
-                        >
-                            <select className="cardNameSelect js-select2"
-                                    type="text"
-                                    {...selectors}
-                            >
-                                <option></option>
-                            </select>
-                        </div>
-                        <div className="addToMainButtonWrapper">
-                            <button onClick={this.props.addCardToDeck} {...selectors}>Add To {mainSideboard.toTitleCase()}</button>
-                        </div>
-                    </div>
+            <div className="cardQuantityAndNameWrapper js-imagePopOver">
+                <input type="number" className="quantityInput" data-mainSideboard={mainSideboard} onChange={this.props.updateQuantity} {...cardQuantity}/>
+                <div className="js-cardNameInput nameSelectedWrapper"
+                     {...selectors}
+                >
+                    <select className="cardNameSelect js-select2"
+                            type="text"
+                            {...selectors}
+                    >
+                        <option></option>
+                    </select>
                 </div>
+                <div className="addToMainButtonWrapper">
+                    <button onClick={this.props.addCardToDeck} {...selectors}>Add To {mainSideboard.toTitleCase()}</button>
+                </div>
+            </div>
+        </div>
     }
 
     totalCards(mainSideboard){
@@ -332,7 +332,6 @@ export default class Deck extends React.Component{
     render() {
 
         if(this.state.listLoading){return <div>Loading...</div>}
-        console.log(this.props.deck);
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.deck.main);
         var resultMain = [];
         for(var type in typesSeparated){
@@ -352,11 +351,11 @@ export default class Deck extends React.Component{
         var resultSideboard = sideboardCards.map((card)=>{
             return this.cardRow(card, "sideboard", "change")
         })
-        
+
         return (
             <div className="deckEdit">
-                <button onClick={this.props.submitDeck}>Submit Changes </button>
-                <span ref={"error"} className="error"></span>
+                <button onClick={this.props.submitDeck.bind(this)}>Submit Changes </button>
+                <span className="error">{this.props.submitMessage}</span>
 
                 <h3>Main <span className={this.totalCards("main") < 60? "wrongCardNumber": ""}>({this.totalCards("main")})</span></h3>
                 {this.addRow("main")}

@@ -1,6 +1,15 @@
 import React from 'react' ;
-import LGSAddNewEventToLGSFormModal from './LGSAddNewEventToLGSFormModal.jsx';
 import LGSEventsCalendarModal  from './LGSEventsCalendarModal.jsx';
+import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
+import FormValidate from '/client/dumbReact/FormValidate/FormValidate.jsx';
+import TextFormInput from '/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx';
+import Select2Container from '/client/dumbReact/FormValidate/Inputs/Select2/Select2Container.jsx';
+import NumberInput from '/client/dumbReact/FormValidate/Inputs/NumberInput/NumberInput.jsx';
+import HoursInput from '/client/dumbReact/FormValidate/Inputs/HoursInput/HoursInput.jsx';
+import TextAreaInput from '/client/dumbReact/FormValidate/Inputs/TextAreaInput/TextAreaInput.jsx';
+import Radio from '/client/dumbReact/FormValidate/Inputs/Radios/Radio.jsx';
+
+
 import Moment from "moment";
 
 var weekDays = {0 : "Sunday", 1 : "Monday", 2 : "Tuesday", 3 : "Wednesday", 4 : "Thursday", 5 : "Friday", 6 : "Saturday" };
@@ -10,10 +19,8 @@ class LGSEventsCalendar extends React.Component {
         super();
 
         this.state = {
-            view: {
-                showModalAddEvent: false,
-                showModalEventInfo: false,
-            },
+            showModalAddEvent: false,
+            showModalEventInfo: false,
             events : []
         }
     }
@@ -28,7 +35,7 @@ class LGSEventsCalendar extends React.Component {
             },
             customButtons: {
                 addEvent: {
-                    text: 'Add Event',
+                    text: 'Request To Add Event',
                     click: ()=> {
                         this.handleShowModalAddEvent()
                     }
@@ -41,8 +48,6 @@ class LGSEventsCalendar extends React.Component {
             },
             fixedWeekCount : false,
             eventClick:  (event, jsEvent, view)=> {
-
-
                 var when = "";
                 if(event.dow){
                     var daysTemp = "";
@@ -67,15 +72,16 @@ class LGSEventsCalendar extends React.Component {
                 var eventObj = {
                     when : when,
                     formats : formats,
-                    price : event.price,
+                    price : "$" + event.price,
                     rounds : event.rounds,
                     description : event.description,
                     LGS_id : event.LGS_id,
                     title : event.title
 
                 }
-                this.setState({view: {showModalEventInfo: true},
-                    eventObj : eventObj});
+                this.setState({ showModalEventInfo: true,
+                                eventObj : eventObj
+                });
             }
         });
 
@@ -93,6 +99,7 @@ class LGSEventsCalendar extends React.Component {
         $(calendar).fullCalendar("removeEvents")
         var events = LGSEvents.find().map((event)=>{
             event.id = event._id;
+            event.dow = [parseInt(event.day)]
             return event;
         });
 
@@ -100,26 +107,105 @@ class LGSEventsCalendar extends React.Component {
     }
 
     handleHideModalEventInfo(){
-        this.setState({view: {showModalEventInfo: false}})
+        this.setState({showModalEventInfo: false})
     }
 
     handleShowModalEventInfo(){
-        this.setState({view: {showModalEventInfo: true}})
+        this.setState({showModalEventInfo: true})
     }
     handleHideModalAddEvent(){
-        this.setState({view: {showModalAddEvent: false}})
+        this.setState({showModalAddEvent: false})
     }
 
     handleShowModalAddEvent(){
-        this.setState({view: {showModalAddEvent: true}})
+        this.setState({showModalAddEvent: true})
     }
 
     render() {
         return (
             <div>
                 <div ref="calendar"></div>
-                {this.state.view.showModalAddEvent ? <LGSAddNewEventToLGSFormModal handleHideModal={this.handleHideModalAddEvent.bind(this)}/> : null}
-                {this.state.view.showModalEventInfo ? <LGSEventsCalendarModal handleHideModal={this.handleHideModalEventInfo.bind(this)} eventObject={this.state.eventObj}/> : null}
+                <ModalFirstPage showModal={this.state.showModalAddEvent}
+                                handleHideModal={this.handleHideModalAddEvent.bind(this)}
+                                title="Request To Add Event" >
+                    <FormValidate submitMethod="addLGSEvents">
+                        <TextFormInput
+                            objectName={"name"}
+                            title="Event Name"
+                            errorMessage="Name is Missing"
+                            required={true}
+                        />
+                        <Select2Container
+                            objectName={"LGS_id"}
+                            title="Local Game Store"
+                            errorMessage="LGS Missing"
+                            collection="LGS"
+                            subscription="LGSByDistanceToAddEvent"
+                            query={[Session.get("position"), Session.get("distance")]}
+                            required={true}
+                            fieldUnique="_id"
+                            fieldText="name"
+                        />
+                        <NumberInput
+                            objectName={"price"}
+                            title="Price"
+                            errorMessage="Price is Missing"
+                            required={true}
+                            min={0}
+                        />
+
+                        <Radio
+                            objectName={"format"}
+                            title="Format"
+                            opts={[ {value : "modern", text : "modern"},
+                                    {value : "standard", text : "standard"},
+                                    {value : "legacy", text : "legacy"},
+                                    {value : "vintage", text : "vintage"}]
+                            }
+                            errorMessage="Format is Missing"
+                            required={true}
+                        />
+
+                        <NumberInput
+                            objectName={"rounds"}
+                            title="Min Rounds"
+                            errorMessage="Round is Missing"
+                            required={true}
+                            min={0}
+                        />
+                        <Radio
+                            objectName={"day"}
+                            title="Day"
+                            opts={[ {value : 0, text : "Sun"},
+                                    {value : 1, text : "Mon"},
+                                    {value : 2, text : "tues"},
+                                    {value : 3, text : "Wed"},
+                                    {value : 4, text : "Thurs"},
+                                    {value : 5, text : "Fri"},
+                                    {value : 6, text : "Sat"},
+                                ]}
+                            errorMessage="Day is Missing"
+                            required={true}
+                        />
+                        <HoursInput
+                            objectName={"startTime"}
+                            title="Start Time"
+                            errorMessage="Round is Missing"
+                            required={true}
+                            min={0}
+                        />
+                        <TextAreaInput
+                            objectName={"description"}
+                            title="Extra Information"
+                            errorMessage="Extra Information"
+                            required={true}
+                        />
+
+
+
+                    </FormValidate>
+                </ModalFirstPage>
+                {this.state.showModalEventInfo ? <LGSEventsCalendarModal handleHideModal={this.handleHideModalEventInfo.bind(this)} eventObject={this.state.eventObj}/> : null}
             </div>
         )
     }

@@ -1,6 +1,7 @@
 import React from "react";
+import DumbSelect2 from "/client/dumbReact/DumbSelect2/DumbSelect2.jsx";
 
-class AutoComplete extends React.Component{
+export default class AutoComplete extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -22,16 +23,7 @@ class AutoComplete extends React.Component{
     }
 
     addToTheListMain(){
-        var card = this.refs["input"].value.toTitleCase();
-        var index = this.state.cardList.findIndex((obj)=>{
-           return card == obj;
-        });
 
-        if(index == -1){
-            var cardList = this.state.cardList.concat([card]);
-            this.props.updateCards(cardList);
-            this.setState({cardList : cardList})
-        }
 
     }
 
@@ -47,25 +39,35 @@ class AutoComplete extends React.Component{
         this.props.updateCards(cardList);
         this.setState({cardList : cardList})
     }
-    
+
+    dumbSelect2(data){
+        var card = data.toTitleCase();
+        var index = this.state.cardList.findIndex((obj)=>{
+            return card == obj;
+        });
+
+        if(index == -1){
+            var cardList = this.state.cardList.concat([card]);
+            this.props.updateCards(cardList);
+            this.setState({cardList : cardList})
+        }
+    }
+
     render() {
         return (
             <div className="optionsGroupName">
                 <div className="optionsHeader">Deck Contain</div>
-                <div className="input-group input-group-sm">
-                    <input ref="input" type="text" className="form-control"/>
-                      <span className="input-group-btn">
-                        <button className="btn btn-default" type="button" onClick={this.addToTheListMain.bind(this)}>Add</button>
-                      </span>
-                </div>
+                <DumbSelect2 call="getAutoComplete"
+                             returnHandler={this.dumbSelect2.bind(this)}
+                />
+
                 <ul className="list-group list-group-sm">
                     {this.state.cardList.map((obj)=>{
                         return <li key={obj} className="list-group-item"><span>{obj}</span><span onClick={this.removeFromTheListMain.bind(this)} data-name={obj} style={{float : "right"}}>X</span></li>
                     })}
                 </ul>
+
             </div>
         )
     }
 }
-
-export default AutoComplete;

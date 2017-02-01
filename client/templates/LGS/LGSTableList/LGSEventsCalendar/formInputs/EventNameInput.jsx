@@ -1,6 +1,6 @@
 import React from "react";
 
-class EventNameInput extends React.Component{
+class nameInput extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -13,7 +13,6 @@ class EventNameInput extends React.Component{
     }
 
     isValid() {
-
         var input = this.refs["input"];
         var error = this.refs["error"];
         if (this.state.inputValue === "") {
@@ -59,4 +58,4 @@ class EventNameInput extends React.Component{
     }
 }
 
-export default EventNameInput;
+export default nameInput;

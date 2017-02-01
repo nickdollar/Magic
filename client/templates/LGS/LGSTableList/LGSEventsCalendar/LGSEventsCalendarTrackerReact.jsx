@@ -139,6 +139,9 @@ class LGSEventsCalendar extends TrackerReact(React.Component) {
         this.state.events = LGSEvents.find().fetch();
         return (
             <div>
+                <div>
+                    fasdfasfd
+                </div>
                 <div ref="calendar"></div>
                 {this.state.view.showModalAddEvent ? <LGSAddNewEventToLGSFormModal handleHideModal={this.handleHideModalAddEvent.bind(this)}/> : null}
                 {this.state.view.showModalEventInfo ? <LGSEventsCalendarModal handleHideModal={this.handleHideModalEventInfo.bind(this)} eventObject={this.state.eventObj}/> : null}

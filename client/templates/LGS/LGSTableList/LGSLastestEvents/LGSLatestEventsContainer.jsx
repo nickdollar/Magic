@@ -1,11 +1,17 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import LGSLatestEvents from './LGSLatestEvents.jsx';
 
-export default LGSLastestEventsContainer = createContainer(({DecksData_id}) => {
-    var handle = Meteor.subscribe("DecksDataBy_id_NonReactive", DecksData_id);
-    var handle2 = Meteor.subscribe("CardsDataFromDeckData_id_NonReactive", DecksData_id);
+export default ListContainer = createContainer(({ LGS }) => {
+    var arraysOfLGS_id = LGS.filter((obj)=>{
+        return obj.checked == true && obj.showing == true;
+    }).map((obj)=>{
+        return  obj._id
+    });
+    var handle = Meteor.subscribe("EventsByLGS_idArray", arraysOfLGS_id);
     return {
         currentUser: Meteor.user(),
-        listLoading: !(handle.ready() && handle2.ready()),
+        listLoading: ! handle.ready(),
+        Events: Events.find({LGS_id : {$in : arraysOfLGS_id}}).fetch(),
     };
+
 }, LGSLatestEvents);

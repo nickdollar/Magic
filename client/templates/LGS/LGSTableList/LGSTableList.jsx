@@ -1,5 +1,6 @@
 import React from 'react' ;
 import LGSEventsCalendarContainer from "./LGSEventsCalendar/LGSEventsCalendarContainer.jsx";
+import LGSLatestEventsContainer from "./LGSLastestEvents/LGSLatestEventsContainer.jsx"
 
 class LGSTableList extends React.Component {
 
@@ -84,7 +85,9 @@ class LGSTableList extends React.Component {
         this.setState({LGS : arrayImu});
     }
 
+
     render(){
+        console.log(this.state.LGS);
         return(
             <div className="LGSTableList">
                 <h3>LGS List</h3>
@@ -108,6 +111,7 @@ class LGSTableList extends React.Component {
                     })}
                     </tbody>
                 </table>
+                <LGSLatestEventsContainer LGS={this.state.LGS}/>
                 <LGSEventsCalendarContainer LGS={this.state.LGS}/>
             </div>
 

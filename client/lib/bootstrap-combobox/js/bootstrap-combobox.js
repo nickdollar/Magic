@@ -79,7 +79,7 @@
     this.$element.attr('placeholder', this.options.placeholder)
     this.$target.prop('name', this.$source.prop('name'))
     this.$target.val(this.$source.val())
-    this.$source.removeAttr('name')  // Remove from source otherwise form will pass parameter twice.
+    this.$source.removeAttr('name')  // Remove from source otherwise FormValidate will pass parameter twice.
     this.$element.attr('required', this.$source.attr('required'))
     this.$element.attr('rel', this.$source.attr('rel'))
     this.$element.attr('title', this.$source.attr('title'))
@@ -289,11 +289,11 @@
         .on('click', $.proxy(this.toggle, this));
     }
 
-  , eventSupported: function(eventName) {
-      var isSupported = eventName in this.$element;
+  , eventSupported: function(name) {
+      var isSupported = name in this.$element;
       if (!isSupported) {
-        this.$element.setAttribute(eventName, 'return;');
-        isSupported = typeof this.$element[eventName] === 'function';
+        this.$element.setAttribute(name, 'return;');
+        isSupported = typeof this.$element[name] === 'function';
       }
       return isSupported;
     }

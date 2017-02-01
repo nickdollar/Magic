@@ -72,7 +72,7 @@ Template.futuroEventsModal.onRendered(function(){
 
     futureEventForm.validate({
         rules : {
-            eventName : {
+            name : {
                 required : true,
                 minlength : 2
             },
@@ -89,7 +89,7 @@ Template.futuroEventsModal.onRendered(function(){
             }
         },
         messages : {
-            eventName : {
+            name : {
                 required : "Event name is required",
                 minlength : "Event name must consist of at least 3 characters"
             },
@@ -118,7 +118,7 @@ Template.futuroEventsModal.onRendered(function(){
 
             var futureEvent = {};
 
-            futureEvent.eventName = $(tmp.find("#eventName")).val();
+            futureEvent.name = $(tmp.find("#name")).val();
             futureEvent.httpAddress = $(tmp.find("#eventSourceUrl")).val();
 
             //var twitchChannelRegex = new RegExp(/twitch.tv\/((?:(?!\/).)*)/);
@@ -213,7 +213,7 @@ Schemas.EventsCalendar.messages({
 AutoForm.hooks({
     addEventCalendar: {
         before: {
-            // Replace `formType` with the form `type` attribute to which this hook applies
+            // Replace `formType` with the FormValidate `type` attribute to which this hook applies
             method: function (doc) {
                 console.log(doc);
                 return doc;

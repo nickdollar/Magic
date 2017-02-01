@@ -31,6 +31,7 @@ getGPEvents = function(){
                 continue;
             }
 
+            event.venue = "WotC";
             // if($(html[i]).next()[0].nextSibling.nodeValue != null){
             //     Events.date += $(html[i]).next()[0].nextSibling.nodeValue;
             // }
@@ -67,7 +68,7 @@ getGPEvents = function(){
             // }
 
             eventCorrected.url = "http://magic.wizards.com" + $(html[i]).attr("href");
-            eventCorrected.eventType = "GP";
+            eventCorrected.type = "GP";
 
             Events.update(
                 {city : eventCorrected.city, date : eventCorrected.date},
@@ -321,7 +322,7 @@ GPEventHTMLMain = function(Events_id){
 GPEventHTML = function(Events_id){
     console.log("START: GPEventHTML");
     console.log(Events_id);
-    var event = Events.findOne({_id : Events_id, eventType : "GP", state : "HTML"});
+    var event = Events.findOne({_id : Events_id, type : "GP", state : "HTML"});
     if(!event) return;
 
     DecksData.remove({Events_id : event._id});
@@ -400,7 +401,7 @@ GPEventHTML = function(Events_id){
         var data = {
             Events_id : event._id,
             date : event.date,
-            eventType : event.eventType,
+            type : event.type,
             player : player,
             format : event.format,
             position : position
@@ -466,6 +467,8 @@ GPEventHTML = function(Events_id){
         data.sideboard = deckCards.sideboard;
         var colors = setUpColorForDeckName(deckCards.main);
         data.colors = colors;
+        data.state = "scraped";
+
         DecksData.insert(data);
         count++;
         var cardsOnMain = [];

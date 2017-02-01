@@ -1,6 +1,4 @@
 import React from "react";
-import DeckNamesListSubmit from "/client/dumbReact/DeckNameListSubmit/DeckNameListSubmitContainer.jsx";
-
 
 var types = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
 typeOptions = { null : {},
@@ -13,26 +11,15 @@ typeOptions = { null : {},
     sorcery : {sorcery : true}
 };
 
-typeOptionsArray = { null : {},
-    artifact : {creature : false, artifact : true},
-    creature : {creature : true},
-    enchantment : {enchantment : true, creature : false, artifact : false},
-    instant : {instant : true},
-    land : {land : true, creature : false, artifact : false},
-    planeswalker : {planeswalker : true},
-    sorcery : {sorcery : true}
-};
-
-
 export default class Deck extends React.Component{
     constructor(props) {
         super();
         this.state = {
-            main: props.DeckSelected.main,
-            sideboard: props.DeckSelected.sideboard,
-            newCards : []
+            listLoading : false,
+            deck : {},
+            newCards : [],
+            submitMessage : ""
         }
-
     }
 
     componentDidMount() {
@@ -49,7 +36,10 @@ export default class Deck extends React.Component{
             html: true,
             trigger: 'hover',
             content: function () {
-                var cardName = encodeURI($(this).data("name"));
+                var cardName = encodeURI($(this).find("select").val());
+                if(cardName == ""){
+                    return false;
+                }
                 cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
                 var linkBase = "https://mtgcards.file.core.windows.net/cards/";
                 var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
@@ -58,15 +48,14 @@ export default class Deck extends React.Component{
             }
         });
 
-
         $('.js-select2').off("select2");
         $('.js-select2').select2({
             ajax : {
                 transport : function(params, sucess, failure){
                     Meteor.call("getAutoComplete", {term : params.data.q}, (err, data)=>{
                         sucess(data.map((obj)=>{
-                                            return obj.name;
-                                        }));
+                            return obj.name;
+                        }));
                     });
                 },
                 processResults : function(data){
@@ -78,22 +67,49 @@ export default class Deck extends React.Component{
                 }
             }
         });
-        var that = this;
+
         $('.js-select2').off("select2:selecting");
         $('.js-select2').on("select2:selecting", (e)=> {
-            this.changeCard(e);
+            if(e.target.getAttribute("data-mainSideboard")== "change"){
+                this.props.changeCardDeck(e);
+            }
+
+            if(e.target.getAttribute("data-mainSideboard")== "add"){
+                this.props.changeCardDeck(e);
+            }
         });
+    }
+
+    removeCardDeck(e){
+        var name = e.currentTarget.getAttribute("data-name");
+        var mainSideboard = e.currentTarget.getAttribute("data-mainSideboard");
+
+        var tempArray = Object.assign({}, this.state.deck);
+        if(mainSideboard=="main")
+        {
+            var index = tempArray.main.findIndex((card)=>{
+                return name  == card.name;
+            })
+            tempArray.main.splice(index, 1);
+            this.setState({deck : tempArray });
+        }
+        if(mainSideboard=="sideboard")
+        {
+            var index = tempArray.sideboard.findIndex((card)=>{
+                return name  == card.name;
+            })
+            tempArray.sideboard.splice(index, 1);
+            this.setState({deck : tempArray });
+        }
     }
 
     subscribeToNewCards(cardName){
         var index = this.state.newCards.findIndex((card)=>{
             return card == cardName;
         })
-
         if(index == -1){
             this.state.newCards.push(cardName);
         }
-
         Meteor.subscribe("cardsFromArray", this.state.newCards, {
             onReady: ()=>{
                 this.forceUpdate();
@@ -101,58 +117,67 @@ export default class Deck extends React.Component{
         });
     }
 
-    changeCard(e){
-        var oldName = e.target.getAttribute("data-name");
-        var value = e.params.args.data.text;
-        var mainSide = e.target.getAttribute("data-mainSide");
-
-        if(mainSide=="main")
-        {
-            var tempArray = this.state.main.concat();
-            var index = tempArray.findIndex((card)=>{
-                return oldName == card.name;
-            })
-
-            tempArray[index].name = value;
-            this.subscribeToNewCards(value);
-            this.setState({main : tempArray });
-        }
-        if(mainSide=="sideboard")
-        {
-            var tempArray = this.state.sideboard.concat();
-            var index = tempArray.findIndex((card)=>{
-                return oldName == card.name;
-            })
-            tempArray[index].quantity = value;
-            this.setState({sideboard : tempArray});
-        }
-    }
-
-    submitMainAndSideboard(){
-        Meteor.call("updateMainSide", {main : this.state.main, sideboard : this.state.sideboard}, this.props.DecksData_id);
-    }
-
     componentWillReceiveProps(nextProps){
-        this.setState({main : nextProps.DeckSelected.main, sideboard : nextProps.DeckSelected.sideboard});
+        if(nextProps.listLoading){
+            this.setState({deck : nextProps.deck});
+        }
+    }
+
+    addCardToDeck(e){
+        var cardName = $(e.target).closest(".addToMainButtonWrapper").siblings(".js-cardNameInput").find(".js-select2").val();
+        var cardQuantity = $(e.target).closest(".addToMainButtonWrapper").siblings(".quantityInput").val();
+        var mainSideboard = e.target.getAttribute("data-mainSideboard");
+
+        if(cardName.length == 0){
+            return;
+        };
+
+        cardName = cardName.toTitleCase();
+
+        if(this.state.deck[mainSideboard].findIndex((card)=>{
+                return cardName == card.name
+            }) != -1){
+            return
+        }
+
+        var deck = Object.assign({}, this.state.deck);
+
+        cardName = cardName.toTitleCase()
+
+        deck[mainSideboard].push({name : cardName, quantity : parseInt(cardQuantity)});
+
+        this.state.deck = deck;
+        this.subscribeToNewCards(cardName);
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(nextState.listLoading == false){
+            if(nextProps.listLoading == false){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        return true;
     }
 
     getCardsByType(type) {
         return CardsData.find(typeOptions[type]).map(function(p) { return {name : p.name, manacost : p.manacost}});
     }
-
     getCardsSideboard() {
-        var sideboard = this.props.DeckSelected.sideboard.map((card)=>{
+        var sideboard = this.state.deck.sideboard.map((card)=>{
             return card.name;
         });
         var cardsExists = CardsData.find({name : {$in : sideboard}}).fetch();
 
         var cardsComplete = cardsExists.filter((card)=>{
-            return this.props.DeckSelected.sideboard.find((queryCard)=>{
+            return this.state.deck.sideboard.find((queryCard)=>{
                 return card.name == queryCard.name;
             })
         })
             .map((card)=>{
-                    var temp = this.props.DeckSelected.sideboard.find((queryCard)=>{
+                    var temp = this.state.deck.sideboard.find((queryCard)=>{
                         return card.name == queryCard.name;
                     })
                     return Object.assign(card, temp);
@@ -160,7 +185,6 @@ export default class Deck extends React.Component{
             )
         return cardsComplete;
     }
-
     separateCardsByTypeAddManaCost(main){
         var typesSeparated = { null : [],
             artifact : [],
@@ -196,6 +220,13 @@ export default class Deck extends React.Component{
         return typesSeparated;
     }
 
+    submitDeck(){
+        var submitDeck = Object.assign({}, this.state.deck, this.props.event);
+        Meteor.call("updateALGSDecksData", submitDeck, (err, data)=>{
+            this.setState({submitMessage : data})
+        });
+    }
+
     addManaCostToSideboard(cards){
 
         var sideboard = [];
@@ -215,47 +246,6 @@ export default class Deck extends React.Component{
         })
         return sideboard;
     }
-
-    updateQuantity(e){
-
-        if(parseInt(e.target.value) < 0){
-            return
-        }
-        var cardName = e.target.getAttribute("data-name");
-        var mainSide = e.target.getAttribute("data-mainSide");
-
-        var value = parseInt(e.target.value);
-        // if(value < 0) {
-        //     console.log("lower");
-        //     value = 0;
-        // }
-        if(mainSide=="main")
-        {
-            var tempArray = this.state.main.concat();
-            var index = tempArray.findIndex((card)=>{
-                return cardName == card.name;
-            })
-            if(parseInt(value)< 0){
-
-            }
-            console.log(value);
-            tempArray[index].quantity = value;
-
-            this.setState({main : tempArray});
-        }
-
-        if(mainSide=="sideboard")
-        {
-            var tempArray = this.state.sideboard.concat();
-            var index = tempArray.findIndex((card)=>{
-                return cardName == card.name;
-            })
-            tempArray[index].quantity = parseInt(value);
-            this.setState({sideboard : tempArray});
-        }
-
-    }
-
     getHTMLColors(card){
         if(typeof card.manacost == "undefined") return [];
         var manacost = card.manacost;
@@ -320,12 +310,122 @@ export default class Deck extends React.Component{
         return str;
     }
 
+    updateQuantity(e){
+        if(parseInt(e.target.value) < 0){
+            return
+        }
+        var cardName = e.target.getAttribute("data-name");
+        var mainSideboard = e.target.getAttribute("data-mainSideboard");
+
+        var value = parseInt(e.target.value);
+
+        if(mainSideboard=="main")
+        {
+            var tempArray = this.state.deck.main.concat();
+            var index = tempArray.findIndex((card)=>{
+                return cardName == card.name;
+            })
+            if(parseInt(value)< 0){
+
+            }
+            tempArray[index].quantity = value;
+            this.setState({main : tempArray});
+        }
+
+        if(mainSideboard=="sideboard")
+        {
+            var tempArray = this.state.deck.sideboard.concat();
+            var index = tempArray.findIndex((card)=>{
+                return cardName == card.name;
+            })
+            tempArray[index].quantity = parseInt(value);
+            this.setState({sideboard : tempArray});
+        }
+
+    }
+
+    cardRow(card, mainSideboard){
+        var selectors = {
+            "data-mainSideboard" : mainSideboard
+        };
+
+        var cardDataName = {"data-name" : card.name};
+        var cardQuantity = {value : card.quantity};
+
+        return  <div className="cardLine" key={card.name} >
+            <div className="cardQuantityAndNameWrapper js-imagePopOver" {...cardDataName}>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={this.removeCardDeck.bind(this)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
+                <input type="number" className="quantityInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.updateQuantity.bind(this)} {...cardQuantity}/>
+                <div className="js-cardNameInput nameSelectedWrapper"
+                     {...cardDataName}
+                     {...selectors}
+                >
+                    <select className="cardNameSelect js-select2"
+                            type="text"
+                            {...cardDataName}
+                            {...selectors}
+                    >
+                        <option>{card.name}</option>
+                    </select>
+                </div>
+                {card ? <div className="cardInfo">
+                        <div className="manaValue">
+                            {
+                                this.getHTMLColors(card).map((mana)=>{
+                                    return <div key={mana.key} className={"mana " + mana.mana}></div>
+                                })
+                            }
+                        </div>
+                    </div>: null}
+
+            </div>
+        </div>
+    }
+
+    addRow(mainSideboard){
+        var selectors = {
+            "data-mainSideboard" : mainSideboard,
+        };
+        var cardQuantity = {defaultValue : 4};
+
+
+        return  <div className="addLine" key={mainSideboard}>
+            <div className="cardQuantityAndNameWrapper js-imagePopOver">
+                <input type="number" className="quantityInput" data-mainSideboard={mainSideboard} defaultValue="4" {...cardQuantity}/>
+                <div className="js-cardNameInput nameSelectedWrapper"
+                     {...selectors}
+                >
+                    <select className="cardNameSelect js-select2"
+                            type="text"
+                            {...selectors}
+                    >
+                        <option></option>
+                    </select>
+                </div>
+                <div className="addToMainButtonWrapper">
+                    <button onClick={this.addCardToDeck.bind(this)} {...selectors}>Add To {mainSideboard.toTitleCase()}</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    totalCards(mainSideboard){
+        if(mainSideboard == "main"){
+            return this.state.deck.main.reduce((a, b)=>{
+                return a + b.quantity;
+            }, 0)
+        }else{
+            return this.state.deck.sideboard.reduce((a, b)=>{
+                return a + b.quantity;
+            }, 0)
+        }
+    }
+
     render() {
-        // console.log(this.state.main);
-        if(!this.props.DeckSelected){return <div>Loading...</div>}
-        if(!this.props.DeckSelected.main){return <div>Loading...</div>}
-        if(!this.props.DeckSelected.sideboard){return <div>Loading...</div>}
-        var typesSeparated = this.separateCardsByTypeAddManaCost(this.state.main);
+        if(this.props.listLoading){
+            return <div>Loading...</div>
+        }
+        var typesSeparated = this.separateCardsByTypeAddManaCost(this.state.deck.main);
         var resultMain = [];
         for(var type in typesSeparated){
             if(typesSeparated[type].length == 0) continue;
@@ -334,63 +434,41 @@ export default class Deck extends React.Component{
             },0)})</div>)
             resultMain.push(
                 typesSeparated[type].map((card)=>{
-                    return  <div className="cardLine" key={card.name}>
-                                <div className="name js-imagePopOver" data-name={card.name}>
-                                    <input type="number" className="quantityInput" data-name={card.name} data-mainSide="main" onChange={this.updateQuantity.bind(this)} value={card.quantity}/><div data-name={card.name} className="js-cardNameInput cardNameSelectWrapper"><select type="text" data-name={card.name} className="cardNameSelect js-select2" data-mainSide="main" defaultValue={card.name} ><option>{card.name}</option></select></div>
-                                </div>
-                                <div className="cardInfo">
-                                    <div className="manaValue">
-                                        {
-                                            this.getHTMLColors(card).map((mana)=>{
-                                                return <div key={mana.key} className={"mana " + mana.mana}></div>
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                    return  this.cardRow(card, "main", "change");
                 })
             )
         }
-        var sideboardCards = this.addManaCostToSideboard(this.state.sideboard);
+
+        var sideboardCards = this.addManaCostToSideboard(this.state.deck.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
-        return <div className="cardLine" key={card.name}>
-                <div className="name js-imagePopOver" data-name={card.name}>
-                    <input type="number" className="quantityInput"  data-name={card.name} data-mainSide="sideboard" onChange={this.updateQuantity.bind(this)} value={card.quantity}/><div data-name={card.name} className="js-cardNameInput cardNameSelectWrapper"><select type="text" className="cardNameSelect js-select2" defaultValue={card.name} ><option>{card.name}</option></select></div>
+            return this.cardRow(card, "sideboard", "change")
+        })
+
+        return (
+            <div className="deckEdit">
+                <button onClick={this.submitDeck.bind(this)}>Submit Changes </button>
+                <span className="error">{this.state.submitMessage}</span>
+
+                <h3>Main <span className={this.totalCards("main") < 60? "wrongCardNumber": ""}>({this.totalCards("main")})</span></h3>
+                {this.addRow("main")}
+                <div className="deckBlock">
+                    <div className="newDeckColumn">
+                        {resultMain.map((obj)=>{
+                            return obj;
+                        })}
+                    </div>
                 </div>
-                <div className="cardInfo">
-                    <div className="manaValue">
-                        {
-                            this.getHTMLColors(card).map((mana)=>{
-                                return <div key={mana.key} className={"mana " + mana.mana}></div>
-                            })
-                        }
+                <h3>Sideboard <span className={this.totalCards("sideboard") > 15? "wrongCardNumber": ""}>({this.totalCards("sideboard")})</span></h3>
+                {this.addRow("sideboard")}
+                <div className="deckBlock">
+                    <div className="newDeckColumn">
+                        {resultSideboard.map((obj)=>{
+                            return obj;
+                        })}
                     </div>
                 </div>
             </div>
-        })
-
-           return (
-                <div className="DeckEdit">
-                    <DeckNamesListSubmit DecksData_id={this.props.DecksData_id} format={this.props.DeckSelected.format}/>
-                    <button onClick={this.submitMainAndSideboard.bind(this)}>Submit Changes </button>
-                    <span ref={"error"} className="error"></span>
-                    <div className="deckBlock">
-                        <div className="newDeckColumn">
-                            {resultMain.map((obj)=>{
-                                return obj;
-                            })}
-                        </div>
-                    </div>
-                    <div className="deckBlock" key="sideboard">
-                        <div className="newDeckColumn">
-
-                            {resultSideboard.map((obj)=>{
-                                return obj;
-                            })}
-                        </div>
-                    </div>
-                </div>
         )
     }
 }

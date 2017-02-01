@@ -27,7 +27,9 @@ class GoogleAutocompleteInput extends React.Component{
     }
 
     getCorrectedValue(){
-        return {location : this.state.location};
+        var object = [];
+        object[this.props.objectName] = this.state.location;
+        return object
     }
 
     clearInput(){
@@ -44,9 +46,8 @@ class GoogleAutocompleteInput extends React.Component{
     }
 
     componentDidMount() {
-        if (this.props.onComponentMounted) {
-            this.props.onComponentMounted(this);
-        }
+        this.props.register(this);
+
 
         var input = this.refs["input"];
         this.state.autocomplete = new google.maps.places.Autocomplete(input);

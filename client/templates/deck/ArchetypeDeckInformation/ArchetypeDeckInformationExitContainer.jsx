@@ -1,23 +1,25 @@
 import { createContainer } from 'meteor/react-meteor-data';
-import ArchetypeDeckInformation from './ArchetypeDeckInformation.jsx';
+import ArchetypeDeckInformationExit from './ArchetypeDeckInformationExit.jsx';
 
-export default ArchetypeDeckInfromationHeaderContainer = createContainer(({archetype, listLoading}) => {
-
-    var handle = Meteor.subscribe("DecksNames_DecksArchetypes_id", archetype._id );
+export default ArchetypeDeckInformationExitContainer = createContainer(({format, archetype, listLoading}) => {
+    console.log("ArchetypeDeckInfromationExitContainer");
 
     if(listLoading){
         return {
             currentUser: Meteor.user(),
             listLoading: true,
-            DecksNames : DecksNames.find({DecksArchetypes_id : archetype}).fetch()
+            decksNames : null
         };
     }else{
+        var handle = Meteor.subscribe("DecksNames_DecksArchetypes_id", archetype._id );
+
         return {
             currentUser: Meteor.user(),
             listLoading: !handle.ready(),
-            DecksNames : null
+            decksNames : DecksNames.find({DecksArchetypes_id : archetype._id}).fetch(),
+            flowRouterDeckSelected : FlowRouter.getParam("deckSelected"),
         };
     }
 
 
-}, ArchetypeDeckInformation);
+}, ArchetypeDeckInformationExit);
