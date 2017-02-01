@@ -1,0 +1,43 @@
+import React from "react";
+
+export default class DumbSelect2 extends React.Component{
+    constructor() {
+        super();
+        this.state = {
+            inputValue : false,
+            cardList : []
+        }
+    }
+
+    componentDidMount(){
+        $('.js-select2').off("select2");
+        $('.js-select2').select2({
+            ajax : {
+                transport : function(params, sucess, failure){
+                    Meteor.call(this.props.call, {term : params.data.q}, (err, data)=>{
+                        sucess(data.map((obj)=>{
+                            return obj.name;
+                        }));
+                    });
+                },
+                processResults : function(data){
+                    return {
+                        results: data.map((cardsName)=>{
+                            return {id : cardsName, text : cardsName}
+                        })
+                    };
+                }
+            }
+        });
+    }
+
+    render() {
+        return (
+            <div className="ContainerDumbSelect2">
+                <select className="js-select2">
+                    <option></option>
+                </select>
+            </div>
+        )
+    }
+}
