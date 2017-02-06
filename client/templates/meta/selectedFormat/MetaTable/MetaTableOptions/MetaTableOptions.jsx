@@ -13,33 +13,32 @@ export default class NewMetaTableOptions extends React.Component {
         this.state = {
             startDate : new Date(new Date().setDate(new Date().getDate() - 60)),
             endDate : new Date(),
-            positionChange : new Date(new Date().setDate(new Date().getDate() - 7)),
             startPosition : 1,
             endPosition : 64,
             venues: [
                 {
                     venue: "MTGO", text : "MTGO", types: [
-                        {type: "daily", text: "Daily", selected : true},
-                        {type: "league", text: "League", selected : true}
-                    ]
+                    {type: "daily", text: "Daily", selected : true},
+                    {type: "league", text: "League", selected : true}
+                ]
                 },
                 {
                     venue: "WotC",  text : "WotC", types: [
-                        {type: "GP", text: "Grand Prix", selected : true},
-                    ]
+                    {type: "GP", text: "Grand Prix", selected : true},
+                ]
                 },
                 {
                     venue: "SCG", text : "SCG", types: [
-                        {type: "SCGSuperIQ", text: "Super IQ", selected : true},
-                        {type: "SCGInviQualifier", text: "Invi Qualifier", selected : true},
-                        {type: "SCGInvitational", text: "Invitational", selected : true},
-                        {type: "SCGClassic", text: "Classic", selected : true},
-                        {type: "SCGOpen", text: "Open", selected : true},
-                        {type: "Players'Championship", text: "Players' Champ", selected : true},
-                        {type: "GrandPrix", text: "Grand Prix", selected : true},
-                        {type: "LegacyChamps", text: "Legacy Champs", selected : true},
-                        {type: "WorldMagicCup", text: "World Magic Cup", selected : true}
-                    ]
+                    {type: "SCGSuperIQ", text: "Super IQ", selected : true},
+                    {type: "SCGInviQualifier", text: "Invi Qualifier", selected : true},
+                    {type: "SCGInvitational", text: "Invitational", selected : true},
+                    {type: "SCGClassic", text: "Classic", selected : true},
+                    {type: "SCGOpen", text: "Open", selected : true},
+                    {type: "Players'Championship", text: "Players' Champ", selected : true},
+                    {type: "GrandPrix", text: "Grand Prix", selected : true},
+                    {type: "LegacyChamps", text: "Legacy Champs", selected : true},
+                    {type: "WorldMagicCup", text: "World Magic Cup", selected : true}
+                ]
                 },
             ]
         }
@@ -51,11 +50,27 @@ export default class NewMetaTableOptions extends React.Component {
         })
     }
 
+    mainSide(mainSide){
+        var tempArray = this.state.mainSide.concat();
+        var index = tempArray.findIndex((arrayItem)=>{
+            return mainSide  == arrayItem.value
+        });
+    }
+
+    mainSideSelectedHandle(mainSide){
+        var tempArray = this.state.mainSide.concat();
+        var index = tempArray.findIndex((arrayItem)=>{
+            return mainSide  == arrayItem.value
+        });
+
+
+    }
+
     typeSelectedHandle(venue, type, event){
         var tempVenues = this.state.venues.concat();
 
         var index = tempVenues.findIndex((venueQuery)=>{
-          return venueQuery.venue == venue;
+            return venueQuery.venue == venue;
         });
 
         var index2 = tempVenues[index].types.findIndex((typeQuery)=>{
@@ -96,9 +111,15 @@ export default class NewMetaTableOptions extends React.Component {
             })
         })
 
+        request.mainSide = [];
+        this.state.mainSide.forEach((mainSide)=>{
+            if(mainSide.selected){
+                request.mainSide.push(mainSide.value);
+            }
+        })
+
         request.startDate = this.state.startDate;
         request.endDate = this.state.endDate;
-        request.positionChange = this.state.positionChange;
         request.startPosition = this.state.startPosition;
         request.endPosition = this.state.endPosition;
 
@@ -109,9 +130,12 @@ export default class NewMetaTableOptions extends React.Component {
         this.props.registerOptions(this.requestQuery());
     }
 
+
+
     componentDidMount(){
         this.props.registerOptions(this.requestQuery());
     }
+
 
     render(){
         return(
@@ -137,7 +161,7 @@ export default class NewMetaTableOptions extends React.Component {
                             <ul className="list-unstyled optionsList">
                                 {venue.types.map((type)=>{
                                     return  <li key={type.type}>
-                                        <input type="checkbox" role="typeCheckbox" onChange={(event)=> this.typeSelectedHandle(venue.venue, type.type, event)} checked={type.selected}/>{type.text}
+                                        <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(venue.venue, type.type, event)} checked={type.selected}/>{type.text}
                                     </li>
                                 })}
                             </ul>
@@ -155,12 +179,6 @@ export default class NewMetaTableOptions extends React.Component {
                                 <input type="date"  onChange={(event)=>this.dateSelectedHandle(event, "endDate")}  value={Moment(this.state.endDate).format("YYYY-MM-DD")}/> End
                             </label>
                         </div>
-                        <div className="optionListName">Positions Changes</div>
-                        <div className="inputDiv">
-                            <label>
-                                <input type="date"  onChange={(event)=>this.dateSelectedHandle(event, "positionChange")} value={Moment(this.state.positionChange).format("YYYY-MM-DD")}/>
-                            </label>
-                        </div>
                         <div className="optionListName">Positions</div>
                         <div className="inputDiv">
                             <label>
@@ -173,12 +191,15 @@ export default class NewMetaTableOptions extends React.Component {
                             </label>
                         </div>
                         <div >
-                            <button className="btn btn-xs" onClick={this.updateOptions.bind(this)}>Request Changes</button>
+                            <button className="btn btn-xs" onClick={this.updateOptions.bind(this)} >Request Changes</button>
                         </div>
+
                     </div>
                 </div>
 
             </div>
+
+
         );
     }
 }

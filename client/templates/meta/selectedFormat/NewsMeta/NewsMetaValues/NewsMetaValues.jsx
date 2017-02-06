@@ -4,7 +4,6 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 export default class ValuesTable extends React.Component {
     constructor(){
         super();
-
     }
 
     nameColumnFormatter(cell, row){

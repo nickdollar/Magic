@@ -1,13 +1,14 @@
 import React from 'react' ;
-import NewMetaTableOptions from "../NewsTableReact/NewsMetaOptions/MetaTableOptions.jsx";
-import ValuesTable from "../NewsTableReact/ValuesTable/ValuesTable.jsx";
+import MetaTableOptions from './NewsMetaOptions/NewsMetaOptions.jsx';
+import ValuesTable from './ValuesTable/ValuesTable.jsx';
 
-export default class NewMetatable extends React.Component {
-    constructor() {
+
+
+export default class NewsReactTable extends React.Component {
+    constructor(){
         super();
-        this.state = {tableData : [], totalDecks : 0}
-    }
 
+    }
 
     registerOptions(options){
         Meteor.call("getMetaAllArchetypes", FlowRouter.getParam("format"), options, (err, data)=>{
@@ -18,15 +19,12 @@ export default class NewMetatable extends React.Component {
         });
     }
 
-    
-
     render(){
-
         return(
-            <div className="NewMetaTableComponent">
-                <NewMetaTableOptions registerOptions={this.registerOptions.bind(this)}/>
+            <div className="NewsReactTableComponent">
+                <MetaTableOptions registerOptions={this.registerOptions.bind(this)}/>
                 <ValuesTable tableData={this.state.tableData}
-                             totalDecks={this.state.totalDecks}
+                              totalDecks={this.state.totalDecks}
                 />
             </div>
         );
