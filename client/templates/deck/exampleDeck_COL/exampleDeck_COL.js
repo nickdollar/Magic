@@ -83,6 +83,7 @@ Template.exampleDeck_COL.helpers({
     test3(){
         $('.js-imagePopOver').popover({
             html: true,
+            placement : "auto right",
             trigger: 'hover',
             content: function () {
                 var cardName = encodeURI($(this).data('name'));

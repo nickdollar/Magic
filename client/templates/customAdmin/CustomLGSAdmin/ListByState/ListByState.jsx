@@ -2,7 +2,7 @@ import React from 'react' ;
 import ReactTableContainer from '/client/dumbReact/ReactTable/ReactTableContainer.jsx' ;
 
 
-export default class ListByState extends React.Component {
+export default class ListByStateTable extends React.Component {
     constructor(props){
         super();
         this.state = {selectedState : props.state ? props.state[0] : null, selectedRows : []}
@@ -12,9 +12,8 @@ export default class ListByState extends React.Component {
         this.setState({selectedState : state})
     }
 
-    sortTD(_id){
-        if(!_id) return "";
-        return _id.substring(0, 4);
+    fixLocation(value, row){
+        return value.formatedAddress;
     }
 
     selectedEvent(row, isSelected){
@@ -44,26 +43,21 @@ export default class ListByState extends React.Component {
         }
     }
 
-    confirmLGSEvents(){
-        Meteor.call("stateConfirmLGSEvents", this.state.selectedRows);
+    confirmLGS(){
+        Meteor.call("stateConfirmLGS", this.state.selectedRows);
     }
 
-    deleteLGSEvents(){
-        Meteor.call("removeConfirmLGSEvents", this.state.selectedRows);
+    removeLGS(){
+        Meteor.call("removeLGS", this.state.selectedRows);
     }
 
     render(){
 
         const columns = [
-            {attr : {key : "_id",       dataField : "_id",      isKey : true, dataFormat: this.sortTD}, text : "_id"},
-            {attr : {key : "name",      dataField : "name",     dataFormat: this.sortTD},   text : "name"},
-            {attr : {key : "LGS_id",    dataField : "LGS_id",   dataFormat: this.sortTD},   text : "LGS_id"},
-            {attr : {key : "price",     dataField : "price"},                               text : "price"},
-            {attr : {key : "format",    dataField : "format"},                             text : "format"},
-            {attr : {key : "rounds",    dataField : "rounds",                           },   text : "rounds"},
-            {attr : {key : "day",       dataField : "day"},     text : "day"},
-            {attr : {key : "start",     dataField : "start"},   text : "start"},
-            {attr : {key : "state",     dataField : "state"},   text : "state"},
+            {attr : {key : "_id",       dataField : "_id",          isKey : true},                  text : "_id"},
+            {attr : {key : "name",      dataField : "name",         },                              text : "name"},
+            {attr : {key : "location",  dataField : "location",     dataFormat: this.fixLocation},  text : "URL"},
+            {attr : {key : "state",     dataField : "state"},                                       text : "state"}
         ]
 
         const options = {
@@ -81,7 +75,6 @@ export default class ListByState extends React.Component {
                 pagination : true
             }
 
-
         return(
             <div className="ListByStateComponent">
                 {this.props.state.map((state)=>{
@@ -92,16 +85,15 @@ export default class ListByState extends React.Component {
                 })}
 
 
-                <ReactTableContainer    collection={"LGSEvents"}
-                                        subscription="LGSEventsStateFormat"
-                                        subscriptionParams={[this.props.format, this.state.selectedState]}
-                                        query={{format : this.props.format, state : this.state.selectedState}}
-                                        format={this.props.format}
+                <ReactTableContainer    collection={"LGS"}
+                                        subscription="LGSState"
+                                        subscriptionParams={[this.state.selectedState]}
+                                        query={{state : this.state.selectedState}}
                                         options={options}
                                         columns={columns}
                 />
-                <button className="btn" onClick={this.confirmLGSEvents.bind(this)}>confirm</button>
-                <button className="btn" onClick={this.deleteLGSEvents.bind(this)}>Delete</button>
+                <button className="btn" onClick={this.confirmLGS.bind(this)}>confirm</button>
+                <button className="btn" onClick={this.removeLGS.bind(this)}>Delete</button>
 
 
             </div>

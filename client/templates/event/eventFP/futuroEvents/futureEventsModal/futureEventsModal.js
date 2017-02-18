@@ -215,7 +215,6 @@ AutoForm.hooks({
         before: {
             // Replace `formType` with the FormValidate `type` attribute to which this hook applies
             method: function (doc) {
-                console.log(doc);
                 return doc;
                 // Then return it or pass it to this.result()
                 //return doc; (synchronous)
@@ -226,7 +225,6 @@ AutoForm.hooks({
         },
     },
     onError: function(formType, error) {
-        console.log("error");
         console.log(error)
     },
     onSuccess: function(formType, result) {

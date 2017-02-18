@@ -16,7 +16,6 @@ export default class SearchOptions extends React.Component{
     typeChange(e){
         var types = this.state.typeOptions.concat();
 
-        console.log(e.target.value);
         var index = types.findIndex((typesObj)=>{
             return typesObj == e.target.value;
         })
@@ -32,7 +31,6 @@ export default class SearchOptions extends React.Component{
     }
 
     typesChecked(type){
-        console.log(type);
         var types = this.state.typeOptions.slice();
 
         var index = types.findIndex((typesObj)=>{
@@ -122,7 +120,6 @@ export default class SearchOptions extends React.Component{
                         Type
                     </div>
                     {["aggro", "combo", "control"].map((option)=>{
-                        console.log(option);
                         return  <div key={option} className="checkbox">
                                     <label>
                                         <input type="checkbox" role="checkbox" value={option} onChange={this.typeChange.bind(this)} checked={this.typesChecked(option)}/>

@@ -49,7 +49,6 @@ class LGSEventsCalendarModal extends TrackerReact(React.Component){
                 <span className="rightTitle">Price:</span><span className="leftInformation">{price}</span>
             </div>)
         };
-        console.log(this.props.eventObject.rounds);
         if(this.props.eventObject.rounds){
             divs.push(<div key="rounds">
                 <span className="rightTitle">Rounds:</span><span className="leftInformation">{this.props.eventObject.rounds}</span>

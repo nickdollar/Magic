@@ -11,7 +11,7 @@ Meteor.publish('LGSEventsStateFormat', function(format, state){
 });
 
 Meteor.publish('LGSEventsByArrayOfLGS_ids', function(arraysOfLGS_id){
-    return LGSEvents.find({LGS_id : {$in : arraysOfLGS_id}});
+    return LGSEvents.find({state : "confirmed", LGS_id : {$in : arraysOfLGS_id}});
 });
 
 Meteor.publish('LGSEventsByStoreInArea', function(location, distance){

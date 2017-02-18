@@ -1,7 +1,7 @@
 import React from "react";
-import LGSNameFieldContainer from "../SubmitTokenForm/LGSNameFieldContainer.jsx";
-import TokenField from "../SubmitTokenForm/TokenField.jsx";
-import PlayerNameInput from "../SubmitTokenForm/PlayerNameInput.jsx";
+import LGSNameFieldContainer from "./SubmitInput/LGSNameField/LGSNameFieldContainer.jsx";
+import TokenField from "./SubmitInput/TokenField/TokenField.jsx";
+import PlayerNameInput from "./SubmitInput/PlayerNameInput/PlayerNameInput.jsx";
 
 
 
@@ -58,8 +58,7 @@ class SubmitTokenForm extends React.Component{
 
     render() {
         return (
-            <div>
-                <h3>Add Deck To Event</h3>
+            <div className="SubmitTokenFormComponent">
                 <form noValidate  onSubmit={this.handleSubmit.bind(this)}>
                     <LGSNameFieldContainer onComponentMounted={this.register.bind(this)}
                                            objectName={"LGS_id"}

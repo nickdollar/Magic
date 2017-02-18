@@ -83,16 +83,6 @@ Template.metaCardTable.events({
 
 Template.metaCardTable.onRendered(function(){
 
-            // if ($.fn.DataTable.isDataTable("#metaCardTableTable")) {
-            //     console.log("Destroy Table");
-            //     $('#metaCardTableTable').DataTable().clear();
-            //     $('#metaCardTableTable').DataTable().destroy({
-            //         remove : true
-            //     });
-            //     var $table = $("<table>", {id : "metaCardTableTable", class : "table table-sm", cellSpacing: 0, width : "100%"});
-            //     $(".js-appendTableMetaCardTableTable").append($table);
-            // }
-
             $('#metaCardTableTable').on( 'draw.dt', function () {
                 $('.js-imagePopOverCards').popover({
                     html: true,

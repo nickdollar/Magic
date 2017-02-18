@@ -21,10 +21,9 @@ Meteor.methods({
         DecksArchetypes.remove({_id : _id});
     },
     eventDelete : function(_id){
-        console.log(_id);
-            DecksData.remove({Events_id : _id});
-            Events.remove({_id : _id});
-            EventsHtmls.remove({Events_id : _id});
+        DecksData.remove({Events_id : _id});
+        Events.remove({_id : _id});
+        EventsHtmls.remove({Events_id : _id});
 
     },
     decksNamesDelete : function(_id){

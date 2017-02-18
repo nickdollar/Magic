@@ -4,59 +4,116 @@ addCron = function(){
     var timer = 0;
     timer -= distanceBetween;
 
+
     SyncedCron.add({
-        name: "Fix All GP Events",
+        name: "Event League Get New Events",
         schedule: function(parser) {
             timer += distanceBetween;
             return parser.text("every " + hour + " h on the "+ timer +" m");
         },
         job: function() {
-            Meteor.call("fixAllGPEvents", "standard");
-            Meteor.call("fixAllGPEvents", "modern");
-            Meteor.call("fixAllGPEvents", "legacy");
-            Meteor.call("fixAllGPEvents", "vintage");
+            Meteor.call("methodEventLeagueGetNewEvents", {format : "standard"});
+            Meteor.call("methodEventLeagueGetNewEvents", {format : "modern"});
+            Meteor.call("methodEventLeagueGetNewEvents", {format : "legacy"});
+            Meteor.call("methodEventLeagueGetNewEvents", {format : "vintage"});
         }
     });
 
     SyncedCron.add({
-        name: "methods Download New Leagues",
+        name: "Event League Get New Events",
         schedule: function(parser) {
             timer += distanceBetween;
             return parser.text("every " + hour + " h on the "+ timer +" m");
         },
         job: function() {
-            Meteor.call("methodEventLeagueGetNewEvents", "standard");
-            Meteor.call("methodEventLeagueGetNewEvents", "modern");
-            Meteor.call("methodEventLeagueGetNewEvents", "legacy");
-            Meteor.call("methodEventLeagueGetNewEvents", "vintage");
+            Meteor.call("methodEventMTGOPTQGetInfoOld", {format : "standard"});
+            Meteor.call("methodEventMTGOPTQGetInfoOld", {format : "modern"});
+            Meteor.call("methodEventMTGOPTQGetInfoOld", {format : "legacy"});
+            Meteor.call("methodEventMTGOPTQGetInfoOld", {format : "vintage"});
         }
     });
 
     SyncedCron.add({
-        name: "Add Names To Decks Automatic",
+        name: "Event GP Get New Events",
         schedule: function(parser) {
             timer += distanceBetween;
             return parser.text("every " + hour + " h on the "+ timer +" m");
         },
         job: function() {
-            Meteor.call("methodAddNameToDeckAutomatically", "standard");
-            Meteor.call("methodAddNameToDeckAutomatically", "modern");
-            Meteor.call("methodAddNameToDeckAutomatically", "legacy");
-            Meteor.call("methodAddNameToDeckAutomatically", "vintage");
+            Meteor.call("methodGetGPEvents");
+            Meteor.call("methodGetGPEvents");
+            Meteor.call("methodGetGPEvents");
+            Meteor.call("methodGetGPEvents");
         }
     });
 
     SyncedCron.add({
-        name: "Update Meta Cards",
+        name: "getStarCityGamesEvents",
         schedule: function(parser) {
             timer += distanceBetween;
             return parser.text("every " + hour + " h on the "+ timer +" m");
         },
         job: function() {
-            Meteor.call("updateMetaCards", "standard");
-            Meteor.call("updateMetaCards", "modern");
-            Meteor.call("updateMetaCards", "legacy");
-            Meteor.call("updateMetaCards", "vintage");
+            Meteor.call("getStarCityGamesEvents", {format : "standard"});
+            Meteor.call("getStarCityGamesEvents", {format : "modern"});
+            Meteor.call("getStarCityGamesEvents", {format : "legacy"});
+            Meteor.call("getStarCityGamesEvents", {format : "vintage"});
+        }
+    });
+
+    SyncedCron.add({
+        name: "fixLeagueDailyEvent",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.text("every " + hour + " h on the "+ timer +" m");
+        },
+        job: function() {
+            Meteor.call("fixLeagueDailyEvent");
+            Meteor.call("fixLeagueDailyEvent");
+            Meteor.call("fixLeagueDailyEvent");
+            Meteor.call("fixLeagueDailyEvent");
+        }
+    });
+
+    SyncedCron.add({
+        name: "fixMTGOPTQEvent",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.text("every " + hour + " h on the "+ timer +" m");
+        },
+        job: function() {
+            Meteor.call("fixMTGOPTQEvent");
+            Meteor.call("fixMTGOPTQEvent");
+            Meteor.call("fixMTGOPTQEvent");
+            Meteor.call("fixMTGOPTQEvent");
+        }
+    });
+
+    SyncedCron.add({
+        name: "fixGPEvent",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.text("every " + hour + " h on the "+ timer +" m");
+        },
+        job: function() {
+            Meteor.call("fixGPEvent");
+            Meteor.call("fixGPEvent");
+            Meteor.call("fixGPEvent");
+            Meteor.call("fixGPEvent");
+        }
+    });
+
+    SyncedCron.add({
+        name: "fixSCGEvent",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.text("every " + hour + " h on the "+ timer +" m");
+        },
+        job: function() {
+            Meteor.call("fixSCGEvent");
+            Meteor.call("fixSCGEvent");
+            Meteor.call("fixSCGEvent");
+            Meteor.call("fixSCGEvent");
         }
     });
 

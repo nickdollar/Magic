@@ -7,6 +7,9 @@ import CustomDecksDataAdmin from './CustomDecksDataAdmin/CustomDecksDataAdmin.js
 import CustomDecksDatabaseAdmin from './CustomDecksDatabaseAdmin/CustomDecksDatabaseAdmin.jsx';
 import CustomLGSAdmin from './CustomLGSAdmin/CustomLGSAdmin.jsx';
 import CustomLGSEventsAdmin from './CustomLGSEventsAdmin/CustomLGSEventsAdmin.jsx';
+import CustomEventsCalendarAdmin from './CustomEventsCalendarAdmin/CustomEventsCalendarAdmin.jsx';
+import CustomZipCodesAdmin from './CustomZipCodesAdmin/CustomZipCodesAdmin.jsx';
+import CustomCardsFullDataAdmin from './CustomCardsFullDataAdmin/CustomCardsFullDataAdmin.jsx';
 
 
 
@@ -33,12 +36,17 @@ export default class CustomAdmin extends React.Component{
             return <CustomLGSAdmin format={this.state.format}/>
         }else if (route=="LGSEvents"){
             return <CustomLGSEventsAdmin format={this.state.format}/>
+        }else if (route=="EventsCalendar"){
+            return <CustomEventsCalendarAdmin format={this.state.format}/>
+        }else if (route=="ZipCodes"){
+            return <CustomZipCodesAdmin/>
+        }else if (route=="CardsFullData"){
+            return <CustomCardsFullDataAdmin/>
         }
     }
 
     closeNav(){
         this.refs["mySideNav"].style.display = "none";
-        console.log("close");
     }
 
 
@@ -55,7 +63,8 @@ export default class CustomAdmin extends React.Component{
 
     render(){
         var formats = ["standard", "modern", "legacy", "vintage"];
-        var collections = ["Events", "CardsDatabase", "DecksNames", "DecksArchetypes", "DecksData", "LGS", "LGSEvents"];
+        var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
+                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData"];
         collections.sort()
         return (
             <div className="row">

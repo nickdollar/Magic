@@ -1,6 +1,13 @@
 import React from "react";
 
-var types = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
+var types = [   {type : "artifact", text : "Artifact"},
+                {type : "creature", text : "Creature"},
+                {type : "enchantment", text : "Enchantment"},
+                {type : "instant", text : "Instant"},
+                {type : "planeswalker", text : "Planeswalker"},
+                {type : "sorcery", text : "Sorcery"},
+                {type : "land", text : "Land"},
+    ];
 typeOptions = { null : {},
     artifact : {creature : false, artifact : true},
     creature : {creature : true},
@@ -30,23 +37,43 @@ export default class Deck extends React.Component{
         this.addEventHandlers();
     }
 
-    addEventHandlers(){
+
+    popover(){
         $('.js-cardNameInput').off("popover");
         $('.js-cardNameInput').popover({
             html: true,
             trigger: 'hover',
+            placement : "auto right",
             content: function () {
-                var cardName = encodeURI($(this).find("select").val());
-                if(cardName == ""){
-                    return false;
+                console.log("AAAAAAAAAAAAAAAA");
+                var cardQuery = CardsData.findOne({name : $(this).data('name')});
+                var cardName = encodeURI($(this).data('name'));
+                var html = "";
+                if(!cardQuery){
+                    return "";
                 }
-                cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                var linkBase = "https://mtgcards.file.core.windows.net/cards/";
-                var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
-                var finalDirectory = linkBase+cardName+".full.jpg" + key;
-                return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                if(cardQuery.names){
+                    cardQuery.names.forEach((card)=>{
+                        cardName = card.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                        var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                        var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                        var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                        html += '<span><img src="'+finalDirectory +'" style="height: 310px; width: 223px"/></span>';
+                    })
+                }else{
+                    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                    var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                    var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                    var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                    html += '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                }
+                return html;
+
             }
         });
+    }
+    addEventHandlers(){
+        this.popover();
 
         $('.js-select2').off("select2");
         $('.js-select2').select2({
@@ -197,8 +224,6 @@ export default class Deck extends React.Component{
         };
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
-
-
             var cardQuery = CardsData.findOne({name : card.name});
             var cardComplete;
 
@@ -446,7 +471,7 @@ export default class Deck extends React.Component{
         })
 
         return (
-            <div className="deckEdit">
+            <div className="DeckEditComponent">
                 <button onClick={this.submitDeck.bind(this)}>Submit Changes </button>
                 <span className="error">{this.state.submitMessage}</span>
 

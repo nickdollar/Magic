@@ -25,8 +25,6 @@ Meteor.methods({
         }
     },
     insertNewPlayList: function (form) {
-        console.log(form);
-
         var playListInformation = getPlayListInformation(form.playlistUrl);
         var file = Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });

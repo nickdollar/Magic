@@ -50,7 +50,6 @@ class ArchetypeList extends React.Component{
             archetypes = "";
         }else{
             var decks = DecksNames.find({"main.name" : { $all : props.cards}}).fetch();
-            console.log(decks);
 
             if(decks.length == 0){
                 archetypes = "^$";

@@ -12,11 +12,12 @@ export default class DeckTableExample extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.listLoading==false && this.state.selectedDeck_id == "" ){
-            if(nextProps.DecksDataNewest != null){
-                this.setState({selectedDeck_id : nextProps.DecksDataNewest._id});
+        if(nextProps.listLoading==false){
+            if(this.state.selectedDeck_id == "") {
+                if(nextProps.DecksDataNewest != null){
+                    this.setState({selectedDeck_id : nextProps.DecksDataNewest._id});
+                }
             }
-
         }
     }
 
@@ -28,6 +29,9 @@ export default class DeckTableExample extends React.Component {
         if(this.props.listLoading){
             return <div>Loading...</div>
         }
+
+        var small = ["league", "daily", "lgs"];
+        var big = ["SCGClassic", "SCGInviQualifier", ];
         return(
             <div className="DeckTableExampleComponent">
                 <div className="tablesWrapper">
@@ -35,14 +39,14 @@ export default class DeckTableExample extends React.Component {
                         <DeckListContainer flowRouterDeckSelected={this.props.flowRouterDeckSelected}
                                            selectedDeckHandle={this.selectedDeckHandle.bind(this)}
                                            selectedDeck_id={this.state.selectedDeck_id}
-                                           eventsType={["league"]}
+                                           eventsType={small}
                         />
                     </div>
                     <div className="halfLength">
                         <DeckListContainer flowRouterDeckSelected={this.props.flowRouterDeckSelected}
                                            selectedDeckHandle={this.selectedDeckHandle.bind(this)}
                                            selectedDeck_id={this.state.selectedDeck_id}
-                                           eventsType={["lgs"]}
+                                           eventsType={big}
                         />
                     </div>
                 </div>

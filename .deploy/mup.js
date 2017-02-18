@@ -16,9 +16,6 @@ module.exports = {
     servers: {
       one: {}
     },
-	volumes : {
-		"/root/images":"/bundle/bundle/programs/web.browser/app/cards/"
-	},
 	docker: {
       image: 'abernix/meteord:base'
 	},
@@ -33,8 +30,9 @@ module.exports = {
 	 ssl: {
 		crt: './bundle.crt', // this is a bundle of certificates
 		key: './private.key', // this is the private key of the certificate
-		port: 443 // 443 is the default value and it's the standard HTTPS port
-  }
+		port : 443
+	},
+	enableUploadProgressBar: true
   },
 
   mongo: {

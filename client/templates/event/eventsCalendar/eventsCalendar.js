@@ -13,12 +13,6 @@ Template.eventsCalendar.helpers({
                 center: 'prev title next',
                 right: ''
             },
-            // eventClick: function (Events, jsEvent, view) {
-            //     //set the values and open the modal
-            //     $("#eventInfo").html(Events.description);
-            //     $("#eventLink").attr('href', Events.url);
-            //     $("#eventContent").dialog({modal: true, title: Events.title});
-            // }
         }
     },
     exampleMapOptions: function() {
@@ -75,7 +69,6 @@ Template.eventsCalendar.onRendered(function(){
         fixedWeekCount : false,
         eventClick:  function(event, jsEvent, view) {
             //set the values and open the modal
-            // console.log(Events);
             $(".js-name").html(event.title);
             var html = "";
             html += '<div><span class="rightTitle">When:</span><span class="leftInformation">'+moment(new Date(event.source.origArray[0].start)).format("llll");
@@ -156,7 +149,6 @@ Template.eventsCalendar.onRendered(function(){
                 var array = [];
                 array.push(obj);
                 $('#eventsCalendar').fullCalendar("addEventSource", array);
-
             },
             removed : function(obj){
                 $('#eventsCalendar').fullCalendar("removeEvents", obj._id);

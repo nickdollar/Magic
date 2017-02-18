@@ -18,7 +18,6 @@ export default class ListByState extends React.Component {
     }
 
     selectedEvent(row, isSelected){
-
         var tempArray = this.state.selectedRows.concat();
 
         if(isSelected){

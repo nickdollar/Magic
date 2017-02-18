@@ -140,7 +140,7 @@ checkIfEventIsComplete = function(Events_id){
     if(decksDataWithNameQuery == decksDataTotalQuery){
         Events.update({_id : Events_id},
             {
-                $set : { state : decks}
+                $set : { state : "names"}
             }
         );
     }
@@ -379,8 +379,6 @@ findBestResultDeckComparison = function(_id){
     var foundDeck = DecksDataUniqueWithoutQuantity.findOne({format : deck.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}});
     if(foundDeck){
         if(foundDeck.DecksNames_id){
-            console.log(foundDeck);
-            console.log(DecksNames.findOne({_id : foundDeck.DecksNames_id}));
             return {DecksNames_id : foundDeck.DecksNames_id, name : DecksNames.findOne({_id : foundDeck.DecksNames_id}).name, result  : 1};
         }
     }

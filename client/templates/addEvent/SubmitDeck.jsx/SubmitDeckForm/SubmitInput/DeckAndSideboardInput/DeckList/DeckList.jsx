@@ -27,23 +27,42 @@ export default class Deck extends React.Component{
         this.addEventHandlers();
     }
 
-    addEventHandlers(){
+    popover(){
         $('.js-cardNameInput').off("popover");
         $('.js-cardNameInput').popover({
             html: true,
             trigger: 'hover',
+            placement : "auto right",
             content: function () {
-                var cardName = encodeURI($(this).find("select").val());
-                if(cardName == ""){
-                    return false;
+                var cardQuery = CardsData.findOne({name : $(this).data('name')});
+                var cardName = encodeURI($(this).data('name'));
+                var html = "";
+                if(!cardQuery){
+                    return "";
                 }
-                cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                var linkBase = "https://mtgcards.file.core.windows.net/cards/";
-                var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
-                var finalDirectory = linkBase+cardName+".full.jpg" + key;
-                return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                if(cardQuery.names){
+                    cardQuery.names.forEach((card)=>{
+                        cardName = card.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                        var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                        var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                        var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                        html += '<span><img src="'+finalDirectory +'" style="height: 310px; width: 223px"/></span>';
+                    })
+                }else{
+                    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                    var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                    var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                    var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                    html += '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                }
+                return html;
+
             }
         });
+    }
+
+    addEventHandlers(){
+        this.popover();
 
         $('.js-select2').off("select2");
         $('.js-select2').select2({
@@ -67,31 +86,13 @@ export default class Deck extends React.Component{
 
         $('.js-select2').off("select2:selecting");
         $('.js-select2').on("select2:selecting", (e)=> {
-            if(e.target.getAttribute("data-mainSideboard")== "change"){
-                this.props.changeCardDeck(e);
-            }
-
-            if(e.target.getAttribute("data-mainSideboard")== "add"){
+            if(e.target.getAttribute("data-changeAdd")== "change"){
                 this.props.changeCardDeck(e);
             }
         });
     }
 
-    subscribeToNewCards(cardName){
-        var index = this.state.newCards.findIndex((card)=>{
-            return card == cardName;
-        })
 
-        if(index == -1){
-            this.state.newCards.push(cardName);
-        }
-
-        Meteor.subscribe("cardsFromArray", this.state.newCards, {
-            onReady: ()=>{
-                this.forceUpdate();
-            }
-        });
-    }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.listLoading){
@@ -254,7 +255,8 @@ export default class Deck extends React.Component{
 
     cardRow(card, mainSideboard){
         var selectors = {
-            "data-mainSideboard" : mainSideboard
+            "data-mainSideboard" : mainSideboard,
+            "data-changeAdd" : "change"
         };
 
         var cardDataName = {"data-name" : card.name};
@@ -293,6 +295,7 @@ export default class Deck extends React.Component{
     addRow(mainSideboard){
         var selectors = {
             "data-mainSideboard" : mainSideboard,
+            "data-changeAdd" : "add"
         };
         var cardQuantity = {value : 4};
 
@@ -330,7 +333,6 @@ export default class Deck extends React.Component{
     }
 
     render() {
-
         if(this.state.listLoading){return <div>Loading...</div>}
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.deck.main);
         var resultMain = [];
@@ -353,7 +355,7 @@ export default class Deck extends React.Component{
         })
 
         return (
-            <div className="deckEdit">
+            <div className="DeckListComponent">
                 <button onClick={this.props.submitDeck.bind(this)}>Submit Changes </button>
                 <span className="error">{this.props.submitMessage}</span>
 

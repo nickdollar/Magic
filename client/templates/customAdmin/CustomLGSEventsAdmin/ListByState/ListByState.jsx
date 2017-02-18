@@ -14,7 +14,7 @@ export default class ListByState extends React.Component {
 
     sortTD(_id){
         if(!_id) return "";
-        return _id.substring(0, 4);
+        return _id.substring(0, 8);
     }
 
     selectedEvent(row, isSelected){
@@ -56,14 +56,14 @@ export default class ListByState extends React.Component {
 
         const columns = [
             {attr : {key : "_id",       dataField : "_id",      isKey : true, dataFormat: this.sortTD}, text : "_id"},
-            {attr : {key : "name",      dataField : "name",     dataFormat: this.sortTD},   text : "name"},
+            {attr : {key : "title",     dataField : "title",    dataFormat: this.sortTD},   text : "Title"},
             {attr : {key : "LGS_id",    dataField : "LGS_id",   dataFormat: this.sortTD},   text : "LGS_id"},
             {attr : {key : "price",     dataField : "price"},                               text : "price"},
-            {attr : {key : "format",    dataField : "format"},                             text : "format"},
-            {attr : {key : "rounds",    dataField : "rounds",                           },   text : "rounds"},
+            {attr : {key : "format",    dataField : "format"},                              text : "format"},
+            {attr : {key : "rounds",    dataField : "rounds",                           },  text : "rounds"},
             {attr : {key : "day",       dataField : "day"},     text : "day"},
             {attr : {key : "start",     dataField : "start"},   text : "start"},
-            {attr : {key : "state",     dataField : "state"},   text : "state"},
+            // {attr : {key : "state",     dataField : "state"},   text : "state"},
         ]
 
         const options = {

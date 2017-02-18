@@ -7,6 +7,8 @@ export default TopMenuContainer = createContainer(({}) => {
         activatedlink : Session.get("topMenuSite"),
         format : Session.get("selectedMenuFormat"),
         distance : Session.get("distance"),
-
+        positionOption : Session.get("positionOption"),
+        ZIP : Session.get("ZIP"),
+        state : Session.get("state"),
     };
 }, TopMenu);

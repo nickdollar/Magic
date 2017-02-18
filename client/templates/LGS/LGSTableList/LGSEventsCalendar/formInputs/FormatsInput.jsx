@@ -27,7 +27,6 @@ class formatInput extends React.Component{
     isValid() {
         var input = this.refs["input"];
         var error = this.refs["error"];
-        console.log(this.state.inputValue);
         if (this.state.inputValue.length == 0) {
             input.classList.add('error'); //add class error
             error.textContent = "Choose a format";

@@ -1,6 +1,7 @@
 import cheerio from "cheerio";
 
 getMTGOPtqEventsOLD = function(format, days){
+    console.log("STARTING: getMTGOPtqEventsOLD");
     if(format == null || days == null){
         return;
     }
@@ -29,6 +30,10 @@ getMTGOPtqEventsOLD = function(format, days){
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + mtgoPtqTypes[format] + "-" + year + "-" + month + "-" + day;
         var res = Meteor.http.get(url);
 
+        if(Events.findOne({type : "MTGOPTQ", date : date, format : format})){
+            continue;
+        }
+
         Events.update(
             {type : "MTGOPTQ", date : date, format : format},
             {
@@ -36,7 +41,6 @@ getMTGOPtqEventsOLD = function(format, days){
                     date: date,
                     format : format,
                     venue : "MTGO",
-                    name : mtgoPtqTypes[format],
                     type: "MTGOPTQ",
                     url : url,
                     state: "startProduction"
@@ -44,7 +48,6 @@ getMTGOPtqEventsOLD = function(format, days){
             },
             {upsert : true}
         );
-
 
         if (res.statusCode == 200) {
             var buffer = res.content;
@@ -70,16 +73,93 @@ getMTGOPtqEventsOLD = function(format, days){
         }
         date = new Date(date.setDate(date.getDate() - 1));
     }
+    console.log("ENDING: getMTGOPtqEventsOLD");
+}
+
+getMTGOPtqNewEvents = function(format){
+    console.log("STARTING: getMTGOPtqNewEvents");
+    if(format == null){
+        return;
+    }
+
+    if(mtgoPtqTypes[format] == null){
+        console.log("Invalid Format");
+        return;
+    }
+
+    var event = Events.findOne({format : format, type : "MTGOPTQ"}, {sort : {date : -1}, limit : 1});
+
+    var date = null;
+    if(event==null){
+        date = new Date();
+    }else{
+        date = new Date(event.date);
+        date.setDate(date.getDate() + 1);
+    }
+    date.setHours(0,0,0,0);
+
+    while(new Date().getTime() > date.getTime()){
+        var day = pad(date.getDate());
+        var month = pad(date.getMonth()+1);
+        var year = date.getYear() + 1900;
+        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + mtgoPtqTypes[format] + "-" + year + "-" + month + "-" + day;
+        var res = Meteor.http.get(url);
+
+        if(Events.findOne({type : "MTGOPTQ", date : date, format : format})){
+            continue;
+        }
+
+        Events.update(
+            {type : "MTGOPTQ", date : date, format : format},
+            {
+                $setOnInsert : {
+                    date: date,
+                    format : format,
+                    venue : "MTGO",
+                    type: "MTGOPTQ",
+                    url : url,
+                    state: "startProduction"
+                }
+            },
+            {upsert : true}
+        );
+
+
+        if (res.statusCode == 200) {
+            var buffer = res.content;
+            var $ = cheerio.load(buffer);
+
+            var deckMeta = $('#main-content');
+            var state = "notFound";
+            if(deckMeta.length == 0){
+                console.log("Page Doesn't exists");
+            }else{
+                console.log("page exists");
+                state = "exists";
+            }
+
+            Events.update(
+                {type : "MTGOPTQ", date : date, format : format},
+                {
+                    $set : {
+                        state : state
+                    }
+                }
+            );
+        }
+        date = new Date(date.setDate(date.getDate() + 1));
+    }
+    console.log("ENDING: getMTGOPtqNewEvents");
 }
 
 notFoundEventMTGOPTQ = function(Events_id) {
     console.log("START: notFoundEventMTGOPTQ");
-    var eventNotFound = Events.findOne({type: "EventsExists", _id: Events_id, state: "notFound"});
 
+    var eventNotFound = Events.findOne({type: "MTGOPTQ", _id: Events_id, state: "notFound"});
     if (!eventNotFound) {
         return
-    }
-    ;
+    };
+
     var res = Meteor.http.get(eventNotFound.url);
 
     if (res.statusCode == 200) {
@@ -103,7 +183,6 @@ notFoundEventMTGOPTQ = function(Events_id) {
     } else {
         var days = 10 * 24 * 60 * 60 * 1000;
         if ((new Date) - Events.findOne({_id: Events_id}).date > days) {
-            console.log("GGGGGGGGGGGGGGGG");
             Events.update(
                 {_id: Event_id},
                 {
@@ -343,16 +422,12 @@ getTop8Bracket = function($, top8Table){
 
 getDeckInfoFromTop8 = function(information){
     console.log("START: getDeckInfoFromTop8");
-    console.log(information);
-
     var playerPatt = /^.+(?=(?: \())/i;
     var positionPatt = /\d*(?=(?:ST|RD|ND|TH) )/i;
     var temp = {};
 
     temp.player = information.match(playerPatt)[0];
     temp.position = parseInt(information.match(positionPatt)[0]);
-
-    console.log(temp);
     return temp;
 }
 
@@ -380,6 +455,5 @@ getInfoFromPlayerTop8Winner = function(line){
     information.losses = line.match(scoreLosePatt)[0];
     information.position = line.match(positionPatt)[0];
 
-    console.log(information);
     return information;
 }

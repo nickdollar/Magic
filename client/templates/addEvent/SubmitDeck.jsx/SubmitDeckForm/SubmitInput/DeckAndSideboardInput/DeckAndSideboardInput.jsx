@@ -11,7 +11,8 @@ export default class DeckAndSideboardInput extends React.Component{
             textOrList : "list",
             deck : props.deck,
             event : props.event,
-            submitMessage : ""
+            submitMessage : "",
+            newCards : []
         }
 
     }
@@ -22,6 +23,11 @@ export default class DeckAndSideboardInput extends React.Component{
 
     setDeck(deck){
         var temp = Object.assign({}, deck);
+        var mainSideTemp = [].concat(temp.main, temp.sideboard)
+        var cardsNames = mainSideTemp.map((card)=>{
+           return card.name;
+        });
+        this.subscribeToNewCards(cardsNames);
         this.setState({deck : temp})
     }
     componentWillReceiveProps(nextProps){
@@ -35,7 +41,7 @@ export default class DeckAndSideboardInput extends React.Component{
         var cardName = $(e.target).closest(".addToMainButtonWrapper").siblings(".js-cardNameInput").find(".js-select2").val();
         var cardQuantity = $(e.target).closest(".addToMainButtonWrapper").siblings(".quantityInput").val();
         var mainSideboard = e.target.getAttribute("data-mainSideboard");
-
+        this.subscribeToNewCards([cardName]);
         if(cardName.length == 0){
             return;
         };
@@ -60,18 +66,17 @@ export default class DeckAndSideboardInput extends React.Component{
     }
 
     changeCardDeck(e){
-
         var cardName = e.target.getAttribute("data-name");
-        var mainSideboard = e.target.getAttribute("data-mainside");
+        var mainSideboard = e.target.getAttribute("data-mainSideboard");
 
         if(e.target.value < 0) return;
         var deck = Object.assign({}, this.state.deck);
 
-        var item = deck[mainSideboard].find((obj)=>{
+        var itemIndex = deck[mainSideboard].findIndex((obj)=>{
             return cardName == obj.name
         });
 
-        item.quantity = parseInt(e.target.value);
+        deck[mainSideboard][itemIndex].name = e.params.args.data.id;
         this.setState({
             deck : deck
         })
@@ -103,25 +108,6 @@ export default class DeckAndSideboardInput extends React.Component{
 
             this.setState({deck : tempArray });
         }
-    }
-
-
-    changeCard(e){
-        var oldName = e.target.getAttribute("data-name");
-        var value = e.params.args.data.text;
-        var mainSideboard = e.target.getAttribute("data-mainSide");
-
-
-
-        var tempArray = this.state.deck.concat();
-        var index = tempArray[mainSideboard].findIndex((card)=>{
-            return oldName == card.name;
-        })
-
-        tempArray.sideboard[index].quantity = value;
-
-
-        this.setState({deck : tempArray});
     }
 
     updateQuantity(e){
@@ -158,6 +144,27 @@ export default class DeckAndSideboardInput extends React.Component{
 
     }
 
+    subscribeToNewCards(cardsNames){
+
+        cardsNames.forEach((card)=>{
+            var index = this.state.newCards.findIndex((cardName)=>{
+                return card == cardName;
+            })
+
+            if(index == -1){
+                this.state.newCards.push(cardsNames);
+            }
+        })
+
+        console.log(this.state.newCards);
+
+        Meteor.subscribe("cardsFromArray", this.state.newCards, {
+            onReady: ()=>{
+                this.forceUpdate();
+            }
+        });
+    }
+
     submitDeck(){
         var submitDeck = Object.assign({}, this.state.deck, this.props.event);
         Meteor.call("addALGSDecksData", submitDeck, (err, data)=>{
@@ -178,7 +185,7 @@ export default class DeckAndSideboardInput extends React.Component{
                 deck={this.state.deck}
                 event={this.state.event}
                 addCardToDeck={this.addCardToDeck.bind(this)}
-                changeCardDeck={this.changeCard.bind(this)}
+                changeCardDeck={this.changeCardDeck.bind(this)}
                 updateQuantity={this.updateQuantity.bind(this)}
                 submitDeck={this.submitDeck.bind(this)}
                 removeCardDeck={this.removeCardDeck.bind(this)}

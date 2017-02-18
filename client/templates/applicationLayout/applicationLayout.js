@@ -6,12 +6,27 @@ import CustomAdmin from "/client/templates/customAdmin/CustomAdmin.jsx";
 import CustomEventsAdmin from "/client/templates/customAdmin/CustomEventsAdmin/CustomEventsAdmin.jsx";
 import SelectedEvent from "/client/templates/event/SelectedEvent/SelectedEvent.jsx";
 import ArchetypeDeckInformation from "/client/templates/deck/ArchetypeDeckInformation/ArchetypeDeckInformation.jsx";
+import MetaContainer from           "/client/templates/meta/MetaContainer.jsx";
+import LatestDecksContainer from           "/client/templates/main/LatestDecksReact/LatestDecksContainer.jsx";
+import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuContainer.jsx";
+import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableComponent.jsx";
+
+
 
 
 
 navigator.geolocation.getCurrentPosition((location)=> {
-    Session.set("position", [location.coords.longitude ,location.coords.latitude]);
-});
+        // Session.set("positionOption", "GPS");
+        Session.set("position", [location.coords.longitude ,location.coords.latitude]);
+    },
+    (error)=>{
+        Session.set("positionOption", "state");
+        console.log(error)
+    },
+    {
+        enableHighAccuracy: true,
+        timeout : 15000
+    });
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
@@ -24,14 +39,6 @@ Template.ApplicationLayout.helpers({
     subscriptionsReady (){
         return Template.instance().subscriptionsReady();
     },
-    UserAvatar() {
-        return myComponent;
-    },
-    dropdown: function () {
-        // Assuming this is https://github.com/fraserxu/react-dropdown, loaded
-        // elsewhere in the project.
-        return DropDown;
-    },
     options: [
         { value: 'one', label: 'One' },
         { value: 'two', label: 'Two' },
@@ -42,6 +49,9 @@ Template.ApplicationLayout.helpers({
         ]
         }
     ],
+    TopMenuContainer(){
+      return TopMenuContainer;
+    },
     selected: function () {
         return Template.instance().state.get("selected");
     },
@@ -67,6 +77,12 @@ Template.selectADeck.helpers({
 
 Template.selectADeck.onRendered(function(){
     Session.set("deckOrArchetype", false);
+});
+
+Template.selectedMeta.helpers({
+    MetaContainer(){
+        return MetaContainer;
+    }
 });
 
 Template.selectedMeta.onRendered(function(){
@@ -112,15 +128,12 @@ Template.selectedMeta.onRendered(function(){
     //$('#example2 tbody').on('click', 'td.details-control', function () {
     //    var tr = $(this).closest('tr');
     //    var row = table.row( tr );
-    //    console.log("AVVVVVVVVVVVVVVV");
     //    if ( row.child.isShown() ) {
-    //        console.log("ZZZZZZZZZZZZ");
     //        // This row is already open - close it
     //        row.child.hide();
     //        tr.removeClass('shown');
     //    }
     //    else {
-    //        console.log("YYYYYYYYYYYYYY");s
     //        // Open this row
     //        row.child().show();
     //        tr.addClass('shown');
@@ -130,11 +143,15 @@ Template.selectedMeta.onRendered(function(){
 
 });
 
-Template.events.helpers({
-    test : function(){
-        return {
+Template.main.helpers({
+    LatestDecks(){
+        return LatestDecksContainer;
+    }
+})
 
-        }
+Template.events.helpers({
+    EventsTableComponent(){
+        return EventsTableComponent;
     }
 });
 

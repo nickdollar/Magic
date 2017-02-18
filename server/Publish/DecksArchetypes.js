@@ -28,13 +28,8 @@ Meteor.publish("DecksArchetypes", function(){
     return DecksArchetypes.find();
 });
 
-Meteor.publish("DecksArchetypesThatHasDecksData", function(){
-
-});
-
 Meteor.publish("DecksArchetypesNameRegex", function(format, DecksArchetypes_name){
     var DecksArchetypesRegex = new RegExp("^" + DecksArchetypes_name.replace(/[-']/g, ".") + "$", "i");
-
 
     return DecksArchetypes.find({format : format, name : {$regex : DecksArchetypesRegex}}, {limit : 1})
 });

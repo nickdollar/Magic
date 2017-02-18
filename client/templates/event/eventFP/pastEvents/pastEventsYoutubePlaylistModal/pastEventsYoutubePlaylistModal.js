@@ -43,7 +43,6 @@ Template.pastEventsYoutubePlaylistModal.onRendered(function(){
 
             var youtubePlaylistMatch = youtubePlaylistRegex.exec($(tmp.find("#youtubePlaylist")).val());
 
-            console.log(youtubePlaylistMatch);
             var playlist = "";
             if(youtubePlaylistMatch[1] == "playlist"){
                 playlist = youtubePlaylistMatch[7];

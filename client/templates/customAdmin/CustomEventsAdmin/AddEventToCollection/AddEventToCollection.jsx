@@ -19,8 +19,8 @@ export default class AddEventToCollection extends React.Component{
                 <button onClick={()=>this.callFunction("fixLeagueDailyEvent")} type="button"
                         style={{backgroundColor : "#3399ff"}} className="btn btn-primary btn-block">Fix League Daily Events</button>
 
-                <button onClick={()=>this.callFunction("methodEventMTGOPTQGetInfoOld", {format : this.props.format, days : 30})} type="button" className="btn btn-primary btn-block">Get New MTGOPTG</button>
-                <button onClick={()=>this.callFunction("methodEventLeagueGetInfoOld", {format : this.props.format, days : 30})} type="button" className="btn btn-primary btn-block">Add 5 Days To Events Dailies and Leagues</button>
+                <button onClick={()=>this.callFunction("methodEventMTGOPTQNewGetEvents", {format : this.props.format})} type="button" className="btn btn-primary btn-block">Get New MTGOPTQ</button>
+                <button onClick={()=>this.callFunction("methodEventMTGOPTQGetInfoOld", {format : this.props.format, days : 30})} type="button" className="btn btn-primary btn-block">Add 30 Days PTQ</button>
                 <button onClick={()=>this.callFunction("fixMTGOPTQEvent")} type="button" className="btn btn-primary btn-block">Fix MTGOPTQ</button>
 
                 <button onClick={()=>this.callFunction("methodGetGPEvents", {format : this.props.format, days : 5})}

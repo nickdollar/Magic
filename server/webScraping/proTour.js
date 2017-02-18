@@ -6,12 +6,8 @@ var monthValues = { jan : 0, january : 0, feb : 1, february : 1, mar : 2, march 
                         jul : 6, july : 6, aug : 7, august : 7, sep : 8, september : 8, oct : 9, october : 9, nov : 10, november : 10, dec : 11, december : 11
                     }
 
-
-
-
-
 getGPEvents = function(){
-
+    console.log("STARTING: getGPEvents");
     var res = Meteor.http.get("http://magic.wizards.com/en/events/coverage");
 
     if(res.statusCode == 200){
@@ -31,15 +27,9 @@ getGPEvents = function(){
                 continue;
             }
 
-            event.venue = "WotC";
-            // if($(html[i]).next()[0].nextSibling.nodeValue != null){
-            //     Events.date += $(html[i]).next()[0].nextSibling.nodeValue;
-            // }
-
             if($(html[i]).next().html() != null && $(html[i]).next().html() != ""){
                 event.edition = $(html[i]).next().html();
             }
-
 
             if(event.edition != null){
                 continue;
@@ -48,7 +38,6 @@ getGPEvents = function(){
             if(!/(modern|legacy|standard|vintage)/i.test(event.DateFormat)){
                 continue;
             }
-
 
             if(event.city != null && event.city != ""){
                 eventCorrected.city = event.city;
@@ -63,12 +52,13 @@ getGPEvents = function(){
                 eventCorrected.format = eventCorrected.format.toLowerCase();
             }
 
-            // if(Events.edition != null && Events.edition != ""){
-            //     eventCorrected.edition = Events.edition;
-            // }
-
             eventCorrected.url = "http://magic.wizards.com" + $(html[i]).attr("href");
             eventCorrected.type = "GP";
+            eventCorrected.venue = "WotC";
+
+            if(Events.findOne({city : eventCorrected.city, date : eventCorrected.date})){
+                continue;
+            };
 
             Events.update(
                 {city : eventCorrected.city, date : eventCorrected.date},
@@ -77,8 +67,6 @@ getGPEvents = function(){
                 },
                 {upsert : true}
             )
-
-
 
             var eventRes = Meteor.http.get(eventCorrected.url);
             if (eventRes.statusCode == 200) {
@@ -102,6 +90,7 @@ getGPEvents = function(){
             console.log("end");
         }
     }
+    console.log("ENDING: getGPEvents");
 }
 
 GPEventNotFound = function(Events_id){
@@ -223,7 +212,7 @@ TOP 64 DECKLISTS
 
 GPEventHTMLMain = function(Events_id){
     console.log("START: GPEventHTMLMain");
-    var event = Events.findOne({_id : Events_id, state : "HTMLMain"});
+    var event = Events.findOne({_id : Events_id, $or : [{state : "HTMLMain"}, {state : "HTMLFail"}, {state : "HTMLPartial"}]});
 
     EventsHtmls.remove({Events_id : Events_id});
 
@@ -321,7 +310,6 @@ GPEventHTMLMain = function(Events_id){
 
 GPEventHTML = function(Events_id){
     console.log("START: GPEventHTML");
-    console.log(Events_id);
     var event = Events.findOne({_id : Events_id, type : "GP", state : "HTML"});
     if(!event) return;
 
@@ -383,17 +371,11 @@ GPEventHTML = function(Events_id){
             result = null;
         }
 
-        if( result == null){
-            console.log($(decks[i]).find('h4').html());
-            console.log(getGPDeckInfo($(decks[i]).find('h4').html()));
-
-        }
         var position = null;
         var player = null;
 
 
         if(result){
-            console.log(result);
             position = result.position;
             player = result.fullName;
         }
@@ -507,8 +489,6 @@ getGPDeckInfo = function(information){
     information = fixNames(information);
     var temp = {};
     var namePatt = new RegExp(/(?:\b\S+\b +)+?\b\S+\b(?=(?:'s?| -| U\/W| R\/W))/i);
-    console.log(information);
-    console.log(information.match(namePatt));
     temp.player = information.match(namePatt)[0];
     return temp;
 }

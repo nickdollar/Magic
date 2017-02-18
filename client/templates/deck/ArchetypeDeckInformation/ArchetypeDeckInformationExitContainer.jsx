@@ -2,7 +2,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import ArchetypeDeckInformationExit from './ArchetypeDeckInformationExit.jsx';
 
 export default ArchetypeDeckInformationExitContainer = createContainer(({format, archetype, listLoading}) => {
-    console.log("ArchetypeDeckInfromationExitContainer");
 
     if(listLoading){
         return {

@@ -109,6 +109,23 @@ export default class FixDecksWithoutNames extends React.Component{
     }
 
     render(){
+
+
+        const options = {
+            options : {
+                sizePerPage : 10,
+                hideSizePerPage: true
+            },
+            selectRow : {
+                selected : this.state.selectedRows,
+                mode : "checkbox",
+                clickToSelect : true,
+                onSelect : this.selectedEvent.bind(this),
+                onSelectAll : this.onSelectAll.bind(this)
+            },
+            pagination : true
+        }
+
         return (
             <div>
                 <div>

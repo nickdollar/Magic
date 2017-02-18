@@ -25,39 +25,49 @@ typeOptionsArray = { null : {},
 export default class Deck extends React.Component{
     constructor() {
         super();
+        this.state = {firstLoaded : false};
     }
 
     componentDidMount() {
+       this.popover();
+    }
+
+
+    popover(){
         $('.js-imagePopOver').off("popover");
         $('.js-imagePopOver').popover({
             html: true,
             trigger: 'hover',
+            placement : "auto right",
             content: function () {
+                var cardQuery = CardsData.findOne({name : $(this).data('name')});
                 var cardName = encodeURI($(this).data('name'));
-                cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                var linkBase = "https://mtgcards.file.core.windows.net/cards/";
-                var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
-                var finalDirectory = linkBase+cardName+".full.jpg" + key;
-                return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                var html = "";
+                if(!cardQuery){
+                    return "";
+                }
+                if(cardQuery.names){
+                    cardQuery.names.forEach((card)=>{
+                        cardName = card.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                        var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                        var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                        var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                        html += '<span><img src="'+finalDirectory +'" style="height: 310px; width: 223px"/></span>';
+                    })
+                }else{
+                    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                    var linkBase = "https://mtgcards.file.core.windows.net/cards/";
+                    var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
+                    var finalDirectory = linkBase+cardName+".full.jpg" + key;
+                    html += '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
+                }
+                return html;
+
             }
         });
     }
-
     componentDidUpdate() {
-
-        $('.js-imagePopOver').off("popover");
-        $('.js-imagePopOver').popover({
-            html: true,
-            trigger: 'hover',
-            content: function () {
-                var cardName = encodeURI($(this).data('name'));
-                cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-                var linkBase = "https://mtgcards.file.core.windows.net/cards/";
-                var key = "?sv=2015-12-11&ss=f&srt=o&sp=r&se=2017-07-01T10:06:43Z&st=2017-01-03T02:06:43Z&spr=https&sig=dKcjc0YGRKdFH441ITFgI5nhWLyrZR6Os8qntzWgMAw%3D";
-                var finalDirectory = linkBase+cardName+".full.jpg" + key;
-                return '<img src="'+finalDirectory +'" style="height: 310px; width: 223px"/>';
-            }
-        });
+        this.popover();
     }
 
     getCardsByType(type) {
@@ -140,6 +150,20 @@ export default class Deck extends React.Component{
         return sideboard;
     }
 
+    componentWillReceiveProps(nextProps){
+        if(!nextProps.listLoading && this.state.firstLoaded == false){
+            this.setState({firstLoaded : true})
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(nextProps.listLoading){
+            return false;
+        }
+
+        return true;
+    }
+
 
     getHTMLColors(card){
         if(typeof card.manacost == "undefined") return [];
@@ -206,8 +230,7 @@ export default class Deck extends React.Component{
     }
 
     render() {
-
-        if(this.props.listLoading){return <div>Loading...</div>};
+        if(!this.state.firstLoaded){return <div>Loading...</div>};
 
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.DeckSelected.main);
         var resultMain = [];
@@ -219,8 +242,8 @@ export default class Deck extends React.Component{
             resultMain.push(
                 typesSeparated[type].map((card)=>{
                     return  <div className="cardLine" key={card.name}>
-                                <div className="cardQuantityAndNameWrapper" data-name={card.name}>
-                                    <span className="quantity">{card.quantity}</span><span data-name={card.name} className="js-imagePopOver">{card.name}</span>
+                                <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
+                                    <span className="quantity">{card.quantity}</span><span data-name={card.name}>{card.name}</span>
                                 </div>
                                 <div className="cardInfo">
                                     <div className="manaValue">
@@ -239,8 +262,8 @@ export default class Deck extends React.Component{
 
         var resultSideboard = sideboardCards.map((card)=>{
         return <div className="cardLine" key={card.name}>
-                <div className="cardQuantityAndNameWrapper" data-name={card.name}>
-                    <span className="quantity">{card.quantity}</span><span className="name js-imagePopOver" data-name={card.name}>{card.name}</span>
+                <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
+                    <span className="quantity">{card.quantity}</span><span className="name " data-name={card.name}>{card.name}</span>
                 </div>
                 <div className="cardInfo">
                     <div className="manaValue">
@@ -255,7 +278,7 @@ export default class Deck extends React.Component{
         })
 
            return (
-            <div className="deckContainer">
+            <div className="DeckContainer">
                 <span ref={"error"} className="error"></span>
                 <div className="mainSide">Main</div>
                 <div className="deckBlock">

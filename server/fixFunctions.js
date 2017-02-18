@@ -31,7 +31,6 @@ fixNamesOnDecksNames = function(){
 
     DecksArchetypes.find({}).forEach(function(obj){
         var name = deckNameAndArchetype(obj.name);
-        console.log(name);
         DecksArchetypes.update({_id : obj._id},
             {$set : {name : name}}
         )

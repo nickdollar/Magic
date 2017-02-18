@@ -13,8 +13,8 @@ export default class CustomAdmin extends React.Component{
 
     render(){
         return (
-            <div>
-                <AddDecksNamesContainer />
+            <div className="CustomDecksNamesAdmin">
+                <AddDecksNamesContainer format={this.props.format}/>
             </div>
         )
     }

@@ -69,8 +69,8 @@ Meteor.publish('DecksDataQueryProjection', function(query, project){
     return DecksData.find(query, project);
 });
 
-Meteor.publish('DecksWithoutNamesContainer', function(query, projection){
-    return DecksData.find(query, projection);
+Meteor.publish('DecksWithoutNamesContainer', function(state, format, limit, skip){
+    return DecksData.find({state : state, format : format}, {limit : limit, skip : skip, fields : {state : 1}});
 });
 
 Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id, Events_id){
@@ -250,16 +250,15 @@ Meteor.publish('DecksAutoPercentage100AutoNamingQuantity', function(format){
 Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameQuantity', function(format){
     return  DecksData.find({
             format: format,
-            type : {$in : ["league", "daily"]},
-            $or : [
-                    {"main.wrongName" : true},
-                    {"sideboard.wrongName" : true}
+            $or :   [
+                        {"main.wrongName" : true},
+                        {"sideboard.wrongName" : true}
                     ]
 
-        },
-        {
-            fields : {DecksNames_id : 1, format : 1, type : 1, autoNaming : 1, autoPercentage : 1, main : 1, sideboard: 1}
-        })
+            },
+            {
+                fields : {DecksNames_id : 1, main : {$elemMatch : {wrongName : true}}, sideboard : {$elemMatch : {wrongName : true}}, sideboard : 1, format : 1}
+            })
 });
 
 Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameComplete', function(format){
@@ -275,7 +274,6 @@ Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameComplete', function(format
 });
 
 Meteor.publish('DecksAutoPercentageLessThan100LeagueDailyQuantity', function(format){
-    console.log(format);
     return  DecksData.find({
             format: format,
             type : {$in : ["league", "daily"]},

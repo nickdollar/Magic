@@ -29,8 +29,13 @@ getCssManaFromDeck = function(colors){
 }
 
 
-getHTMLColors = function(colors){
-    var html = '<td class="tableMana">';
+getHTMLColors = function(colors, size){
+    if(!size ){
+        size = "14px";
+    } else{
+        size = size +"px"
+    }
+    var html = '<span class="tableMana" style="font-size: '+size +'">';
     for(var obj in colors){
         if(obj === "B" && colors[obj]){html +=      '<span class="mana sb"></span>'}
         else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
@@ -39,6 +44,7 @@ getHTMLColors = function(colors){
         else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
         else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
     }
+    html += '</span>';
     return html;
 }
 
@@ -56,31 +62,6 @@ getCssManaByNumberFromDeckNameById = function(DecksNames_id){
         else if(obj === "W" && deckName.colors[obj]){str.push( {mana :'sw' })}
     }
     return str;
-}
-
-
-getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
-    var deckArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
-    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
-    if(deckArchetype.DecksNames == null) return;
-    if(!deckArchetype.DecksNames.length) return;
-
-    DecksNames.find({$or : deckArchetype.DecksNames}).forEach(function(obj){
-        for(var color in obj.colors){
-            colors[color] += obj.colors[color];
-        }
-    });
-
-    var html = '<td class="tableMana">';
-    for(var obj in colors){
-        if(obj === "B" && colors[obj]){html += '<span class="mana sb"></span>'}
-        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
-        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
-        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
-        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
-        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
-    }
-    return html;
 }
 
 getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
@@ -207,6 +188,23 @@ getManaCss = function(value){
         else if(res[0] === "W/U"){str.push({mana :'swu'}) }
     }
     return str;
+}
+
+getDistanceBetweenTwoCoords = (coords1, coords2)=>{
+
+    var R = 3959; // miles
+    var φ1 = coords1.latitude.toRad();
+    var φ2 = coords2.latitude.toRad();
+    var Δφ = (coords2.latitude-coords1.latitude).toRad();
+    var Δλ = (coords2.longitude-coords1.longitude).toRad();
+
+    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    var d = R * c;
+    return d;
 }
 
 Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {

@@ -1,6 +1,6 @@
 import React from 'react' ;
-import SubmitDeckForm from "./SubmitDeckForm.jsx"
-import SubmitTokenFormContainer from "./SubmitTokenFormContainer.jsx"
+import SubmitDeckForm from "./SubmitDeckForm/SubmitDeckForm.jsx"
+import SubmitTokenFormContainer from "./SubmitTokenForm/SubmitTokenFormContainer.jsx"
 
 
 class SubmitDeck extends React.Component {
@@ -21,7 +21,13 @@ class SubmitDeck extends React.Component {
     }
 
     deckSubmitted(){
-        console.log("deckSubmitted");
+        this.setState({
+            isTokenEntered : false,
+            event : {}
+        })
+    }
+
+    resetAll(){
         this.setState({
             isTokenEntered : false,
             event : {}
@@ -29,12 +35,15 @@ class SubmitDeck extends React.Component {
     }
 
 
-
     render() {
         return (
-            <div className="addNameToEvent">
+            <div className="SubmitDeckComponent">
+                <h3>Add Deck To Event</h3>
+
                 {this.state.isTokenEntered ? <SubmitDeckForm event={this.state.Event}
-                                                             deckSubmitted={this.deckSubmitted.bind(this)}/>
+                                                             deckSubmitted={this.deckSubmitted.bind(this)}
+                                                             resetAll={this.resetAll.bind(this)}
+                    />
                     :
                     <SubmitTokenFormContainer tokenConfirmed={this.tokenConfirmed.bind(this)}/>}
             </div>

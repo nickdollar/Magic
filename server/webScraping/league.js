@@ -44,6 +44,11 @@ eventLeagueGetInfoOld = function(format, days){
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
         var res = Meteor.http.get(url);
 
+
+        if(Events.findOne({type : type, date : date, format : format})){
+            continue;
+        }
+
         Events.update(
             {type : type, date : date, format : format},
             {
@@ -54,8 +59,7 @@ eventLeagueGetInfoOld = function(format, days){
                     type: type,
                     url : url,
                     state : "startProduction",
-                    venue : "mtgo"
-
+                    venue : "MTGO"
                 }
             },
             {upsert : true}
@@ -82,7 +86,6 @@ eventLeagueGetInfoOld = function(format, days){
                 }
             );
         }
-
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
@@ -106,7 +109,7 @@ eventLeagueGetNewEvents = function(format){
         type = "league";
     }
 
-    var event = Events.findOne({type : type}, {sort : {date : -1}, limit : 1});
+    var event = Events.findOne({format : format, type : type}, {sort : {date : -1}, limit : 1});
     var date = null;
     if(event==null){
         date = new Date();
@@ -124,32 +127,35 @@ eventLeagueGetNewEvents = function(format){
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
         var res = Meteor.http.get(url);
 
-        Events.update(
-            {type : type, date : date, format : format},
-            {
-                $setOnInsert : {
-                    date: date,
-                    format : format,
-                    name : leagueTypes[format],
-                    type: type,
-                    url : url
-                }
-            },
-            {upsert : true}
-        );
 
-        if (res.statusCode == 200) {
-            var buffer = res.content;
-            var $ = cheerio.load(buffer);
-            var deckMeta = $('#main-content');
-            var state = "pre";
-            if(deckMeta.length == 0){
-                console.log("Page Doesn't exists");
-            }else{
-                state = "exist";
-            }
+        if(!Events.findOne({type : type, date : date, format : format})){
+            Events.update(
+                {type : type, date : date, format : format},
+                {
+                    $setOnInsert : {
+                        date: date,
+                        format : format,
+                        name : leagueTypes[format],
+                        type: type,
+                        url : url
+                    }
+                },
+                {upsert : true}
+            );
+
+            if (res.statusCode == 200) {
+                var buffer = res.content;
+                var $ = cheerio.load(buffer);
+                var deckMeta = $('#main-content');
+                var state = "pre";
+                if(deckMeta.length == 0){
+                    console.log("Page Doesn't exists");
+                }else{
+                    state = "exist";
+                }
                 console.log("page exists");
             }
+
             Events.update(
                 {type : type, date : date, format : format},
                 {
@@ -158,6 +164,9 @@ eventLeagueGetNewEvents = function(format){
                     }
                 }
             );
+        }
+
+
             date = new Date(date.setDate(date.getDate() + 1));
         }
 }
@@ -167,7 +176,7 @@ notFoundEvent = function(Event_id){
     var eventNotFound = Events.findOne({_id : Event_id, state : "notFound"});
 
     if(!eventNotFound){return};
-    var res = Meteor.http.get(eventNotFound.url);
+    var res = Meteor.http.get(eventNotFound.url, {timeout : 10000});
 
     if (res.statusCode == 200) {
         var buffer = res.content;
@@ -187,8 +196,6 @@ notFoundEvent = function(Event_id){
                 }
             );
         }
-
-
     }else{
         var days = 10*24*60*60*1000;
         if((new Date) - Events.findOne({_id : "RaXQGbAdNHkHSC7dj"}).date > days){
@@ -374,6 +381,5 @@ getDeckInfo = function(information){
     }else if(results.length==3){
         temp.score = {victory : parseInt(results[0]), draw : parseInt(results[1]), loss : parseInt(results[2])}
     }
-    console.log(temp);
     return temp;
 }

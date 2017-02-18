@@ -14,7 +14,6 @@ export default class CustomDecksDataAdmin extends React.Component{
     }
 
     render(){
-        console.log(this.props.format);
         return (
             <div>
                 <button onClick={this.updateDatabase.bind(this)}></button>

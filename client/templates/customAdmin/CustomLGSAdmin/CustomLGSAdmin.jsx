@@ -1,22 +1,25 @@
 import React from 'react' ;
-import StateListContainer from "/client/dumbReact/StatesList/StateListContainer.jsx"
-
+import StateListContainer from "/client/dumbReact/StatesList/StateListContainer.jsx";
+import ListByStateTable from "./ListByState/ListByState.jsx";
 
 export default class CustomLGSAdmin extends React.Component {
     constructor(){
         super();
-
     }
 
+
     render(){
+        const state = ["pending", "confirmed"];
+
         return(
             <div className="CustomLGSAdminComponent">
                 <StateListContainer collection="LGS"
                                     subscription="LGSStatesList"
                                     notState={[]}
-                                    states={["created", "confirmed"]}
-                                    format={this.props.format}
+                                    states={["pending", "confirmed"]}
                 />
+                <ListByStateTable state={state} format={this.props.format}/>
+
             </div>
         );
     }

@@ -1,6 +1,7 @@
 import React from "react";
 
 var types = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
+
 typeOptions = { null : {},
     artifact : {creature : false, artifact : true},
     creature : {creature : true},

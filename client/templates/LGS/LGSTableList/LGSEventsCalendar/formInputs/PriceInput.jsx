@@ -9,12 +9,9 @@ class PriceInput extends React.Component{
     }
 
     handleChange (e) {
-        console.log(e.target.value);
         if(e.target.value >= 0){
-            console.log("NNNNNNNNNNNNNN");
             this.setState({inputValue : e.target.value})
         }else{
-            console.log("BBBBBBBBBBBBB");
             this.setState({inputValue : 0})
         }
         // this.setState({inputValue : 0})

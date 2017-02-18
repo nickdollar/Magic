@@ -121,7 +121,6 @@ Template.selectedEvent.events({
 
 Template.selectedEvent.onRendered(function(){
     if ($.fn.DataTable.isDataTable("#playersTable")) {
-        console.log("Destroy Table");
         $('#playersTable').DataTable().clear();
         $('#playersTable').DataTable().destroy({
             remove : true

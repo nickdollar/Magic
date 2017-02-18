@@ -1,19 +1,25 @@
 import React from 'react' ;
 import Moment from "moment";
+
 export default class  extends React.Component {
     constructor(){
         super();
+        this.state = {firstLoaded : false};
 
     }
 
-
     eventInfo(event){
         return  <div className="left">
-                    <div><a href={event.url}>{eventsTypes[event.type]} - {event.format.toTitleCase()}</a></div>
+                    <div><a href={event.url}>{eventsTypes[event.type] ? eventsTypes[event.type] : event.type} - {event.format.toTitleCase()}</a></div>
                     <div>{Moment(event.date).format("L")}</div>
                     <div>Winning Decks: {event.decks}</div>
                 </div>
+    }
 
+    componentWillReceiveProps(nextProps){
+        if(!nextProps.listLoading && this.state.firstLoaded == false){
+            this.setState({firstLoaded : true})
+        }
     }
 
     deckInfo(deck){
@@ -29,15 +35,15 @@ export default class  extends React.Component {
 
         }
         return  <div className="center" >
-                <div className="headerDeckName">{deckName} <span dangerouslySetInnerHTML={{__html : getHTMLColors(deck.colors)}}></span></div>
-                <div className="headerType">{type}</div>
+                <div className="headerDeckName">{deckName} </div>
+                <div className="headerType"><span dangerouslySetInnerHTML={{__html : getHTMLColors(deck.colors, 18)}}></span>{type}</div>
             </div>
 
 
     }
     render(){
 
-        if(this.props.listLoading){
+        if(!this.state.firstLoaded){
             return <div>loading...</div>
         }
 
@@ -52,9 +58,3 @@ export default class  extends React.Component {
     }
 }
 
-
-
-var eventsTypes = {
-    league : "League",
-    daily : "Daily",
-}

@@ -2,7 +2,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import ArchetypeDeckInformationExitContainer from './ArchetypeDeckInformationExitContainer.jsx';
 
 export default ArchetypeDeckInformationEntryContainer = createContainer(({format, archetype}) => {
-    console.log("ArchetypeDeckInformationEntryContainer");
     var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
     var handle = Meteor.subscribe("DecksArchetypesNameRegex", format, archetype);
 

@@ -77,7 +77,6 @@ class LGSEventsCalendar extends React.Component {
                     description : event.description,
                     LGS_id : event.LGS_id,
                     title : event.title
-
                 }
                 this.setState({ showModalEventInfo: true,
                                 eventObj : eventObj
@@ -85,25 +84,35 @@ class LGSEventsCalendar extends React.Component {
             }
         });
 
-        $(calendar).fullCalendar("removeEvents")
+        this.eventsUpdate();
 
-        var events = LGSEvents.find().map((event)=>{
-            event.id = event._id;
-            return event;
-        });
-        $(calendar).fullCalendar("addEventSource", events)
     }
 
-    componentDidUpdate(){
+    eventsUpdate(){
         var calendar = this.refs["calendar"];
         $(calendar).fullCalendar("removeEvents")
         var events = LGSEvents.find().map((event)=>{
             event.id = event._id;
             event.dow = [parseInt(event.day)]
+            if(event.format == "modern"){
+                event.color = "#2E0E02";
+            }else if(event.format == "standard"){
+                event.color = "#764248";
+            }else if(event.format == "legacy"){
+                event.color = "#1E2D2F";
+            }else if(event.format == "vintage"){
+                event.color = "#041F1E";
+            }
+
             return event;
         });
 
+
         $(calendar).fullCalendar("addEventSource", events)
+    }
+
+    componentDidUpdate(){
+        this.eventsUpdate();
     }
 
     handleHideModalEventInfo(){
@@ -123,15 +132,15 @@ class LGSEventsCalendar extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="LGSEventsCalendarContainer">
                 <div ref="calendar"></div>
                 <ModalFirstPage showModal={this.state.showModalAddEvent}
                                 handleHideModal={this.handleHideModalAddEvent.bind(this)}
                                 title="Request To Add Event" >
                     <FormValidate submitMethod="addLGSEvents">
                         <TextFormInput
-                            objectName={"name"}
-                            title="Event Name"
+                            objectName={"title"}
+                            title="Event Title"
                             errorMessage="Name is Missing"
                             required={true}
                         />
@@ -141,7 +150,8 @@ class LGSEventsCalendar extends React.Component {
                             errorMessage="LGS Missing"
                             collection="LGS"
                             subscription="LGSByDistanceToAddEvent"
-                            query={[Session.get("position"), Session.get("distance")]}
+                            serverQuery={[Session.get("position"), Session.get("distance")]}
+                            clientQuery={{}}
                             required={true}
                             fieldUnique="_id"
                             fieldText="name"

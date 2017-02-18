@@ -4,4 +4,15 @@ Meteor.methods({
 
         EventsCalendar.insert(temp);
     },
+    stateConfirmCalendarEvents : function(_ids){
+
+        EventsCalendar.update({_id : {$in : _ids}},
+        {
+            $set : {state : "confirmed"}
+        },
+        {
+            multi : true
+        });
+    },
+
 })

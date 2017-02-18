@@ -2,7 +2,6 @@ import React from 'react';
 import FormValidate from "/client/dumbReact/FormValidate/FormValidate.jsx";
 import TextInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx";
 import Select2Container from "/client/dumbReact/FormValidate/Inputs/Select2/Select2Container.jsx";
-import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio.jsx";
 
 
 export default class CustomAdmin extends React.Component{
@@ -27,23 +26,9 @@ export default class CustomAdmin extends React.Component{
     }
 
     render(){
-
-        var formats = ["standard", "modern", "legacy", "vintage"];
         return (
             <div>
-                <div ref="input">
-                    {formats.map((opt)=>{
-                        return  <label key={opt} className="radio-inline">
-                                    <input onChange={this.formatChange.bind(this, opt)}
-                                           checked={this.defaultRadio(opt)}
-                                           type="radio"
-                                           value={opt}
-                                           name={this.props.objectName}/>
-                                    {opt}
-                                </label>
-                    })}
-                </div>
-                <FormValidate submitMethod="addDeckName" collection="DecksNames" extraFields={{format : this.state.format}}>
+                <FormValidate submitMethod="addDeckName" extraFields={{format : this.props.format}}>
                     <TextInput objectName={"name"}
                                title={"Deck Name"}
                                errorMessage="E-mail is not Valid."
@@ -52,13 +37,14 @@ export default class CustomAdmin extends React.Component{
 
                     <Select2Container objectName={"DecksArchetypes_id"}
                                       title={"Decks Archetype"}
+                                      collection="DecksArchetypes"
                                       errorMessage="Deck Archetype Missing"
-                                      subscription="DecksArchetypesQueryProjection"
-                                      query={{format : this.state.format}}
+                                      subscription="DecksArchetypesFormat"
+                                      serverQuery={[this.props.format]}
+                                      clientQuery={{format : this.props.format}}
                                       projection={{fields : {_id : 1, name : 1}}}
-                                      fieldValue="_id"
+                                      fieldUnique="_id"
                                       fieldText="name"
-
                     />
                 </FormValidate>
             </div>

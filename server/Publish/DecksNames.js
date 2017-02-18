@@ -7,8 +7,6 @@ Meteor.publish("DecksNamesWithoutArchetype", function(){
 });
 
 Meteor.publish("DecksNames_DecksArchetypes_id", function(DecksArchetypes_id){
-
-    console.log(DecksArchetypes_id);
     return DecksNames.find({DecksArchetypes_id : DecksArchetypes_id});
 });
 
@@ -39,9 +37,6 @@ Meteor.publish("DecksNamesMain", function(){
 
 
 Meteor.publish('DecksNamesByArchetypeRegex', function(format, DecksArchetypes) {
-
-    console.log(format, DecksArchetypes);
-
     var DecksArchetypesRegex = new RegExp("^" + DecksArchetypes.replace(/[-']/g, ".") + "$", "i");
 
     var decksArchetypes = DecksNames.find({format : format, name : {$regex : DecksArchetypesRegex}}, {limit : 1}).map((deckArchetype)=>{
@@ -59,7 +54,6 @@ Meteor.publish('deckSelectedSelectedName', function(format, name){
 });
 
 Meteor.publish('DecksNamesByArchetypeNameRegex', function(format, archetypeName) {
-    console.log("PUBLISH: DecksNamesByArchetypeNameRegex")
     var deckArchetype = DecksArchetypes.findOne({format : format, name : {$regex : new RegExp(archetypeName, "i")}});
     return DecksNames.find({format : format, decks : {$gt : 0}, DecksArchetypes_id : deckArchetype._id, decks : {$gte : 0}});
 });

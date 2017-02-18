@@ -1,6 +1,6 @@
 import React from 'react' ;
-import NewsMetaOptions from "./NewsMetaOptions/NewsMetaOptions.jsx";
-import NewsMetaValues from "./NewsMetaValues/NewsMetaValues.jsx";
+import NewsMetaOptions from "./MetaNewsOptions/MetaNewsOptions.jsx";
+import NewsMetaValues from "./MetaNewsValues/MetaNewsValues.jsx";
 
 export default class NewsMetaValue extends React.Component {
     constructor() {
@@ -10,6 +10,27 @@ export default class NewsMetaValue extends React.Component {
 
 
     registerOptions(options){
+        this.state.options = options;
+        Meteor.call("getLastTwenty", this.props.format, (err, data)=>{
+            this.state.data = data;
+            this.updateValues(options)
+        });
+
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(this.props.format != nextProps.format && this.state.options){
+            Meteor.call("getLastTwenty", nextProps.format, (err, data)=>{
+                this.state.data = data;
+                this.updateValues(this.state.options);
+            });
+        }
+    }
+
+
+
+
+    updateValues(options){
         var data = [];
         var temp = Object.assign({}, this.state.data);
         options.forEach((option)=>{
@@ -20,12 +41,8 @@ export default class NewsMetaValue extends React.Component {
         this.setState({tableData : data});
     }
 
-
     componentDidMount(){
-        Meteor.call("getLastTwenty", FlowRouter.getParam("format"), (err, data)=>{
-            var array = [].concat(data.newestDecks, data.newestArchetypes, data.newestCards);
-            this.setState({data : data, tableData : array});
-        });
+
     }
 
     render(){

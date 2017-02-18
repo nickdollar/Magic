@@ -233,8 +233,6 @@ var addPlaylistHooks = {
     // Called when any submit operation succeeds
     onSuccess: function(formType, result) {
         console.log("onSucess");
-        console.log(formType);
-        console.log(result);
     },
 
     // Called when any submit operation fails

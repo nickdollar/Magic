@@ -3,12 +3,10 @@ Meteor.methods({
     createNewDecksArchetype: function (form) {
         var queryCheck = DecksArchetypes.find({format: form.format, name: {$regex: new RegExp("^" + form.name + "$", 'i')}});
 
-        console.log(queryCheck.fetch());
         if (queryCheck.count()) {
             return false;
         }
         form.name = deckNameAndArchetype(form.name);
-        console.log(form.name);
         DecksArchetypes.insert(form);
     },
     createNewDecksNames : function(form){
@@ -19,12 +17,9 @@ Meteor.methods({
         }
         form.name = deckNameAndArchetype(form.name);
 
-        console.log(form);
         DecksNames.insert(form);
     },
-    createCardsFullData : function(){
-        createCardsFullData();
-    }
+
 })
 
 

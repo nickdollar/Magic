@@ -13,31 +13,32 @@ export default class NewMetaTableOptions extends React.Component {
             endDate : new Date(),
             startPosition : 1,
             endPosition : 64,
+            LGS : {type: "lgs", text: "LGS", selected : true},
             venues: [
-                {
-                    venue: "MTGO", text : "MTGO", types: [
-                    {type: "daily", text: "Daily", selected : true},
-                    {type: "league", text: "League", selected : true}
-                ]
-                },
-                {
-                    venue: "WotC",  text : "WotC", types: [
-                    {type: "GP", text: "Grand Prix", selected : true},
-                ]
-                },
-                {
-                    venue: "SCG", text : "SCG", types: [
-                    {type: "SCGSuperIQ", text: "Super IQ", selected : true},
-                    {type: "SCGInviQualifier", text: "Invi Qualifier", selected : true},
-                    {type: "SCGInvitational", text: "Invitational", selected : true},
-                    {type: "SCGClassic", text: "Classic", selected : true},
-                    {type: "SCGOpen", text: "Open", selected : true},
-                    {type: "Players'Championship", text: "Players' Champ", selected : true},
-                    {type: "GrandPrix", text: "Grand Prix", selected : true},
-                    {type: "LegacyChamps", text: "Legacy Champs", selected : true},
-                    {type: "WorldMagicCup", text: "World Magic Cup", selected : true}
-                ]
-                },
+                        {
+                            venue: "MTGO", text : "MTGO", types: [
+                            {type: "daily", text: "Daily", selected : true},
+                            {type: "league", text: "League", selected : true}
+                        ]
+                    },
+                        {
+                            venue: "WotC",  text : "WotC", types: [
+                            {type: "GP", text: "Grand Prix", selected : true},
+                        ]
+                    },
+                        {
+                            venue: "SCG", text : "SCG", types: [
+                            {type: "SCGSuperIQ", text: "Super IQ", selected : true},
+                            {type: "SCGInviQualifier", text: "Invi Qualifier", selected : true},
+                            {type: "SCGInvitational", text: "Invitational", selected : true},
+                            {type: "SCGClassic", text: "Classic", selected : true},
+                            {type: "SCGOpen", text: "Open", selected : true},
+                            {type: "Players'Championship", text: "Players' Champ", selected : true},
+                            {type: "GrandPrix", text: "Grand Prix", selected : true},
+                            {type: "LegacyChamps", text: "Legacy Champs", selected : true},
+                            {type: "WorldMagicCup", text: "World Magic Cup", selected : true}
+                        ]
+                }
             ]
         }
     }
@@ -62,10 +63,6 @@ export default class NewMetaTableOptions extends React.Component {
         });
 
 
-    }
-
-    componentWillReceiveProps(nextProps){
-        this.props.registerOptions(this.requestQuery(), this.props.format);
     }
 
     typeSelectedHandle(venue, type, event){
@@ -117,12 +114,13 @@ export default class NewMetaTableOptions extends React.Component {
         request.endDate = this.state.endDate;
         request.startPosition = this.state.startPosition;
         request.endPosition = this.state.endPosition;
+        request.LGS = this.state.LGS.selected;
 
         return request;
     }
 
     updateOptions(){
-        this.props.registerOptions(this.requestQuery(), this.props.format);
+        this.props.registerOptions(this.requestQuery());
     }
 
 
@@ -131,6 +129,15 @@ export default class NewMetaTableOptions extends React.Component {
         this.props.registerOptions(this.requestQuery());
     }
 
+    checkedLGS(){
+        var objTemp = Object.assign({}, this.state.LGS);
+        if(objTemp.selected){
+            objTemp.selected = false;
+        }else{
+            objTemp.selected = true;
+        }
+        this.setState({LGS : objTemp});
+    }
 
     render(){
         return(
@@ -162,6 +169,15 @@ export default class NewMetaTableOptions extends React.Component {
                             </ul>
                         </div>
                     })}
+
+                    <div className="custom-column">
+                        <div>{this.state.LGS.text}</div>
+                        <ul className="list-unstyled optionsList">
+                            <li>
+                                <input type="checkbox" onChange={(event)=> this.checkedLGS(this.state.LGS, this.state.LGS.type, event)} checked={this.state.LGS.selected}/>{this.state.LGS.text}
+                            </li>
+                        </ul>
+                    </div>
                     <div className="custom-column">
                         <div className="optionListName">Deck Date</div>
                         <div className="inputDiv">

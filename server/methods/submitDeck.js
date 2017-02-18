@@ -53,7 +53,6 @@ Meteor.methods({
 
         },
         importFromDeckName : function(deckNames_id){
-            console.log(deckNames_id);
             var main = DecksData.aggregate(
                 [
                     {$match : {

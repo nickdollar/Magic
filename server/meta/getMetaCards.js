@@ -1,28 +1,20 @@
-getMetaCards = function(format, optionsTypes, timeSpan, mainSideboard){
-    console.log("start createDeckCardsMeta");
-    var days = optionsTimeSpanQuery[timeSpan];
-    var startDate = new Date();
-    var endDate = new Date();
-    startDate.setDate(startDate.getDate() - days);
-
-    var thatOptions = [];
-    for(var i = 0; i < optionsTypes.length; ++i){
-        thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
-    }
-
+getMetaCards = function(format, options){
     var result = {};
-    result.totalDecks = metaTotalDecksCards(format, timeSpan, startDate, endDate, optionsTypes, thatOptions);
-    
-    if(mainSideboard == "main"){
-        result.cards = metaCardsMain(format, timeSpan, startDate, endDate, optionsTypes, thatOptions);
-    }else if(mainSideboard == "sideboard") {
-        result.cards = metaCardsSideboard(format, timeSpan, startDate, endDate, optionsTypes, thatOptions);
-    }else {
-        result.cards = metaCardsMainSideboard(format, timeSpan, startDate, endDate, optionsTypes, thatOptions);
+    result.totalDecks = metaTotalDecksCards(format, options);
+    result.cards = [];
+    if(options.mainSide==0){
+        return result
     }
-    
-    
-    
+
+
+    if(options.mainSide.length == 2){
+        result.cards = metaCardsMainSideboard(format, options);
+    }else if(options.mainSide[0] == "main") {
+        result.cards = metaCardsSideboard(format, options);
+    }else {
+        result.cards = metaCardsMain(format, options);
+    }
+
+
     return result;
-    console.log("end create meta 2");
 }

@@ -1,5 +1,5 @@
 import React from 'react' ;
-import ListByStateTableContainer from './ListByState/ListByStateTableContainer.jsx';
+import ListByStateTableContainer from './ListByStateTable/ListByStateTableContainer.jsx';
 
 export default class CustomEventsCalendar extends React.Component {
     constructor(){
@@ -10,7 +10,8 @@ export default class CustomEventsCalendar extends React.Component {
     render(){
         return(
             <div className="CustomEventsCalendarComponent">
-                <ListByStateTableContainer/>
+                <ListByStateTableContainer format={this.props.format}
+                />
             </div>
         );
     }

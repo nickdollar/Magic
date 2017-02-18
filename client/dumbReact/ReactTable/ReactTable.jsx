@@ -13,7 +13,6 @@ export default class ReactTable extends React.Component {
             return <div>Loading...</div>
         }
 
-        console.log(this.props.rows);
         return(
             <div className="BootstrapTableComponent">
                 <BootstrapTable {...this.props.options} data={this.props.rows}>

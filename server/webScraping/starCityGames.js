@@ -6,20 +6,23 @@ getStarCityGamesEvents = function(format) {
     var url = "http://www.starcitygames.com/";
     var resMainPage = Meteor.http.get(url);
     if (resMainPage.statusCode == 200) {
-        console.log("GGGGGGGGGGGGG");
         var $resMainPage = cheerio.load(resMainPage.content, {decodeEntities : false});
         var eventsLinks = $resMainPage("#content_decks_" + format + " li a");
 
         for(var i = 0; i < eventsLinks.length; i++){
-            console.log($resMainPage(eventsLinks[i]).html());
-
-            var eventPattern = /(\d+\/\d+) (SCG Super IQ|Invi Qualifier|SCG Invitational|SCG Classic|SCG Open|Grand Prix|Legacy Champs|World Magic Cup) (.*), (\w\w)/i;
+            var eventPattern = /(\d+\/\d+) (?:SCG )?(Super IQ|Invi Qualifier|Invitational|Classic|Players' Championship|Open|Grand Prix|Legacy Champs|World Magic Cup) (.*), (\w\w)/i;
             var eventPatternMatch = $resMainPage(eventsLinks[i]).html().match(eventPattern);
             var event = {};
             if(eventPatternMatch == null){
                 continue
             };
-            event.date = new Date(eventPatternMatch[1] + "/2017");
+
+            if(eventPatternMatch[1].slice(0, 2)=="12" || eventPatternMatch[1].slice(0, 2)=="11" ){
+                event.date = new Date(eventPatternMatch[1] + "/2016");
+            }else{
+                event.date = new Date(eventPatternMatch[1] + "/2017");
+            }
+
             event.type = "SCG" + eventPatternMatch[2].replace(/\s/g, "");
             event.city = eventPatternMatch[3];
             event.country = eventPatternMatch[4];
@@ -29,7 +32,7 @@ getStarCityGamesEvents = function(format) {
 
             if(Events.findOne({city : event.city, event : event.date, format : format, type : event.type}))
             {
-                return;
+                continue;
             }
 
             Events.update({city : event.city, event : event.date, format : format, type : event.type},
@@ -176,7 +179,7 @@ SCGEventHTML = function(_id){
             type : event.type,
             player : $decksBlocks(decks[i]).find(".player_name a").html(),
             format : event.format,
-            position :$decksBlocks(decks[i]).find(".deck_played_placed").html().match(positionPatt)[0]
+            position : parseInt($decksBlocks(decks[i]).find(".deck_played_placed").html().match(positionPatt)[0])
         }
         var mainCards = $decksBlocks(decks[i]).find(".decklist_heading+ ul li");
         var sideboardCards = $decksBlocks(decks[i]).find(".deck_sideboard li");

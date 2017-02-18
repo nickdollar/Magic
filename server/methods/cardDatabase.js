@@ -1,9 +1,53 @@
 
 
+checkQuantityOfCards = function() {
+    console.log("START: checkQuantityOfCards");
+
+    var myobject = JSON.parse(Assets.getText('AllCards.json'));
+    var cardsSet = new Set();
+    for (var key in myobject) {
+        var obj = clone(myobject[key]);
+        var data = {};
+
+        obj.name = obj.name.toTitleCase();
+
+        if(obj.hasOwnProperty('layout')){
+            data.layout = obj.layout;
+            if(obj.layout == "split"){
+                if(obj.names.length > 2){
+                    obj.name = obj.names.join("/");
+                }else{
+                    obj.name = obj.names.join(" // ");
+                    obj.manaCost = [myobject[obj.names[0]].manaCost,  myobject[obj.names[1]].manaCost].join(" // ");
+                }
+            }
+        }
+
+        if(obj.hasOwnProperty('name')){
+            obj.name = obj.name.replace("\xC6", "Ae");
+            data.name = obj.name;
+        }
+
+        if(obj.hasOwnProperty('names')){
+
+            var temp = obj.names.map((card)=>{
+                return card.replace("\xC6", "Ae").toTitleCase();
+            })
+            data.names = temp;
+        }
+        cardsSet.add(obj.name);
+    }
+    console.log("END: checkQuantityOfCards");
+    return cardsSet.size;
+}
+
 makeCardsData = function(){
+
     console.log("START: makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllCards.json'));
     CardsData.remove({});
+
+
 
     for (var key in myobject) {
 
@@ -13,6 +57,7 @@ makeCardsData = function(){
         obj.name = obj.name.toTitleCase();
 
         if(obj.hasOwnProperty('layout')){
+            data.layout = obj.layout;
             if(obj.layout == "split"){
                 if(obj.names.length > 2){
                     obj.name = obj.names.join("/");
@@ -20,21 +65,28 @@ makeCardsData = function(){
                     obj.name = obj.names.join(" // ");
                     obj.manaCost = [myobject[obj.names[0]].manaCost,  myobject[obj.names[1]].manaCost].join(" // ");
                 }
-
             }
         }
+
+
 
         if(obj.hasOwnProperty('name')){
             obj.name = obj.name.replace("\xC6", "Ae");
             data.name = obj.name;
         }
 
+        if(obj.hasOwnProperty('names')){
+
+            var temp = obj.names.map((card)=>{
+                return card.replace("\xC6", "Ae").toTitleCase();
+            })
+            data.names = temp;
+        }
+
         if(obj.hasOwnProperty('type')){
             obj.type = obj.type.replace("�", "-");
             data.type = obj.type;
         }
-
-
 
         if(obj.hasOwnProperty('types')){
             var types = {
@@ -76,6 +128,9 @@ makeCardsData = function(){
 
         if(obj.hasOwnProperty('power')){
             data.power = obj.power;
+        }
+        if(obj.hasOwnProperty('layout')){
+            data.layout = obj.layout;
         }
 
         CardsData.update( {name : data.name},

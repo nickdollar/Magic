@@ -65,10 +65,6 @@ export default class NewMetaTableOptions extends React.Component {
 
     }
 
-    componentWillReceiveProps(nextProps){
-        this.props.registerOptions(this.requestQuery(), this.props.format);
-    }
-
     typeSelectedHandle(venue, type, event){
         var tempVenues = this.state.venues.concat();
 
@@ -130,7 +126,7 @@ export default class NewMetaTableOptions extends React.Component {
     }
 
     updateOptions(){
-        this.props.registerOptions(this.requestQuery(), this.props.format);
+        this.props.registerOptions(this.requestQuery());
     }
 
 
@@ -139,23 +135,21 @@ export default class NewMetaTableOptions extends React.Component {
         this.props.registerOptions(this.requestQuery());
     }
 
-
     render(){
         return(
-            <div className="MetaTableOptionsComponent">
+            <div className="MetaCardsOptionsComponent">
                 <div className="metaHeader">
                     <div className="optionsHeader">
                         <div className="buttonsContainer">
                             <div className="optionButton">
-                                <button type="submit"
-                                        onClick={this.openOption.bind(this)}
+                                <button onClick={this.openOption.bind(this)}
                                         className="btn btn-default btn-xs options"
                                         style={{display: "inline"}}>Options<span className="caret"></span></button>
 
                             </div>
                         </div>
                     </div>
-                    <div className="metaTitle"><h4>Meta Breakdown</h4></div>
+                    <div className="metaTitle"><h4>Cards Breakdown</h4></div>
                 </div>
                 <div className="content" ref="content">
                     {this.state.venues.map((venue)=>{

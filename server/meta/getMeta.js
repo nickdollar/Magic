@@ -1,5 +1,4 @@
 getMetaAllDecksNames = function(format, optionsTypes, timeSpan, deckArchetypes){
-    console.log("START: getMetaAllDecksNames");
     var startDate = new Date();
     var endDate = new Date();
     var days = optionsTimeSpanQuery[timeSpan];
@@ -10,13 +9,10 @@ getMetaAllDecksNames = function(format, optionsTypes, timeSpan, deckArchetypes){
     for(var i = 0; i < optionsTypes.length; ++i){
         thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
     }
-
     var metaObj = {};
     var DecksNamesMeta = metaDecksNamesMetaPositionONESHOT(format, timeSpan, startDate, endDate, optionsTypes, thatOptions);
     metaObj.totalDecks = DecksNamesMeta.totalDecks;
     metaObj.DecksNamesMeta = DecksNamesMeta.DecksNamesMeta;
-
-    console.log("END: getMetaAllDecksNames");
     return metaObj;
 }
 
@@ -41,25 +37,27 @@ getMetaDecksNamesFromArchetype = function(format, optionsTypes, timeSpan, DecksA
     return metaObj;
 }
 
-getMetaAllArchetypes = function(format, optionsTypes, timeSpan, positionChange){
-    console.log("START: getMetaAllArchetypes");
-    var startDate = new Date();
-    var endDate = new Date();
-    var days = optionsTimeSpanQuery[timeSpan];
-    startDate.setDate(startDate.getDate() - days);
-
-    var thatOptions = [];
-
-    for(var i = 0; i < optionsTypes.length; ++i){
-        thatOptions.push(optionsTypeQuery[optionsTypes[i]]);
+getMetaAllArchetypes = function(format, options, location, distance, positionOption, state, ZIP){
+    list = [];
+    if(options.LGS){
+        if(positionOption == "state" && state !=""){
+            list = LGS.find({state : "confirmed", "location.state" : state}).map((LGS)=>{
+                return LGS._id
+            });
+        }else if(positionOption == "ZIP" && ZIP){
+            var zipInfo = ZipCodes.findOne({ZIP : ZIP});
+            list = LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [[zipInfo.LNG, zipInfo.LAT], distance / 3963.2]}}}).map((LGS)=>{
+                return LGS._id
+            });
+        }else if(positionOption == "GPS" ){
+            if(!location || !distance){
+                list = LGS.find({state : "nothing"});
+            }
+            list = LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [location, distance / 3963.2]}}}).map((LGS)=>{
+                return LGS._id
+            });
+        }
     }
 
-    var metaObj = {};
-    var DecksArchetypesMeta = metaDecksArchetypesMetaONESHOT(format, timeSpan, startDate, endDate, optionsTypes, thatOptions, positionChange);
-    metaObj.totalDecks = DecksArchetypesMeta.total;
-    metaObj.DecksArchetypesMeta = DecksArchetypesMeta.DecksArchetypesMeta;
-
-    console.log(metaObj.totalDecks);
-    console.log("END: getMetaAllArchetypes");
-    return metaObj;
+    return metaDecksArchetypesMetaONESHOT(format, options, list);
 }

@@ -1,29 +1,23 @@
 Meteor.methods({
-
-    MethodCreateMeta : function(format){
+    MethodCreateMeta(format){
         createMeta(format);
     },
-    //META
-    updateMetaCards: function (format) {
-        createDeckCardsMeta(format);
-    },
-    createMetaNewThingsDaysAllFormats : function(){
+    createMetaNewThingsDaysAllFormats(){
         createMetaNewThingsDaysAllFormats();
     },
-    createMetaNewest: function (format) {
+    createMetaNewest(format) {
         createMetaNewThings(format);
     },
-    getMeta : function(format, optionsTypes, timeSpan, deckArchetypes){
+    getMeta(format, optionsTypes, timeSpan, deckArchetypes){
         return getMeta(format, optionsTypes, timeSpan, deckArchetypes);
     },
-    getMetaAllArchetypes : function(format, optionsTypes, timeSpan, positionChange){
-        return getMetaAllArchetypes(format, optionsTypes, timeSpan, positionChange);
+    MethodGetMetaAllArchetypes(format, optionsTypes, location, distance, positionOption, state, ZIP){
+        return getMetaAllArchetypes(format, optionsTypes, location, distance, positionOption, state, ZIP);
     },
-    getMetaDecksNamesFromArchetype : function(format, optionsTypes, timeSpan, DecksArchetypes_id, positionChange){
+    getMetaDecksNamesFromArchetype(format, optionsTypes, timeSpan, DecksArchetypes_id, positionChange){
         return getMetaDecksNamesFromArchetype(format, optionsTypes, timeSpan, DecksArchetypes_id, positionChange);
     },
-    getMetaCards : function(format, optionsTypes, timeSpan, mainSideboard){
-        return getMetaCards(format, optionsTypes, timeSpan, mainSideboard);
+    getMetaCards(format, options){
+        return getMetaCards(format, options);
     }
 })
-

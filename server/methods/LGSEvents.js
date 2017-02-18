@@ -10,7 +10,6 @@ Meteor.methods({
         return true;
     },
     stateConfirmLGSEvents(_ids){
-        console.log(_ids);
         LGSEvents.update({_id : {$in : _ids}},
             {
                 $set : {state : "confirmed"}
@@ -21,7 +20,6 @@ Meteor.methods({
         )
     },
     removeConfirmLGSEvents(_ids){
-
         LGSEvents.remove({_id : {$in : _ids}})
     }
 })

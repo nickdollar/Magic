@@ -65,7 +65,7 @@ meteortoys:allthings
 accounts-ui@1.1.9
 accounts-password@1.3.3
 accounts-base@1.2.14
-accounts-facebook
+accounts-facebook@1.0.11
 #accounts-github
 #accounts-twitter
 #accounts-meetup
@@ -75,7 +75,7 @@ useraccounts:bootstrap
 alanning:roles
 aldeed:autoform
 email@1.1.18
-service-configuration
+service-configuration@1.0.11
 
 
 #dtables plugins
@@ -109,4 +109,8 @@ dburles:google-maps
 lukemadera:autoform-googleplace
 ultimatejs:tracker-react@=1.0.5
 react-meteor-data
-force-ssl
+force-ssl@1.0.13
+
+
+#cookie
+ostrio:cookies

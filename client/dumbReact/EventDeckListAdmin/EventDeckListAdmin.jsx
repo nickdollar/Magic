@@ -16,18 +16,6 @@ export default class EventDeckListAdmin extends React.Component {
         Meteor.call("removeDeckFromLGSEvent", e.target.getAttribute("data-_id"));
     }
 
-    updateResults(){
-        console.log($(this.refs["table"]).find("tr"));
-    }
-
-    addRowBelow(e){
-        console.log(e.target.getAttribute("data-_id"));
-    }
-
-    addRemoveBelow(e){
-        console.log(e.target.getAttribute("data-_id"));
-    }
-
     componentWillReceiveProps(nextProps){
 
     }

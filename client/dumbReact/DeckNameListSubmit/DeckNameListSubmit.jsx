@@ -22,7 +22,6 @@ export default class DeckNameListSubmit extends React.Component{
             if(DecksData.findOne({_id : this.props.DecksData_id}).DecksNames_id){
                 if(DecksNames.findOne({_id : DecksData.findOne({_id : this.props.DecksData_id}).DecksNames_id})){
                     if(!$(this.refs["input"]).val()){
-                        console.log(DecksNames.findOne({_id : DecksData.findOne({_id : this.props.DecksData_id}).DecksNames_id})._id);
                         $(this.refs["input"]).select2().val(DecksNames.findOne({_id : DecksData.findOne({_id : this.props.DecksData_id}).DecksNames_id})._id).trigger('change');
                     }
 

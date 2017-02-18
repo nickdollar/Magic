@@ -15,18 +15,6 @@ class PlayerList extends React.Component {
         Meteor.call("removeDeckFromLGSEvent", DecksData_id);
     }
 
-    updateResults(){
-    console.log($(this.refs["table"]).find("tr"));
-}
-
-    addRowBelow(DecksData_id){
-        console.log(DecksData_id);
-    }
-
-    addRemoveBelow(DecksData_id){
-        console.log(DecksData_id);
-    }
-
     componentWillReceiveProps(nextProps){
         
     }
@@ -41,9 +29,6 @@ class PlayerList extends React.Component {
         var showDecks = this.state.showDecks.concat();
 
         if(index > -1){
-            console.log(index);
-            console.log(showDecks.splice(index, 1));
-            console.log(showDecks);
             this.setState({showDecks : showDecks});
         }else{
             showDecks = this.state.showDecks.concat([DecksData_id]);

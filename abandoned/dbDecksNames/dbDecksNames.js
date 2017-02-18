@@ -176,7 +176,6 @@
 // //         var deckName = Template.currentData().deckName;
 // //         Meteor.call("methodGetDeckNamePercentage", deckName, function(error, data){
 // //             if (error) {
-// //                 console.log(error);
 // //                 return;
 // //             }
 // //             that.deckPercentage.set(data);
@@ -220,8 +219,6 @@
 // // });
 // //
 // // Template.decksPercentageTable.onRendered(function(){
-// // console.log(Template.currentData().decksPercentage);
-// //
 // //     if (! $.fn.dataTable.isDataTable( '#example' ) ) {
 // //         var data = Template.currentData().decksPercentage;
 // //         $('#example').DataTable({

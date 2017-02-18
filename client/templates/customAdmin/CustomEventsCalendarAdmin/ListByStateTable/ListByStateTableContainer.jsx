@@ -3,7 +3,6 @@ import ListByStateTable from './ListByStateTable.jsx';
 
 export default ListByStateTableContainer = createContainer(({format}) => {
     var handle = Meteor.subscribe("EventsCalendarNotConfirmed", format);
-    console.log(format);
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),

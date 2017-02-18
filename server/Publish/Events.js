@@ -21,3 +21,13 @@ Meteor.publish('EventsQueryProjection', function(notState){
 Meteor.publish('EventsByLGS_idArray', function(arraysOfLGS_id){
     return Events.find({LGS_id : {$in : arraysOfLGS_id}, state : "names"});
 });
+
+
+Meteor.publish('EventsSmall', function(states, format){
+    return Events.find({state : {$in : states},  format : format, decks : {$lt : 16}})
+});
+
+Meteor.publish('EventsBig', function(states, format){
+    return Events.find({state : {$in : states}, format : format, decks : {$gte : 16}});
+});
+

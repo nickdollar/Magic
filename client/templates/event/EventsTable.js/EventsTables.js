@@ -2,10 +2,10 @@
 
 Template.EventsTables.helpers({
     eventsSmallSelector : function(){
-        return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$lt : 16} }
+        return {state : {$in : ["decks", "names"]},  format : FlowRouter.getParam("format"), decks : {$lt : 16} }
     },
     eventsBigSelector : function(){
-        return {"validation.allDecksHasNames" : true, format : FlowRouter.getParam("format"), decks : {$gte : 16}}
+        return {state : {$in : ["decks", "names"]}, format : FlowRouter.getParam("format"), decks : {$gte : 16}}
     },
     geoLocation : function(){
         var location = Geolocation.latLng() || { lat: 0, lng: 0 };

@@ -90,7 +90,6 @@ returnLocation = function() {
 AutoForm.addInputType("googlePlaces", {
     template: "customGoogleType",
     valueOut: function() {
-        console.log(returnLocation());
         return returnLocation();
     }
 });

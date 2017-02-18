@@ -1,14 +1,5 @@
 import React from "react";
 
-/*
-<textFormInput
-    objectName={"name"}
-    title="LGS Name"
-    errorMessage="LGS Name is Missing"
-    required={true}
-/>
-*/
-
 export default class textFormInput extends React.Component{
     constructor() {
         super();

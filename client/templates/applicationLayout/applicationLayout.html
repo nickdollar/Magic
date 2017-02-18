@@ -2,23 +2,21 @@
     {{#if subscriptionsReady}}
         <div class="header">
             <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places&callback=initAutocomplete" async defer></script>
-            {{>topMenu}}
+            <!--{{>topMenu}}-->
+            <div class="container">{{> React component=TopMenuContainer}}</div>
+
             {{>typeMenu}}
         </div>
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
         <div class="container">
             {{> Template.dynamic template=main}}
             {{>modals}}
+            <div>
+                <img src="/img/comodo_secure_seal_76x26_transp.png">
+            </div>
         </div>
     {{/if}}
-    <div>
-        <table width="135" border="0" cellpadding="2" cellspacing="0" title="Click to Verify - This site chose GeoTrust SSL for secure e-commerce and confidential communications.">
-            <tr>
-                <td width="135" align="center" valign="top"><script type="text/javascript" src="https://seal.geotrust.com/getgeotrustsslseal?host_name=www.crowdmtg.com&amp;size=S&amp;lang=en"></script><br />
-                    <a href="http://www.geotrust.com/ssl/" target="_blank"  style="color:#000000; text-decoration:none; font:bold 7px verdana,sans-serif; letter-spacing:.5px; text-align:center; margin:0px; padding:0px;"></a></td>
-            </tr>
-        </table>
-    </div>
+
 
 </template>
 
@@ -30,7 +28,7 @@
         <!--{{>latestAddedPlaylist}}-->
     <!--</div>-->
     <div class="row">
-        {{>latestDecks}}
+        <div>{{> React component=LatestDecks}}</div>
     </div>
 </template>
 
@@ -66,21 +64,7 @@
 </template>
 
 <template name="selectedMeta">
-    <div class="row">
-        <div class="col-xs-8">
-            <div class="row">
-                {{>dataTableNewMetaTable}}
-            </div>
-        </div>
-        <div class="col-xs-4" >
-            <div class="row">
-                {{>metaCardTable}}
-            </div>
-            <div class="row">
-                {{>newsTable}}
-            </div>
-        </div>
-    </div>
+    <div>{{> React component=MetaContainer}}</div>
 </template>
 
 <template name="eventsFP">
@@ -89,7 +73,7 @@
 
 <template name="events">
     <div class="row">
-        {{>EventsTables}}
+        {{> React component=EventsTableComponent}}
     </div>
     <div class="row">
         {{>eventsCalendar}}

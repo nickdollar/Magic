@@ -17,21 +17,32 @@ export default class AddArchetypeName extends React.Component{
 
     render(){
         return (
-            <div>
-                <FormValidate submitMethod="insertToCollection" collection="DecksArchetypes">
+            <div className="AddDecksArchetypesContainer">
+                <FormValidate submitMethod="addArchetype">
                     <TextInput objectName={"name"}
-                               title={"Deck Name"}
-                               errorMessage="E-mail is not Valid."
+                               title={"Deck Archetype"}
+                               errorMessage="Archetype is Missing."
                                required={true}
                     />
                     <Radio  objectName={"format"}
                             title={"Format"}
                             errorMessage="Choose A Format."
                             required={true}
-                            opts={["standard", "modern", "legacy", "vintage"]}
+                            opts={[ {value : "standard", text : "standard"},
+                                    {value : "modern", text : "modern"},
+                                    {value : "legacy", text : "legacy"},
+                                    {value : "vintage", text : "vintage"}]}
                             defaultOption="standard"
                     />
-
+                    <Radio  objectName={"type"}
+                            title={"Type"}
+                            errorMessage="Choose A Type."
+                            required={true}
+                            opts={[ {value : "aggro", text : "aggro"},
+                                {value : "combo", text : "combo"},
+                                {value : "control", text : "control"}]}
+                            defaultOption="aggro"
+                    />
                 </FormValidate>
             </div>
         )

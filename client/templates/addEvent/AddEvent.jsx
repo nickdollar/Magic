@@ -3,7 +3,7 @@ import SubmitDeck from './SubmitDeck.jsx/SubmitDeck.jsx';
 import CreateEvent from './CreateEvent/CreateEvent.jsx';
 
 
-class AddEvent extends React.Component{
+export default class AddEvent extends React.Component{
 
 
     constructor(props){
@@ -25,5 +25,3 @@ class AddEvent extends React.Component{
         )
     }
 }
-
-export default AddEvent;

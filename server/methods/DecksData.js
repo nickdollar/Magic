@@ -1,3 +1,5 @@
+import Fuse from "fuse.js";
+
 Meteor.methods({
     addALGSDecksData: function (deck) {
         var totalMain = deck.main.reduce((a, b)=>{
@@ -11,10 +13,18 @@ Meteor.methods({
         var colors = setUpColorForDeckName(deck.main);
 
         deck.main = deck.main.map((card)=>{
-            return {name : card.name, quantity : card.quantity }
+            if(CardsData.findOne({name : card.name})){
+                return {name : card.name, quantity : card.quantity }
+            }else{
+                return {name : card.name, quantity : card.quantity , wrong : true}
+            }
         })
         deck.sideboard = deck.sideboard.map((card)=>{
-            return {name : card.name, quantity : card.quantity }
+            if(CardsData.findOne({name : card.name})){
+                return {name : card.name, quantity : card.quantity }
+            }else{
+                return {name : card.name, quantity : card.quantity , wrong : true}
+            }
         })
 
         // console.log(deck);
@@ -24,10 +34,11 @@ Meteor.methods({
         }
 
         if(Events.findOne({LGS_id : deck.LGS_id, token : deck.token})){
-            console.log(DecksData.update({Events_id : deck._id, player : deck.player},
+            DecksData.update({Events_id : deck._id, player : deck.player},
                 {
                     $set : {
                         Events_id : deck._id,
+                        LGS_id : deck.LGS_id,
                         format : deck.format,
                         type : "lgs",
                         totalMain : totalMain,
@@ -37,13 +48,15 @@ Meteor.methods({
                         totalSideboard : totalSideboard,
                         sideboard : deck.sideboard,
                         date : deck.date,
-                        state : "lgs"
+                        position : 1,
+                        state : "lgs",
+
                     }
                 },
                 {
                     upsert : true
                 }
-            ))
+            )
         }
 
         return message;
@@ -82,6 +95,30 @@ Meteor.methods({
         }
         return "Deck Updated";
     },
+    updateALGSDecksData: function (deck) {
+
+    },
+
+    fixDecksScraped(format){
+        DecksData.find({format : format, state : {$nin : ["manual", "perfect"]}}).forEach((DeckData)=>{
+            if(DecksData.findOne({_id : DeckData._id}).state == "scraped"){
+                var result = findBestResultDeckComparison(DeckData._id);
+                if(result.result == 1){
+                    DecksData.update({_id : DeckData._id},
+                            {
+                                $set : {DecksNames_id : result.DecksNames_id, state : "perfect"}
+                            }
+                    )
+                }else if(result.result > 0.85){
+                    DecksData.update({_id : DeckData._id},
+                        {
+                            $set : {DecksNames_id : result.DecksNames_id, state : "match"}
+                        })
+                }
+            }
+        });
+        console.log("END: fixMTGOPTQEvent");
+    },
     updateMainSide: function (mainSide, DecksData_id) {
 
         var main = mainSide.main.map((card)=>{
@@ -113,7 +150,6 @@ Meteor.methods({
         }, 0);
 
         var colors = setUpColorForDeckName(main);
-        console.log(DecksData_id);
         DecksData.update({_id : DecksData_id},
             {$set : {
                 totalMain : totalMain,
@@ -139,7 +175,6 @@ Meteor.methods({
         )
     },
     removeDeckFromLGSEvent: function (DecksData_id) {
-        console.log(DecksData_id);
         DecksData.remove({_id : DecksData_id});
     },
     addDeckName_idToDeckData(DecksData_id, DecksNames_id){
@@ -150,11 +185,11 @@ Meteor.methods({
             })
     },
     recheckDeckWithWrongCardName(format){
+        console.log("START: recheckDeckWithWrongCardName");
         var cardsWithWrongName = DecksData.aggregate([
             {
                 $match : {
                     format: format,
-                    type : {$in : ["league", "daily"]},
                     $or : [
                         {"main.wrongName" : true},
                         {"sideboard.wrongName" : true}
@@ -186,31 +221,48 @@ Meteor.methods({
                     _id : "$cards.name"
                 }
             }
-
         ])
 
-        cardsWithWrongName.forEach((card)=>{
-            var cardQuery = CardsData.findOne({name : card._id});
-            if(cardQuery){
-                  DecksData.update  (  {"main.name" : cardQuery.name},
-                                        {
-                                            $unset : { "main.$.wrongName" : ""}
-                                        },
-                                        {
-                                            multi : true
-                                        }
-                                    )
+        var allCardsNames = CardsData.find({}, {fields : {name : 1}}).fetch();
 
-                DecksData.update  (  {"sideboard.name" : cardQuery.name},
+        var options = {
+            keys : [{name : "name"}],
+            id : "name",
+            threshold : 0.4
+
+        }
+
+        var fuse = new Fuse(allCardsNames, options);
+
+
+
+        console.log(cardsWithWrongName.length);
+
+        cardsWithWrongName.forEach((card, index)=>{
+            var rightName = fuse.search(card._id)[0];
+
+              DecksData.update  (  {"main.name" : card._id},
+                                    {
+                                        $unset : { "main.$.wrongName" : ""},
+                                        $set : { "main.$.name" : rightName},
+                                    },
+                                    {
+                                        multi : true
+                                    }
+                                )
+
+                DecksData.update  (  {"sideboard.name" : card._id},
                     {
-                        $unset : { "sideboard.$.wrongName" : ""}
+                        $unset : { "sideboard.$.wrongName" : ""},
+                        $set : { "sideboard.$.name" : rightName},
                     },
                     {
                         multi : true
                     }
                 )
-            }
         })
+
+        console.log("END: recheckDeckWithWrongCardName");
     }
 })
 

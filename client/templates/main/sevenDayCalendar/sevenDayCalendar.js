@@ -28,7 +28,7 @@ Template.sevenDayCalendar.onRendered(function(){
     var initializing = false;
 
     that.autorun(function(){
-        that.subscribe("eventsCalendarByFormat", FlowRouter.getParam("format"), {
+        that.subscribe("EventsCalendarAll", {
             onReady : function(){
             }
         });
