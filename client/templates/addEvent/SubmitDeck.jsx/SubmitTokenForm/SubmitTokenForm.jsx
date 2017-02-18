@@ -1,7 +1,7 @@
 import React from "react";
-import LGSNameFieldContainer from "./SubmitTokenForm/LGSNameFieldContainer.jsx";
-import TokenField from "./SubmitTokenForm/TokenField.jsx";
-import PlayerNameInput from "./SubmitTokenForm/PlayerNameInput.jsx";
+import LGSNameFieldContainer from "../SubmitTokenForm/LGSNameFieldContainer.jsx";
+import TokenField from "../SubmitTokenForm/TokenField.jsx";
+import PlayerNameInput from "../SubmitTokenForm/PlayerNameInput.jsx";
 
 
 

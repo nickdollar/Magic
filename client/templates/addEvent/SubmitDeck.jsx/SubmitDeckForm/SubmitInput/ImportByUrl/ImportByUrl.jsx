@@ -8,21 +8,10 @@ class ImportByUrl extends React.Component{
 
     }
 
-    componentWillUnmount(){
-
-    }
-
-    componentDidMount(){
-
-    }
-
     onClick(e){
-
-        console.log(this.refs["input"].value);
         Meteor.call("getDeckFromURL", $(".js-urlInput").val(), (err, value)=>{
             this.props.callParent(value);
         });
-        
     }
 
     render(){
@@ -37,7 +26,6 @@ class ImportByUrl extends React.Component{
                   </span>
                     </div>
                     <p className="help-block">Options: tappedout</p>
-
                 </div>
             </div>
         )

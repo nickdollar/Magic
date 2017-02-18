@@ -82,7 +82,8 @@ class TextDeck extends React.Component{
     render(){
 
         return (
-            <div >
+            <div className="TextDeckComponent">
+                <div>add "sb:" in front of sideboard card </div>
                 <textarea onChange={this.onChangeOnArea.bind(this)}
                           value={this.state.inputValue}
                           ref="textInput"

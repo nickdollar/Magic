@@ -1,8 +1,7 @@
 import React from 'react' ;
-import ImportByUrl from './SubmitInput/ImportByUrl.jsx' ;
-import ImportByFile from './SubmitInput/ImportByFile.jsx' ;
-import ImportByDeckContainer from './SubmitInput/ImportByDeckContainer.jsx' ;
-import DeckAndSideboardInput from './SubmitInput/DeckAndSideboardInput.jsx' ;
+import ImportByFile from './SubmitInput/ImportByFile/ImportByFile.jsx' ;
+import ImportByDeckContainer from './SubmitInput/ImportByDeck/ImportByDeckContainer.jsx' ;
+import DeckAndSideboardInput from './SubmitInput/DeckAndSideboardInput/DeckAndSideboardInput.jsx' ;
 
 
 class SubmitDeckForm extends React.Component {
@@ -23,13 +22,10 @@ class SubmitDeckForm extends React.Component {
         this.setState({deck : temp})
     }
 
-
-
-
     render() {
         return (
-            <div>
-                <ImportByUrl setDeck={this.setDeck.bind(this)}/>
+            <div className="SubmitDeckFormComponent">
+                <button onClick={this.props.resetAll}>Close Form</button>
                 <ImportByFile setDeck={this.setDeck.bind(this)}/>
                 <ImportByDeckContainer setDeck={this.setDeck.bind(this)}/>
                 <DeckAndSideboardInput  deck={this.state.deck}

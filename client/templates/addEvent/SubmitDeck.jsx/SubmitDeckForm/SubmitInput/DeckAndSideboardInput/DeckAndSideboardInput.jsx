@@ -1,10 +1,10 @@
 import React from 'react' ;
-import DeckListContainer from "./DeckListContainer.jsx";
-import TextDeck from "./TextDeck.jsx";
+import DeckListContainer from "./DeckList/DeckListContainer.jsx";
+import TextDeck from "./TextDeck/TextDeck.jsx";
 
 
 
-class DeckAndSideboardInput extends React.Component{
+export default class DeckAndSideboardInput extends React.Component{
     constructor(props){
         super();
         this.state = {
@@ -82,7 +82,6 @@ class DeckAndSideboardInput extends React.Component{
         var name = e.currentTarget.getAttribute("data-name");
         var mainSideboard = e.currentTarget.getAttribute("data-mainSideboard");
 
-        console.log(this.state.deck);
         var tempArray = Object.assign({}, this.state.deck);
         if(mainSideboard=="main")
         {
@@ -162,7 +161,6 @@ class DeckAndSideboardInput extends React.Component{
     submitDeck(){
         var submitDeck = Object.assign({}, this.state.deck, this.props.event);
         Meteor.call("addALGSDecksData", submitDeck, (err, data)=>{
-            console.log(data);
             this.setState({submitMessage : data})
         });
     }
@@ -204,4 +202,3 @@ class DeckAndSideboardInput extends React.Component{
     }
 }
 
-export default DeckAndSideboardInput;
