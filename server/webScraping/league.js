@@ -210,7 +210,7 @@ notFoundEvent = function(Event_id){
         }
     }
 
-    console.log("END: notFoundEvent");
+    console.log("   END: notFoundEvent");
 }
 
 eventLeagueDailyDownloadHTML = function(_id){
@@ -259,10 +259,11 @@ eventLeagueDailyDownloadHTML = function(_id){
             );
         }
     }
-    console.log("END: eventLeagueDailyDownloadHTML");
+    console.log("   END: eventLeagueDailyDownloadHTML");
 };
 
 eventLeagueDailyExtractDecks = function(_id){
+    console.log("START: eventLeagueDailyExtractDecks");
     var event = Events.findOne({_id : _id, state : "HTML"});
 
     if(event == null) return;
@@ -293,7 +294,7 @@ eventLeagueDailyExtractDecks = function(_id){
             totalMain += quantity;
             var name = $(mainCards[j]).find('.card-name').text();
             name = fixCards(name);
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 main.push(
                     {
                         name : name,
@@ -319,7 +320,7 @@ eventLeagueDailyExtractDecks = function(_id){
             totalSideboard += quantity;
             var name = $(sideboardCards[j]).find('.card-name').text();
             name = fixCards(name);
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 sideboard.push(
                     {
                         name : name,
@@ -356,6 +357,7 @@ eventLeagueDailyExtractDecks = function(_id){
             }
         }
     );
+    console.log("   END: eventLeagueDailyExtractDecks");
 }
 
 var leagueTypes = {

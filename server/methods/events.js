@@ -92,7 +92,7 @@ Meteor.methods({
                 eventLeagueDailyExtractDecks(event._id);
             }
         });
-        console.log("END: fixLeagueDailyEvent");
+        console.log("   END: fixLeagueDailyEvent");
     },
 
     fixMTGOPTQEvent(){
@@ -111,7 +111,7 @@ Meteor.methods({
                 eventHTMLMTGOPTQ(event._id);
             }
         });
-        console.log("END: fixMTGOPTQEvent");
+        console.log("   END: fixMTGOPTQEvent");
     },
     fixGPEvent(){
         console.log("START: fixGPEvent");
@@ -129,7 +129,7 @@ Meteor.methods({
                 GPEventHTML(event._id);
             }
         });
-        console.log("END: fixGPEvent");
+        console.log("   END: fixGPEvent");
     },
     fixSCGEvent(){
         console.log("START: fixGPEvent");
@@ -148,7 +148,7 @@ Meteor.methods({
                 SCGEventHTML(event._id);
             }
         });
-        console.log("END: fixGPEvent");
+        console.log("   END: fixGPEvent");
     }
 })
 
@@ -202,7 +202,7 @@ fixEventsStandard = function(){
         }
     }
 
-    console.log("END: fixEventsStandard");
+    console.log("   END: fixEventsStandard");
 }
 
 

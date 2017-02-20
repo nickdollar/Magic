@@ -58,7 +58,7 @@ getStarCityGamesEvents = function(format) {
             }
         }
     }
-    console.log("END: getStarCityGamesEvents");
+    console.log("   END: getStarCityGamesEvents");
 }
 
 SCGnotFound = function(Events_id){
@@ -150,12 +150,10 @@ SCGEventExists = function(_id) {
             }
         )
     }
-    console.log("END: SCGEventExists");
+    console.log("   END: SCGEventExists");
 }
 
 SCGEventHTML = function(_id){
-
-
     console.log("START: SCGEventHTML");
     DecksData.remove({Events_id : _id});
     var event = Events.findOne({_id : _id, state : "HTML"});
@@ -193,14 +191,18 @@ SCGEventHTML = function(_id){
             var quantity = parseInt(regexResult[1]);
             var cardName = regexResult[2].toTitleCase();
             totalMain += quantity;
-            if(CardsFullData.find({name : cardName}).count()) {
+            cardName = fixCards(cardName);
+
+            if(CardsFullData.find({name : cardName}, {limit : 1}).count()) {
                 main.push({name : cardName, quantity : quantity});
             }else{
-                main.push({name : cardName, quantity : quantity, wrongName : true});
+                main.push({ name : cardName,
+                            quantity : quantity,
+                            wrongName : true
+                });
             }
 
         }
-
         var sideboard = [];
         var totalSideboard = 0;
         for(var j = 0; j < sideboardCards.length; j++){
@@ -208,11 +210,17 @@ SCGEventHTML = function(_id){
             var quantity = parseInt(regexResult[1]);
             var cardName = regexResult[2].toTitleCase();
             totalSideboard += quantity;
+            cardName = fixCards(cardName);
 
-            if(CardsFullData.find({name : cardName}).count()) {
-                sideboard.push({name : cardName, quantity : quantity});
+            if(CardsFullData.find({name : cardName, limit : 1}).count()) {
+                sideboard.push({name : cardName,
+                                quantity : quantity
+                });
             }else{
-                sideboard.push({name : cardName, quantity : quantity, wrongName : true});
+                sideboard.push({name : cardName,
+                                quantity : quantity,
+                                wrongName : true
+                });
             }
         }
 
@@ -225,7 +233,6 @@ SCGEventHTML = function(_id){
         data.state = "scraped";
         DecksData.insert(data);
         decksCount++;
-
     }
     if(decksCount == decks.length){
         Events.update(
@@ -247,5 +254,5 @@ SCGEventHTML = function(_id){
         );
     }
 
-    console.log("END: SCGEventHTML");
+    console.log("   END: SCGEventHTML");
 }

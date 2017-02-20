@@ -5,13 +5,13 @@ export default class UpdateCardsDatabase extends React.Component{
         super();
     }
 
-    callFunction(method, data){
-        Meteor.call(method, data);
+    callFunction(method){
+        Meteor.call(method);
     }
     render(){
         return (
             <div>
-                <button onClick={()=>this.callFunction("methodsCardsData", {format : "standard", days : 5})}
+                <button onClick={()=>this.callFunction("makeCardsDataFromFullData")}
                         type="button" style={{backgroundColor : "#3399ff"}} className="btn btn-block">Add Cards to CardsDatabase</button>
             </div>
         )

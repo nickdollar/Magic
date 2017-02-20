@@ -18,41 +18,49 @@ Meteor.startup(function () {
         Roles.addUsersToRoles(_id, "admin");
     }
 
-    console.log(checkIfZipNeedsFixing(), ZipCodes.find().count())
     if(checkIfZipNeedsFixing() != ZipCodes.find().count()){
         console.log("makeZipCollection Wrong Quantity");
-        Meteor.call("makeZipCollection");
+        makeZipCollection();
     }else{
-        console.log("ZipCodes Match");
+        console.log("Collection ZipCodes Match");
     }
 
-    if(checkQuantityOfCards() != CardsData.find().count()){
-        console.log("makeZipCollection Wrong Quantity");
-        makeCardsData();
+    if(checkIfCardFullDataQuantity() != CardsFullData.find().count()){
+        console.log("checkIfCardFullDataQuantity Wrong Quantity");
+        createCardsFullData();
     }else{
-        console.log("CardsData Match");
+        console.log("Collection CardsFullData Match");
     }
+
+    if(checkQuantityOfCardsFullData() != CardsData.find().count()){
+        console.log("makeCardsData Wrong Quantity");
+        makeCardsDataFromFullData();
+    }else{
+        console.log("Collection CardsData Match");
+    }
+
+
 });
 
-var cookies = new Cookies()
-
-var cookie = new Cookies({
-    auto: false, // Do not bind as a middleware by default
-    handler: function(cookies){
-
-        var cookiesArray = [{type : "distance", value : 20},
-                            {type : "positionOption", value : "GPS"},
-                            {type : "ZIP", value : "false"},
-                            {type : "state", value : ""}
-        ]
-        cookiesArray.forEach((obj)=>{
-            if(!cookies.has(obj.type)){
-                cookies.set(obj.type, obj.value);
-            }
-        })
-    }
-});
-
-WebApp.connectHandlers.use(cookie.middleware());
+// var cookies = new Cookies()
+//
+// var cookie = new Cookies({
+//     auto: false, // Do not bind as a middleware by default
+//     handler: function(cookies){
+//
+//         var cookiesArray = [{type : "distance", value : 20},
+//                             {type : "positionOption", value : "GPS"},
+//                             {type : "ZIP", value : ""},
+//                             {type : "state", value : ""}
+//         ]
+//         cookiesArray.forEach((obj)=>{
+//             if(!cookies.has(obj.type)){
+//                 cookies.set(obj.type, obj.value);
+//             }
+//         })
+//     }
+// });
+//
+// WebApp.connectHandlers.use(cookie.middleware());
 
 

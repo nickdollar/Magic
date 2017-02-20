@@ -80,9 +80,6 @@ export default class PlayerList extends React.Component {
 
     render(){
         this.props.Players.sort(this.sortFunc);
-
-
-        console.log(this.props.Players)
         const tableOptions = {
             options : {
                 sizePerPage : 8,

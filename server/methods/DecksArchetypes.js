@@ -8,7 +8,7 @@ Meteor.methods({
             DecksArchetypes.update({_id : obj._id}, {$set : {name : name}});
         })
 
-        console.log("END: fixArchetypesColorsAbbreviation");
+        console.log("   END: fixArchetypesColorsAbbreviation");
 
     },
     addArchetype: function (form) {
@@ -24,7 +24,7 @@ Meteor.methods({
                 upsert : true
             })
 
-        console.log("END: addArchetype");
+        console.log("   END: addArchetype");
 
     },
 })

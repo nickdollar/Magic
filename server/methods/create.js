@@ -25,32 +25,9 @@ Meteor.methods({
 
 
 
-createCardsFullData = function(){
-    console.log("START: createCardsFullData");
-    CardsFullData.remove({});
 
 
-    var cardFromFile = JSON.parse(Assets.getText('AllCards.json'));
 
-    for (var key in cardFromFile) {
-
-        var card = clone(cardFromFile[key]);
-
-        if(card.hasOwnProperty('name')){
-            card.name = fixCards(card.name.replace("\xC6", "Ae"));
-        }
-
-        if(card.hasOwnProperty('type')){
-            card.type = card.type.replace("�", "-");
-        }
-
-        CardsFullData.update({name : card.name},
-            {$set : card},
-            {upsert : true}
-        );
-    }
-    console.log("END: createCardsFullData");
-}
 
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;

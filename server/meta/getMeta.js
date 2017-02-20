@@ -33,7 +33,7 @@ getMetaDecksNamesFromArchetype = function(format, optionsTypes, timeSpan, DecksA
     var DecksNamesMeta = getMetaDecksNamesFromArchetypeONESHOT(format, timeSpan, startDate, endDate, optionsTypes, thatOptions, DecksArchetypes_id, positionChange);
     metaObj.totalDecks = DecksNamesMeta.totalDecks;
     metaObj.DecksNamesMeta = DecksNamesMeta.DecksNamesMeta;
-    console.log("END: getMetaDecksNamesFromArchetype");
+    console.log("   END: getMetaDecksNamesFromArchetype");
     return metaObj;
 }
 

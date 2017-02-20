@@ -3,8 +3,13 @@
 
 var cookies = new Cookies();
 
-var cookiesArray = ["distance", "positionOption", "ZIP", "state"];
+var cookiesArray = [{ name : "distance", default : "25"}, { name : "positionOption", default : "GPS"}, { name : "ZIP", default : ""}, { name : "state", default : ""}];
 
 cookiesArray.forEach((item)=>{
-    Session.set(item, cookies.get(item));
+    if(cookies.get(item.name)){
+        Session.set(item.name, cookies.get(item.name));
+    }else{
+        Session.set(item.name, item.default);
+    }
 });
+

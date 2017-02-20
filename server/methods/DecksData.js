@@ -117,7 +117,7 @@ Meteor.methods({
                 }
             }
         });
-        console.log("END: fixMTGOPTQEvent");
+        console.log("   END: fixMTGOPTQEvent");
     },
     updateMainSide: function (mainSide, DecksData_id) {
 
@@ -262,7 +262,7 @@ Meteor.methods({
                 )
         })
 
-        console.log("END: recheckDeckWithWrongCardName");
+        console.log("   END: recheckDeckWithWrongCardName");
     }
 })
 

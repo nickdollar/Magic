@@ -10,13 +10,13 @@ export default class CustomDecksDataAdmin extends React.Component{
     }
 
     updateDatabase(){
-        Meteor.call("methodsCardsData");
+        Meteor.call("makeCardsDataFromFullData");
     }
 
     render(){
         return (
             <div>
-                <button onClick={this.updateDatabase.bind(this)}></button>
+                <button onClick={this.updateDatabase.bind(this)}>makeCardsDataFromFullData</button>
             </div>
         )
     }

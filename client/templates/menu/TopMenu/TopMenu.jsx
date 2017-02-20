@@ -15,10 +15,7 @@ export default class TopMenu extends React.Component {
                 return "Choose State";
             }
         }else if(this.props.positionOption == "ZIP") {
-            console.log(this.props.ZIP);
-            console.log(typeof this.props.ZIP);
-
-            if(this.props.ZIP == "false"){
+            if(this.props.ZIP == ""){
                 return "Bad ZIP";
             }
         }
@@ -29,17 +26,17 @@ export default class TopMenu extends React.Component {
     }
 
     changeZip(e){
-
-        if(e.target.value.length == 5){
-            var ZIP = parseInt(e.target.value);
+        const ZIP = e.target.value;
+        console.log(ZIP);
+        if(ZIP.length == 5){
             Meteor.call("checkIfZipExists", ZIP, (err, data)=>{
                 var cookies = new Cookies();
                 if(data){
                     cookies.set("ZIP", ZIP)
                     Session.set("ZIP", ZIP)
                 }else{
-                    cookies.set("ZIP", "false")
-                    Session.set("ZIP", "false")
+                    cookies.set("ZIP", "")
+                    Session.set("ZIP", "")
                 }
             })
         }
@@ -52,8 +49,9 @@ export default class TopMenu extends React.Component {
     }
 
     getPositionOption(){
+        console.log(this.props.distance);
         if(Session.get("positionOption") == "GPS"){
-            return <input onChange={this.changeDistance} value={this.props.distance} className="distanceNumber" min="0" type="number"/>
+            return <input onChange={this.changeDistance} value={parseInt(this.props.distance)} className="distanceNumber" min="0" type="number"/>
         }else if(Session.get("positionOption") == "state"){
             const states = ['', 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO',
                             'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU',
@@ -69,7 +67,7 @@ export default class TopMenu extends React.Component {
                                 return <option key={state} value={state}> {state}</option>
                             })}
                 </select>
-        }else if(Session.get("positionOption") == "ZIP"){ return <span><input onChange={this.changeZip} defaultValue={this.props.ZIP} className="zipNumber" min="0" type="number"/>Distance : <input onChange={this.changeDistance} value={this.props.distance} className="distanceNumber" min="0" type="number"/></span>
+        }else if(Session.get("positionOption") == "ZIP"){ return <span><input maxLength="5" onChange={this.changeZip} defaultValue={this.props.ZIP} className="zipNumber" type="text"/>Distance : <input onChange={this.changeDistance} value={this.props.distance} className="distanceNumber" min="0" type="number"/></span>
         }
     }
 

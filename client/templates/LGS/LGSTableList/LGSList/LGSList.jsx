@@ -28,6 +28,20 @@ export default class LGSList extends React.Component {
         return deg * (Math.PI/180)
     }
 
+    checkDistanceHeader(){
+        if(Session.get("positionOption") == "state"){
+            return null;
+        }
+        return <th>Distance</th>;
+    }
+
+    checkDistanceType(lgs){
+        if(Session.get("positionOption") == "state"){
+            return null;
+        }
+        return <td>{this.getDistanceFromLatLonInKm(lgs.location.coords.coordinates[0], lgs.location.coords.coordinates[1])} Miles</td>;
+    }
+
     render(){
         return(
             <div className="LGSListComponent">
@@ -38,16 +52,17 @@ export default class LGSList extends React.Component {
                         <th>Events</th>
                         <th>Name</th>
                         <th>Address</th>
-                        <th>Distance</th>
+                        {this.checkDistanceHeader()}
+
                     </tr>
                     </thead>
                     <tbody>
                     {this.props.LGS.map((lgs)=>{
                         return <tr key={lgs._id}>
                             <td><input type="checkbox" data-_id={lgs._id} checked={this.props.checkedOrNotChecked(lgs._id)} onChange={this.props.checkEvent.bind(this)}/></td>
-                            <td>{lgs.name} ({lgs.location.city})</td>
+                            <td>{lgs.name} {lgs.location.city ? "({${lgs.location.city}})" : ""}</td>
                             <td>{lgs.location.formatedAddress}</td>
-                            <td>{this.getDistanceFromLatLonInKm(lgs.location.coords.coordinates[0], lgs.location.coords.coordinates[1])} Miles</td>
+                            {this.checkDistanceType(lgs)}
                         </tr>
                     })}
                     </tbody>

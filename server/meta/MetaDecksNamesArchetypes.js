@@ -30,7 +30,7 @@ createMeta = function(format){
             Meta.insert(metaObj);
         });
     })
-    console.log("END: createM eta");
+    console.log("   END: createM eta");
 }
 
 metaDecksNamesMetaPositionONESHOT = function(format, timeSpan, startDate, endDate, options, thatOptions){

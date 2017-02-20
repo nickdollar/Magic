@@ -8,7 +8,7 @@ Meteor.methods({
             DecksNames.update({_id : obj._id}, {$set : {name : name}});
         })
 
-        console.log("END: " + fixDecksNamesColorsAbbreviation);
+        console.log("   END: " + fixDecksNamesColorsAbbreviation);
 
     },
     addDeckName(data){

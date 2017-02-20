@@ -24,20 +24,135 @@ checkQuantityOfCards = function() {
         }
 
         if(obj.hasOwnProperty('name')){
-            obj.name = obj.name.replace("\xC6", "Ae");
             data.name = obj.name;
         }
 
         if(obj.hasOwnProperty('names')){
-
-            var temp = obj.names.map((card)=>{
-                return card.replace("\xC6", "Ae").toTitleCase();
-            })
-            data.names = temp;
+            data.names = temp.names;
         }
         cardsSet.add(obj.name);
     }
-    console.log("END: checkQuantityOfCards");
+    console.log("   END: checkQuantityOfCards");
+    return cardsSet.size;
+}
+
+
+makeCardsDataFromFullData = function(){
+
+    console.log("START: makeCardsDataFromFullData");
+    CardsData.remove({});
+
+    CardsFullData.find().forEach((card)=>{
+        var obj = clone(card);
+
+        var data = {};
+
+        data.name = obj.name.toTitleCase();
+
+        var keys = ["layout", "name", "cmc", "manaCost", "toughness", "power", "layout"];
+
+        keys.forEach((key)=>{
+            if(obj.hasOwnProperty(key)){
+                if(key == "name"){
+                    data[key] = obj[key].toTitleCase();
+                }else{
+                    data[key] = obj[key];
+                }
+            }
+        })
+
+
+        if(obj.hasOwnProperty('names')){
+            data.names = obj.names.map((name)=>{
+                return name.toTitleCase();
+            })
+        }
+
+        if(obj.hasOwnProperty('layout')){
+            if(obj.layout == "split"){
+                data.name = "";
+                for(var i = 0; i < obj.names.length; i ++){
+                    data.name += obj.names[i].toTitleCase();
+                    if( i < obj.names.length - 1){
+                        data.name += " // ";
+                    }
+                }
+                data.manaCost = "";
+                for(var i = 0; i < obj.names.length; i ++){
+                    data.manaCost += CardsFullData.findOne({name : obj.names[i]}).manaCost;
+                    if( i < obj.names.length - 1){
+                        data.manaCost += " // ";
+                    }
+                }
+            }
+        }
+
+        if(obj.hasOwnProperty('types')) {
+            var types = ["artifact", "creature", "enchantment", "instant", "land", "planeswalker", "sorcery", "tribal"];
+
+            types.forEach((type) => {
+                var index = obj.types.findIndex((queryType) => {
+                    return type.toTitleCase() == queryType;
+                });
+                if (index == -1) {
+                    data[type] = false;
+                } else {
+                    data[type] = true;
+                }
+            })
+        }
+
+
+        if(data.layout == "split"){
+            CardsData.update({name : data.name},
+                {
+                    $set : data
+                },
+                {
+                    upsert : true
+                }
+            );
+        }else{
+            CardsData.insert(data);
+        }
+
+    });
+    console.log("   END: makeCardsDataFromFullData");
+}
+
+checkQuantityOfCardsFullData = function() {
+    console.log("START: checkQuantityOfCardsFullData");
+
+    var cardsSet = new Set();
+    CardsFullData.find().forEach((card)=>{
+        var obj = clone(card);
+        var data = {};
+
+        data.name = obj.name.toTitleCase();
+
+        if(obj.hasOwnProperty('layout')){
+            data.layout = obj.layout;
+            data.name = "";
+            data.manaCost = "";
+            if(data.layout == "split"){
+                for(var i = 0; i < obj.names.length; i ++){
+                    obj.name += obj.names[i];
+                    if( i < obj.names.length - 1){
+                        data.name += " // ";
+                    }
+                }
+
+                for(var i = 0; i < obj.names.length; i ++){
+                    data.name += CardsFullData.findOne({name : obj.names[i]}).manaCost;
+                    if( i < obj.names.length - 1){
+                        data.manacost += " // ";
+                    }
+                }
+            }
+        }
+        cardsSet.add(obj.name);
+    });
+    console.log("   END: checkQuantityOfCards");
     return cardsSet.size;
 }
 
@@ -46,8 +161,6 @@ makeCardsData = function(){
     console.log("START: makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllCards.json'));
     CardsData.remove({});
-
-
 
     for (var key in myobject) {
 
@@ -68,23 +181,16 @@ makeCardsData = function(){
             }
         }
 
-
-
         if(obj.hasOwnProperty('name')){
-            obj.name = obj.name.replace("\xC6", "Ae");
             data.name = obj.name;
         }
 
         if(obj.hasOwnProperty('names')){
 
-            var temp = obj.names.map((card)=>{
-                return card.replace("\xC6", "Ae").toTitleCase();
-            })
-            data.names = temp;
+            data.names = obj.names;
         }
 
         if(obj.hasOwnProperty('type')){
-            obj.type = obj.type.replace("�", "-");
             data.type = obj.type;
         }
 
@@ -140,7 +246,7 @@ makeCardsData = function(){
         );
     }
 
-    console.log("END: makeCardsData");
+    console.log("   END: makeCardsData");
 }
 
 function clone(obj) {

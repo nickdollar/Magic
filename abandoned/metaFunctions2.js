@@ -36,7 +36,7 @@
 //             metaDecksArchetypesMetaPositionChange(format, timeSpanObj, startDate, endDate, optionsTypesObj, thatOptions);
 //         });
 //     });
-//     console.log("END: createMeta2");
+//     console.log("   END: createMeta2");
 // }
 //
 //

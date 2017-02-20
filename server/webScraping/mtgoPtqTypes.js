@@ -194,7 +194,7 @@ notFoundEventMTGOPTQ = function(Events_id) {
         }
     }
 
-    console.log("END: notFoundEventMTGOPTQ");
+    console.log("   END: notFoundEventMTGOPTQ");
 }
 
 eventExistsMTGOPTQ = function(_id){
@@ -279,7 +279,7 @@ eventHTMLMTGOPTQ = function(_id){
             var name = $(cards[j]).find('.card-name').text();
             name = fixCards(name);
 
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 deckCards.main.push(
                     {
                         name : name,
@@ -305,7 +305,7 @@ eventHTMLMTGOPTQ = function(_id){
             var name = $(sideboard[j]).find('.card-name').text();
             name = fixCards(name);
 
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 deckCards.sideboard.push(
                     {
                         name : name,

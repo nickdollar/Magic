@@ -19,6 +19,7 @@ getGPEvents = function(){
 
             var event = {};
             var eventCorrected = {};
+
             if($(html[i]).html() != null && $(html[i]).html() != ""){
                 event.city = $(html[i]).html();
                 event.DateFormat = $(html[i])[0].nextSibling.nodeValue;
@@ -215,21 +216,17 @@ GPEventHTMLMain = function(Events_id){
     var event = Events.findOne({_id : Events_id, $or : [{state : "HTMLMain"}, {state : "HTMLFail"}, {state : "HTMLPartial"}]});
 
     EventsHtmls.remove({Events_id : Events_id});
-
+    console.log(event.url);
     var resMain = Meteor.http.get(event.url);
     var $ = cheerio.load(resMain.content);
-
 
     if (resMain.statusCode == 200) {
 
         var decksHtml = "";
         var extrasURL = [];
-
-
         var decksTags = [   "TOP 8 DECKS", "TOP 8 DECKLISTS", "FINALS DECKLISTS", "9TH-16TH DECKLISTS", "TOP 16 DECKLISTS", "17TH-64TH PLACE FINISHERS", "TOP 9-32 DECKLISTS", "9-32 DECKLISTS", "9-64 DECKLISTS", "9TH - 32ND DECKLISTS", "9TH - 32ND DECKLISTS",
-                            "9-64TH DECKLISTS", "9TH - 32ND DECKLISTS",  "9TH - 32ND DECKLISTS",
-                            "9TH - 32ND DECKLISTS",  "9TH TO 16TH DECKLISTS",  "TOP 32 DECKLISTS",  "33-64 DECKLISTS",  "33RD-64TH DECKLISTS",  "33RD - 64TH DECKLISTS",  "TOP 64 DECKLISTS"]
-
+            "9-64TH DECKLISTS", "9TH - 32ND DECKLISTS",  "9TH - 32ND DECKLISTS",
+            "9TH - 32ND DECKLISTS",  "9TH TO 16TH DECKLISTS",  "TOP 32 DECKLISTS",  "33-64 DECKLISTS",  "33RD-64TH DECKLISTS",  "33RD - 64TH DECKLISTS",  "TOP 64 DECKLISTS"]
         var decksQuery = "";
         for(var i = 0; i < decksTags.length; i++){
             decksQuery += "#full-coverage-archive a:icontains(" + decksTags[i] + ")"
@@ -240,6 +237,15 @@ GPEventHTMLMain = function(Events_id){
         }
 
         var htmlDecksLinkQuery = $(decksQuery);
+
+        try{
+            if(htmlDecksLinkQuery.length == 0){
+                throw "GP Don't Has Decks";
+            }
+        }catch (ex){
+            console.log(`Error : ${ex}`);
+            return;
+        }
 
         var wrong = 0;
 
@@ -255,11 +261,13 @@ GPEventHTMLMain = function(Events_id){
             }
         }
 
-
-        var standingURL = $(".final a")
-        var finalStandingResponse = Meteor.http.get(standingURL.attr("href"));
-
-
+        try{
+            var standingURL = $(".final a")
+            var finalStandingResponse = Meteor.http.get(standingURL.attr("href"));
+        }catch (ex){
+            console.log("ERROR: Final Standings Doesn't Exists");
+            return;
+        }
 
         if(finalStandingResponse.statusCode == 200){
             var $finalStandingResponse = cheerio.load(finalStandingResponse.content);
@@ -304,7 +312,8 @@ GPEventHTMLMain = function(Events_id){
         );
     }
 
-    console.log("End: EventHTMLMain")
+
+    console.log("   END: EventHTMLMain")
 }
 
 
@@ -398,9 +407,7 @@ GPEventHTML = function(Events_id){
             var name = $(cards[j]).find('.card-name').text();
             name = fixCards(name);
 
-            CardsData.find({name : name});
-
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 deckCards.main.push(
                     {
                         name : name,
@@ -425,7 +432,7 @@ GPEventHTML = function(Events_id){
             sideboardQuantity += quantity;
             var name = $(sideboard[j]).find('.card-name').text();
             name = fixCards(name);
-            if(CardsData.find({ name : name}).count()){
+            if(CardsData.find({ name : name}, {limit : 1}).count()){
                 deckCards.sideboard.push(
                     {
                         name : name,
@@ -482,7 +489,7 @@ GPEventHTML = function(Events_id){
         );
     }
 
-    console.log("END: GPEventHTML");
+    console.log("   END: GPEventHTML");
 }
 
 getGPDeckInfo = function(information){

@@ -64,6 +64,23 @@ fixCards = function (card) {
     card = card.replace("\xC6", "Ae");
     card = card.replace("\xE9", "e");
     card = card.toTitleCase();
+
+    if(CardsData.find({name : card}, {limit : 1}).count()){
+        return card;
+    }
+
+    var queryCard = CardsFullData.findOne({name : {$regex : new RegExp("^" + card + "$"), $options :'i'}});
+    if(queryCard){
+        if(queryCard.layout == "split"){
+            card = "";
+            for(var i = 0; i < queryCard.names.length; i++){
+                card += queryCard.names[i].toTitleCase();
+                if( i < queryCard.names.length - 1){
+                    card += " // ";
+                }
+            }
+        }
+    }
     return card;
 }
 
