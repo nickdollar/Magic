@@ -1,5 +1,9 @@
 import React from "react";
 
+
+//submitMethod
+//extraFields
+
 export default class FormValidate extends React.Component{
 
     constructor(props){
@@ -10,8 +14,12 @@ export default class FormValidate extends React.Component{
         };
     }
 
+    componentDidUpdate(){
+    }
+
     handleSubmit (e){
         e.preventDefault();
+        console.log("handleSubmit");
         var validForm = true;
         this.state.Fields.forEach((field)=>{
             if(typeof field.isValid === "function"){
@@ -63,7 +71,7 @@ export default class FormValidate extends React.Component{
 
     render() {
         return (
-            <div>
+            <div className="FormValidateComponent">
                 <form name="contactForm" noValidate onSubmit={this.handleSubmit.bind(this)}>
                     {React.Children.map(this.props.children, this.clone.bind(this))}
                     <button type="submit" className="btn btn-default">Submit</button>

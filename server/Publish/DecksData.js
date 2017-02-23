@@ -70,7 +70,7 @@ Meteor.publish('DecksDataQueryProjection', function(query, project){
 });
 
 Meteor.publish('DecksWithoutNamesContainer', function(state, format, limit, skip){
-    return DecksData.find({state : state, format : format}, {limit : limit, skip : skip, fields : {state : 1}});
+    return DecksData.find({state : state, format : format}, {limit : limit, skip : skip, fields : {format : 1, state : 1, colors : 1}});
 });
 
 Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id, Events_id){

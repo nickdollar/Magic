@@ -21,7 +21,6 @@ removeNameFromDeck = function(DecksData_id){
     var deckData = DecksData.findOne({_id : DecksData_id});
 
     if(!deckData.DecksNames_id){
-        console.log("Don't Exists");
         return;
     }
     console.log("Exists");
@@ -131,7 +130,6 @@ addNameToDeck = function(DecksData_id, DecksNames_id){
     checkIfEventIsComplete(deckData.Events_id);
 
 };
-
 
 checkIfEventIsComplete = function(Events_id){
     var decksDataWithNameQuery = DecksData.find({Events_id : Events_id, DecksNames_id : {$exists : true}}).count();
@@ -338,7 +336,7 @@ findDeckComparisonPart2DeckPerDeck = function(decks, _id){
                 }
             }
 
-            decksResults.push({_id : decksData[i]._id, name : DecksNames.findOne({_id : decksData[i].DecksNames_id}).name, result  : filteredCardData.length/nonLandsCards.length});
+            decksResults.push({_id : decksData[i]._id, DecksNames_id : decksData[i].DecksNames_id, name : DecksNames.findOne({_id : decksData[i].DecksNames_id}).name, result  : filteredCardData.length/nonLandsCards.length});
 
             if(filteredCardData.length/nonLandsCards.length == 1){
                 break;

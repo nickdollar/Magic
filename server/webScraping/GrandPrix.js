@@ -9,7 +9,6 @@ var monthValues = { jan : 0, january : 0, feb : 1, february : 1, mar : 2, march 
 getGPEvents = function(){
     console.log("STARTING: getGPEvents");
     var res = Meteor.http.get("http://magic.wizards.com/en/events/coverage");
-
     if(res.statusCode == 200){
         var buffer = res.content;
         var $ = cheerio.load(buffer);
@@ -61,6 +60,7 @@ getGPEvents = function(){
                 continue;
             };
 
+            console.log("Events Update");
             Events.update(
                 {city : eventCorrected.city, date : eventCorrected.date},
                 {
@@ -91,7 +91,7 @@ getGPEvents = function(){
             console.log("end");
         }
     }
-    console.log("ENDING: getGPEvents");
+    console.log("   END: getGPEvents");
 }
 
 GPEventNotFound = function(Events_id){
@@ -216,7 +216,6 @@ GPEventHTMLMain = function(Events_id){
     var event = Events.findOne({_id : Events_id, $or : [{state : "HTMLMain"}, {state : "HTMLFail"}, {state : "HTMLPartial"}]});
 
     EventsHtmls.remove({Events_id : Events_id});
-    console.log(event.url);
     var resMain = Meteor.http.get(event.url);
     var $ = cheerio.load(resMain.content);
 

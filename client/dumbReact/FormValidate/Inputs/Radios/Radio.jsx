@@ -1,11 +1,17 @@
 import React from "react";
 
+//initialValue
+//errorMessage
+//objectName
+//title
+//opts {value : "", text : ""}
+
 export default class Radio extends React.Component{
     constructor(props) {
         super();
 
         this.state = {
-            outputValue : props.defaultOption
+            outputValue : props.initialValue ? props.initialValue : ""
         }
     }
 
@@ -26,6 +32,12 @@ export default class Radio extends React.Component{
             error.textContent  = "";
         }
         return true;
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.initialValue != this.state.outputValue ){
+            this.state.outputValue = nextProps.initialValue
+        }
     }
 
     clearInput(){

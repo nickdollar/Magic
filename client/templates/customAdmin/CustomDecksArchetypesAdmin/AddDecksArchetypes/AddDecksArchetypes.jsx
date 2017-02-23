@@ -18,6 +18,7 @@ export default class AddArchetypeName extends React.Component{
     render(){
         return (
             <div className="AddDecksArchetypesContainer">
+                <h3>Add New Archetypes</h3>
                 <FormValidate submitMethod="addArchetype">
                     <TextInput objectName={"name"}
                                title={"Deck Archetype"}

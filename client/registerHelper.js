@@ -65,23 +65,20 @@ getCssManaByNumberFromDeckNameById = function(DecksNames_id){
 }
 
 getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
-    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
 
-    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
-        for(var color in obj.colors){
-            colors[color] += obj.colors[color];
+    var colors = {B : "sb", C : "scl", G : "sg", R : "sr", U : "su", W : "sw"};
+    var decksNames = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
+    var colorsArray = [];
+    for(var i = 0; i < decksNames.length; ++i){
+        if(!decksNames[i].colors){
+            continue;
         }
-    });
-
-    var html = '<td class="tableMana">';
-    for(var obj in colors){
-        if(obj === "B" && colors[obj]){html += '<span class="mana sb"></span>'}
-        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
-        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
-        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
-        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
-        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
+        colorsArray = _.union(colorsArray, decksNames[i].colors);
     }
+    var html = "";
+    colorsArray.forEach((color)=>{
+        html += `<span class="mana ${colors[color]}"></span>`
+    })
     return html;
 }
 
@@ -106,25 +103,16 @@ getCssColorsFromArchetypes = function(DecksArchetypes_id){
     return str;
 }
 
-getColorsListFromArchetypes = function(DecksArchetypes_id){
-    var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
-
-    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
-        for(var color in obj.colors){
-            colors[color] += obj.colors[color];
+getColorsFromArchetypes = function(DecksArchetypes_id){
+    var decksNames = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
+    var colorsArray = [];
+    for(var i = 0; i < decksNames.length; ++i){
+        if(!decksNames[i].colors){
+            continue;
         }
-    });
-
-    var str = [];
-    for(var obj in colors){
-        if(obj === "B" && colors[obj]){str.push( {mana :'b' })}
-        else if(obj === "G" && colors[obj]){str.push( {mana :'g' })}
-        else if(obj === "C" && colors[obj]){str.push( {mana :'c' })}
-        else if(obj === "R" && colors[obj]){str.push( {mana :'r' })}
-        else if(obj === "U" && colors[obj]){str.push( {mana :'u' })}
-        else if(obj === "W" && colors[obj]){str.push( {mana :'w' })}
+        colorsArray = _.union(colorsArray, decksNames[i].colors);
     }
-    return str;
+    return colorsArray.join("");
 }
 
 getManaCss = function(value){

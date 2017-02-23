@@ -24,11 +24,6 @@ export default class MetaTable extends React.Component {
 
             var table = [];
             table = table.concat(data)
-            table = table.concat(table)
-            table = table.concat(table)
-            table = table.concat(table)
-            table = table.concat(table)
-
 
             this.setState({tableData : table, totalDecks : totalDecks});
         });

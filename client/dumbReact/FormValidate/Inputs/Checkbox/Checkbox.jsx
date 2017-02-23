@@ -1,19 +1,24 @@
 import React from "react";
+//initialValue
+//minimunRequired
+//errorMessage
+//selected
+//objectName
 
 export default class Radio extends React.Component{
     constructor(props) {
         super();
 
         this.state = {
-            outputValue : []
+            outputValue: props.initialValue ? props.initialValue : []
         }
+
     }
 
-    handleChange (option) {
-
-        var tempOutValue = Object.assign({}, this.state.outputValue);
+    handleChange(option){
+        var tempOutValue = this.state.outputValue.concat();
         var index = tempOutValue.findIndex((opt)=>{
-           return option == option
+           return option == opt
         });
 
         if(index == -1){
@@ -27,25 +32,31 @@ export default class Radio extends React.Component{
     isValid() {
         var input = this.refs["input"];
         var error = this.refs["error"];
-        if (this.state.outputValue === "") {
+        if (this.state.outputValue.length < this.props.minimunRequired ? this.props.minimunRequired : 0) {
             input.classList.add('error');
-            error.textContent = this.props.errorMessage;
+            error.textContent = this.props.errorMessage ? this.props.errorMessage : "Missing Field";
             return false;
-        }
-        else {
+        }else {
             input.classList.remove('error');
             error.textContent  = "";
         }
         return true;
     }
 
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps.initialValue,  this.state.outputValue)
+        if(nextProps.initialValue != this.state.outputValue ){
+            this.state.outputValue = nextProps.initialValue ? nextProps.initialValue : [];
+        }
+    }
+
     clearInput(){
-        this.setState({outputValue : this.props.defaultOption});
+        this.setState({outputValue : this.props.selected ? this.props.selected : []});
     }
 
     getCorrectedValue(){
         var object = [];
-        object[this.props.objectName] = this.state.outputValue;
+        object[this.props.objectName] = this.state.outputValue.sort();
         return object
     }
 
@@ -54,28 +65,36 @@ export default class Radio extends React.Component{
     }
 
     defaultRadio(opt){
-        if(opt == this.state.outputValue){
-            return true
+
+        var index = this.state.outputValue.findIndex((value)=>{
+            return opt == value
+        })
+
+        if(index == -1){
+            return false;
         }
-        return false;
+
+        return true;
     }
 
     render() {
         return (
-            <div className="form-group">
-                <label> {this.props.title}</label>
-                <div ref="input">
-                    {this.props.opts.map((opt)=>{
-                        return <label key={opt} className="radio-inline">
-                            <input onChange={this.handleChange.bind(this, opt)}
-                                   checked={this.defaultRadio(opt)}
-                                   type="checkbox"
-                                   value={opt}
-                                   name={this.props.objectName}/>{opt}
-                           </label>
-                    })}
+            <div className="CheckBoxComponent">
+                <div className="form-group">
+                    <label> {this.props.title}</label>
+                    <div ref="input">
+                        {this.props.opts.map((opt)=>{
+                            return <label key={opt.value} className="radio-inline">
+                                <input onChange={this.handleChange.bind(this, opt.value)}
+                                       checked={this.defaultRadio(opt.value)}
+                                       type="checkbox"
+                                       value={opt.value}
+                                       name={this.props.objectName}/>{opt.text}
+                               </label>
+                        })}
+                    </div>
+                    <span ref="error" className="error"></span>
                 </div>
-                <span ref="error" className="error"></span>
             </div>
         )
     }

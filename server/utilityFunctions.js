@@ -7,7 +7,7 @@ setUpColorForDeckName = function(main){
     main.forEach(function(card){
         var cardQuery = CardsData.findOne({name : card.name});
         if(cardQuery){
-            var mana = CardsData.findOne({name : card.name}).manacost;
+            var mana = cardQuery.manaCost;
             var result;
             while(result = manaRegex.exec(mana)) {
                 if      (result[0] == "B")   {tempMana["B"]++}

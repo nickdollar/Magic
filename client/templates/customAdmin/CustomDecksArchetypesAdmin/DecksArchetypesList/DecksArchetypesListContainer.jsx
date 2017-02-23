@@ -1,12 +1,12 @@
 import { createContainer } from 'meteor/react-meteor-data';
-import DecksNamesList from './DecksNamesList.jsx';
+import DecksArchetypesList from './DecksArchetypesList.jsx';
 
-export default DecksNamesListContainer = createContainer(({format}) => {
-    var handle = Meteor.subscribe("DecksNamesByFormat");
+export default DecksArchetypesListContainer = createContainer(({format}) => {
+    var handle = Meteor.subscribe("DecksArchetypesFormat", format);
 
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        DecksNames : DecksNames.find({format : format}).fetch()
+        DecksArchetypes : DecksArchetypes.find({format : format}).fetch()
     };
-}, DecksNamesList);
+}, DecksArchetypesList);

@@ -19,7 +19,7 @@ export default class CustomDecksDataAdmin extends React.Component{
                 <StateListContainer collection="DecksData"
                                     subscription="DecksDataStatesList"
                                     notState={[]}
-                                    states={["lgs", "scraped", "match", "perfect", "manual"]}
+                                    states={["lgs", "scraped", "match", "perfect", "manual", "nameRemoved"]}
                                     format={this.props.format}
                 />
                 <DecksDataMethodsButtons format={this.props.format} />

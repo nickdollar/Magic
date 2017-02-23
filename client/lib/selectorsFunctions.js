@@ -5,12 +5,8 @@ cardPopover = function(jsClassName, confirmed){
         trigger: 'hover',
         placement : "auto right",
         content: function () {
-            var cardQuery = CardsData.findOne({name : $(this).data('name')});
             var cardName = encodeURI($(this).data('name'));
             var html = "";
-            if(!cardQuery){
-                return "";
-            }
 
             if(confirmed){
                 var html = "";
@@ -21,7 +17,14 @@ cardPopover = function(jsClassName, confirmed){
                 var finalDirectory = linkBase+cardName+".full.jpg" + key;
                 html += '<span><img src="'+finalDirectory +'" style="height: 310px; width: 223px"/></span>';
                 return html;
-            }else if(cardQuery.layout == "split"){
+            }
+
+            var cardQuery = CardsData.findOne({name : $(this).data('name')});
+            if(!cardQuery){
+                return "";
+            }
+
+            if(cardQuery.layout == "split"){
                 var cardName = "";
                 cardQuery.names.forEach((card)=>{
                     cardName += card.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");

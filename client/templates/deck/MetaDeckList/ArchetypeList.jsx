@@ -174,12 +174,7 @@ class ArchetypeList extends React.Component{
                     if (type === 'display') {
                         return getHTMLColorsFromArchetypes(row._id);
                     }
-
-                    var manas = "";
-                    getColorsListFromArchetypes(row._id).forEach(function(manaObj){
-                        manas += manaObj.mana;
-                    });
-                    return manas;
+                    return getColorsFromArchetypes(row._id);
                 }},
                 {
                     title: "Type", data: "type"

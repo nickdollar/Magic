@@ -22,9 +22,8 @@ export default class AutoComplete extends React.Component{
         });
     }
 
-    addToTheListMain(){
-
-
+    componentDidUpdate(){
+        cardPopover(".js-imagePopover", true);
     }
 
     removeFromTheListMain(e){
@@ -60,13 +59,11 @@ export default class AutoComplete extends React.Component{
                 <DumbSelect2 call="getAutoComplete"
                              returnHandler={this.dumbSelect2.bind(this)}
                 />
-
                 <ul className="list-group list-group-sm">
                     {this.state.cardList.map((obj)=>{
-                        return <li key={obj} className="list-group-item"><span>{obj}</span><span onClick={this.removeFromTheListMain.bind(this)} data-name={obj} style={{float : "right"}}>X</span></li>
+                        return <li key={obj} className="list-group-item"><span className="js-imagePopover" data-name={obj}>{obj}</span><span onClick={this.removeFromTheListMain.bind(this)} data-name={obj} style={{float : "right"}}>X</span></li>
                     })}
                 </ul>
-
             </div>
         )
     }

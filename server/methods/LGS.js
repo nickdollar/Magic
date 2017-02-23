@@ -4,8 +4,14 @@ Meteor.methods({
             return "LGS on that Address Already Exists";
         }
 
-        data.state = "pending";
+        var state;
+        if(Roles.userIsInRole(this.userId, ['admin'])){
+            state = "confirmed";
+        }else{
+            state = "pending";
+        }
 
+        Object.assign(data, {state : state});
         LGS.update(data,{
             $set : data
         },

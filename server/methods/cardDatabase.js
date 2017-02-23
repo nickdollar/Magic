@@ -1,39 +1,29 @@
+makeCardsDataCount = function(){
+    console.log("START: makeCardsDataFromFullData");
 
+    var cardSet = new Set();
+    CardsFullData.find().forEach((card)=>{
+        var obj = clone(card);
 
-checkQuantityOfCards = function() {
-    console.log("START: checkQuantityOfCards");
-
-    var myobject = JSON.parse(Assets.getText('AllCards.json'));
-    var cardsSet = new Set();
-    for (var key in myobject) {
-        var obj = clone(myobject[key]);
         var data = {};
-
-        obj.name = obj.name.toTitleCase();
+        var name = obj.name.toTitleCase();
 
         if(obj.hasOwnProperty('layout')){
-            data.layout = obj.layout;
             if(obj.layout == "split"){
-                if(obj.names.length > 2){
-                    obj.name = obj.names.join("/");
-                }else{
-                    obj.name = obj.names.join(" // ");
-                    obj.manaCost = [myobject[obj.names[0]].manaCost,  myobject[obj.names[1]].manaCost].join(" // ");
+                var name = "";
+                for(var i = 0; i < obj.names.length; i ++){
+                    name += obj.names[i].toTitleCase();
+                    if( i < obj.names.length - 1){
+                        name += " // ";
+                    }
                 }
             }
         }
+        cardSet.add(name);
+    });
 
-        if(obj.hasOwnProperty('name')){
-            data.name = obj.name;
-        }
-
-        if(obj.hasOwnProperty('names')){
-            data.names = temp.names;
-        }
-        cardsSet.add(obj.name);
-    }
-    console.log("   END: checkQuantityOfCards");
-    return cardsSet.size;
+    console.log("   END: makeCardsDataFromFullData");
+    return cardSet.size;
 }
 
 
@@ -46,9 +36,6 @@ makeCardsDataFromFullData = function(){
         var obj = clone(card);
 
         var data = {};
-
-        data.name = obj.name.toTitleCase();
-
         var keys = ["layout", "name", "cmc", "manaCost", "toughness", "power", "layout"];
 
         keys.forEach((key)=>{
@@ -102,7 +89,6 @@ makeCardsDataFromFullData = function(){
             })
         }
 
-
         if(data.layout == "split"){
             CardsData.update({name : data.name},
                 {
@@ -115,7 +101,6 @@ makeCardsDataFromFullData = function(){
         }else{
             CardsData.insert(data);
         }
-
     });
     console.log("   END: makeCardsDataFromFullData");
 }

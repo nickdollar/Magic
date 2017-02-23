@@ -100,6 +100,7 @@ Meteor.methods({
     },
 
     fixDecksScraped(format){
+        console.log("START: fixDecksScraped");
         DecksData.find({format : format, state : {$nin : ["manual", "perfect"]}}).forEach((DeckData)=>{
             if(DecksData.findOne({_id : DeckData._id}).state == "scraped"){
                 var result = findBestResultDeckComparison(DeckData._id);
@@ -117,7 +118,7 @@ Meteor.methods({
                 }
             }
         });
-        console.log("   END: fixMTGOPTQEvent");
+        console.log("   END: fixDecksScraped");
     },
     updateMainSide: function (mainSide, DecksData_id) {
 
@@ -177,13 +178,7 @@ Meteor.methods({
     removeDeckFromLGSEvent: function (DecksData_id) {
         DecksData.remove({_id : DecksData_id});
     },
-    addDeckName_idToDeckData(DecksData_id, DecksNames_id){
-        addNameToDeck(DecksData_id, DecksNames_id);
-        DecksData.update({_id : DecksData_id},
-            {
-                $set : {state : "manual"}
-            })
-    },
+
     recheckDeckWithWrongCardName(format){
         console.log("START: recheckDeckWithWrongCardName");
         var cardsWithWrongName = DecksData.aggregate([
@@ -234,10 +229,6 @@ Meteor.methods({
 
         var fuse = new Fuse(allCardsNames, options);
 
-
-
-        console.log(cardsWithWrongName.length);
-
         cardsWithWrongName.forEach((card, index)=>{
             var rightName = fuse.search(card._id)[0];
 
@@ -263,6 +254,17 @@ Meteor.methods({
         })
 
         console.log("   END: recheckDeckWithWrongCardName");
-    }
-})
+    },
+    methodAddNameToDeck : function(data){
+        removeNameFromDeck(data._id);
+        addNameToDeck(data._id, data.DecksNames_id);
 
+        addToDecksUniqueWithName(data._id);
+        DecksData.update({_id : data._id},
+            {
+                $set : {state : "manual"}
+            },
+            {multi : true}
+        )
+    },
+})

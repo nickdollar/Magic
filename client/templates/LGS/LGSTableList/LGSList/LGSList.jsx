@@ -60,7 +60,7 @@ export default class LGSList extends React.Component {
                     {this.props.LGS.map((lgs)=>{
                         return <tr key={lgs._id}>
                             <td><input type="checkbox" data-_id={lgs._id} checked={this.props.checkedOrNotChecked(lgs._id)} onChange={this.props.checkEvent.bind(this)}/></td>
-                            <td>{lgs.name} {lgs.location.city ? "({${lgs.location.city}})" : ""}</td>
+                            <td>{lgs.name} {lgs.location.city ? `(${lgs.location.city})` : ""}</td>
                             <td>{lgs.location.formatedAddress}</td>
                             {this.checkDistanceType(lgs)}
                         </tr>

@@ -13,7 +13,7 @@ export default class NewMetaTableOptions extends React.Component {
             endDate : new Date(),
             startPosition : 1,
             endPosition : 64,
-            mainSide : [{value : "main", text : "Main", selected : true}, {value : "side", text : "Side", selected : true}],
+            mainSide : [{value : "main", text : "Main", selected : true}, {value : "side", text : "Side", selected : false}],
             venues: [
                 {
                     venue: "MTGO", text : "MTGO", types: [
@@ -54,6 +54,12 @@ export default class NewMetaTableOptions extends React.Component {
         var index = tempArray.findIndex((arrayItem)=>{
            return mainSide  == arrayItem.value
         });
+        if(tempArray[index].selected){
+            tempArray[index].selected = false;
+        }else {
+            tempArray[index].selected = true;
+        }
+        this.setState({mainSide : tempArray});
     }
 
     mainSideSelectedHandle(mainSide){
@@ -193,14 +199,14 @@ export default class NewMetaTableOptions extends React.Component {
                     <div className="custom-column">
                         <div className="optionListName">Main or Side</div>
                         {this.state.mainSide.map((mainSide)=>{
-                            return <div key={mainSide.value} className="checkbox">
-                                <label>
-                                    <input onChange={this.mainSide.bind(this)} type="checkbox" checked={mainSide.selected} value={mainSide.value} />
-                                    {mainSide.text}
-                                </label>
-                            </div>
+                            return  <div key={mainSide.value} className="checkbox">
+                                        <label>
+                                            <input onChange={()=>this.mainSide(mainSide.value)} type="checkbox" checked={mainSide.selected} value={mainSide.value} />
+                                            {mainSide.text}
+                                        </label>
+                                    </div>
                         })}
-                        <div >
+                        <div>
                             <button className="btn btn-xs" onClick={this.updateOptions.bind(this)} >Request Changes</button>
                         </div>
                     </div>

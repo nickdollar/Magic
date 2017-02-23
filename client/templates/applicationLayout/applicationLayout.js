@@ -69,16 +69,6 @@ Template.deckSelected.helpers({
    }
 });
 
-Template.selectADeck.helpers({
-    deckOrArchetype : function(){
-        return Session.get("deckOrArchetype");
-    }
-})
-
-Template.selectADeck.onRendered(function(){
-    Session.set("deckOrArchetype", false);
-});
-
 Template.selectedMeta.helpers({
     MetaContainer(){
         return MetaContainer;

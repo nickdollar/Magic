@@ -11,16 +11,8 @@ export default class DecksNamesList extends React.Component {
 
     }
 
-    colorsFormat(colors, row){
-        return getHTMLColorsFromColorArray(colors)
-    }
-
-    removeDeckName(DecksNames_id){
-        Meteor.call("removeDeckName", DecksNames_id);
-    }
-
     expandComponent(row){
-        return  <FormValidate submitMethod="updateDeckName" extraFields={{_id : row._id}}>
+        return  <FormValidate submitMethod="updateDeckArchetype" extraFields={{_id : row._id}}>
                     <TextFormInput defaultValue={row.name}
                                    title="Name"
                                    objectName="name"
@@ -33,18 +25,21 @@ export default class DecksNamesList extends React.Component {
                                {value : "vintage", text : "Vintage"},
                                {value : "legacy", text : "Legacy"}, ]}
                     />
-                    <Checkbox   defaultValue = {row.colors}
-                                title="Colors"
-                                objectName="colors"
-                                opts={[ {value : "B", text : "B"},
-                                        {value : "C", text : "C"},
-                                        {value : "G", text : "G"},
-                                        {value : "R", text : "R"},
-                                        {value : "U", text : "U"},
-                                        {value : "W", text : "W"},
-                                ]}
+                    <Radio defaultValue = {row.type}
+                           title="Type"
+                           objectName="type"
+                           opts={[{value : "aggro", text : "Aggro"},
+                                   {value : "combo", text : "Combo"},
+                                   {value : "control", text : "Control"},
+                             ]}
                     />
                 </FormValidate>
+    }
+
+
+    removeDeckName(event, DecksNames_id){
+        event.stopPropagation();
+        Meteor.call("removeDecksArchetypes", DecksNames_id);
     }
 
     isExpandableRow(){
@@ -52,7 +47,7 @@ export default class DecksNamesList extends React.Component {
     }
 
     removeButton(DecksNames_id){
-        return <button onClick={()=>this.removeDeckName(DecksNames_id)}>X</button>
+        return <button onClick={(event)=>this.removeDeckName(event, DecksNames_id)}>X</button>
     }
 
     render(){
@@ -66,16 +61,17 @@ export default class DecksNamesList extends React.Component {
             expandComponent : this.expandComponent,
             expandableRow : this.isExpandableRow,
             pagination : true,
-            data : this.props.DecksNames
+            data : this.props.DecksArchetypes
         }
 
         return(
-            <div className="DecksNamesListComponent">
+            <div className="DecksArchetypesListComponent">
+                <h3>Decks Archetypes List</h3>
                 <BootstrapTable {...options}>
                     <TableHeaderColumn isKey dataField={"_id"} dataSort>_id</TableHeaderColumn>
                     <TableHeaderColumn dataField={"name"} dataSort>Name</TableHeaderColumn>
                     <TableHeaderColumn dataField={"format"}>format</TableHeaderColumn>
-                    <TableHeaderColumn dataField={"colors"} dataFormat={this.colorsFormat}>Colors</TableHeaderColumn>
+                    <TableHeaderColumn dataField={"type"}>Type</TableHeaderColumn>
                     <TableHeaderColumn width="50px" dataField={"_id"} dataFormat={this.removeButton.bind(this)}>X</TableHeaderColumn>
                 </BootstrapTable>
             </div>

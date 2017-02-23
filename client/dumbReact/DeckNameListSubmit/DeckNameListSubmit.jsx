@@ -37,7 +37,7 @@ export default class DeckNameListSubmit extends React.Component{
     // }
 
     submitDeckName(){
-        Meteor.call("addDeckName_idToDeckData", this.props.DecksData_id, this.refs.input.value);
+        Meteor.call("methodAddNameToDeck", {_id : this.props.DecksData_id, DecksNames_id : this.refs.input.value});
     }
 
     render(){

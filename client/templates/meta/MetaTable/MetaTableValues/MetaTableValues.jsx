@@ -42,7 +42,8 @@ export default class ValuesTable extends React.Component {
 
     colorsColumn(cell, row){
 
-        return getHTMLColorsFromArchetypes(row._id);
+        return getHTMLColorsFromArchetypesReact(cell);
+        // return getHTMLColorsFromArchetypes(row._id);
     }
 
     typeColumns(cell, row){

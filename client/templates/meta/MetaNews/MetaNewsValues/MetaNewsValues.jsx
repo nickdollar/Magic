@@ -59,7 +59,6 @@ export default class NewsMetaValues extends React.Component {
                 },
                 data : this.props.tableData,
                 pagination : true
-
         }
 
         return(

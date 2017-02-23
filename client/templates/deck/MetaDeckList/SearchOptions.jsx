@@ -145,11 +145,11 @@ export default class SearchOptions extends React.Component{
                                     <label><input type="radio" name="optionsRadio" value={option} onChange={this.containMatchChange.bind(this)} checked={this.containMatchChecked(option)} />{option.toTitleCase()}</label>
                                 </div>
                     })}
-                    {["archetypes", "decks"].map((option)=>{
-                        return  <div key={option} className="radio">
-                                    <label><input type="radio" name="archetypesDecks" value={option} onChange={this.containArchetypesDecksChange.bind(this)} checked={this.containArchetypesDecksChecked({option})} />{option.toTitleCase()}</label>
-                                </div>
-                    })}
+                    {/*{["archetypes", "decks"].map((option)=>{*/}
+                        {/*return  <div key={option} className="radio">*/}
+                                    {/*<label><input type="radio" name="archetypesDecks" value={option} onChange={this.containArchetypesDecksChange.bind(this)} checked={this.containArchetypesDecksChecked({option})} />{option.toTitleCase()}</label>*/}
+                                {/*</div>*/}
+                    {/*})}*/}
                 </div>
 
                 <AutoComplete updateCards={this.props.updateCards}/>

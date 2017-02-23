@@ -9,7 +9,11 @@ export default class LatestDecks extends React.Component {
     }
 
     formatFormat(cell, row){
-        return cell.format.toTitleCase();
+        if(row.t == 3){
+            return row._id.format.toTitleCase();
+        }
+        return row.format.toTitleCase();
+
     }
 
     nameFormat(cell, row){

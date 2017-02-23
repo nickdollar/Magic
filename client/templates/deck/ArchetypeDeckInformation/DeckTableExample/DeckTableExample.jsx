@@ -31,7 +31,7 @@ export default class DeckTableExample extends React.Component {
         }
 
         var small = ["league", "daily", "lgs"];
-        var big = ["SCGClassic", "SCGInviQualifier", ];
+        var big = ["SCGClassic", "SCGInviQualifier", "GP"];
         return(
             <div className="DeckTableExampleComponent">
                 <div className="tablesWrapper">

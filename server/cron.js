@@ -41,10 +41,7 @@
 //         },
 //         job: function() {
 //             Meteor.call("methodGetGPEvents");
-//             Meteor.call("methodGetGPEvents");
-//             Meteor.call("methodGetGPEvents");
-//             Meteor.call("methodGetGPEvents");
-//         }
+//        }
 //     });
 //
 //     SyncedCron.add({
@@ -97,9 +94,6 @@
 //         },
 //         job: function() {
 //             Meteor.call("fixGPEvent");
-//             Meteor.call("fixGPEvent");
-//             Meteor.call("fixGPEvent");
-//             Meteor.call("fixGPEvent");
 //         }
 //     });
 //
@@ -110,9 +104,6 @@
 //             return parser.text("every " + hour + " h on the "+ timer +" m");
 //         },
 //         job: function() {
-//             Meteor.call("fixSCGEvent");
-//             Meteor.call("fixSCGEvent");
-//             Meteor.call("fixSCGEvent");
 //             Meteor.call("fixSCGEvent");
 //         }
 //     });

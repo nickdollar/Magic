@@ -1,7 +1,14 @@
 Meteor.methods({
     addLGSEvents(data){
-        Object.assign(data, {state : "created"});
 
+        var state;
+        if(Roles.userIsInRole(this.userId, ['admin'])){
+            state = "confirmed";
+        }else{
+            state = "created";
+        }
+
+        Object.assign(data, {state : state});
         LGSEvents.update(data,{
             $set : data
         },

@@ -18,8 +18,16 @@ export default class MetaCardsValues extends React.Component {
         if(this.props.totalDecks==0){
             return 0;
         }
-        return (cell/this.props.totalDecks).toFixed(1);
+        return (cell/row.count).toFixed(1);
     }
+
+    // percentageSortFunction(a, b, order) {   // order is desc or asc
+    //     if (order === 'desc') {
+    //         return a.price - b.price;
+    //     } else {
+    //         return b.price - a.price;
+    //     }
+    // }
 
     render(){
         const options =
@@ -28,7 +36,7 @@ export default class MetaCardsValues extends React.Component {
                     pagination : true,
                     sizePerPage : 8,
                     paginationSize : 2,
-                    defaultSortName : "total",
+                    defaultSortName : "count",
                     defaultSortOrder : "desc"
                 },
                 data : this.props.tableData,

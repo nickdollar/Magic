@@ -14,7 +14,10 @@ export default class DeckListPercentage extends React.Component{
 
     }
 
-
+    submitName(DecksNames_id){
+        console.log(DecksNames_id);
+        Meteor.call("methodAddNameToDeck", {_id : this.props.DecksData_id, DecksNames_id : DecksNames_id});
+    }
 
     render(){
 
@@ -25,13 +28,14 @@ export default class DeckListPercentage extends React.Component{
         if(this.state.decksPercentage.length == 0){
             return <div>Nothing</div>
         }
+        console.log(this.state.decksPercentage);
         return (
-            <div>
+            <div className="DeckListPercentage">
                 <ul className="list-group">
                     {this.state.decksPercentage.map((percentage)=>{
                         return <li key={percentage._id ? percentage._id : percentage.DecksNames_id} className="list-group-item justify-content-between">
-                                {percentage.name}
-                            <span className="badge badge-default badge-pill">{prettifyPercentage(percentage.result)}</span>
+                            <button onClick={()=>this.submitName(percentage.DecksNames_id)}>Choose This</button> {percentage.name}
+                            <span className="badge badge-default badge-pill">{prettifyPercentage(percentage.result)} </span>
                         </li>
                     })}
                 </ul>

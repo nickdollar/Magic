@@ -38,25 +38,17 @@ getMetaDecksNamesFromArchetype = function(format, optionsTypes, timeSpan, DecksA
 }
 
 getMetaAllArchetypes = function(format, options, location, distance, positionOption, state, ZIP){
-    list = [];
-    if(options.LGS){
-        if(positionOption == "state" && state !=""){
-            list = LGS.find({state : "confirmed", "location.state" : state}).map((LGS)=>{
-                return LGS._id
-            });
-        }else if(positionOption == "ZIP" && ZIP){
-            var zipInfo = ZipCodes.findOne({ZIP : ZIP});
-            list = LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [[zipInfo.LNG, zipInfo.LAT], distance / 3963.2]}}}).map((LGS)=>{
-                return LGS._id
-            });
-        }else if(positionOption == "GPS" ){
-            if(!location || !distance){
-                list = LGS.find({state : "nothing"});
-            }
-            list = LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [location, distance / 3963.2]}}}).map((LGS)=>{
-                return LGS._id
-            });
-        }
+    var list = [];
+    if(positionOption == "state" && state !="" && state){
+        list.push(LGS.find({state : "confirmed", "location.state" : state}).fetch());
+    }else if(positionOption == "ZIP" && ZIP != '' && ZIP){
+        distance = parseInt(distance);
+        ZIP = parseInt(ZIP);
+        var zipInfo = ZipCodes.findOne({ZIP : ZIP});
+        list.push(LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [[zipInfo.LNG, zipInfo.LAT], distance / 3963.2]}}}).fetch());
+    }else if(positionOption == "GPS" && distance && location){
+        distance = parseInt(distance);
+        list.push(LGS.find({state : "confirmed", "location.coords" : {$geoWithin : {$centerSphere: [location, distance / 3963.2]}}}).fetch());
     }
 
     return metaDecksArchetypesMetaONESHOT(format, options, list);

@@ -31,15 +31,12 @@ Meteor.startup(function () {
     }else{
         console.log("Collection CardsFullData Match");
     }
-
-    if(checkQuantityOfCardsFullData() != CardsData.find().count()){
+    if(makeCardsDataCount() != CardsData.find().count()){
         console.log("makeCardsData Wrong Quantity");
         makeCardsDataFromFullData();
     }else{
-        console.log("Collection CardsData Match");
+        console.log("Collection CardsData Match ");
     }
-
-
 });
 
 // var cookies = new Cookies()

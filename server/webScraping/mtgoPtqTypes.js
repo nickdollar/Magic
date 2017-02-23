@@ -174,7 +174,6 @@ notFoundEventMTGOPTQ = function(Events_id) {
                 {_id: eventNotFound._id},
                 {
                     $set: {
-
                         state: "exists"
                     }
                 }
@@ -333,26 +332,6 @@ eventHTMLMTGOPTQ = function(_id){
         data.state = "scraped";
         DecksData.insert(data);
 
-        var cardsOnMain = [];
-
-        data.main.forEach(function(obj){
-            cardsOnMain.push(obj.name)
-        });
-
-        var nonLandsCards = CardsData.find({name : {$in : cardsOnMain}, land : false}).map(function(obj){
-            return obj.name;
-        });
-
-
-        if(!DecksDataUniqueWithoutQuantity.find({format : data.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}).count()){
-            console.log("EQUAL");
-        }
-
-        DecksDataUniqueWithoutQuantity.update({format : data.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}},
-            {$set : {format : data.format, nonLandMain : nonLandsCards}},
-            {
-                upsert : true
-            });
 
     }
 
@@ -365,6 +344,8 @@ eventHTMLMTGOPTQ = function(_id){
         }
     );
 }
+
+
 
 var mtgoPtqTypes = {
     modern : "modern-ptq",

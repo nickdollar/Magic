@@ -1,3 +1,116 @@
+<template name="selectADeck">
+    <div class="selectADeck">
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="row">
+                    <div class="narrow-block js-typeOptions" >
+                        <div class="header">
+                            Type
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="aggro" checked>
+                                Aggro
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="combo" checked>
+                                Combo
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="control" checked>
+                                Control
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="narrow-block js-colorsOption">
+                        <div class="header">
+                            Colors
+
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="b" checked>
+                                Black
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="c" checked>
+                                Colorless
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="g" checked>
+                                Green
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="r" checked>
+                                Red
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="u" checked>
+                                Blue
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" role="checkbox" value="w" checked>
+                                White
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optionsRadio" value="contain" checked>Contain</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="optionsRadio" value="match">Match</label>
+                        </div>
+                    </div>
+
+
+                    <!--<div class="narrow-block js-deckOrArchetype">-->
+                        <!--<div class="header">-->
+                            <!--Show:-->
+                        <!--</div>-->
+                        <!--<div class="radio">-->
+                            <!--<label><input type="radio" name="decksArchetypes" value="archetypes" checked>Archetypes</label>-->
+                        <!--</div>-->
+                        <!--<div class="radio">-->
+                            <!--<label><input type="radio" name="decksArchetypes" value="decks" >Decks</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="col-xs-10">
+                <div class="row">
+                        <div class="archetypeListTable js-archetypeListTable">
+                            <table id="archetypeListTable" class="table table-sm" cellspacing="0" width="100%"></table>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="narrow-block">-->
+    <!--<div class="buttonDivision">-->
+    <!--<div class="header">-->
+    <!--Price range:-->
+    <!--</div>-->
+    <!--$<span id="minAmount"></span>-$<span id="maxAmount"></span>-->
+    <!--<div id="slider-range"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+</template>
+
 <template name="deckPopOutOption">
     <div class="modal show" id="addEmployee">
         <div class="modal-dialog">

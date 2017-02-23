@@ -56,20 +56,46 @@ metaTotalDecksCards = function(format, options){
 };
 
 
-metaCardsMain = function(format, timeSpan, startDate, endDate, options, thatOptions){
-    var mainCards = DecksData.aggregate(
-        [
-            {$match : {date: {$gte: startDate, $lte: endDate}, format : format, $or: thatOptions, DecksNames_id : {$ne : null}}},
-            {$unwind : "$main"},
-            {$group : {_id : "$main.name", total : {$sum : "$main.quantity"}, count : {$sum : 1}}},
-            {$sort : {total : -1}}
-        ]
-    );
+metaCardsMain = function(format, options){
+    var mainCards = DecksArchetypes.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+        {$unwind : "$DecksNames"},
+        {$project : {DecksNames_id : "$DecksNames._id"}},
+        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {_id : "$DecksData._id", main : "$DecksData.main", date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", type : "$DecksData.type"}},
+        {$match : {date : {$gte : options.startDate, $lte : options.endDate}, type : {$in : options.types}, $or : [{position : {$gte : options.startPosition, $lte : options.endPosition}}, {victory : {$exists : true}, position : null}], }},
+        {$unwind : "$main"},
+        {$group : {"_id": { _id : "$_id", name: "$main.name" }, quantity : {$sum : "$main.quantity"}}},
+        {$group : {_id : {_id : "$_id._id", name : "$_id.name"}, quantity: {$sum : "$quantity"}}},
+        {$group : {	_id : "$_id.name", total: {$sum : "$quantity"}, count: {$sum : 1}}},
+    ]);
     return mainCards;
 };
 
 metaCardsSideboard = function(format, options){
 
+    var mainCards = DecksArchetypes.aggregate([
+        {$project : {"format" : 1}},
+        {$match : {format : format}},
+        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
+        {$unwind : "$DecksNames"},
+        {$project : {DecksNames_id : "$DecksNames._id"}},
+        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$unwind : "$DecksData"},
+        {$project : {_id : "$DecksData._id", cards : "$DecksData.sideboard", date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", type : "$DecksData.type"}},
+        {$match : {date : {$gte : options.startDate, $lte : options.endDate}, type : {$in : options.types}, $or : [{position : {$gte : options.startPosition, $lte : options.endPosition}}, {victory : {$exists : true}, position : null}], }},
+        {$unwind : "$cards"},
+        {$group : {"_id": { _id : "$_id", name: "$cards.name" }, quantity : {$sum : "$cards.quantity"}}},
+        {$group : {_id : {_id : "$_id._id", name : "$_id.name"}, quantity: {$sum : "$quantity"}}},
+        {$group : {	_id : "$_id.name", total: {$sum : "$quantity"}, count: {$sum : 1}}},
+    ]);
+    return mainCards;
+};
+
+metaCardsMainSideboard = function(format, options){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"format" : 1}},
         {$match : {format : format}},
@@ -90,46 +116,6 @@ metaCardsSideboard = function(format, options){
         {$group : {_id : {_id : "$_id._id", name : "$_id.name"}, quantity: {$sum : "$quantity"}}},
         {$group : {	_id : "$_id.name", total: {$sum : "$quantity"}, count: {$sum : 1}}},
     ]);
-
-    var DecksArchetypesMeta = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
-        {$unwind : "$DecksData"},
-        {$project : {_id : "$_id", date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", type : "$DecksData.type"}},
-        {$match : {date : {$gte : options.startDate, $lte : options.endDate}, type : {$in : options.types}, $or : [{position : {$gte : options.startPosition, $lte : options.endPosition}}, {victory : {$exists : true}, position : null}], }},
-        // {$group : {	_id : "$DecksArchetypes", quantity : {$sum : 1}}}
-    ]);
-
-    return [];
-};
-
-metaCardsMainSideboard = function(format, options){
-    var DecksArchetypesMeta = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
-        {$unwind : "$DecksData"},
-        {$project : {_id : "$DecksData._id", main : "$DecksData.main", sideboard : "$DecksData.sideboard", date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", type : "$DecksData.type"}},
-        {$match : {date : {$gte : options.startDate, $lte : options.endDate}, type : {$in : options.types}, $or : [{position : {$gte : options.startPosition, $lte : options.endPosition}}, {victory : {$exists : true}, position : null}], }},
-        {$project : {cards : {"$setUnion" :
-                    [
-                        {$map : {input : "$main", as: "el", in : {name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "main"}}}},
-                        {$map : { input : "$sideboard", as: "el", in : { name : "$$el.name", quantity : "$$el.quantity", class : {"$const" : "sideboard"}}}}
-                    ]}}},
-        {$unwind : "$cards"},
-        {$group : {"_id": { _id : "$_id", class: "$cards.class", name: "$cards.name" }, quantity : {$sum : "$cards.quantity"}}},
-        {$group : {_id : {_id : "$_id._id", name : "$_id.name"}, quantity: {$sum : "$quantity"}}},
-        {$group : {	_id : "$_id.name", total: {$sum : "$quantity"}, count: {$sum : 1}}},
-    ]);
-
-
     return DecksArchetypesMeta;
 };
 

@@ -27,5 +27,35 @@ Meteor.methods({
         console.log("   END: addArchetype");
 
     },
+    updateDeckArchetype(form){
+        if(Roles.userIsInRole(Meteor.user(), ['admin'])){
+            DecksArchetypes.update(  {_id : form._id},
+                {
+                    $set : form
+                }
+            )
+        };
+    },
+    removeDecksArchetypes(DecksArchetypes_id){
+        if(Roles.userIsInRole(Meteor.user(), ['admin'])){
+            console.log(DecksArchetypes_id);
+            var decksNames_ids = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).map((deckName)=>{
+                return deckName._id;
+            })
+
+            console.log(decksNames_ids);
+            DecksNames.remove({DecksNames_id : {$in : decksNames_ids}});
+            DecksData.update({DecksNames_id : {$in : decksNames_ids}},
+                {
+                    $set : {state : "nameRemoved"},
+                    $unset : {DecksNames_id : ""}
+                },
+                {
+                    multi : true
+                }
+            )
+            DecksDataUniqueWithoutQuantity.remove({DecksNames_id : {$n : decksNames_ids}});
+        };
+    },
 })
 

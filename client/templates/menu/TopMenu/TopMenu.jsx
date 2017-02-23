@@ -49,7 +49,6 @@ export default class TopMenu extends React.Component {
     }
 
     getPositionOption(){
-        console.log(this.props.distance);
         if(Session.get("positionOption") == "GPS"){
             return <input onChange={this.changeDistance} value={parseInt(this.props.distance)} className="distanceNumber" min="0" type="number"/>
         }else if(Session.get("positionOption") == "state"){

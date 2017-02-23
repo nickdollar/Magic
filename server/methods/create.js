@@ -22,13 +22,6 @@ Meteor.methods({
 
 })
 
-
-
-
-
-
-
-
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();

@@ -1,11 +1,15 @@
 import React from "react";
 
+//initialValue
+//errorMessage
+//title
+//required
+//objectName
+
 export default class textFormInput extends React.Component{
-    constructor() {
+    constructor(props) {
         super();
-        this.state = {
-            outputValue : ""
-        }
+        this.state = {outputValue : props.initialValue ? props.initialValue : ""};
     }
 
     handleChange (e) {
@@ -38,6 +42,11 @@ export default class textFormInput extends React.Component{
         this.setState({outputValue : ""});
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.initialValue != this.state.outputValue ){
+            this.state.outputValue = nextProps.initialValue
+        }
+    }
 
     componentDidMount() {
         this.props.register(this);

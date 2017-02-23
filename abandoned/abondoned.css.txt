@@ -1,3 +1,73 @@
+.selectADeck{
+  .narrow-block{
+    background-color: white;
+
+    .buttonDivision{
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .archetypeListTable {
+    width: 99%;
+    margin-left: 15px;
+    background-color: white;
+    float: right;
+
+    .tableHeight {
+      min-height: 630px;
+    }
+
+    table#archetypeListTable {
+      thead {
+        tr {
+          th {
+            font-size: 10px;
+            font-weight: 600;
+            font-family: "Open Sans";
+          }
+        }
+      }
+      tbody {
+        tr {
+          td.details-control {
+            background: url('/img/details_open.png') no-repeat center center;
+            cursor: pointer;
+          }
+
+          &.shown td.details-control {
+            background: url('/img/details_close.png') no-repeat center center;
+          }
+
+          td {
+            padding : 4px;
+          }
+        }
+      }
+    }
+
+    table.childTable {
+      background-color: white;
+        margin-bottom: 5px;
+        tr {
+          td {
+            padding: 4px;
+          }
+          td:first-child{
+            width: 14px;
+          }
+          td:nth-child(2){
+            width: 230px;
+          }
+          td:nth-child(3){
+            width: 274px;
+          }
+        }
+      }
+  }
+}
+
+
 .headerStatic {
     display: none;
     position : fixed;

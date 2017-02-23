@@ -25,7 +25,11 @@ export default class DecksWithoutNames extends React.Component{
         this.setState({showModal: false})
     }
 
+
+
+
     render(){
+        console.log(this.props.DecksList);
         return (
             <div>
                 <table className="table">
@@ -37,6 +41,9 @@ export default class DecksWithoutNames extends React.Component{
                             <th>
                                 State
                             </th>
+                            <th>
+                                Colors
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,6 +51,7 @@ export default class DecksWithoutNames extends React.Component{
                         return <tr key={deck._id}>
                             <td onClick={this.selectDeck.bind(this, i)}>{deck._id}</td>
                             <td>{deck.state}</td>
+                            <td>{deck.colors.B}{deck.colors.C}{deck.colors.G}{deck.colors.R}{deck.colors.U}{deck.colors.W}</td>
                         </tr>
                     })}
 

@@ -27,22 +27,18 @@ export default class DecksWithoutNamesWrapper extends React.Component{
         }
     }
 
-
     changedState(state){
         this.setState({selectedState : state});
     }
 
     render(){
-
         return (
-            <div>
-
-                {["lgs", "scraped", "match", "perfect", "manual"].map((state)=>{
+            <div className="DecksWithoutNamesWrapperContainer">
+                {["lgs", "scraped", "match", "perfect", "nameRemoved", "manual"].map((state)=>{
                     return  <label key={state} className="radio-inline">
                                 <input type="radio" onChange={()=>this.changedState(state)} value={state} name="optradio" checked={this.state.selectedState == state ? true : false}/> {state}
                             </label>
                 })}
-
                 <button data-change="-" onClick={this.changePage.bind(this)} className="btn btn-xs">-</button>
                 <button data-change="+" onClick={this.changePage.bind(this)} className="btn btn-xs">+</button>
                 <DecksWithoutNamesContainer serverQuery={[this.state.selectedState, this.props.format, this.state.perPage, this.state.page]}

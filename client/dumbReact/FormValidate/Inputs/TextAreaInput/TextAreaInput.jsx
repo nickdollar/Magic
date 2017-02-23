@@ -1,5 +1,8 @@
 import React from "react";
 
+//objectName
+//title
+//Default Value
 class DescriptionInput extends React.Component{
     constructor() {
         super();
