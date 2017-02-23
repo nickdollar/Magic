@@ -3,7 +3,6 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import FormValidate from "/client/dumbReact/FormValidate/FormValidate";
 import TextFormInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput";
 import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio";
-import Checkbox from "/client/dumbReact/FormValidate/Inputs/Checkbox/Checkbox";
 
 export default class DecksNamesList extends React.Component {
     constructor(){

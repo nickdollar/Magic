@@ -20,6 +20,7 @@ Meteor.methods({
         return true;
     },
     removeDeckName(DecksNames_id){
+        console.log(DecksNames_id);
         if(Roles.userIsInRole(Meteor.user(), ['admin'])){
 
             DecksData.update({DecksNames_id : DecksNames_id},
@@ -32,7 +33,7 @@ Meteor.methods({
                 }
             )
             DecksDataUniqueWithoutQuantity.remove({DecksNames_id : DecksNames_id});
-            DecksNames.remove({DecksNames_id : DecksNames_id});
+            DecksNames.remove({_id : DecksNames_id});
         };
     },
     updateDeckName(form){

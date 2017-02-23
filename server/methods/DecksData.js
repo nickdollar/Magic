@@ -267,4 +267,15 @@ Meteor.methods({
             {multi : true}
         )
     },
+    getDecksList(DecksNames_id){
+        return DecksData.find({DecksNames_id : DecksNames_id}, {sort : {date : -1}, fields : {
+            format : 0,
+            totalMain : 0,
+            main : 0,
+            totalSideboard : 0,
+            sideboard : 0,
+            colors : 0,
+            state : 0
+        }}).fetch()
+    },
 })

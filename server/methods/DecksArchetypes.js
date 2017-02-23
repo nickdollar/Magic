@@ -38,12 +38,10 @@ Meteor.methods({
     },
     removeDecksArchetypes(DecksArchetypes_id){
         if(Roles.userIsInRole(Meteor.user(), ['admin'])){
-            console.log(DecksArchetypes_id);
             var decksNames_ids = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).map((deckName)=>{
                 return deckName._id;
             })
 
-            console.log(decksNames_ids);
             DecksNames.remove({DecksNames_id : {$in : decksNames_ids}});
             DecksData.update({DecksNames_id : {$in : decksNames_ids}},
                 {
@@ -54,7 +52,8 @@ Meteor.methods({
                     multi : true
                 }
             )
-            DecksDataUniqueWithoutQuantity.remove({DecksNames_id : {$n : decksNames_ids}});
+            DecksDataUniqueWithoutQuantity.remove({DecksNames_id : {$in : decksNames_ids}});
+            DecksArchetypes.remove({_id : DecksArchetypes_id});
         };
     },
 })

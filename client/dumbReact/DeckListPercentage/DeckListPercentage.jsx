@@ -28,7 +28,6 @@ export default class DeckListPercentage extends React.Component{
         if(this.state.decksPercentage.length == 0){
             return <div>Nothing</div>
         }
-        console.log(this.state.decksPercentage);
         return (
             <div className="DeckListPercentage">
                 <ul className="list-group">

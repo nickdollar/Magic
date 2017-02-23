@@ -1,7 +1,7 @@
 import React from 'react' ;
 import ArchetypeDeckInformationHeader from "./ArchetypeDeckInformationHeader/ArchetypeDeckInformationHeader.jsx"
 import DecksNamesList from "./DecksNamesList/DecksNamesList.jsx"
-import DeckTableExampleContainer from "./DeckTableExample/DeckTableExampleContainer.jsx"
+import DeckTableExample from "./DeckTableExample/DeckTableExample.jsx"
 
 
 
@@ -31,7 +31,7 @@ export default class ArchetypeDeckInformationExit extends React.Component {
                 />
 
                 {this.props.flowRouterDeckSelected ?
-                    <DeckTableExampleContainer flowRouterDeckSelected={this.props.flowRouterDeckSelected}
+                    <DeckTableExample flowRouterDeckSelected={this.props.flowRouterDeckSelected}
                                       format={this.props.format}
                     /> :
                     null}

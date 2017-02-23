@@ -156,8 +156,6 @@ export default class DeckAndSideboardInput extends React.Component{
             }
         })
 
-        console.log(this.state.newCards);
-
         Meteor.subscribe("cardsFromArray", this.state.newCards, {
             onReady: ()=>{
                 this.forceUpdate();

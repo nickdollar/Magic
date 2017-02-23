@@ -15,9 +15,9 @@ export default class DecksNamesList extends React.Component {
         return getHTMLColorsFromColorArray(colors)
     }
 
-    removeDeckName(DecksArchetypes_id){
+    removeDeckName(event, DecksNames_id){
         event.stopPropagation();
-        Meteor.call("removeDecksArchetypes", DecksArchetypes_id);
+        Meteor.call("removeDeckName", DecksNames_id);
     }
 
     onPageChange (){
@@ -58,7 +58,7 @@ export default class DecksNamesList extends React.Component {
     }
 
     removeButton(DecksNames_id){
-        return <button onClick={()=>this.removeDeckName(DecksNames_id)}>X</button>
+        return <button onClick={(event)=>this.removeDeckName(event, DecksNames_id)}>X</button>
     }
 
     render(){

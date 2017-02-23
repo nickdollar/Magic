@@ -16,7 +16,6 @@ export default class DecksWithoutNamesWrapper extends React.Component{
             var page = this.state.page;
             page++;
             this.setState({page : page});
-
         }else{
             var page = this.state.page;
             page--;

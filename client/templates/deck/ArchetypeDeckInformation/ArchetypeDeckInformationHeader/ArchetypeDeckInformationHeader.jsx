@@ -11,7 +11,8 @@ export default class ArchetypeDeckInformationHeader extends React.Component {
                     <h1>
                         {DeckArchetype.name}
                     </h1>
-                    <div className="archetypeMana" dangerouslySetInnerHTML={{__html : getHTMLColorsFromArchetypes(DeckArchetype._id)}}>
+                    <div className="archetypeMana" >
+                        {getHTMLColorsFromArchetypesReact(DeckArchetype._id)}
                     </div>
                     <div className="archetypeType">
                         {DeckArchetype.type}

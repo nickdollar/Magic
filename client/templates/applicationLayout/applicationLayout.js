@@ -11,10 +11,6 @@ import LatestDecksContainer from           "/client/templates/main/LatestDecksRe
 import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuContainer.jsx";
 import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableComponent.jsx";
 
-
-
-
-
 navigator.geolocation.getCurrentPosition((location)=> {
         // Session.set("positionOption", "GPS");
         Session.set("position", [location.coords.longitude ,location.coords.latitude]);

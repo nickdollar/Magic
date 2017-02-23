@@ -30,4 +30,3 @@ Meteor.methods({
         LGSEvents.remove({_id : {$in : _ids}})
     }
 })
-

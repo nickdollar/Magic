@@ -44,7 +44,6 @@ export default class Radio extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.initialValue,  this.state.outputValue)
         if(nextProps.initialValue != this.state.outputValue ){
             this.state.outputValue = nextProps.initialValue ? nextProps.initialValue : [];
         }

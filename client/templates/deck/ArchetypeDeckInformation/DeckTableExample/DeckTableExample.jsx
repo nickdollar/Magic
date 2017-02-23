@@ -1,58 +1,53 @@
 import React from 'react' ;
-import DeckListContainer from "./DeckList/DeckListContainer.jsx";
-import DeckContainer from "/client/dumbReact/Deck/DeckContainer.jsx";
+import DecksNamesDecksDataList from "./DecksNamesDecksDataList/DecksNamesDecksDataList.jsx";
 
 export default class DeckTableExample extends React.Component {
-    constructor(){
+    constructor(props){
         super();
         this.state = {
-            selectedDeck_id : ""
+            DecksNames_id : ""
         }
+    }
 
+    newDeckName(flowRouterDeckSelected){
+        var DecksNames_regex= new RegExp("^" + flowRouterDeckSelected.replace(/[-']/g, ".") + "$", "i");
+        var DecksNames_id = DecksNames.findOne({name : {$regex : DecksNames_regex}})._id;
+        this.setState({DecksNames_id : DecksNames_id});
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.listLoading==false){
-            if(this.state.selectedDeck_id == "") {
-                if(nextProps.DecksDataNewest != null){
-                    this.setState({selectedDeck_id : nextProps.DecksDataNewest._id});
-                }
-            }
+        this.newDeckName(nextProps.flowRouterDeckSelected)
+    }
+
+    selectedDeckHandle(_id){
+        if(this.state.selectedDeck_id != _id){
+            this.setState({selectedDeck_id : _id});
         }
     }
 
-    selectedDeckHandle(row, isSelected, e){
-        this.setState({selectedDeck_id : row._id});
+    componentDidMount(){
+        this.newDeckName(this.props.flowRouterDeckSelected);
     }
 
     render(){
-        if(this.props.listLoading){
-            return <div>Loading...</div>
-        }
-
-        var small = ["league", "daily", "lgs"];
-        var big = ["SCGClassic", "SCGInviQualifier", "GP"];
         return(
             <div className="DeckTableExampleComponent">
-                <div className="tablesWrapper">
-                    <div className="halfLength">
-                        <DeckListContainer flowRouterDeckSelected={this.props.flowRouterDeckSelected}
-                                           selectedDeckHandle={this.selectedDeckHandle.bind(this)}
-                                           selectedDeck_id={this.state.selectedDeck_id}
-                                           eventsType={small}
-                        />
-                    </div>
-                    <div className="halfLength">
-                        <DeckListContainer flowRouterDeckSelected={this.props.flowRouterDeckSelected}
-                                           selectedDeckHandle={this.selectedDeckHandle.bind(this)}
-                                           selectedDeck_id={this.state.selectedDeck_id}
-                                           eventsType={big}
+                <div className="col-xs-3">
+                    <div className="row">
+                        <DecksNamesDecksDataList   DecksNames_id={this.state.DecksNames_id}
+                                                   selectedDeckHandle={this.selectedDeckHandle.bind(this)}
                         />
                     </div>
                 </div>
-                {this.state.selectedDeck_id != "" ?
-                    <DeckContainer DecksData_id={this.state.selectedDeck_id}/> : null
-                }
+                <div className="col-xs-9">
+                    <div className="row">
+                        {this.state.selectedDeck_id != "" ?
+                            <DeckContainer DecksData_id={this.state.selectedDeck_id}/> : null
+                        }
+                    </div>
+                </div>
+
+
             </div>
         );
     }

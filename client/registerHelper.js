@@ -29,24 +29,24 @@ getCssManaFromDeck = function(colors){
 }
 
 
-getHTMLColors = function(colors, size){
-    if(!size ){
-        size = "14px";
-    } else{
-        size = size +"px"
-    }
-    var html = '<span class="tableMana" style="font-size: '+size +'">';
-    for(var obj in colors){
-        if(obj === "B" && colors[obj]){html +=      '<span class="mana sb"></span>'}
-        else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
-        else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
-        else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
-        else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
-        else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
-    }
-    html += '</span>';
-    return html;
-}
+// getHTMLColors = function(colors, size){
+//     if(!size ){
+//         size = "14px";
+//     } else{
+//         size = size +"px"
+//     }
+//     var html = '<span class="tableMana" style="font-size: '+size +'">';
+//     for(var obj in colors){
+//         if(obj === "B" && colors[obj]){html +=      '<span class="mana sb"></span>'}
+//         else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
+//         else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
+//         else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
+//         else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
+//         else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
+//     }
+//     html += '</span>';
+//     return html;
+// }
 
 getCssManaByNumberFromDeckNameById = function(DecksNames_id){
 

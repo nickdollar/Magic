@@ -13,7 +13,8 @@ Meteor.publish('DeckTableExample_Decksnames_id', function(DecksNames_id) {
                                                                 main : 0,
                                                                 totalSideboard : 0,
                                                                 sideboard : 0,
-                                                                colors : 0
+                                                                colors : 0,
+                                                                state : 0
                                                             }});
 });
 
@@ -73,14 +74,10 @@ Meteor.publish('DecksWithoutNamesContainer', function(state, format, limit, skip
     return DecksData.find({state : state, format : format}, {limit : limit, skip : skip, fields : {format : 1, state : 1, colors : 1}});
 });
 
-Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id, Events_id){
+Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id){
     return {
         find : function() {
-            if(DecksData_id){
-                return DecksData.find({_id : DecksData_id});
-            }else{
-                return DecksData.find({Events_id : Events_id}, {$sort : {position : 1, victory : 1}, limit : 1});
-            }
+            return DecksData.find({_id : DecksData_id});
         },
         children : [
             {

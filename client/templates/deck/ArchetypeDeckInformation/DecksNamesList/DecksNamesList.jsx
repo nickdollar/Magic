@@ -26,7 +26,6 @@ export default class DecksNamesList extends React.Component {
             <div className="DecksNamesListComponent">
                 <div className="js-owl-deckOption owl-carousel owl-theme">
                     {this.props.decksNames.map((deckName)=>{
-
                         var fixedDeckName = replaceTokenWithDash(deckName.name);
                         return  <div className="deckBox" key={deckName._id}>
                                     <a href={"/decks/" +  this.props.archetype.format + '/' + archetypeName + '/' + fixedDeckName} >
@@ -36,7 +35,8 @@ export default class DecksNamesList extends React.Component {
                                             </div>
                                         </div>
                                         <div className="secondLine">
-                                            <div className="deckMana" dangerouslySetInnerHTML={{__html : getHTMLColors(deckName.colors)}}>
+                                            <div className="deckMana" >
+                                                {getHTMLColorsFromColorArray(deckName.colors)}
                                             </div>
                                         </div>
                                     </a>
