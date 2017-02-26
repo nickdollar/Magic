@@ -21,13 +21,17 @@ export default class MetaCardsValues extends React.Component {
         return (cell/row.count).toFixed(1);
     }
 
-    // percentageSortFunction(a, b, order) {   // order is desc or asc
-    //     if (order === 'desc') {
-    //         return a.price - b.price;
-    //     } else {
-    //         return b.price - a.price;
-    //     }
-    // }
+    componentDidMount(){
+        cardPopover(".js-MetaCardValuesImagePopover", true);
+    }
+
+    nameFormat(cell, row){
+        return <div className="js-MetaCardValuesImagePopover" data-name={cell}>{cell}</div>
+    }
+
+    handleTableComplete(){
+        cardPopover(".js-MetaCardValuesImagePopover", true);
+    }
 
     render(){
         const options =
@@ -37,7 +41,8 @@ export default class MetaCardsValues extends React.Component {
                     sizePerPage : 8,
                     paginationSize : 2,
                     defaultSortName : "count",
-                    defaultSortOrder : "desc"
+                    defaultSortOrder : "desc",
+                    afterTableComplete: this.handleTableComplete
                 },
                 data : this.props.tableData,
                 pagination : true
@@ -46,7 +51,7 @@ export default class MetaCardsValues extends React.Component {
         return(
             <div className="MetaCardsValuesComponent">
                 <BootstrapTable {...options}>
-                    <TableHeaderColumn dataField="_id" isKey>Card</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id" isKey dataFormat={this.nameFormat}>Card</TableHeaderColumn>
                     <TableHeaderColumn width="50" dataField="total" dataFormat={this.avgColumn.bind(this)}>Avg.</TableHeaderColumn>
                     <TableHeaderColumn width="60" dataField="count" dataFormat={this.percentageColumn.bind(this)}>%</TableHeaderColumn>
                 </BootstrapTable>

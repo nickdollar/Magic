@@ -1,6 +1,7 @@
 import React from "react";
+import ReactDOMServer from 'react-dom/server'
 
-class ArchetypeList extends React.Component{
+export default class ArchetypeList extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -97,27 +98,24 @@ class ArchetypeList extends React.Component{
     }
 
     formatDeckArchetypes(DecksArchetypes_id) {
-        console.log("formatDeckArchetypes");
         var decksArchetypesQuery = DecksArchetypes.findOne({_id : DecksArchetypes_id});
         var decksNameQuery = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
 
-        var html = '<table class="table table-sm childTable">';
-        decksNameQuery.forEach(function(decksNamesObj){
-            html += '<tr>'+
-                '<td></td>'+
-                '<td class="tableName"><a href="/decks/' + FlowRouter.getParam("format") + '/' + DecksArchetypes.findOne({_id : DecksArchetypes_id}).name+'/'+ decksNamesObj.name +'">'+decksNamesObj.name+'</a></td>'+
-                '<td class="tableMana">';
-
-            var manas = getCssManaByNumberFromDeckNameById(decksNamesObj._id);
-            manas.forEach(mana =>{
-                html += "<div class='mana " + mana.mana + "'></div>";
-            });
-            html += '</td>'+
-                '<td class="tableType">' + decksArchetypesQuery.type +'</td>';
-            html += '</tr>';
-        });
-        html += "</table>";
-        return html;
+        return <table className="table table-sm childTable">
+                    {decksNameQuery.map((decksNamesObj)=> {
+                        return <tr key={decksNamesObj._id}>
+                                    <td></td>
+                                    <td className="tableName"><a href={FlowRouter.path('ArchetypeDeckInformation', {format : FlowRouter.getParam("format"), archetype : DecksArchetypes.findOne({_id: DecksArchetypes_id}).name, deckSelected : decksNamesObj.name}) }> {decksNamesObj.name}  </a></td>
+                                    <td className="tableMana">
+                                        {getCssManaByNumberFromDeckNameById(decksNamesObj._id).map((mana) => {
+                                            return <div className={`mana ${mana.mana}`}></div>
+                                        })}
+                                    </td>
+                                    <td className="tableType"> {decksArchetypesQuery.type}  </td>
+                                </tr>
+                        })
+                    }
+                </table>
     }
     
     componentDidMount(){
@@ -195,7 +193,7 @@ class ArchetypeList extends React.Component{
                 tr.removeClass('shown');
             } else {
                 // Open this row
-                row.child($(this.formatDeckArchetypes(decksArchetypes_id))).show();
+                row.child($(ReactDOMServer.renderToStaticMarkup(this.formatDeckArchetypes(decksArchetypes_id)))).show();
                 tr.addClass('shown');
             }
         });
@@ -204,11 +202,9 @@ class ArchetypeList extends React.Component{
 
     render() {
         return (
-            <div className="archetypeListTable row">
+            <div className="ArchetypeListComponent row">
                 <table id="archetypeListTable" className="table table-sm" cellSpacing="0" width="100%"></table>
             </div>
         )
     }
 }
-
-export default ArchetypeList;

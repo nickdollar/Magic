@@ -1,23 +1,23 @@
 <template name="ApplicationLayout">
-    {{#if subscriptionsReady}}
-        <div class="header">
-            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places&callback=initAutocomplete" async defer></script>
-            <!--{{>topMenu}}-->
-            <div class="container">{{> React component=TopMenuContainer}}</div>
-
-            {{>typeMenu}}
-        </div>
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
-        <div class="container">
-            {{> Template.dynamic template=main}}
-            {{>modals}}
-            <div>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
+    <div class="container">
+        {{#if subscriptionsReady}}
+            <div class="header">
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places&callback=initAutocomplete" async defer></script>
+                <div class="row">
+                    <div>{{> React component=TopMenuContainer}}</div>
+                    <div>{{>typeMenu}}</div>
+                </div>
+            </div>
+            <div class="body" style="min-height: 700px">
+                    {{> Template.dynamic template=main}}
+                    {{>modals}}
+            </div>
+            <div class="footer" style="background-color: white">
                 <img src="/img/comodo_secure_seal_76x26_transp.png">
             </div>
-        </div>
-    {{/if}}
-
-
+        {{/if}}
+    </div>
 </template>
 
 <template name="main">

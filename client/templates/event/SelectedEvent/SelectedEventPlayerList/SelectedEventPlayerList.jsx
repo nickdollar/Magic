@@ -5,7 +5,6 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 export default class PlayerList extends React.Component {
     constructor(){
         super();
-
     }
 
     positionVictory(deck){
@@ -33,24 +32,14 @@ export default class PlayerList extends React.Component {
     }
 
     trClassFormat(row, rowIndex) {
-        if(!this.props.selectedDeck){
-            if(row._id == this.props.Players[0]._id){
+        if(!this.props.DecksData_id){
+            if(row._id == this.props.DecksList[0]._id){
                 return "selected"
             }
-
         }
-
-        if(this.props.selectedDeck == row._id){
+        if(this.props.DecksData_id == row._id){
             return "selected"
         }
-    }
-
-
-    shouldComponentUpdata(nextProps, nextState){
-        if(!nextProps.listLoading ){
-            return true;
-        }
-            return false;
     }
 
     deckInfo(data, row){
@@ -60,11 +49,15 @@ export default class PlayerList extends React.Component {
                     deckName = DecksNames.findOne({_id : row.DecksNames_id}).name;
                 }
             }
-
-            var colors = getHTMLColors(row.colors);
-
             return  <div  className="tablePlayerInfo">
-                        <div><a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row.Events_id, DecksData_id : row._id})}> {this.positionVictory(row)} {deckName}</a> <span dangerouslySetInnerHTML={{__html : colors}}></span></div>
+                           <div className="deckNameManaWrapper">
+                               <div className="deckNamePosition">
+                                    <a href={FlowRouter.path("selectedEvent", {format : FlowRouter.getParam("format"), Events_id : FlowRouter.getParam("Events_id"), DecksData_id : row._id})}> {this.positionVictory(row)} {deckName}</a>
+                               </div>
+                               <div className="manaValues">
+                                    {getHTMLColorsFromDecksNamesReact(row.DecksNames_id)}
+                               </div>
+                           </div>
                         <div>{row.player ? row.player : "Missing Name"}</div>
                     </div>
     }
@@ -79,7 +72,6 @@ export default class PlayerList extends React.Component {
     }
 
     render(){
-        this.props.Players.sort(this.sortFunc);
         const tableOptions = {
             options : {
                 sizePerPage : 8,
@@ -89,7 +81,7 @@ export default class PlayerList extends React.Component {
 
             headerStyle : {display : "none"},
             hideSizePerPage: true,
-            data : this.props.Players,
+            data : this.props.DecksList,
             pagination : true,
             ignoreSinglePage : true,
             trClassName : this.trClassFormat.bind(this)
@@ -105,20 +97,3 @@ export default class PlayerList extends React.Component {
         );
     }
 }
-
-//
-// <ul className="list-group">
-//     {this.props.Players.map((deck)=>{
-//         var deckName = "Name Pending";
-//         if(deck.DecksNames_id){
-//             if(DecksNames.findOne({_id : deck.DecksNames_id})){
-//                 deckName = DecksNames.findOne({_id : deck.DecksNames_id}).name;
-//             }
-//         }
-//         var colors = getHTMLColors(deck.colors);
-//         return <li key={deck._id} className="list-group-item">
-//             <div><a href={FlowRouter.path("selectedEvent", {format : deck.format, Events_id : deck.Events_id, DecksData_id : deck._id})}> {this.positionVictory(deck)} {deckName}</a> <span dangerouslySetInnerHTML={{__html : colors}}></span></div>
-//             <div>{deck.player}</div>
-//         </li>
-//     })}
-// </ul>

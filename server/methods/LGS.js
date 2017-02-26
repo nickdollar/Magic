@@ -31,5 +31,8 @@ Meteor.methods({
     },
     removeLGS(_ids){
         LGSEvents.remove({_id : {$in : _ids}})
+    },
+    autoPublish(){
+
     }
 });

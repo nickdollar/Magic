@@ -193,8 +193,6 @@ export default class NewMetaTableOptions extends React.Component {
                                 <input type="number" min="2" onChange={(event)=>this.positionSelectedHandle(event, "endPosition")} value={this.state.endPosition}/> end
                             </label>
                         </div>
-
-
                     </div>
                     <div className="custom-column">
                         <div className="optionListName">Main or Side</div>

@@ -16,9 +16,6 @@ export default class LGSTableList extends React.Component {
         return LGS.find().fetch();
     }
 
-
-
-
     componentWillReceiveProps(newProps){
 
         var arraysOfLGS = this.state.LGS.concat();
@@ -53,26 +50,27 @@ export default class LGSTableList extends React.Component {
     }
 
     checkEvent(e){
-        var arrayImu = this.state.LGS.concat();
+        var arrayTemp = this.state.LGS.concat();
 
-        var obj = arrayImu.find((arrayImuOby)=>{
+
+        var index = arrayTemp.findIndex((arrayImuOby)=>{
             return e.target.getAttribute("data-_id") == arrayImuOby._id;
         })
 
-        if(obj.checked == true){
-            obj.checked = false;
+        if(arrayTemp[index].checked){
+            arrayTemp[index].checked = false;
         }else{
-            obj.checked = true;
+            arrayTemp[index].checked = true;
         }
-        this.setState({LGS : arrayImu});
+        this.setState({LGS : arrayTemp});
     }
 
 
     render(){
         return(
             <div className="LGSTableListComponent">
-                <LGSList LGS={this.props.LGS} checkEvent={this.checkEvent.bind(this)} checkedOrNotChecked={this.checkedOrNotChecked.bind(this)}/>
-                <LGSLatestEventsContainer LGS={this.state.LGS}/>
+                <LGSList LGS={this.props.LGS} checkEvent={this.checkEvent.bind(this)} checkedOrNotChecked={this.checkedOrNotChecked.bind(this)} positionOption={this.props.positionOption}/>
+                <LGSLatestEventsContainer LGS={this.state.LGS} positionOption={this.props.positionOption}/>
                 <LGSEventsCalendarContainer LGS={this.state.LGS}/>
             </div>
         );

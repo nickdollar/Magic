@@ -1,90 +1,20 @@
 import React from 'react' ;
+import LGSLocation from "./LGSLocation/LGSLocation.jsx";
 
 export default class TopMenu extends React.Component {
     constructor(){
         super();
     }
 
-    getError(){
-        if(this.props.positionOption == "GPS"){
-            if(!Session.get("position")){
-                return "GPS Disabled";
-            }
-        }else if(this.props.positionOption == "state"){
-            if(!this.props.state){
-                return "Choose State";
-            }
-        }else if(this.props.positionOption == "ZIP") {
-            if(this.props.ZIP == ""){
-                return "Bad ZIP";
-            }
-        }
-    }
-
     activatedlink(selected){
         return selected == this.props.activatedlink ? "active" : null;
-    }
-
-    changeZip(e){
-        const ZIP = e.target.value;
-        console.log(ZIP);
-        if(ZIP.length == 5){
-            Meteor.call("checkIfZipExists", ZIP, (err, data)=>{
-                var cookies = new Cookies();
-                if(data){
-                    cookies.set("ZIP", ZIP)
-                    Session.set("ZIP", ZIP)
-                }else{
-                    cookies.set("ZIP", "")
-                    Session.set("ZIP", "")
-                }
-            })
-        }
-    }
-
-    stateChange(e){
-        var cookies = new Cookies();
-        cookies.set("state", e.target.value);
-        Session.set("state", e.target.value);
-    }
-
-    getPositionOption(){
-        if(Session.get("positionOption") == "GPS"){
-            return <input onChange={this.changeDistance} value={parseInt(this.props.distance)} className="distanceNumber" min="0" type="number"/>
-        }else if(Session.get("positionOption") == "state"){
-            const states = ['', 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO',
-                            'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU',
-                            'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY',
-                            'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN',
-                            'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-                            'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK',
-                            'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD',
-                            'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA',
-                            'WV', 'WI', 'WY', 'AE', 'AA', 'AP']
-
-            return <select onChange={this.stateChange} value={this.props.state}> {states.map((state)=>{
-                                return <option key={state} value={state}> {state}</option>
-                            })}
-                </select>
-        }else if(Session.get("positionOption") == "ZIP"){ return <span><input maxLength="5" onChange={this.changeZip} defaultValue={this.props.ZIP} className="zipNumber" type="text"/>Distance : <input onChange={this.changeDistance} value={this.props.distance} className="distanceNumber" min="0" type="number"/></span>
-        }
-    }
-
-    changedOption(e){
-        var cookies = new Cookies();
-        cookies.set("positionOption", e.target.value);
-        Session.set("positionOption", e.target.value);
     }
 
     url(path){
         return FlowRouter.path(path, {format : this.props.format});
     }
 
-    changeDistance(e){
-        var cookies = new Cookies();
-        cookies.set("distance", e.target.value)
-        Session.set("distance", e.target.value)
-    }
+
 
     logOut(){
         Meteor.logout(()=> {
@@ -92,12 +22,7 @@ export default class TopMenu extends React.Component {
         });
     }
 
-    checkedOption(option){
-        if(Session.get("positionOption")){
-            return true;
-        }
-        return false;
-    }
+
 
     render(){
         var menu = [
@@ -122,27 +47,20 @@ export default class TopMenu extends React.Component {
                             </div>
                         </div>
                         <div className="col-xs-5">
-                            <div className="row">
-                                <div className="positionLoginDistanceWrapper">
-                                    <span className="error">{this.getError()}</span>
-                                    <span className="distance">
-                                        <select onChange={this.changedOption} value={Session.get("positionOption")}>
-                                            <option value="GPS">GPS</option>
-                                            <option value="state">State</option>
-                                            <option value="ZIP">ZIP</option>
-                                        </select>
-                                        {this.getPositionOption()}
-                                    </span>
-                                    <span className="topMenuLogin">
-                                        {this.props.currentUser ? <button onClick={this.logOut} type="button" className="btn btn-primary btn-sm logout">
-                                            Logout
-                                            </button>
-                                            : <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginModal">
-                                                Login/Sign-up
-                                            </button>
-                                            }
-                                    </span>
+                            <div className="positionLoginDistanceWrapper">
+                                <div className="LGSLocation">
+                                    <LGSLocation/>
                                 </div>
+
+                                <span className="topMenuLogin">
+                                    {this.props.currentUser ? <button onClick={this.logOut} type="button" className="btn btn-primary btn-sm logout">
+                                        Logout
+                                        </button>
+                                        : <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginModal">
+                                            Login/Sign-up
+                                        </button>
+                                        }
+                                </span>
                             </div>
                         </div>
                     </div>

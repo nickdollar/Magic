@@ -151,7 +151,7 @@ eventLeagueGetNewEvents = function(format){
                 if(deckMeta.length == 0){
                     console.log("Page Doesn't exists");
                 }else{
-                    state = "exist";
+                    state = "exists";
                 }
                 console.log("page exists");
             }
@@ -169,6 +169,47 @@ eventLeagueGetNewEvents = function(format){
 
             date = new Date(date.setDate(date.getDate() + 1));
         }
+}
+
+eventLeaguePreEvent = function(Event_id){
+    console.log("START: pre");
+    var eventPre = Events.findOne({_id : Event_id, state : "pre"});
+
+    if(!eventPre){return};
+    var res = Meteor.http.get(eventPre.url, {timeout : 10000});
+
+    if (res.statusCode == 200) {
+        var buffer = res.content;
+        var $ = cheerio.load(buffer);
+        var deckMeta = $('#main-content');
+        if(deckMeta.length == 0){
+            console.log("Page Doesn't exists");
+        }else{
+            console.log("page exists");
+            Events.update(
+                {_id : eventPre._id},
+                {
+                    $set : {
+                        state : "exists"
+                    }
+                }
+            );
+        }
+    }else{
+        var days = 10*24*60*60*1000;
+        if((new Date) - Events.findOne({_id : Event_id}).date > days){
+            Events.update(
+                {_id : Event_id},
+                {
+                    $set : {
+                        state : "notFoundOld"
+                    }
+                }
+            );
+        }
+    }
+
+    console.log("   END: notFoundEvent");
 }
 
 notFoundEvent = function(Event_id){

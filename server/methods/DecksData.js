@@ -33,7 +33,7 @@ Meteor.methods({
             message = "Deck Updated"
         }
 
-        if(Events.findOne({LGS_id : deck.LGS_id, token : deck.token})){
+        if(Events.findOne({_id : deck._id})){
             DecksData.update({Events_id : deck._id, player : deck.player},
                 {
                     $set : {
@@ -58,6 +58,13 @@ Meteor.methods({
                 }
             )
         }
+
+
+        var DecksDataCount = DecksData.find({Events_id : deck._id}).count();
+
+        Events.update({_id : deck._id},{
+            $set : {decks : DecksDataCount}
+        })
 
         return message;
     },
@@ -95,10 +102,6 @@ Meteor.methods({
         }
         return "Deck Updated";
     },
-    updateALGSDecksData: function (deck) {
-
-    },
-
     fixDecksScraped(format){
         console.log("START: fixDecksScraped");
         DecksData.find({format : format, state : {$nin : ["manual", "perfect"]}}).forEach((DeckData)=>{
@@ -267,7 +270,7 @@ Meteor.methods({
             {multi : true}
         )
     },
-    getDecksList(DecksNames_id){
+    getDecksListFromDeckName(DecksNames_id){
         return DecksData.find({DecksNames_id : DecksNames_id}, {sort : {date : -1}, fields : {
             format : 0,
             totalMain : 0,
@@ -277,5 +280,18 @@ Meteor.methods({
             colors : 0,
             state : 0
         }}).fetch()
+    },
+    getDecksListEvents_id(Events_id){
+        var EventQuery = Events.findOne({_id : Events_id});
+        var DecksDataQuery = DecksData.find({Events_id : Events_id}, {fields : {
+            format : 0,
+            totalMain : 0,
+            main : 0,
+            totalSideboard : 0,
+            sideboard : 0,
+            colors : 0,
+            state : 0
+        }}).fetch()
+        return {Event : EventQuery, DecksData : DecksDataQuery};
     },
 })

@@ -17,7 +17,12 @@ export default class MetaTable extends React.Component {
     }
 
     updateValues(options, format){
-        Meteor.call("MethodGetMetaAllArchetypes", format, options, Session.get("position"), Session.get("distance"), Session.get('positionOption'), Session.get('state'), Session.get('ZIP'), (err, data)=>{
+
+        var LGS_ids = LGS.find({}).map((LGSObj)=>{
+            return LGSObj;
+        })
+
+        Meteor.call("MethodGetMetaAllArchetypes", format, options, LGS_ids, (err, data)=>{
             var totalDecks = data.reduce((a, b)=>{
                 return  a + b.quantity;
             },0);

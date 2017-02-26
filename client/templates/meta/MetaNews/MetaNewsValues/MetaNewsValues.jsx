@@ -55,7 +55,6 @@ export default class NewsMetaValues extends React.Component {
                     sizePerPage : 10,
                     paginationSize : 2,
                     afterTableComplete: this.handleTableComplete.bind(this),
-
                 },
                 data : this.props.tableData,
                 pagination : true

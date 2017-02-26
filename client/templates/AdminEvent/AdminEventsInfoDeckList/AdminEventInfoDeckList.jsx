@@ -132,10 +132,7 @@ export default class Deck extends React.Component{
         };
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
-
-
             var cardQuery = CardsData.findOne({name : card.name});
-            console.log(cardQuery);
             var cardComplete;
 
             if(cardQuery){

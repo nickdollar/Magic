@@ -7,9 +7,28 @@ export default class LGSList extends React.Component {
     }
 
     getDistanceFromLatLonInKm(lon1,lat1) {
+
         if(!lon1 || !lat1) 0;
-        var lon2 = Session.get("position")[0],
-            lat2 = Session.get("position")[1];
+
+
+            if(Session.get("positionOption")=="GPS"){
+                try {
+                    var lon2 = Session.get("position")[0],
+                        lat2 = Session.get("position")[1];
+                }catch(e) {
+                    return "GPS Not Working"
+                }
+            }else {
+                try {
+                    var lon2 = Session.get("ZIPPosition")[0],
+                        lat2 = Session.get("ZIPPosition")[1];
+                } catch (e) {
+                    return "Wrong Zip"
+                }
+            }
+
+
+
 
         var R = 3963.2; // Radius of the earth in km
         var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
@@ -43,6 +62,8 @@ export default class LGSList extends React.Component {
     }
 
     render(){
+        // console.log(console.log(this.props));
+        // console.log(this.props);
         return(
             <div className="LGSListComponent">
                 <h3>LGS List</h3>
@@ -59,7 +80,7 @@ export default class LGSList extends React.Component {
                     <tbody>
                     {this.props.LGS.map((lgs)=>{
                         return <tr key={lgs._id}>
-                            <td><input type="checkbox" data-_id={lgs._id} checked={this.props.checkedOrNotChecked(lgs._id)} onChange={this.props.checkEvent.bind(this)}/></td>
+                            <td><input type="checkbox" data-_id={lgs._id} checked={this.props.checkedOrNotChecked(lgs._id)} onChange={()=>this.props.checkEvent(lgs._id)}/></td>
                             <td>{lgs.name} {lgs.location.city ? `(${lgs.location.city})` : ""}</td>
                             <td>{lgs.location.formatedAddress}</td>
                             {this.checkDistanceType(lgs)}

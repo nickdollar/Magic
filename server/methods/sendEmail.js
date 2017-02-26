@@ -16,7 +16,7 @@ Meteor.methods({
 
             Email.send({
                 to:email,
-                from:"no-replay@crowdmtg.com",
+                from:"no-reply@crowdmtg.com",
                 subject: "Information of Event: " +eventFinal.name + "of " + eventFinal,
                 html:result.html
             })

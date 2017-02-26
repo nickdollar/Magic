@@ -7,4 +7,5 @@ eventsTypes = {
     "SCGPlayers'Championship" : "SCGPlayers' Championship",
     SCGGrandPrix : "SCG Grand Prix",
     SCGSuperIQ : "SCG Super IQ",
+    lgs : "Local Game Store"
 }

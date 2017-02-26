@@ -1,9 +1,12 @@
 // import { Cookies } from 'meteor/ostrio:cookies';
 
 
-var cookies = new Cookies();
+cookies = new Cookies();
 
-var cookiesArray = [{ name : "distance", default : "25"}, { name : "positionOption", default : "GPS"}, { name : "ZIP", default : ""}, { name : "state", default : ""}];
+var cookiesArray = [{ name : "distance", default : "25"},
+    { name : "positionOption", default : "GPS"},
+    { name : "ZIP", default : ""},
+    { name : "state", default : ""}];
 
 cookiesArray.forEach((item)=>{
     if(cookies.get(item.name)){

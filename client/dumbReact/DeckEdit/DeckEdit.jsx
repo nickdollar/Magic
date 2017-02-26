@@ -159,7 +159,7 @@ export default class Deck extends React.Component{
     }
 
     getCardsByType(type) {
-        return CardsData.find(typeOptions[type]).map(function(p) { return {name : p.name, manacost : p.manacost}});
+        return CardsData.find(typeOptions[type]).map(function(p) { return {name : p.name, manaCost : p.manaCost}});
     }
     getCardsSideboard() {
         var sideboard = this.state.deck.sideboard.map((card)=>{
@@ -197,7 +197,7 @@ export default class Deck extends React.Component{
             var cardComplete;
 
             if(cardQuery){
-                cardComplete = Object.assign(card, {manacost : cardQuery.manacost});
+                cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});
             }else{
                 cardComplete = card;
             }
@@ -229,24 +229,24 @@ export default class Deck extends React.Component{
             var cardQuery = CardsData.findOne({name : card.name});
             var cardComplete;
             if(cardQuery){
-                cardComplete = Object.assign(card, {manacost : cardQuery.manacost});
+                cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});
             }else{
                 cardComplete = card;
             }
             if(cardQuery){
-                cardComplete = Object.assign(card, {manacost : cardQuery.manacost});
+                cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});
             }
             sideboard.push(cardComplete);
         })
         return sideboard;
     }
     getHTMLColors(card){
-        if(typeof card.manacost == "undefined") return [];
-        var manacost = card.manacost;
+        if(typeof card.manaCost == "undefined") return [];
+        var manaCost = card.manaCost;
         var manaRegex = new RegExp("(?:B|C|G|R|U|W)?\/?(?:X|P|B|C|G|R|U|W|\\d+)(?=})", 'g');
 
         var str = [];
-        var matches = manacost.match(manaRegex);
+        var matches = manaCost.match(manaRegex);
 
         for(var i = 0; i < matches.length; i ++){
             if(     matches[i] ==  "X" ) {str.push({key : i, mana :'sx' }) }

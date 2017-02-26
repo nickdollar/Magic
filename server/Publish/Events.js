@@ -19,15 +19,17 @@ Meteor.publish('EventsQueryProjection', function(notState){
 });
 
 Meteor.publish('EventsByLGS_idArray', function(arraysOfLGS_id){
-    return Events.find({LGS_id : {$in : arraysOfLGS_id}, state : "names"});
+    return Events.find({LGS_id : {$in : arraysOfLGS_id}, state : {$in : ["names", "published", "decks"]}});
 });
 
-
-Meteor.publish('EventsSmall', function(states, format){
-    return Events.find({state : {$in : states},  format : format, decks : {$lt : 16}})
+Meteor.publish('EventsSmall', function(states, format, LGS_ids){
+    return Events.find({state : {$in : states},  format : format, $or : [{decks : {$lt : 16}}, {LGS_id : {$in : LGS_ids}}]});
 });
 
 Meteor.publish('EventsBig', function(states, format){
-    return Events.find({state : {$in : states}, format : format, decks : {$gte : 16}});
+    return Events.find({state : {$in : states}, format : format,  decks : {$gte : 16}});
 });
 
+Meteor.publish('EventsLGS', function(format){
+    return Events.find({state : {$in : ["prePublished", "published"]}, format : format});
+});

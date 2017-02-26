@@ -1,16 +1,5 @@
 import React from "react";
 
-var types = ["artifact", "creature", "enchantment", "instant", "planeswalker", "sorcery", "land"];
-typeOptions = { null : {},
-    artifact : {creature : false, artifact : true},
-    creature : {creature : true},
-    enchantment : {enchantment : true, creature : false, artifact : false},
-    instant : {instant : true},
-    planeswalker : {planeswalker : true},
-    sorcery : {sorcery : true},
-    land : {land : true, creature : false, artifact : false},
-};
-
 export default class Deck extends React.Component{
     constructor() {
         super();
@@ -27,41 +16,39 @@ export default class Deck extends React.Component{
         cardPopover(".js-imagePopOver");
     }
 
-    getCardsByType(type) {
-        return CardsData.find(typeOptions[type]).map(function(p) { return {name : p.name, manaCost : p.manaCost}});
-    }
-
-    getCardsSideboard() {
-        var sideboard = this.props.DeckSelected.sideboard.map((card)=>{
-            return card.name;
-        });
-        var cardsExists = CardsData.find({name : {$in : sideboard}}).fetch();
-
-        var cardsComplete = cardsExists.filter((card)=>{
-            return this.props.DeckSelected.sideboard.find((queryCard)=>{
-                return card.name == queryCard.name;
-            })
-        })
-            .map((card)=>{
-                    var temp = this.props.DeckSelected.sideboard.find((queryCard)=>{
-                        return card.name == queryCard.name;
-                    })
-                    return Object.assign(card, temp);
-                }
-            )
-        return cardsComplete;
-    }
+    // getCardsSideboard() {
+    //     var sideboard = this.props.DeckSelected.sideboard.map((card)=>{
+    //         return card.name;
+    //     });
+    //     var cardsExists = CardsData.find({name : {$in : sideboard}}).fetch();
+    //
+    //     var cardsComplete = cardsExists.filter((card)=>{
+    //         return this.props.DeckSelected.sideboard.find((queryCard)=>{
+    //             return card.name == queryCard.name;
+    //         })
+    //     })
+    //         .map((card)=>{
+    //                 var temp = this.props.DeckSelected.sideboard.find((queryCard)=>{
+    //                     return card.name == queryCard.name;
+    //                 })
+    //                 return Object.assign(card, temp);
+    //             }
+    //         )
+    //     return cardsComplete;
+    // }
 
     separateCardsByTypeAddManaCost(main){
-        var typesSeparated = { null : [],
-            artifact : [],
-            creature : [],
-            enchantment : [],
-            instant : [],
-            planeswalker : [],
-            sorcery : [],
-            land : []
+        var typesSeparated = {
+            null : {array : [], text : "Wrong Name"},
+            creature : {array : [], text : "Creature"},
+            sorcery : {array : [], text : "Sorcery"},
+            instant : {array : [], text : "Instant"},
+            planeswalker : {array : [], text : "Planeswalker"},
+            artifact : {array : [], text : "Artifact"},
+            enchantment : {array : [], text : "enchantment"},
+            land : {array : [], text : "Land"},
         };
+
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
             var cardQuery = CardsData.findOne({name : card.name});
@@ -73,14 +60,14 @@ export default class Deck extends React.Component{
             }else{
                 cardComplete = card;
             }
-            if(!cardQuery){typesSeparated.null.push(cardComplete)}
-            else if(cardQuery.artifact == true && cardQuery.creature == false){typesSeparated.artifact.push(cardComplete)}
-            else if (cardQuery.creature == true){typesSeparated.creature.push(cardComplete)}
-            else if (cardQuery.enchantment == true && cardQuery.creature == false && cardQuery.artifact == false){typesSeparated.enchantment.push(cardComplete)}
-            else if (cardQuery.instant == true){typesSeparated.instant.push(cardComplete)}
-            else if (cardQuery.land == true && cardQuery.creature == false && cardQuery.artifact == false){typesSeparated.land.push(cardComplete)}
-            else if (cardQuery.planeswalker == true){typesSeparated.planeswalker.push(cardComplete)}
-            else if (cardQuery.sorcery == true){typesSeparated.sorcery.push(cardComplete)}
+            if(!cardQuery){typesSeparated.null.array.push(cardComplete)}
+            else if (cardQuery.land == true){typesSeparated.land.array.push(cardComplete)}
+            else if(cardQuery.artifact == true && cardQuery.creature == false){typesSeparated.artifact.array.push(cardComplete)}
+            else if (cardQuery.creature == true){typesSeparated.creature.array.push(cardComplete)}
+            else if (cardQuery.enchantment == true && cardQuery.creature == false && cardQuery.artifact == false){typesSeparated.enchantment.array.push(cardComplete)}
+            else if (cardQuery.instant == true){typesSeparated.instant.array.push(cardComplete)}
+            else if (cardQuery.planeswalker == true){typesSeparated.planeswalker.array.push(cardComplete)}
+            else if (cardQuery.sorcery == true){typesSeparated.sorcery.array.push(cardComplete)}
         })
         return typesSeparated;
     }
@@ -127,12 +114,12 @@ export default class Deck extends React.Component{
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.DeckSelected.main);
         var resultMain = [];
         for(var type in typesSeparated){
-            if(typesSeparated[type].length == 0) continue;
-            resultMain.push(<div className="typeHeader" key={type} >{type} ({typesSeparated[type].reduce((a, b)=>{
+            if(typesSeparated[type].array.length == 0) continue;
+            resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
                 return a + b.quantity;
             },0)})</div>)
             resultMain.push(
-                typesSeparated[type].map((card)=>{
+                typesSeparated[type].array.map((card)=>{
                     return  <div className="cardLine" key={card.name}>
                                 <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
                                     <span className="quantity">{card.quantity}</span><span data-name={card.name}>{card.name}</span>

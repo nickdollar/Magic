@@ -74,8 +74,12 @@ Meteor.methods({
 Meteor.methods({
     fixLeagueDailyEvent(){
         console.log("START: fixLeagueDailyEvent");
+        Events.find({type : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld", "names"]}}).forEach((event)=>{
 
-        Events.find({type : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+            if(Events.findOne({_id : event._id}).state == "pre"){
+                console.log("pre");
+                eventLeaguePreEvent(event._id);
+            }
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
                 console.log("notFound");
@@ -149,6 +153,21 @@ Meteor.methods({
             }
         });
         console.log("   END: fixGPEvent");
+    },
+    checkIfAdmin(){
+        if(Roles.userIsInRole(Meteor.user(), 'admin')){
+            return true;
+        }
+        return false;
+
+
+    },
+    confirmLGSPrePublish(Events_id){
+        if(Roles.userIsInRole(Meteor.user(), 'admin')){
+            Events.update({_id : Events_id}, {
+                $set : {state : "published"}
+            })
+        }
     }
 })
 

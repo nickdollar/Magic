@@ -13,33 +13,44 @@ export default class LatestDecks extends React.Component {
             return row._id.format.toTitleCase();
         }
         return row.format.toTitleCase();
-
     }
 
     nameFormat(cell, row){
         if(row.t == 1){
+            console.log(deckName)
             var deckName = DecksNames.findOne({_id : row._id});
             var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
-            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : archetype.name, deckSelected : deckName.name})}> {deckName.name} </a>
+            return  <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : archetype.name, deckSelected : deckName.name})}>{deckName.name}</a>
             return DecksNames.findOne({_id : row._id}).name;
         }else if(row.t == 2){
             var deckName = DecksNames.findOne({_id : row.DecksNames_id});
             return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name})}> {DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name} </a>
         }else if(row.t == 3){
-            return <a href={FlowRouter.path("selectedEvent", {format : row._id.format, Events_id : row.Events_id, DecksData_id : row.DecksData_id})}><div className="js-imagePopOver" data-name={row._id.name}>{row._id.name}</div></a>
+
+            return  <a href={FlowRouter.path("selectedEvent", {format : row._id.format, Events_id : row.Events_id, DecksData_id : row.DecksData_id})}>
+                        <div className="js-imagePopOver" data-name={row._id.name}>{row._id.name}</div>
+                    </a>
         }
         return cell.name.toTitleCase();
     }
 
-    componentDidMount() {
-        this.popover();
-    }
 
-    componentDidUpdate() {
-        cardPopover('.js-imagePopOver');
-    }
-    handleTableComplete(){
-        cardPopover('.js-imagePopOver');
+    nameFormat2(cell, row){
+        if(row.t == 1){
+            var deckName = DecksNames.findOne({_id : row._id});
+            var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
+            return  <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : archetype.name, deckSelected : deckName.name})}>{deckName.name}</a>
+            return DecksNames.findOne({_id : row._id}).name;
+        }else if(row.t == 2){
+            var deckName = DecksNames.findOne({_id : row.DecksNames_id});
+            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name})}> {DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name} </a>
+        }else if(row.t == 3){
+
+            return  <a href={FlowRouter.path("selectedEvent", {format : row._id.format, Events_id : row.Events_id, DecksData_id : row.DecksData_id})}>
+                        <span className="js-imagePopOver" data-name={row._id.name}>{row._id.name}</span>
+                    </a>
+        }
+        return cell.name.toTitleCase();
     }
 
     dateFormat(cell, row){
@@ -47,11 +58,23 @@ export default class LatestDecks extends React.Component {
     }
 
     popover(){
-        cardPopover('.js-imagePopOver');
+        cardPopover('.js-imagePopOver', true);
     }
 
-    render(){
+    afterTableCompleteHandler(){
+        cardPopover('.js-imagePopOver', true);
+    }
 
+    componentDidMount() {
+        cardPopover('.js-imagePopOver', true);
+    }
+
+    componentDidUpdate() {
+        cardPopover('.js-imagePopOver', true);
+    }
+
+
+    render(){
         if(this.props.listLoading){
             return <div>Loading</div>
         }
@@ -59,7 +82,7 @@ export default class LatestDecks extends React.Component {
         var tableDecksArchetypes = {
             options : {
                 sizePerPage : 5,
-                hideSizePerPage: true
+                hideSizePerPage: true,
             },
             data : this.props.List ? [].concat(this.props.List.newestArchetypes, this.props.List.newestDecks) : [],
             pagination : true
@@ -68,11 +91,12 @@ export default class LatestDecks extends React.Component {
         var tableCards = {
             options : {
                 sizePerPage : 5,
+                pagination : true,
                 paginationSize : 2,
                 hideSizePerPage: true,
-                afterTableComplete: this.handleTableComplete.bind(this),
+                afterTableComplete: this.afterTableCompleteHandler.bind(this),
             },
-            data : this.props.List && this.props.List.newestDecks  ? [].concat(this.props.List.newestCards) : [],
+            data : this.props.List.newestCards  ? [].concat(this.props.List.newestCards) : [],
             pagination : true
         }
 
@@ -87,15 +111,15 @@ export default class LatestDecks extends React.Component {
                     <div className="col-xs-6">
                         <BootstrapTable {...tableDecksArchetypes}>
                             <TableHeaderColumn dataField="_id" isKey dataFormat={this.formatFormat}> Format</TableHeaderColumn>
-                            <TableHeaderColumn dataField="_id" >Name</TableHeaderColumn>
-                            <TableHeaderColumn dataField="data" dataFormat={this.dateFormat}>Date</TableHeaderColumn>
+                            <TableHeaderColumn dataField="_id" dataFormat={this.nameFormat}>Name</TableHeaderColumn>
+                            <TableHeaderColumn dataField="data" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
                         </BootstrapTable>
                     </div>
                     <div className="col-xs-6">
                             <BootstrapTable {...tableCards}>
-                                <TableHeaderColumn width="75" dataField="_id" isKey dataFormat={this.formatFormat} dataSort>Format</TableHeaderColumn>
+                                <TableHeaderColumn width="75" dataField="_id" isKey dataFormat={this.formatFormat}>Format</TableHeaderColumn>
                                 <TableHeaderColumn dataField="_id" dataFormat={this.nameFormat}>Name</TableHeaderColumn>
-                                <TableHeaderColumn width="65" dataField="data" dataFormat={this.dateFormat} dataSort>Date</TableHeaderColumn>
+                                <TableHeaderColumn width="65" dataField="data" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
                             </BootstrapTable>
                     </div>
                 </div>

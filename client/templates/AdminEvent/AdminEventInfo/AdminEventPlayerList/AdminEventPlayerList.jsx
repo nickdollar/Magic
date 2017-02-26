@@ -2,13 +2,13 @@ import React from 'react' ;
 import DeckListContainer from '/client/dumbReact/DeckEdit/DeckEditContainer.jsx' ;
 import Moment from "moment";
 
-class PlayerList extends React.Component {
+export default class AdminEventPlayerList extends React.Component {
     constructor(){
         super();
         this.state = {
-            showDecks : []
+            showDecks : [],
+            userAdmin : false
         }
-
     }
 
     removeDeck(DecksData_id){
@@ -19,20 +19,27 @@ class PlayerList extends React.Component {
         
     }
 
-
     toggleShowDeck(DecksData_id){
 
         var index = this.state.showDecks.findIndex((showDeckObj)=>{
             return showDeckObj == DecksData_id;
         });
 
-        var showDecks = this.state.showDecks.concat();
+        var tempShowDecks = this.state.showDecks.concat();
 
         if(index > -1){
-            this.setState({showDecks : showDecks});
+            tempShowDecks.splice(index, 1)
+            this.setState({showDecks : tempShowDecks});
         }else{
-            showDecks = this.state.showDecks.concat([DecksData_id]);
-            this.setState({showDecks : showDecks});
+            tempShowDecks.push(DecksData_id);
+            this.setState({showDecks : tempShowDecks});
+        }
+    }
+
+
+    componentDidMount(){
+        if(Roles.userIsInRole(Meteor.user(), "admin")){
+            this.setState({userAdmin : true});
         }
     }
 
@@ -53,8 +60,14 @@ class PlayerList extends React.Component {
 
     }
 
+    adminConfirm(){
+        Meteor.call("confirmLGSPrePublish", FlowRouter.getParam("Event_id"), (err, data)=>{
+
+        });
+    }
+
     publish(){
-        Meteor.call("publishLGSEvent", FlowRouter.getParam("event_id"), ()=>{
+        Meteor.call("publishLGSEvent", FlowRouter.getParam("Event_id"), ()=>{
 
         });
     }
@@ -110,8 +123,9 @@ class PlayerList extends React.Component {
                     </tbody>
         })
         return (
-                <div>
+                <div className="AdminEventPlayerListComponent">
                     <div>
+                        {this.state.userAdmin ? <button onClick={this.adminConfirm}>{this.props.event.state}</button> : null}
                         {this.props.event.state == "prePublish" ? <div>Published At : {Moment(this.props.event.publishedDate).format("L")}</div> :
                             <div><button disabled={this.props.event.state == "published" ? true : false}
                                     className="btn btn-xs"
@@ -119,10 +133,6 @@ class PlayerList extends React.Component {
                                  <span> You still Can modify for the 48 hours. Will be published after Mod Confirm</span>
                             </div>
                         }
-
-
-
-
                     </div>
                     <table ref="table" className="table table-sm">
                         <thead>
@@ -146,4 +156,3 @@ class PlayerList extends React.Component {
     }
 }
 
-export default PlayerList;

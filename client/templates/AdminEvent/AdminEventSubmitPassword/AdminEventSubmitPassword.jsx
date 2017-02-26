@@ -8,7 +8,7 @@ class AdminEvent extends React.Component {
     }
 
     checkPassword(){
-        Meteor.call("checkIfEventPasswordIsRight", {password : this.refs["input"].value, _id : FlowRouter.getParam("event_id")}, (error, data)=>{
+        Meteor.call("checkIfEventPasswordIsRight", {password : this.refs["input"].value, _id : FlowRouter.getParam("Event_id")}, (error, data)=>{
             if(!data){
                 this.refs["error"].textContainer = "Wrong Password";
                 return;
@@ -18,11 +18,11 @@ class AdminEvent extends React.Component {
     }
     render() {
         var html;
-        if(Events.find({_id : FlowRouter.getParam("event_id")}).count()){
+        if(Events.find({_id : FlowRouter.getParam("Event_id")}).count()){
             html = <div className="form-group row">
                 <label htmlFor="example-text-input" className="col-xs-2 col-form-label">Event Password</label>
                 <div className="col-xs-10">
-                    <input className="form-control" ref="input" type="text" id="example-text-input" defaultValue="qwer"/>
+                    <input className="form-control" ref="input" type="text" id="example-text-input"/>
                 </div>
                 <button onClick={this.checkPassword.bind(this)}>Submit</button>
                 <span ref="error" className="error"></span>
@@ -33,7 +33,7 @@ class AdminEvent extends React.Component {
 
 
         return (
-            <div>
+            <div className="AdminEventSubmitPasswordComponent">
                 {html}
             </div>
         )

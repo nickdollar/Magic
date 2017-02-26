@@ -1,9 +1,9 @@
 import React from 'react' ;
-import SubmitPasswordContainer from "./SubmitPasswordContainer.jsx";
-import EventInfoContainer from "./EventInfoContainer.jsx";
+import AdminEventSubmitPasswordContainer from "./AdminEventSubmitPassword/AdminEventSubmitPasswordContainer.jsx";
+import EventInfoContainer from "./AdminEventInfo/AdminEventInfoContainer.jsx";
 
 
-class AdminEvent extends React.Component {
+export default class AdminEvent extends React.Component {
     constructor(){
         super();
         this.state = {
@@ -18,15 +18,22 @@ class AdminEvent extends React.Component {
         })
     }
 
+    componentDidMount(){
+        Meteor.call("checkIfAdmin", (err, data)=>{
+            if(data){
+                this.setState({passwordCorrect : true})
+            }
+        })
+    }
+
     render() {
         return (
-            <div>
+            <div className="AdminEventsComponent">
                 {this.state.passwordCorrect ?
                     <EventInfoContainer /> :
-                    <SubmitPasswordContainer confirmPassword={this.confirmPassword.bind(this)}/> }
+                    <AdminEventSubmitPasswordContainer confirmPassword={this.confirmPassword.bind(this)}/> }
             </div>
         )
     }
 }
 
-export default AdminEvent;
