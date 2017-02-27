@@ -115,12 +115,16 @@ export default class LGSLocation extends React.Component {
     }
 
     changeZip(e, type){
+
         var ZIP;
         if(type){
             ZIP = e;
         }else {
             ZIP = e.target.value;
         }
+          if(!ZIP){
+            return;
+          }
         if(ZIP.length == 5){
             Meteor.call("checkIfZipExists", ZIP, (err, ZIPQuery)=>{
                 var cookies = new Cookies();

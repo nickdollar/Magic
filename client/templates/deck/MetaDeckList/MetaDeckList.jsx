@@ -1,6 +1,6 @@
 import React from "react";
-import SearchOptions from "./SearchOptions.jsx";
-import ArchetypeList from "./ArchetypeList.jsx";
+import SearchOptions from "./SearchOptions/SearchOptions.jsx";
+import ArchetypeList from "./ArchetypeList/ArchetypeList.jsx";
 
 
 
@@ -8,55 +8,84 @@ class MetaDeckList extends React.Component{
     constructor() {
         super();
         this.state = {
-            typeOptions : ["aggro", "combo", "control"],
-            colors: ["b", "c", "g", "r", "u", "w"],
-            containMatch : "contain",
-            cards : [],
-            archetypesDecks : "archetypes"
+            types: [{value : "aggro", text : "Aggro", checked : true}, {value : "combo", text : "Combo", checked : true}, {value : "control", text : "Control", checked : true}],
+            colors: [{value : "B", css : "sb", checked : true}, {value : "C", css : "scl", checked : true}, {value : "G", css : "sg", checked : true},
+                {value : "R", css : "sr", checked : true}, {value : "U", css : "su", checked : true}, {value : "W", css : "sw", checked : true}],
+            containMatch : [{value : "contain", text : "Contain", checked : true}, {value : "match", text : "Match", checked : false}],
+            cards : []
         }
     }
 
-    updateTypesOptions(types){
-        this.setState({typeOptions : types});
+    updateTypes(index){
+        var types = this.state.types.concat();
+
+        if(types[index].checked){
+            types[index].checked = false
+        }else {
+            types[index].checked = true
+        }
+        this.setState({types : types});
     }
 
-    updateColors(colors){
+    updateColors(index){
+        var colors = this.state.colors.concat();
+
+        if(colors[index].checked){
+            colors[index].checked = false
+        }else {
+            colors[index].checked = true
+        }
         this.setState({colors : colors});
     }
 
-    updateContainMatch(containMatch){
+    updateContainMatch(index){
+        var containMatch = this.state.containMatch.concat();
+        containMatch.forEach((obj, indexObj)=>{
+            if(indexObj == index){
+                obj.checked = true
+            }else{
+                obj.checked = false;
+            }
+        })
         this.setState({containMatch : containMatch});
     }
 
-    updateCards(cards){
-        this.setState({cards : cards});
+    removeFromTheListMain(index){
+        var cards = this.state.cards.concat();
+        cards.splice(index, 1);
+        this.setState({cards : cards})
     }
 
-    updateArchetypesDecks(archetypesDecks){
-        this.setState({archetypesDecks : archetypesDecks});
+    dumbSelect2(cardName){
+        var card = cardName.toTitleCase();
+        var index = this.state.cards.findIndex((obj)=>{
+            return cardName == obj;
+        });
+
+        if(index == -1){
+            var cards = this.state.cards.concat([card]);
+            this.setState({cards : cards})
+        }
     }
 
     render() {
         return (
             <div className="row  ">
                 <div className="col-xs-3">
-                    <SearchOptions updateTypesOptions={this.updateTypesOptions.bind(this)}
+                    <SearchOptions updateTypes={this.updateTypes.bind(this)}
                                    updateColors={this.updateColors.bind(this)}
                                    updateContainMatch={this.updateContainMatch.bind(this)}
-                                   updateCards={this.updateCards.bind(this)}
-                                   updateArchetypesDecks={this.updateArchetypesDecks.bind(this)}
+                                   removeFromTheListMain={this.removeFromTheListMain.bind(this)}
+                                   dumbSelect2={this.dumbSelect2.bind(this)}
+                                   state={this.state}
                     />
                 </div>
                 <div className="col-xs-9">
-                    {this.state.archetypesDecks == "archetypes" ?
-                    <ArchetypeList typeOptions={this.state.typeOptions}
-                                   colors={this.state.colors}
-                                   containMatch = {this.state.containMatch}
-                                   cards = {this.state.cards}
-                                   format = {this.props.format}
-                    /> :
-                        null
-                    }
+
+                    <ArchetypeList cards={this.state.cards}
+                                   format={this.props.format}
+                                   state={this.state}
+                    />
                 </div>
             </div>
         )

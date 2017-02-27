@@ -9,14 +9,12 @@ export default class EventsTable extends React.Component {
     }
 
     event(data, row){
-
         if(row.type == "lgs"){
             var LGSquery = LGS.findOne({_id : row.LGS_id});
             return <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row._id})}>{row.name} - {`${LGSquery.name} (${LGSquery.location.city ? LGSquery.location.city : LGSquery.location.state})`}</a>
         }else{
             return  <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row._id})}>{eventsTypes[row.type] ? eventsTypes[row.type] : row.type}</a>
         }
-
     }
 
     format(data, row){

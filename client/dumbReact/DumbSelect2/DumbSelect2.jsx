@@ -3,10 +3,6 @@ import React from "react";
 export default class DumbSelect2 extends React.Component{
     constructor() {
         super();
-        this.state = {
-            inputValue : false,
-            cardList : []
-        }
     }
 
     componentDidMount(){
@@ -33,6 +29,7 @@ export default class DumbSelect2 extends React.Component{
         $('.js-select2').off("select2:select");
         $('.js-select2').on("select2:select", (evt)=> {
             this.props.returnHandler(evt.params.data.text);
+            $('.js-select2').val("");
         });
     }
 

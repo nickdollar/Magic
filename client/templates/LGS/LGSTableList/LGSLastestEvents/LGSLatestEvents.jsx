@@ -34,7 +34,6 @@ class LGSLatestEvents extends React.Component{
                         />
                     </div>
                 </div>
-
                 <div className="LGSLatestEventsTable">
                     <table className="table">
                         <thead>

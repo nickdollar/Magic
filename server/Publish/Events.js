@@ -23,7 +23,7 @@ Meteor.publish('EventsByLGS_idArray', function(arraysOfLGS_id){
 });
 
 Meteor.publish('EventsSmall', function(states, format, LGS_ids){
-    return Events.find({state : {$in : states},  format : format, $or : [{decks : {$lt : 16}}, {LGS_id : {$in : LGS_ids}}]});
+    return Events.find({$or : [{state : {$in : ["decks", "names"]}, format : format, decks : {$lt : 16}}, {state : "published", LGS_id : {$in : LGS_ids}}]});
 });
 
 Meteor.publish('EventsBig', function(states, format){
