@@ -96,6 +96,30 @@ Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_i
     }
 });
 
+Meteor.publish('DecksDataByArchetypes', function(selectedCard, archetype, format){
+    var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
+
+    var aggregation = DecksArchetypes.aggregate(
+        [
+            {$match: {format: "standard", name : {$regex : DecksArchetypesRegex}}},
+            {$lookup: {
+                    "from" : "DecksNames",
+                    "localField" : "_id",
+                    "foreignField" : "DecksArchetypes_id",
+                    "as" : "DecksNames_id"
+            }},
+            {$unwind: {path : "$DecksNames_id"}},
+            {$group: {_id : "$_id", DecksNames_id : {$addToSet : "$DecksNames_id._id"}}},
+
+        ]
+    );
+
+    if(selectedCard.length){
+        return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_id}, format: format, "main.name" : {$in : selectedCard}});
+    }
+
+    return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_id}, format: format});
+});
 
 Meteor.publishComposite('DecksDataCardsDataByIdOrFirstOnEvents', function(DecksData_id, Events_id){
     return {
@@ -115,7 +139,6 @@ Meteor.publishComposite('DecksDataCardsDataByIdOrFirstOnEvents', function(DecksD
                         return obj.name;
                     });
                     var allCards = arrayUnique(main.concat(sideboard));
-
                     return CardsData.find({name: {$in : allCards}});
                 }
             }
@@ -208,8 +231,12 @@ Meteor.publishComposite("deckSelectedAndCardsData", function(_id, DecksNames_id)
     }
 });
 
-Meteor.publish('deckSelectedGetNewestDeck', function(DecksNames_id){
-    return DecksData.find({DecksNames_id : DecksNames_id});
+Meteor.publish('DecksDataByDecksNames_idSimple', function(DecksNames_id){
+    if(!DecksNames_id){
+        return;
+    }
+    return DecksData.find({DecksNames_id : DecksNames_id}, {fields : {DecksNames_id : 1, state : 1}});
+
 });
 
 Meteor.publish('DecksWithoutNamesQuantity', function(format){

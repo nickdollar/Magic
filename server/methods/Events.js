@@ -30,7 +30,7 @@ Meteor.methods({
             return false;
         }
         event.venue = "lgs";
-        Object.assign(event, {type : "lgs"});
+        Object.assign(event, {type : "lgs", state : "created"});
 
         var email = event.email;
         delete event.email;
@@ -44,6 +44,10 @@ Meteor.methods({
         var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token});
 
         if(eventFound){
+            if(eventFound.state == "locked"){
+                return "locked";
+            }
+
             if(DecksData.findOne({Events_id : eventFound._id, player : form.player})){
                 return "player";
             }
@@ -62,12 +66,46 @@ Meteor.methods({
         return result;
     },
     publishLGSEvent(Event_id){
+        var event = Events.findOne({_id : Event_id});
 
-        Events.update({_id : Event_id},
-            {
-                $set : {state : "prePublish", publishedDate : new Date()}
-            }
-        )
+        if(!event.publishedDate){
+            Events.update({_id : Event_id},
+                {
+                    $set : {publishedDate : new Date()}
+                }
+            )
+        }
+
+        if(event.state == "locked"){
+            Events.update({_id : Event_id},
+                {
+                    $set : {state : "created"}
+                }
+            )
+        }else{
+            Events.update({_id : Event_id},
+                {
+                    $set : {state : "locked"}
+                }
+            )
+        }
+    },
+    addBigEvent(form){
+        form = Object.assign(form, {state : Roles.userIsInRole(Meteor.user(), 'admin') ? "confirmed" : "pending"});
+        EventsCalendar.insert(form);
+        return true;
+    },
+    stopEventsPublished(){
+        var date = new Date(new Date().getTime() - (2*24*60*60*1000));
+        console.log(date);
+        Events.find({password : {$exists : true}, date : {$lt : date}}).forEach((event)=>{
+            console.log(event);
+            Events.update({_id : event._id},
+                {
+                    $unset : {password : "", token : ""}
+                })
+
+        })
     }
 })
 
@@ -159,8 +197,6 @@ Meteor.methods({
             return true;
         }
         return false;
-
-
     },
     confirmLGSPrePublish(Events_id){
         if(Roles.userIsInRole(Meteor.user(), 'admin')){
@@ -171,8 +207,28 @@ Meteor.methods({
     }
 })
 
-
 fixEventsStandard = function(){
+    console.log("START: fixEventsStandard");
+
+    Events.update({format : "oldStandard"},
+        {
+            $set : {format : "standard"},
+            $unset : {totalDifference : ""}
+        },
+        {
+            multi : true
+        }
+    )
+
+    DecksData.update({format : "oldStandard"},
+        {
+            $set : {format : "standard"}
+        },
+        {
+            multi : true
+        }
+    )
+
     var events = Events.aggregate([
         {$match : {format : "standard"}},
         {$lookup : {
@@ -182,25 +238,49 @@ fixEventsStandard = function(){
             "as" : "DecksData"
         }},
         {$unwind : "$DecksData"},
-        {$project : {_id : "$_id", cards : {$setUnion :
-            [
-                {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}},
-                {$map : {input : "$DecksData.sideboard", as : "el", in : "$$el.name"}}
-            ]
-        }}},
+        {$project : {_id : "$_id", cards : {
+            $setUnion :
+                [
+                    {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}},
+                    {$map : {input : "$DecksData.sideboard", as : "el", in : "$$el.name"}}
+                ]
+            }}},
         {$unwind : "$cards"},
         {$group : {_id : "$_id", cards : {$addToSet : "$cards"}}}
     ]);
+
+    var standards = [];
+
+
+    for(var i = 0; i < standardSets.length; i++){
+        if(standardSets[i].release < new Date()){
+            standards.push(standardSets[i].name);
+            if(standardSets[i].end){
+                if(standards.length == 6){
+                    break;
+                }
+            }
+        }
+    }
+
+    var lastStandard = [];
+    lastStandard.push(standards[standards.length -1]);
+    console.log(lastStandard);
 
     for(var i = 0; i <events.length; i++){
         var cardsFound = CardsFullData.find({name : {$in : events[i].cards}}).map(function(obj){
             return obj.name;
         });
+        var cardsFound2 = CardsFullData.find({name : {$in : events[i].cards}, printings : {$in : lastStandard}}).map(function(obj){
+            return obj.name;
+        });
 
-        var cardsFound2 = CardsFullData.find({name : {$in : events[i].cards}, printings : {$in : standardSets}});
+        if(_.intersection(cardsFound2, cardsFound).length){
+            console.log(events[i]._id);
+        }
+        var totalDifference = Math.abs(cardsFound.length - cardsFound2.length);
 
-        var totalDifference = Math.abs(cardsFound.length - cardsFound2.count());
-        if(totalDifference > 5){
+        if(_.intersection(cardsFound2, cardsFound).length < 5){
             console.log("OLD STANDARD");
             Events.update({_id : events[i]._id},
                           {
@@ -220,11 +300,18 @@ fixEventsStandard = function(){
             )
         }
     }
-
     console.log("   END: fixEventsStandard");
 }
 
 
 
 
-standardSets = ["BFZ", "OGW", "SOI", "EMN", "KLD"];
+standardSets =
+    [   {name : "BFZ", release : new Date(2015, 9, 2)},
+        {name : "OGW", release : new Date(2016, 0, 22), end : true},
+        {name : "SOI", release : new Date(2016, 3, 8)},
+        {name : "EMN", release : new Date(2016, 6, 22), end : true},
+        {name : "KLD", release : new Date(2016, 8, 30)},
+        {name : "AER", release : new Date(2017, 0, 20), end : true},
+        {name : "AKH", release : new Date(2017, 3, 28)},
+    ]

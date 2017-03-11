@@ -4,10 +4,10 @@ import ImportByDeckContainer from './SubmitInput/ImportByDeck/ImportByDeckContai
 import DeckAndSideboardInput from './SubmitInput/DeckAndSideboardInput/DeckAndSideboardInput.jsx' ;
 
 
-class SubmitDeckForm extends React.Component {
+
+export default class SubmitDeckForm extends React.Component {
     constructor(){
         super();
-
         this.state = {
             deck : {
                 main : [],
@@ -35,5 +35,3 @@ class SubmitDeckForm extends React.Component {
         )
     }
 }
-
-export default SubmitDeckForm;

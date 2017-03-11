@@ -56,5 +56,113 @@ Meteor.methods({
             DecksArchetypes.remove({_id : DecksArchetypes_id});
         };
     },
+
+    createShellArchetype(DecksArchetypes_id){
+        console.log("START: DecksArchetypes_id");
+        var DecksArchetypesAggregation = DecksArchetypes.aggregate(
+            [
+                {$match: {_id : DecksArchetypes_id}},
+                {$lookup: {
+                        "from" : "DecksNames",
+                        "localField" : "_id",
+                        "foreignField" : "DecksArchetypes_id",
+                        "as" : "DecksNames"
+                    }
+                },
+                {$unwind: {path : "$DecksNames"}},
+                {$lookup: {
+                        "from" : "DecksData",
+                        "localField" : "DecksNames._id",
+                        "foreignField" : "DecksNames_id",
+                        "as" : "DecksData"
+                }},
+                {
+                    $unwind: {
+                        path : "$DecksData"
+                    }
+                },
+
+                // Stage 6
+                {
+                    $project: {
+                        _id : "$DecksData._id",
+                        name : {
+                            $map : {input : "$DecksData.main", as : "el", in : "$$el.name"}
+                        }
+                    }
+                },
+
+                // Stage 7
+                {
+                    $unwind: {
+                        path : "$name",
+                    }
+                },
+
+                // Stage 8
+                {
+                    $group: {
+                        _id : "$name",
+                        count : {$sum : 1}
+                    }
+                },
+
+                // Stage 9
+                {
+                    $lookup: {
+                        "from" : "CardDatabase",
+                        "localField" : "_id",
+                        "foreignField" : "name",
+                        "as" : "cardData"
+                    }
+                },
+
+                // Stage 10
+                {
+                    $unwind: {
+                        path : "$cardData"
+
+                    }
+                },
+
+                // Stage 11
+                {
+                    $match: {
+                        "cardData.land" : false
+                    }
+                },
+                {$group: {
+                        _id : "$count",
+                        cards : { $push : "$_id"}
+                    }
+                },
+                {
+                    $sort : {_id : -1}
+                }
+
+            ]
+
+
+        );
+        ArchetypesShells.update({DecksArchetypes_id : DecksArchetypes_id},{
+                $set : {
+                    cardTiers : DecksArchetypesAggregation
+                }
+            },
+            {
+                upsert : true
+            }
+        )
+        console.log("   END: DecksArchetypes_id");
+    },
+    createArchetypesShellsForFormat(format){
+        console.log("START: createShellForFormat");
+        DecksArchetypes.find({format : format}).forEach((deckArchetype)=>{
+            Meteor.call("createShellArchetype", deckArchetype._id);
+        })
+        console.log("   END: createShellForFormat");
+    }
+
+
 })
 

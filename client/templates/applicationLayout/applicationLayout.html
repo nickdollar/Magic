@@ -1,5 +1,12 @@
 <template name="ApplicationLayout">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6373196080512263",
+            enable_page_level_ads: true
+        });
+    </script>
     <div class="container">
         {{#if subscriptionsReady}}
             <div class="header">
@@ -10,26 +17,25 @@
                 </div>
             </div>
             <div class="body" style="min-height: 700px">
+                <div class="row">
                     {{> Template.dynamic template=main}}
                     {{>modals}}
+                </div>
+
             </div>
             <div class="footer" style="background-color: white">
-                <img src="/img/comodo_secure_seal_76x26_transp.png">
+                <img src="/img/comodo_secure_seal_76x26_transp.png">This site is beta development. We have no Affiliation with Wizards of the Coast and no Affiliation with Any Local Game Store.
             </div>
         {{/if}}
     </div>
 </template>
 
 <template name="main">
-    <div class="row">
-        {{>sevenDayCalendar}}
-    </div>
+    {{>sevenDayCalendar}}
     <!--<div class="row">-->
         <!--{{>latestAddedPlaylist}}-->
     <!--</div>-->
-    <div class="row">
-        <div>{{> React component=LatestDecks}}</div>
-    </div>
+    <div>{{> React component=LatestDecks}}</div>
 </template>
 
 <template name="modals">
@@ -72,12 +78,8 @@
 </template>
 
 <template name="events">
-    <div class="row">
-        {{> React component=EventsTableComponent}}
-    </div>
-    <div class="row">
-        {{>eventsCalendar}}
-    </div>
+    <div>{{> React component=EventsTableComponent}}</div>
+    <div>{{> React component=BigEventsCalendarContainer}}</div>
 </template>
 
 
@@ -99,6 +101,10 @@
 
 <template name="admin">
     <div>{{> React component=CustomAdmin}}</div>
+</template>
+
+<template name="User">
+    <div>{{> React component=User}}</div>
 </template>
 
 <template name="CustomEventsAdmin">

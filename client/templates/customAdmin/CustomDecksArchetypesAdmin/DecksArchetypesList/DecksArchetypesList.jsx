@@ -4,6 +4,7 @@ import FormValidate from "/client/dumbReact/FormValidate/FormValidate";
 import TextFormInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput";
 import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio";
 
+
 export default class DecksNamesList extends React.Component {
     constructor(){
         super();
@@ -11,12 +12,12 @@ export default class DecksNamesList extends React.Component {
     }
 
     expandComponent(row){
-        return  <FormValidate submitMethod="updateDeckArchetype" extraFields={{_id : row._id}}>
-                    <TextFormInput defaultValue={row.name}
+        return  <FormValidate submitMethod="updateDeckArchetype" id={row._id} extraFields={{_id : row._id}}>
+                    <TextFormInput initialValue={row.name}
                                    title="Name"
                                    objectName="name"
                     />
-                    <Radio defaultValue = {row.format}
+                    <Radio initialValue = {row.format}
                            title="Format"
                            objectName="format"
                            opts={[{value : "standard", text : "Standard"},
@@ -24,7 +25,7 @@ export default class DecksNamesList extends React.Component {
                                {value : "vintage", text : "Vintage"},
                                {value : "legacy", text : "Legacy"}, ]}
                     />
-                    <Radio defaultValue = {row.type}
+                    <Radio initialValue = {row.type}
                            title="Type"
                            objectName="type"
                            opts={[{value : "aggro", text : "Aggro"},
@@ -34,6 +35,8 @@ export default class DecksNamesList extends React.Component {
                     />
                 </FormValidate>
     }
+
+
 
 
     removeDeckName(event, DecksNames_id){
@@ -68,7 +71,7 @@ export default class DecksNamesList extends React.Component {
                 <h3>Decks Archetypes List</h3>
                 <BootstrapTable {...options}>
                     <TableHeaderColumn isKey dataField={"_id"} dataSort>_id</TableHeaderColumn>
-                    <TableHeaderColumn dataField={"name"} dataSort>Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField={"name"} dataSort >Name</TableHeaderColumn>
                     <TableHeaderColumn dataField={"format"}>format</TableHeaderColumn>
                     <TableHeaderColumn dataField={"type"}>Type</TableHeaderColumn>
                     <TableHeaderColumn width="50px" dataField={"_id"} dataFormat={this.removeButton.bind(this)}>X</TableHeaderColumn>

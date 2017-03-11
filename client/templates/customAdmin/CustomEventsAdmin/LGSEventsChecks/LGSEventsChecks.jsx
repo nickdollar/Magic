@@ -12,7 +12,6 @@ export default class LGSEventsChecks extends React.Component {
     }
 
     render(){
-        console.log(this.props);
         const options = {
             options : {
 

@@ -15,11 +15,18 @@ export default class FormValidate extends React.Component{
     }
 
     componentDidUpdate(){
+
     }
 
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.id != nextProps.id){
+            return true;
+        }
+        return false;
+    }
     handleSubmit (e){
         e.preventDefault();
-        console.log("handleSubmit");
         var validForm = true;
         this.state.Fields.forEach((field)=>{
             if(typeof field.isValid === "function"){

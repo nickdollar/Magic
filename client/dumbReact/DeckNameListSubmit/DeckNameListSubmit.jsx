@@ -32,6 +32,7 @@ export default class DeckNameListSubmit extends React.Component{
     }
 
 
+
     // shouldComponentUpdate(){
     //
     // }
@@ -45,6 +46,7 @@ export default class DeckNameListSubmit extends React.Component{
             return (<div>Loading...</div>)
         }
         return (
+            <div className="DeckNameListSubmitComponent">
                 <div className="input-group" style={{width : "100%"}} >
                     <select ref="input" className="select2-container form-control" style={{width : "100%"}} >
                         <option></option>
@@ -56,6 +58,7 @@ export default class DeckNameListSubmit extends React.Component{
                         <button disabled={!this.state.inputValue} className="btn btn-default" type="button" style={{padding : "4px 12px 3px 12px"}} onClick={this.submitDeckName.bind(this)}>Submit</button>
                     </span>
                 </div>
+            </div>
         )
     }
 }

@@ -22,7 +22,7 @@ class LGSLatestEvents extends React.Component{
             <div className="LGSLatestEvents">
                 <div className="titlePaginationWrapper">
                     <div className="eventTitle">
-                        <h3>LGS Submitted Events</h3>
+                        <h3>LGS Published Events</h3>
                     </div>
                     <div className="eventPagination">
                         <Pagination

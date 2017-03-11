@@ -14,7 +14,9 @@ export default class DecksDataMethodsButtons extends React.Component {
     render(){
         return(
             <div className="DecksNamesMethodsButtonsComponent">
+                <h3>Fix Decks Scraped</h3>
                 <button onClick={()=>this.methodCall("fixDecksScraped", [this.props.format])}>fixDecksScraped</button>
+
             </div>
         );
     }

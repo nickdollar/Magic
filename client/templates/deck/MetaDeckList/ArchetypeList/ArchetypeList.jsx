@@ -12,6 +12,12 @@ export default class ArchetypeList extends React.Component {
         return getHTMLColorsFromArchetypes(_id);
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.format != this.props.format){
+            this.state.DecksArchetypes = DecksArchetypes.find({format : nextProps.format}).fetch();
+        }
+    }
+
     filterColors(decksArchetypes, colors){
         var goodRows = [];
         decksArchetypes.forEach((deckArchetype)=>{
@@ -41,6 +47,17 @@ export default class ArchetypeList extends React.Component {
         return goodRows;
     }
 
+    nameFilter(decksArchetypes, nameFilter){
+        var array = [];
+        var regex = new RegExp(nameFilter, "i")
+        for(var i = 0; i < decksArchetypes.length; i++){
+            if(decksArchetypes[i].name.match(regex)){
+                array.push(decksArchetypes[i]);
+            }
+        }
+        return array;
+    }
+
     filterTypes(decksArchetypes, types){
         decksArchetypes = decksArchetypes.filter((deckArchetype)=>{
             return types.findIndex((type)=>{
@@ -50,6 +67,9 @@ export default class ArchetypeList extends React.Component {
         return decksArchetypes;
     }
 
+    nameFormat(name, row){
+        return <a href={FlowRouter.path('ArchetypeDeckInformation', {format : row.format, archetype : row.name})}>{name}</a>
+    }
 
     filterNames(decksArchetypes){
         var decksArchetypes_ids = decksArchetypes.map((deckArchetype)=>{
@@ -99,30 +119,31 @@ export default class ArchetypeList extends React.Component {
             goodRows = this.filterColors(goodRows, colors);
         }
 
+        if(this.props.nameFilter != ""){
+            goodRows = this.nameFilter(goodRows, this.props.state.nameFilter);
+        }
+
         if(this.props.state.cards.length != 0){
             goodRows = this.filterNames(goodRows);
         }
 
         var tableOptions = {
             options : {
-
+                sizePerPage: 15,
+                defaultSortName: 'name',
+                defaultSortOrder: 'asc'
             },
+            height: "595px",
+            pagination : true,
             data : goodRows
         }
 
         return(
             <div className="ArchetypeListComponent">
                 <BootstrapTable {...tableOptions}>
-                    <TableHeaderColumn isKey dataField="name">
-                        Name
-                    </TableHeaderColumn>
-                    <TableHeaderColumn dataField="_id" dataFormat={this.colorsFormat}>
-                        Colors
-                    </TableHeaderColumn>
-                    <TableHeaderColumn dataField="type">
-                        Type
-                    </TableHeaderColumn>
-
+                    <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormat.bind(this)}>Name</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id" dataFormat={this.colorsFormat}>Colors</TableHeaderColumn>
+                    <TableHeaderColumn dataField="type" >Type</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         );

@@ -5,7 +5,7 @@ Meteor.methods({
     sendConfirmationFromNewEvent(email, event){
         this.unblock();
         
-        var eventFinal = Object.assign({}, event, {LGS : LGS.findOne({_id : event.LGS_id}).name.toTitleCase() + " (" + LGS.findOne({_id : event.LGS_id}).location.city + ")", date : moment(event.date).format("LL")})
+        var eventFinal = Object.assign({}, event, {LGS : LGS.find({_id : event.LGS_id}, {limit : 1}).fetch()[0].name.toTitleCase() + " (" + LGS.find({_id : event.LGS_id}, {limit : 1}).fetch()[0].location.city + ")", date : moment(event.date).format("LL")})
         eventFinal.link = "www.crowdmtg.com/adminEvent/" + event.Event_id;
         var emailTemplate = new EmailTemplate("assets/app/welcome-email");
 

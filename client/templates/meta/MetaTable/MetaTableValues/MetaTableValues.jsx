@@ -21,7 +21,7 @@ export default class ValuesTable extends React.Component {
 
         var position = row.positionChange;
         if(row.positionChange==999){
-            position = "NEW";
+            position = "";
         }
 
 

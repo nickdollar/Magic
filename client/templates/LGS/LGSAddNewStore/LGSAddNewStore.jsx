@@ -38,7 +38,7 @@ export default class LGSAddNewStore extends React.Component {
                     <FormValidation submitMethod="addLGS">
                         <TextFormInput
                             objectName={"name"}
-                            title={"LGS Name"}
+                            title={"Local Game Store Name"}
                             errorMessage={"LGS Name is Missing"}
                             required={true}
                         />

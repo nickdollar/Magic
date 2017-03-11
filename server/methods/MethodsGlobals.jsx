@@ -4,7 +4,7 @@ Meteor.methods({
         return true;
     },
     getLastTwenty(format){
-         return MetaNewest.findOne({format : format, type : "lastTwenty"});
+         return MetaNewest.find({format : format, type : "lastTwenty"}, {limit : 1}).fetch()[0];
     }
 })
 

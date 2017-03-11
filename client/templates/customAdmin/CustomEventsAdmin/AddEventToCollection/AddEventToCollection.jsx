@@ -11,7 +11,8 @@ export default class AddEventToCollection extends React.Component{
 
     render(){
         return (
-            <div>
+            <div className="AddEventToCollectionComponent">
+                <h3>Add Event To Collection</h3>
                 <button onClick={()=>this.callFunction("methodEventLeagueGetNewEvents", {format : this.props.format, days : 5})}
                         type="button" style={{backgroundColor : "#3399ff"}} className="btn btn-block">Get New Dailies and Leagues</button>
                 <button onClick={()=>this.callFunction("methodEventLeagueGetInfoOld", {format : this.props.format, days : 5})}

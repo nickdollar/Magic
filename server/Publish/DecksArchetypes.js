@@ -1,6 +1,6 @@
 Meteor.publish('DecksArchetypesFormatNotReactive', function(format) {
 
-    return DecksArchetypes.find({}, {reactive : false});
+    return DecksArchetypes.find({});
     var DecksArchetypes_idQuery = DecksNames.find({format : format, DecksArchetypes_id : {$ne : null}, decks : {$gt : 0}}).map(function(obj){
         return obj.DecksArchetypes_id;
     });

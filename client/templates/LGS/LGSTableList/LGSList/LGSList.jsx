@@ -26,10 +26,6 @@ export default class LGSList extends React.Component {
                     return "Wrong Zip"
                 }
             }
-
-
-
-
         var R = 3963.2; // Radius of the earth in km
         var dLat = this.deg2rad(lat2-lat1);  // deg2rad below
         var dLon = this.deg2rad(lon2-lon1);
@@ -62,8 +58,6 @@ export default class LGSList extends React.Component {
     }
 
     render(){
-        // console.log(console.log(this.props));
-        // console.log(this.props);
         return(
             <div className="LGSListComponent">
                 <h3>LGS List</h3>
@@ -80,7 +74,7 @@ export default class LGSList extends React.Component {
                     <tbody>
                     {this.props.LGS.map((lgs)=>{
                         return <tr key={lgs._id}>
-                            <td><input type="checkbox" data-_id={lgs._id} checked={this.props.checkedOrNotChecked(lgs._id)} onChange={()=>this.props.checkEvent(lgs._id)}/></td>
+                            <td><input type="checkbox" checked={this.props.checkedOrNotChecked(lgs._id)} onChange={()=>this.props.checkEvent(lgs._id)}/></td>
                             <td>{lgs.name} {lgs.location.city ? `(${lgs.location.city})` : ""}</td>
                             <td>{lgs.location.formatedAddress}</td>
                             {this.checkDistanceType(lgs)}

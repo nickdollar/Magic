@@ -1,6 +1,7 @@
 import React from 'react' ;
 import DecksWithoutNamesContainer from './DecksWithoutNamesContainer.jsx' ;
 
+
 export default class DecksWithoutNamesWrapper extends React.Component{
     constructor(props){
         super();
@@ -27,13 +28,14 @@ export default class DecksWithoutNamesWrapper extends React.Component{
     }
 
     changedState(state){
-        this.setState({selectedState : state});
+        this.setState({page : 0, selectedState : state});
     }
 
     render(){
         return (
             <div className="DecksWithoutNamesWrapperContainer">
-                {["lgs", "scraped", "match", "perfect", "nameRemoved", "manual"].map((state)=>{
+                <h3>Deck List By State</h3>
+                {["lgs", "scraped", "match", "perfect", "nameRemoved", "manual", "shell"].map((state)=>{
                     return  <label key={state} className="radio-inline">
                                 <input type="radio" onChange={()=>this.changedState(state)} value={state} name="optradio" checked={this.state.selectedState == state ? true : false}/> {state}
                             </label>

@@ -66,7 +66,7 @@ makeCardsDataFromFullData = function(){
                 }
                 data.manaCost = "";
                 for(var i = 0; i < obj.names.length; i ++){
-                    data.manaCost += CardsFullData.findOne({name : obj.names[i]}).manaCost;
+                    data.manaCost += CardsFullData.find({name : obj.names[i]}, {limit : 1}).fetch()[0].manaCost;
                     if( i < obj.names.length - 1){
                         data.manaCost += " // ";
                     }

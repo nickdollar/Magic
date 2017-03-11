@@ -7,6 +7,6 @@ export default LGSEventsChecksContainer = createContainer(({}) => {
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        Events : Events.find({state : {$in : ["prePublish", "published"]}}).fetch()
+        Events : Events.find({state : {$in : ["created", "locked", "published"]}}).fetch()
     };
 }, LGSEventsChecks);

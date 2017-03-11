@@ -10,8 +10,8 @@ getHTMLColorsFromArchetypesReact = function(DecksArchetypes_id){
         }
         colorsArray = _.union(colorsArray, decksNames[i].colors);
     }
-    return  <div> {colorsArray.map((color)=>{     return <span key={color} className={`mana ${colors[color]}`}></span> })}
-            </div>
+    return  <span> {colorsArray.map((color)=>{     return <span key={color} className={`mana ${colors[color]}`}></span> })}
+            </span>
 }
 
 
@@ -24,11 +24,11 @@ getHTMLColorsFromDecksNamesReact = function(DecksNames_id){
     if(!deckName.colors){
         return "";
     }
-    return <div>
-        {deckName.colors.map((color)=>{
-            return <span key={color} className={`mana ${colorsValues[color]}`}></span>
-        })}
-    </div>
+    return  <span>
+                {deckName.colors.map((color)=>{
+                    return <span key={color} className={`mana ${colorsValues[color]}`}></span>
+                })}
+            </span>
 }
 
 getHTMLColorsFromColorArray = function(colors){

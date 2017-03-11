@@ -1,5 +1,5 @@
 import React from 'react' ;
-import LGSEventsCalendarContainer from "./LGSEventsCalendar/LGSEventsCalendarContainer.jsx";
+import LGSEventsCalendar from "./LGSEventsCalendar/LGSEventsCalendar.jsx";
 import LGSLatestEventsContainer from "./LGSLastestEvents/LGSLatestEventsContainer.jsx"
 import LGSList from "./LGSList/LGSList.jsx"
 
@@ -7,8 +7,13 @@ export default class LGSTableList extends React.Component {
 
     constructor(){
         super();
+
+        var lgsArray = LGS.find({}).map((lgs)=>{
+            return Object.assign(lgs, {checked : true, showing : true})
+        })
+
         this.state = {
-            LGS : []
+            LGS : lgsArray
         }
     }
 
@@ -17,20 +22,16 @@ export default class LGSTableList extends React.Component {
     }
 
     componentWillReceiveProps(newProps){
-
         var arraysOfLGS = this.state.LGS.concat();
 
         arraysOfLGS.forEach((LGSObj)=>{
             LGSObj.showing = false;
         });
-
         if(newProps.LGS){
             newProps.LGS.forEach((LGSObj)=>{
-
                 var index = arraysOfLGS.findIndex((obj)=>{
                     return obj._id == LGSObj._id;
                 })
-
                 if(index == -1){
                     arraysOfLGS.push({_id : LGSObj._id, checked : true, showing : true});
                 }else{
@@ -41,20 +42,19 @@ export default class LGSTableList extends React.Component {
         }
     }
 
+
     checkedOrNotChecked(_id){
-        if(!this.state.LGS.find((LGSObj)=>{ return _id == LGSObj._id})){
+        if(!this.state.LGS.find((LGSObj)=>{return _id == LGSObj._id})){
             return true;
         }
-
-        return this.state.LGS.find((LGSObj)=>{ return _id == LGSObj._id}).checked;
+        return this.state.LGS.find((LGSObj)=>{return _id == LGSObj._id}).checked;
     }
 
-    checkEvent(e){
+    checkEvent(LGS_id){
         var arrayTemp = this.state.LGS.concat();
 
-
         var index = arrayTemp.findIndex((arrayImuOby)=>{
-            return e.target.getAttribute("data-_id") == arrayImuOby._id;
+            return  LGS_id == arrayImuOby._id;
         })
 
         if(arrayTemp[index].checked){
@@ -65,13 +65,12 @@ export default class LGSTableList extends React.Component {
         this.setState({LGS : arrayTemp});
     }
 
-
     render(){
         return(
             <div className="LGSTableListComponent">
                 <LGSList LGS={this.props.LGS} checkEvent={this.checkEvent.bind(this)} checkedOrNotChecked={this.checkedOrNotChecked.bind(this)} positionOption={this.props.positionOption}/>
                 <LGSLatestEventsContainer LGS={this.state.LGS} positionOption={this.props.positionOption}/>
-                <LGSEventsCalendarContainer LGS={this.state.LGS}/>
+                <LGSEventsCalendar LGS={this.state.LGS}/>
             </div>
         );
     }

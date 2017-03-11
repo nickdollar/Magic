@@ -27,10 +27,11 @@ export default class CustomAdmin extends React.Component{
     }
 
     render(){
+        console.log(this.props);
         return (
             <div className="AddDecksNamesComponent">
                 <h3>Add A New Deck Name</h3>
-                <FormValidate submitMethod="addDeckName" extraFields={{format : this.props.format}}>
+                <FormValidate submitMethod="addDeckName" id={this.props.format} extraFields={{format : this.props.format}}>
                     <TextInput objectName={"name"}
                                title={"Deck Name"}
                                errorMessage="Need Name."

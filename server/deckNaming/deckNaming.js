@@ -18,45 +18,14 @@ deckNaming = function(DecksData_id){
 };
 
 removeNameFromDeck = function(DecksData_id){
-    var deckData = DecksData.findOne({_id : DecksData_id});
+    var deckData = DecksData.find({_id : DecksData_id}, {limit : 1}).fetch()[0];
 
     if(!deckData.DecksNames_id){
         return;
     }
-    console.log("Exists");
-    deckData.main.forEach(function(obj){
-        var query = {};
-        query = {_id : deckData.DecksNames_id, "DecksData._id" : deckData._id};
-        query["main.name"] = obj.name;
-
-        var increment = {"main.$.decksQuantity" : -1, "main.$.total" : -obj.quantity};
-        DecksNames.update(query,
-            {
-                $inc : increment
-            })
-    });
-    DecksData.update(deckData,
+    DecksData.update({_id : deckData._id},
         {$unset : {DecksNames_id : ""}}
     );
-
-    DecksNames.update({_id : deckData.DecksNames_id, "DecksData._id" : deckData._id}, {
-        $inc : {
-            decks : -1,
-                "colors.B" : -deckData.colors.B,
-                "colors.C" : -deckData.colors.C,
-                "colors.G" : -deckData.colors.G,
-                "colors.R" : -deckData.colors.R,
-                "colors.U" : -deckData.colors.U,
-                "colors.W" : -deckData.colors.W
-        },
-        $pull : {
-            DecksData : {
-                _id : deckData._id}
-        }
-    },
-        {multi : true}
-    );
-
     checkIfEventIsComplete(deckData.Events_id);
 
 };
@@ -77,55 +46,11 @@ createANewDeckName = function(deckName, format){
 
 addNameToDeck = function(DecksData_id, DecksNames_id){
 
-    var deckData = DecksData.findOne({_id : DecksData_id});
-    var deckName = DecksNames.findOne({_id : DecksNames_id});
-
-    deckData.main.forEach(function(obj){
-        var query = {};
-        query = {_id : deckName._id};
-        query["main.name"] = obj.name;
-
-        var exists = DecksNames.find(query).count();
-
-        if(exists){
-            var increment = {"main.$.decksQuantity" : 1, "main.$.total" : obj.quantity};
-            DecksNames.update(query,
-                {
-                    $inc : increment
-                })
-        }else {
-            var setQuery = {name : obj.name, decksQuantity : 1, total : obj.quantity};
-            DecksNames.update({_id : deckName._id},
-                {
-                    $push : {
-                        main : setQuery
-                    }
-                })
-        }
-    });
+    var deckData = DecksData.find({_id : DecksData_id}, {limit : 1}).fetch()[0];
+    var deckName = DecksNames.find({_id : DecksNames_id}, {limit : 1}).fetch()[0];
     DecksData.update(  {_id : deckData._id},
                     {$set : {DecksNames_id : deckName._id}}
     );
-
-    DecksNames.update({_id : deckName._id},
-                {
-                    $inc : {
-                    decks : 1,
-                    "colors.B" : deckData.colors.B,
-                    "colors.C" : deckData.colors.C,
-                    "colors.G" : deckData.colors.G,
-                    "colors.R" : deckData.colors.R,
-                    "colors.U" : deckData.colors.U,
-                    "colors.W" : deckData.colors.W
-                },
-                    $push : {
-                        DecksData : {
-                            _id : deckData._id
-                        }
-                    }
-                }
-            );
-
 
     checkIfEventIsComplete(deckData.Events_id);
 
@@ -157,13 +82,7 @@ Array.prototype.diff = function(arr2) {
     return ret;
 };
 
-findDeckComparison = function(_id){
-    console.log("Start: findDeckComparison");
-    var deck = DecksData.findOne({_id : _id});
-
-
-
-    //check for deck on templates
+findDeckComparison2 = function(_id){
     var cardsOnMain = [];
     deck.main.forEach(function(obj){
         cardsOnMain.push(obj.name)
@@ -181,86 +100,127 @@ findDeckComparison = function(_id){
             return [{DecksNames_id : foundDeck.DecksNames_id, name : DecksNames.findOne({_id : foundDeck.DecksNames_id}).name, result  : 1}];
         }
     }
+}
 
-    var deckNames = DecksNames.find({format : deck.format});
+foundDeckFromDecksDataUniqueWithoutQuantity = function(_id){
 
-    var deckCards = deck.main.map(function(obj){
+    var cardsOnMain = DecksData.aggregate(
+        [
+            {$match: {_id : _id}},
+            {$project: {format : "$format", card :{$map : {input : "$main", as: "el", in : "$$el.name"}}}}
+        ]
+    );
+
+    var nonLandsCards = CardsData.find({name: {$in: cardsOnMain[0].card}, land: false}).map(function (obj) {
         return obj.name;
     });
 
-    var nonLandsCards = CardsData.find({name : {$in : deckCards}, land : false}).map(function(obj){
-        return obj.name;
-    });
+    var foundDeck = DecksDataUniqueWithoutQuantity.find({format : cardsOnMain[0].format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}, {limit : 1}).fetch()[0];
 
-    var decks = [];
+    return foundDeck;
+}
 
-    deckNames.forEach(function(obj){
+findDeckComparison = function(_id){
+    var template = foundDeckFromDecksDataUniqueWithoutQuantity(_id);
+    console.log(template);
+    if(template){
+        return [{DecksNames_id : template.DecksNames_id, name : DecksNames.findOne({_id : template.DecksNames_id}).name, result  : 1}];
+    }
 
-        if(obj.main == null){
-            return;
-        }
+    return [];
 
-        var deckNameDeckCards = obj.main.map(function(obj2){
-            return obj2.name;
-        });
-
-        var deckNameNonLandsCards = CardsData.find({name : {$in : deckNameDeckCards}, land : false}).map(function(obj2){
-            return obj2.name;
-        });
-
-        var deckNameNonLandscardsData = [];
-        deckNameNonLandsCards.sort();
-        obj.main.sort(function(a,b){
-            var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
-            // names must be equal
-            return 0;
-        });
-
-        for(var i = 0; i < obj.main.length; i += 1) {
-            if(deckNameNonLandsCards.indexOf( obj.main[i].name ) > -1){
-                deckNameNonLandscardsData.push( obj.main[i] );
-            }
-        }
-
-        var filteredCardData = [];
-
-        for(var i = 0; i < deckNameNonLandscardsData.length; i += 1) {
-
-            var test = nonLandsCards.findIndex( function(obj2){
-                return obj2 == deckNameNonLandscardsData[i].name;
-            });
-            if(test > -1){
-                filteredCardData.push(deckNameNonLandscardsData[i]);
-            }
-        }
-
-        var sum = filteredCardData.reduce(function(a, b){
-            return a + b.decksQuantity;
-        }, 0);
-
-        decks.push({_id : obj._id, name : obj.name, result  : (sum/obj.decks)/nonLandsCards.length});
-    });
+    // console.log(foundDeck);
 
 
-    var decksFiltered = decks.filter(function(obj){
-        return obj.result > 0.5;
-    })
 
-    decksFiltered.sort(function(a,b){
-        return b.result -a.result;
-    });
 
-    // findDeckComparisonPart2DeckPerDeck(decksFiltered, _id);
 
-    // console.log(decksFiltered);
-    return findDeckComparisonPart2DeckPerDeck(decksFiltered, _id);
+    // if(foundDecks.length){
+    //     return [{DecksNames_id : foundDecks[0].DecksNames_id, name : DecksNames.findOne({_id : foundDecks[0].DecksNames_id}).name, result  : 1}];
+    // }
+    //
+    // return [];
+
+
+    // var deckNames = DecksNames.find({format : deck.format});
+    //
+    // var deckCards = deck.main.map(function(obj){
+    //     return obj.name;
+    // });
+    //
+    // var nonLandsCards = CardsData.find({name : {$in : deckCards}, land : false}).map(function(obj){
+    //     return obj.name;
+    // });
+    //
+    // var decks = [];
+    //
+    // deckNames.forEach(function(obj){
+    //
+    //     if(obj.main == null){
+    //         return;
+    //     }
+    //
+    //     var deckNameDeckCards = obj.main.map(function(obj2){
+    //         return obj2.name;
+    //     });
+    //
+    //     var deckNameNonLandsCards = CardsData.find({name : {$in : deckNameDeckCards}, land : false}).map(function(obj2){
+    //         return obj2.name;
+    //     });
+    //
+    //     var deckNameNonLandscardsData = [];
+    //     deckNameNonLandsCards.sort();
+    //     obj.main.sort(function(a,b){
+    //         var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    //         var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+    //         if (nameA < nameB) {
+    //             return -1;
+    //         }
+    //         if (nameA > nameB) {
+    //             return 1;
+    //         }
+    //         // names must be equal
+    //         return 0;
+    //     });
+    //
+    //     for(var i = 0; i < obj.main.length; i += 1) {
+    //         if(deckNameNonLandsCards.indexOf( obj.main[i].name ) > -1){
+    //             deckNameNonLandscardsData.push( obj.main[i] );
+    //         }
+    //     }
+    //
+    //     var filteredCardData = [];
+    //
+    //     for(var i = 0; i < deckNameNonLandscardsData.length; i += 1) {
+    //
+    //         var test = nonLandsCards.findIndex( function(obj2){
+    //             return obj2 == deckNameNonLandscardsData[i].name;
+    //         });
+    //         if(test > -1){
+    //             filteredCardData.push(deckNameNonLandscardsData[i]);
+    //         }
+    //     }
+    //
+    //     var sum = filteredCardData.reduce(function(a, b){
+    //         return a + b.decksQuantity;
+    //     }, 0);
+    //
+    //     decks.push({_id : obj._id, name : obj.name, result  : (sum/obj.decks)/nonLandsCards.length});
+    // });
+    //
+    //
+    // var decksFiltered = decks.filter(function(obj){
+    //     return obj.result > 0.5;
+    // })
+    //
+    // decksFiltered.sort(function(a,b){
+    //     return b.result -a.result;
+    // });
+    //
+    // // findDeckComparisonPart2DeckPerDeck(decksFiltered, _id);
+    //
+    // // console.log(decksFiltered);
+    // return findDeckComparisonPart2DeckPerDeck(decksFiltered, _id);
 };
 
 findDeckComparisonPart2DeckPerDeck = function(decks, _id){
@@ -272,6 +232,8 @@ findDeckComparisonPart2DeckPerDeck = function(decks, _id){
     // var decks_ids = decks.map(function(obj){
     //     return  obj._id;
     // });
+
+
 
     var deck = DecksData.findOne({_id : _id});
 
@@ -364,17 +326,7 @@ findBestResultDeckComparison = function(_id){
     var deck = DecksData.findOne({_id : _id});
 
     //check for deck on templates
-    var cardsOnMain = [];
-    deck.main.forEach(function(obj){
-        cardsOnMain.push(obj.name)
-    });
-
-
-    var nonLandsCards = CardsData.find({name : {$in : cardsOnMain}, land : false}).map(function(obj){
-        return obj.name;
-    });
-
-    var foundDeck = DecksDataUniqueWithoutQuantity.findOne({format : deck.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}});
+    var foundDeck = foundDeckFromDecksDataUniqueWithoutQuantity(_id);
     if(foundDeck){
         if(foundDeck.DecksNames_id){
             return {DecksNames_id : foundDeck.DecksNames_id, name : DecksNames.findOne({_id : foundDeck.DecksNames_id}).name, result  : 1};

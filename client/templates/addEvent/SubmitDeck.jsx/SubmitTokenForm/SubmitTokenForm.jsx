@@ -6,7 +6,6 @@ import PlayerNameInput from "./SubmitInput/PlayerNameInput/PlayerNameInput.jsx";
 
 
 class SubmitTokenForm extends React.Component{
-
     constructor(props){
         super(props);
         this.state = {
@@ -32,6 +31,12 @@ class SubmitTokenForm extends React.Component{
             });
 
             Meteor.call("checkIfEventExists", form, (err, data)=>{
+
+                if(data == "locked"){
+                    this.refs["serverMessage"].textContent = "Events is Locked."
+                    return;
+                }
+
                 if(data == "token"){
                     this.refs["serverMessage"].textContent = "Token doesn't exist for that Store."
                     return;

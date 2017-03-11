@@ -3,10 +3,11 @@ import React from "react";
 export default class Deck extends React.Component{
     constructor() {
         super();
-        this.state = {firstLoaded : false};
+        this.state = {DecksData : {main : [], sideboard : []}};
     }
 
     componentDidMount() {
+        this.getDecksDataById(this.props.DecksData_id);
         cardPopover(".js-imagePopOver");
     }
 
@@ -16,27 +17,6 @@ export default class Deck extends React.Component{
         cardPopover(".js-imagePopOver");
     }
 
-    // getCardsSideboard() {
-    //     var sideboard = this.props.DeckSelected.sideboard.map((card)=>{
-    //         return card.name;
-    //     });
-    //     var cardsExists = CardsData.find({name : {$in : sideboard}}).fetch();
-    //
-    //     var cardsComplete = cardsExists.filter((card)=>{
-    //         return this.props.DeckSelected.sideboard.find((queryCard)=>{
-    //             return card.name == queryCard.name;
-    //         })
-    //     })
-    //         .map((card)=>{
-    //                 var temp = this.props.DeckSelected.sideboard.find((queryCard)=>{
-    //                     return card.name == queryCard.name;
-    //                 })
-    //                 return Object.assign(card, temp);
-    //             }
-    //         )
-    //     return cardsComplete;
-    // }
-
     separateCardsByTypeAddManaCost(main){
         var typesSeparated = {
             null : {array : [], text : "Wrong Name"},
@@ -45,7 +25,7 @@ export default class Deck extends React.Component{
             instant : {array : [], text : "Instant"},
             planeswalker : {array : [], text : "Planeswalker"},
             artifact : {array : [], text : "Artifact"},
-            enchantment : {array : [], text : "enchantment"},
+            enchantment : {array : [], text : "Enchantment"},
             land : {array : [], text : "Land"},
         };
 
@@ -72,6 +52,15 @@ export default class Deck extends React.Component{
         return typesSeparated;
     }
 
+
+    getDecksDataById(DecksData_id){
+        Meteor.call("getDecksDataBy_id", DecksData_id, (err, data)=>{
+            if(data){
+                this.setState({DecksData : data})
+            }
+        });
+    }
+
     addManaCostToSideboard(cards){
 
         var sideboard = [];
@@ -93,8 +82,8 @@ export default class Deck extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
-        if(!nextProps.listLoading && this.state.firstLoaded == false){
-            this.setState({firstLoaded : true})
+        if(nextProps.DecksData_id != this.props.DecksData_id){
+            this.getDecksDataById(nextProps.DecksData_id);
         }
     }
 
@@ -102,16 +91,31 @@ export default class Deck extends React.Component{
         if(nextProps.listLoading){
             return false;
         }
-
         return true;
     }
 
+    createLink(){
+        var link = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
+
+        this.state.DecksData.main.forEach((card)=>{
+            link += `${card.quantity} ${card.name}||`
+        });
+        this.state.DecksData.sideboard.forEach((card)=>{
+            link += `${card.quantity} ${card.name}||`
+        });
+
+        return <a href={link}>Buy At TCGPLAYER.com $555.55</a>
+
+    }
+
+    cardPriceLink(cardName){
+        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${cardName}&partner=Crowd`}>5.55</a>
+
+    }
 
     render() {
-        if(!this.state.firstLoaded){return <div>Loading...</div>};
-
-
-        var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.DeckSelected.main);
+        if(this.props.listLoading){return <div>Loading...</div>};
+        var typesSeparated = this.separateCardsByTypeAddManaCost(this.state.DecksData.main);
         var resultMain = [];
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
@@ -132,12 +136,13 @@ export default class Deck extends React.Component{
                                             })
                                         }
                                     </div>
+                                    <div className="priceValue">{this.cardPriceLink(card.name)}</div>
                                 </div>
                             </div>
                 })
             )
         }
-        var sideboardCards = this.addManaCostToSideboard(this.props.DeckSelected.sideboard);
+        var sideboardCards = this.addManaCostToSideboard(this.state.DecksData.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
         return <div className="cardLine" key={card.name}>
@@ -152,12 +157,14 @@ export default class Deck extends React.Component{
                             })
                         }
                     </div>
+                    <div className="priceValue">{this.cardPriceLink(card.name)}</div>
                 </div>
             </div>
         })
 
            return (
             <div className="DeckContainer">
+                <div className="buyPlace">{this.createLink()}</div>
                 <span ref={"error"} className="error"></span>
                 <div className="mainSide">Main</div>
                 <div className="deckBlock">

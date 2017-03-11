@@ -8,7 +8,6 @@ export default class LGSInput extends React.Component{
     }
 
     clearInput(){
-
         this.state.clearInput = true;
         $(this.refs["input"]).select2("val", "all");
         this.state.inputValue = "";
@@ -35,6 +34,11 @@ export default class LGSInput extends React.Component{
         return object;
     }
 
+    componentDidUpdate(){
+        $(this.refs["input"]).val(this.props.initialValue).trigger("change");
+
+    }
+
     componentDidMount() {
         this.props.register(this);
 
@@ -47,9 +51,18 @@ export default class LGSInput extends React.Component{
             }
             this.state.clearInput = false
         });
+
+    }
+
+    shouldComponentUpdate(nextProps, nextStates){
+        if(nextProps.listLoading){
+            return false;
+        }
+        return true;
     }
 
     render() {
+
         return (
             <div className="form-group">
                 <label> {this.props.title} </label>

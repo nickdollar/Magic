@@ -53,7 +53,7 @@ export default class DecksNamesDecksDataList extends React.Component {
     }
 
     getNewList(DecksNames_id){
-        Meteor.call("getDecksListFromDeckName", DecksNames_id, (err, data)=>{
+        Meteor.call("getDecksListFromDeckName", DecksNames_id, FlowRouter.getParam("format"), (err, data)=>{
             if(data.length){
                 this.props.selectedDeckHandle(data[0]._id);
                 this.state.SelectedDeck = data[0]._id;

@@ -5,6 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-runtime": "^6.20.0",
     "cheerio": "^0.22.0",
     "classnames": "^2.2.5",
@@ -24,12 +25,20 @@
     "path": "^0.12.7",
     "react": "^15.4.2",
     "react-addons-pure-render-mixin": "^15.4.1",
+    "react-autosuggest": "^9.0.0",
     "react-bootstrap-table": "^2.9.2",
+    "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.2",
-    "react-js-pagination": "^2.0.2"
+    "react-js-pagination": "^2.0.2",
+    "react-themeable": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^3.16.1",
     "eslint-plugin-react": "^6.10.0"
+  },
+  "babel": {
+    "plugins": [
+      "transform-class-properties"
+    ]
   }
 }

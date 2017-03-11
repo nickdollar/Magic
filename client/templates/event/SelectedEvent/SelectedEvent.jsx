@@ -28,7 +28,12 @@ export default class LGSAddNewStore extends React.Component {
         }
 
         if(nextProps.DecksData_id != this.props.DecksData_id){
-            this.setState({DecksData_id : nextProps.DecksData_id})
+            var decksData = this.state.DecksList.find((deck)=>{
+                if(deck._id == nextProps.DecksData_id){
+                    return true
+                }
+            })
+            this.setState({DecksData_id : nextProps.DecksData_id, DecksData : decksData})
         }
     }
 
@@ -44,15 +49,17 @@ export default class LGSAddNewStore extends React.Component {
             }
 
             var DecksData_id = this.state.DecksData_id;
+            var DecksData;
             if(!DecksData_id){
                 data.DecksData[0] ? DecksData_id = data.DecksData[0]._id : DecksData_id = "";
+            }else{
+                DecksData = data.DecksData.find((deck)=>{
+                    return deck._id == DecksData_id
+                })
             }
-
-
-            this.setState({DecksList : data.DecksData, DecksData : data.DecksData[0] ? data.DecksData[0] : {}, DecksData_id : DecksData_id, Event : data.Event})
+            this.setState({DecksList : data.DecksData, DecksData : DecksData ? DecksData : {}, DecksData_id : DecksData_id, Event : data.Event})
         });
     }
-
 
     render(){
         return(

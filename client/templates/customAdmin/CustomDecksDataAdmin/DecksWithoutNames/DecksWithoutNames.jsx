@@ -29,7 +29,6 @@ export default class DecksWithoutNames extends React.Component{
 
 
     render(){
-        console.log(this.props.DecksList);
         return (
             <div>
                 <table className="table">
@@ -51,7 +50,9 @@ export default class DecksWithoutNames extends React.Component{
                         return <tr key={deck._id}>
                             <td onClick={this.selectDeck.bind(this, i)}>{deck._id}</td>
                             <td>{deck.state}</td>
-                            <td>{deck.colors.B}{deck.colors.C}{deck.colors.G}{deck.colors.R}{deck.colors.U}{deck.colors.W}</td>
+                                {deck.colors ?
+                                    <td>{deck.colors.B}|{deck.colors.C}|{deck.colors.G}|{deck.colors.R}|{deck.colors.U}|{deck.colors.W}</td> :
+                                null}
                         </tr>
                     })}
 

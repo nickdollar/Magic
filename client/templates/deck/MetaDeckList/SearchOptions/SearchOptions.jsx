@@ -11,6 +11,12 @@ export default class SearchOptions extends React.Component{
             <div className="searchOptions">
                 <div className="optionsGroupName" >
                     <div className="header">
+                        Name Filter
+                    </div>
+                    <input type="text" onChange={this.props.nameFilter} value={this.props.state.nameFilter}/>
+                </div>
+                <div className="optionsGroupName" >
+                    <div className="header">
                         Type
                     </div>
                     {this.props.state.types.map((type, index)=>{

@@ -27,7 +27,6 @@ export default class textFormInput extends React.Component{
         else {
             input.classList.remove('error');
             error.textContent  = "";
-
         }
         return true;
     }
@@ -39,12 +38,13 @@ export default class textFormInput extends React.Component{
     }
 
     clearInput(){
-        this.setState({outputValue : ""});
+        this.setState({outputValue : this.props.initialValue ? this.props.initialValue : ""});
     }
 
     componentWillReceiveProps(nextProps){
+
         if(nextProps.initialValue != this.state.outputValue ){
-            this.state.outputValue = nextProps.initialValue
+            this.state.outputValue = nextProps.initialValue ? nextProps.initialValue : ""
         }
     }
 

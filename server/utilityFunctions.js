@@ -5,7 +5,7 @@ setUpColorForDeckName = function(main){
                     "R/W" : 0, "U/B" : 0, "U/R" : 0, "W/B" : 0, "W/U" : 0,
                     "B/P" : 0, "G/P" : 0, "R/P" : 0, "U/P" : 0, "W/P" : 0};
     main.forEach(function(card){
-        var cardQuery = CardsData.findOne({name : card.name});
+        var cardQuery = CardsData.find({name : card.name}, {limit : 1}).fetch()[0];
         if(cardQuery){
             var mana = cardQuery.manaCost;
             var result;
@@ -69,7 +69,7 @@ fixCards = function (card) {
         return card;
     }
 
-    var queryCard = CardsFullData.findOne({name : {$regex : new RegExp("^" + card + "$"), $options :'i'}});
+    var queryCard = CardsFullData.find({name : {$regex : new RegExp("^" + card + "$"), $options :'i'}}, {limit : 1}).fetch()[0];
     if(queryCard){
         if(queryCard.layout == "split"){
             card = "";

@@ -31,7 +31,7 @@ export default class TopMenu extends React.Component {
             {value : "meta", path : "selectedMeta", text : "Meta"},
             {value : "events", path : "events", text : "Events"},
             {value : "lgs", path : "lgs", text : "LGS"},
-            {value : "addEvent", path : "addEvent", text : "Add Event"},
+            {value : "addEvent", path : "addEvent", text : "Add Event/Deck"},
         ]
         return(
             <div className="TopMenuComponent">
@@ -43,6 +43,7 @@ export default class TopMenu extends React.Component {
                                     {menu.map((link)=>{
                                         return <li key={link.value} className={this.activatedlink(link.value)}><a href={this.url(link.path)}>{link.text}</a></li>
                                     })}
+                                    <li className={this.activatedlink("User")}><a href={this.url("User")}>User</a></li>
                                 </ul>
                             </div>
                         </div>

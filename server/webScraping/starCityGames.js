@@ -182,7 +182,6 @@ SCGEventHTML = function(_id){
         var mainCards = $decksBlocks(decks[i]).find(".decklist_heading+ ul li");
         var sideboardCards = $decksBlocks(decks[i]).find(".deck_sideboard li");
 
-        tempCollection.insert({html : $decksBlocks(decks[i]).html()});
         var cardPattern = /(\d+) (.*)/i;
         var main = [];
         var totalMain = 0;

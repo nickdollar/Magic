@@ -1,5 +1,9 @@
 import React from "react";
 
+//errorMessage
+//objectName
+//title
+
 class LGSNameField extends React.Component{
     constructor() {
         super();

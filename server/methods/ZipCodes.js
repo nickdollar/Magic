@@ -4,8 +4,7 @@ Meteor.methods({
     },
     checkIfZipExists(ZIP){
         ZIP = parseInt(ZIP);
-        return ZipCodes.findOne({ZIP : ZIP}, {limit : 1});
-
+        return ZipCodes.find({ZIP : ZIP}, {limit : 1}).fetch()[0];
     }
 })
 

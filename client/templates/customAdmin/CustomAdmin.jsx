@@ -10,6 +10,7 @@ import CustomLGSEventsAdmin from './CustomLGSEventsAdmin/CustomLGSEventsAdmin.js
 import CustomEventsCalendarAdmin from './CustomEventsCalendarAdmin/CustomEventsCalendarAdmin.jsx';
 import CustomZipCodesAdmin from './CustomZipCodesAdmin/CustomZipCodesAdmin.jsx';
 import CustomCardsFullDataAdmin from './CustomCardsFullDataAdmin/CustomCardsFullDataAdmin.jsx';
+import CustomArchetypesShellsAdmin from './CustomArchetypesShellsAdmin/CustomArchetypesShells.jsx';
 
 
 
@@ -42,6 +43,8 @@ export default class CustomAdmin extends React.Component{
             return <CustomZipCodesAdmin/>
         }else if (route=="CardsFullData"){
             return <CustomCardsFullDataAdmin/>
+        }else if (route=="ArchetypesShells"){
+            return <CustomArchetypesShellsAdmin format={this.state.format}/>
         }
     }
 
@@ -64,10 +67,10 @@ export default class CustomAdmin extends React.Component{
     render(){
         var formats = ["standard", "modern", "legacy", "vintage"];
         var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
-                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData"];
+                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData", "ArchetypesShells"];
         collections.sort()
         return (
-            <div className="row">
+            <div className="CustomAdminComponent">
                 <div ref="mySideNav" className="sidenav col-xs-2">
                     <a href={FlowRouter.path("admin")}>Main</a>
                     {collections.map((collection)=>{

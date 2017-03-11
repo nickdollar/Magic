@@ -10,10 +10,11 @@ export default class ArchetypeDeckInformationHeader extends React.Component {
         return  <div className="deckArchetypeWrapper">
                     <h1>
                         {DeckArchetype.name}
+                        <div className="archetypeMana" >
+                            {getHTMLColorsFromArchetypesReact(DeckArchetype._id)}
+                        </div>
                     </h1>
-                    <div className="archetypeMana" >
-                        {getHTMLColorsFromArchetypesReact(DeckArchetype._id)}
-                    </div>
+
                     <div className="archetypeType">
                         {DeckArchetype.type}
                     </div>

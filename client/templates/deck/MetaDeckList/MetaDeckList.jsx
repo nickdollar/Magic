@@ -12,7 +12,8 @@ class MetaDeckList extends React.Component{
             colors: [{value : "B", css : "sb", checked : true}, {value : "C", css : "scl", checked : true}, {value : "G", css : "sg", checked : true},
                 {value : "R", css : "sr", checked : true}, {value : "U", css : "su", checked : true}, {value : "W", css : "sw", checked : true}],
             containMatch : [{value : "contain", text : "Contain", checked : true}, {value : "match", text : "Match", checked : false}],
-            cards : []
+            cards : [],
+            nameFilter : ""
         }
     }
 
@@ -56,6 +57,10 @@ class MetaDeckList extends React.Component{
         this.setState({cards : cards})
     }
 
+    nameFilter(e){
+        this.setState({nameFilter : e.target.value});
+    }
+
     dumbSelect2(cardName){
         var card = cardName.toTitleCase();
         var index = this.state.cards.findIndex((obj)=>{
@@ -77,7 +82,9 @@ class MetaDeckList extends React.Component{
                                    updateContainMatch={this.updateContainMatch.bind(this)}
                                    removeFromTheListMain={this.removeFromTheListMain.bind(this)}
                                    dumbSelect2={this.dumbSelect2.bind(this)}
+                                   nameFilter={this.nameFilter.bind(this)}
                                    state={this.state}
+
                     />
                 </div>
                 <div className="col-xs-9">

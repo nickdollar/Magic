@@ -23,7 +23,7 @@ export default class  extends React.Component {
                     </div>
 
                     <div>{Moment(event.date).format("L")}</div>
-                    <div>Winning Decks: {event.decks}</div>
+                    <div>Published Decks: {event.decks}</div>
                 </div>
     }
 
@@ -31,7 +31,7 @@ export default class  extends React.Component {
         if(_.isEmpty(deck)){
             return <div className="left"></div>
         }
-        var deckName = "Name Pending";
+        var deckName = "(Name Pending)";
         var type = "";
         if(deck.DecksNames_id){
             var deckNameQuery = DecksNames.findOne({_id : deck.DecksNames_id});
@@ -41,10 +41,9 @@ export default class  extends React.Component {
             }
         }
         return  <div className="center" >
-                <div className="headerDeckName">{deckName} </div>
-                <div className="headerType">
-                    {getHTMLColorsFromDecksNamesReact(deck.DecksNames_id)}
-                    <span>{type}</span>
+                    <div className="headerDeckName">{deckName} <span className="deckNamesColor">{getHTMLColorsFromDecksNamesReact(deck.DecksNames_id)}</span></div>
+                    <div className="headerType">
+                        <span>{type}</span>
                     </div>
                 </div>
     }

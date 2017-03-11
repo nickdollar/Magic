@@ -39,7 +39,6 @@ class SubmitDeck extends React.Component {
         return (
             <div className="SubmitDeckComponent">
                 <h3>Add Deck To Event</h3>
-
                 {this.state.isTokenEntered ? <SubmitDeckForm event={this.state.Event}
                                                              deckSubmitted={this.deckSubmitted.bind(this)}
                                                              resetAll={this.resetAll.bind(this)}

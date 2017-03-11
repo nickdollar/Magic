@@ -24,6 +24,12 @@ export default class EventsTable extends React.Component {
     date(data, format){
         return Moment(data).format("MM/DD");
     }
+    shouldComponentUpdate(nextProps){
+        if(nextProps.listLoading){
+            return false;
+        }
+        return true;
+    }
 
     render(){
         const tableOptions = {

@@ -9,7 +9,9 @@ import ArchetypeDeckInformation from "/client/templates/deck/ArchetypeDeckInform
 import MetaContainer from           "/client/templates/meta/MetaContainer.jsx";
 import LatestDecksContainer from           "/client/templates/main/LatestDecksReact/LatestDecksContainer.jsx";
 import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuContainer.jsx";
-import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableComponent.jsx";
+import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableContainer.jsx";
+import BigEventsCalendarContainer from           "/client/templates/event/eventsCalendar/BigEventsCalendarContainer.jsx";
+import User                         from    "/client/templates/User/User";
 
 
 
@@ -57,6 +59,12 @@ Template.deckSelected.helpers({
 Template.selectedMeta.helpers({
     MetaContainer(){
         return MetaContainer;
+    }
+});
+
+Template.User.helpers({
+    User(){
+        return User;
     }
 });
 
@@ -127,6 +135,9 @@ Template.main.helpers({
 Template.events.helpers({
     EventsTableComponent(){
         return EventsTableComponent;
+    },
+    BigEventsCalendarContainer(){
+        return BigEventsCalendarContainer
     }
 });
 
@@ -163,6 +174,8 @@ Template.admin.helpers({
         return CustomAdmin;
     },
 });
+
+
 
 Template.CustomEventsAdmin.helpers({
     CustomAdmin(){

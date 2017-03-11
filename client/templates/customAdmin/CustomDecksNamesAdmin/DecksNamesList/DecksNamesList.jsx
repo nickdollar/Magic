@@ -4,6 +4,7 @@ import FormValidate from "/client/dumbReact/FormValidate/FormValidate";
 import TextFormInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput";
 import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio";
 import Checkbox from "/client/dumbReact/FormValidate/Inputs/Checkbox/Checkbox";
+import Select2Container from "/client/dumbReact/FormValidate/Inputs/Select2/Select2Container";
 
 export default class DecksNamesList extends React.Component {
     constructor(){
@@ -25,7 +26,7 @@ export default class DecksNamesList extends React.Component {
 
     expandComponent(row){
         return <div className="ExpandableTableComponent">
-                    <FormValidate submitMethod="updateDeckName" extraFields={{_id : row._id}}>
+                    <FormValidate submitMethod="updateDeckName" id={row._id} extraFields={{_id : row._id}}>
                         <TextFormInput initialValue={row.name}
                                        title="Name"
                                        objectName="name"
@@ -48,6 +49,17 @@ export default class DecksNamesList extends React.Component {
                                         {value : "U", text : "U"},
                                         {value : "W", text : "W"},
                                     ]}
+                        />
+                        <Select2Container
+                            title="Deck Archetype"
+                            objectName="DecksArchetypes_id"
+                            fieldUnique="_id"
+                            fieldText="name"
+                            subscription="DecksArchetypesFormat"
+                            serverQuery={row.format}
+                            collection="DecksArchetypes"
+                            clientQuery={{format : row.format}}
+                            initialValue={row.DecksArchetypes_id}
                         />
                     </FormValidate>
                 </div>

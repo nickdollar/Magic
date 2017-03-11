@@ -2,8 +2,7 @@ import React from "react";
 import LGSAddNewStore from "./LGSAddNewStore/LGSAddNewStore.jsx"
 import LGSTableListContainer from "./LGSTableList/LGSTableListContainer.jsx"
 
-
-class LGS extends React.Component{
+export default class LGS extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -20,4 +19,3 @@ class LGS extends React.Component{
     }
 }
 
-export default LGS;

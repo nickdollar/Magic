@@ -5,6 +5,17 @@ addCron = function(){
     timer -= distanceBetween;
 
     SyncedCron.add({
+        name: "stopEventsPublished",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.text("every 10 min");
+        },
+        job: function() {
+            Meteor.call("stopEventsPublished");
+        }
+    });
+
+    SyncedCron.add({
         name: "Event League Get New Events",
         schedule: function(parser) {
             timer += distanceBetween;

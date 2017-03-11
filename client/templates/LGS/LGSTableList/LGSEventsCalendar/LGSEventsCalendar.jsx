@@ -1,5 +1,5 @@
 import React from 'react' ;
-import LGSEventsCalendarModal  from './LGSEventsCalendarModal.jsx';
+import LGSEventsCalendarModal  from './LGSEventsCalendarModal/LGSEventsCalendarModal.jsx';
 import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
 import FormValidate from '/client/dumbReact/FormValidate/FormValidate.jsx';
 import TextFormInput from '/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx';
@@ -10,19 +10,33 @@ import TextAreaInput from '/client/dumbReact/FormValidate/Inputs/TextAreaInput/T
 import Radio from '/client/dumbReact/FormValidate/Inputs/Radios/Radio.jsx';
 
 
-import Moment from "moment";
-
 var weekDays = {0 : "Sunday", 1 : "Monday", 2 : "Tuesday", 3 : "Wednesday", 4 : "Thursday", 5 : "Friday", 6 : "Saturday" };
 
-class LGSEventsCalendar extends React.Component {
+export default class LGSEventsCalendar extends React.Component {
     constructor(){
         super();
 
         this.state = {
             showModalAddEvent: false,
             showModalEventInfo: false,
-            events : []
+            events : [],
         }
+    }
+
+
+    getEventsFromServer(LGS){
+        if(!LGS){
+            return;
+        }
+        var arraysOfLGS_id = LGS.filter((obj)=>{
+            return obj.checked == true && obj.showing == true;
+        }).map((obj)=>{
+            return  obj._id
+        });
+        Meteor.call("getLGSEventsFromId", arraysOfLGS_id, (err, data)=>{
+            this.state.events = data
+            this.eventsUpdate();
+        });
     }
 
     componentDidMount(){
@@ -83,15 +97,13 @@ class LGSEventsCalendar extends React.Component {
                 });
             }
         });
-
-        this.eventsUpdate();
-
+        this.getEventsFromServer(this.props.LGS);
     }
 
     eventsUpdate(){
         var calendar = this.refs["calendar"];
         $(calendar).fullCalendar("removeEvents")
-        var events = LGSEvents.find().map((event)=>{
+        var events = this.state.events.map((event)=>{
             event.id = event._id;
             event.dow = [parseInt(event.day)]
             if(event.format == "modern"){
@@ -103,31 +115,31 @@ class LGSEventsCalendar extends React.Component {
             }else if(event.format == "vintage"){
                 event.color = "#041F1E";
             }
-
             return event;
         });
-
-
         $(calendar).fullCalendar("addEventSource", events)
     }
 
-    componentDidUpdate(){
-        this.eventsUpdate();
-    }
+    // componentDidUpdate(){
+    //     this.eventsUpdate();
+    // }
 
     handleHideModalEventInfo(){
         this.setState({showModalEventInfo: false})
     }
 
-    handleShowModalEventInfo(){
-        this.setState({showModalEventInfo: true})
-    }
     handleHideModalAddEvent(){
         this.setState({showModalAddEvent: false})
     }
 
     handleShowModalAddEvent(){
         this.setState({showModalAddEvent: true})
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.LGS){
+            this.getEventsFromServer(nextProps.LGS)
+        }
+
     }
 
     render() {
@@ -210,9 +222,6 @@ class LGSEventsCalendar extends React.Component {
                             errorMessage="Extra Information"
                             required={true}
                         />
-
-
-
                     </FormValidate>
                 </ModalFirstPage>
                 {this.state.showModalEventInfo ? <LGSEventsCalendarModal handleHideModal={this.handleHideModalEventInfo.bind(this)} eventObject={this.state.eventObj}/> : null}
@@ -238,8 +247,6 @@ function formatDate(date) {
     }
 
     min = min<10?"0"+min:min;
-
     return hours + ":" + min + " " + AMPM;
 }
 
-export default LGSEventsCalendar;

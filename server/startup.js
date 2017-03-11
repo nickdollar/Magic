@@ -2,7 +2,38 @@ import { Cookies } from 'meteor/ostrio:cookies';
 
 
 Meteor.startup(function () {
-    if ( Meteor.users.find().count() === 0 ) {
+
+    var Future = Npm.require('fibers/future');
+    Mongo.Collection.prototype.getIndexes = function() {
+        var raw = this.rawCollection();
+        var future = new Future();
+
+        raw.indexes(function(err, indexes) {
+            if (err) {
+                future.throw(err);
+            }
+
+            future.return(indexes);
+        });
+
+        return future.wait();
+    };
+
+    // for(var i = 0; i< CardsData.getIndexes().length; i++){
+    //     if(CardsData.getIndexes()[i].name == "_id_"){
+    //         continue;
+    //     }
+    //     CardsData._dropIndex(CardsData.getIndexes()[i].name);
+    // }
+
+    CardsData._ensureIndex({name : 1});
+    CardsFullData._ensureIndex({name : 1});
+    DecksDataUniqueWithoutQuantity._ensureIndex({nonLandMain : 1});
+    DecksData._ensureIndex({DecksNames_id : 1});
+    DecksNames._ensureIndex({DecksArchetypes_id : 1});
+    ZipCodes._ensureIndex({ZIP : 1});
+
+    if ( Meteor.users.find().count() === 0 ){
         Accounts.createUser({
                     username: 'admin',
                     email: 'ivelacc@gmail.com',
@@ -13,7 +44,7 @@ Meteor.startup(function () {
                         company: 'Crowdmtg',
                     }
                 });
-        var _id = Meteor.users.findOne()._id;
+        var _id = Meteor.users.find({}, {limit : 1}).fetch()[0]._id;
         Roles.createRole("admin");
         Roles.addUsersToRoles(_id, "admin");
     }

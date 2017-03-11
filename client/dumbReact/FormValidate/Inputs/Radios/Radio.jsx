@@ -34,12 +34,6 @@ export default class Radio extends React.Component{
         return true;
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.initialValue != this.state.outputValue ){
-            this.state.outputValue = nextProps.initialValue
-        }
-    }
-
     clearInput(){
         this.setState({outputValue : this.props.defaultOption});
     }

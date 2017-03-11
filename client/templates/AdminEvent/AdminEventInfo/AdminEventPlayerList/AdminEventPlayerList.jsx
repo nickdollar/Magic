@@ -71,7 +71,27 @@ export default class AdminEventPlayerList extends React.Component {
 
         });
     }
-    
+
+    eventsButtonStatus(state){
+
+        var results = {
+            published : "Unpublish and Unlock",
+            locked : "Unpublish and Unlock",
+            created : "Lock And Request",
+        }
+
+        return results[state];
+    }
+
+    stateLegend(state){
+        var results = {
+            created : "Created - Decks can be Added",
+            published : "Published - Admin confirmed. Event is public now.",
+            locked : "Locked - Decks Cannot be added. Decks Data Can be Edited",
+        }
+        return results[state];
+    }
+
     render() {
         if(!this.props.decks){
             return <div>loading...</div>
@@ -125,14 +145,14 @@ export default class AdminEventPlayerList extends React.Component {
         return (
                 <div className="AdminEventPlayerListComponent">
                     <div>
-                        {this.state.userAdmin ? <button onClick={this.adminConfirm}>{this.props.event.state}</button> : null}
-                        {this.props.event.state == "prePublish" ? <div>Published At : {Moment(this.props.event.publishedDate).format("L")}</div> :
-                            <div><button disabled={this.props.event.state == "published" ? true : false}
-                                    className="btn btn-xs"
-                                    onClick={this.publish.bind(this)}>Publish Event</button>
-                                 <span> You still Can modify for the 48 hours. Will be published after Mod Confirm</span>
-                            </div>
-                        }
+                        <div>Event Will be published after request made and Admin Confirmation</div>
+                        {this.state.userAdmin ? <button onClick={this.adminConfirm}>Publish</button> : null}
+                        <div>Published At : {this.props.event.publishedDate ? Moment(this.props.event.publishedDate).format("MM/DD HH:MM") : "Not Published Yet"} - This Event Will Be Permanently locked after 2 days. Non locked Event Will be discarded.</div>
+                        <div>State: {this.stateLegend(this.props.event.state)}</div>
+                        <div><button
+                                className="btn btn-xs"
+                                onClick={this.publish.bind(this)}>{this.eventsButtonStatus(this.props.event.state)}</button>
+                        </div>
                     </div>
                     <table ref="table" className="table table-sm">
                         <thead>
