@@ -8,7 +8,7 @@ const theme = {
     input: {
         width: 240,
         height: 30,
-        padding: '10px 20px',
+        padding: '5px 5px',
         fontFamily: 'Helvetica, sans-serif',
         fontWeight: 300,
         fontSize: 16,
@@ -31,7 +31,7 @@ const theme = {
     suggestionsContainerOpen: {
         display: 'block',
         position: 'absolute',
-        width: 280,
+        width: 400,
         border: '1px solid #aaa',
         backgroundColor: '#fff',
         fontFamily: 'Helvetica, sans-serif',
@@ -40,9 +40,8 @@ const theme = {
         borderBottomLeftRadius: 4,
         borderBottomRightRadius: 4,
         zIndex: 2,
-        "max-height": "200px",
+        maxHeight: "200px",
         overflow: "auto",
-        position: "absolute",
     },
     suggestionsList: {
         margin: 0,
@@ -51,7 +50,7 @@ const theme = {
     },
     suggestion: {
         cursor: 'pointer',
-        padding: '10px 20px'
+        padding: '5px 5px'
     },
     suggestionHighlighted: {
         backgroundColor: '#ddd'
@@ -59,12 +58,12 @@ const theme = {
 };
 
 const getSuggestionValue = (suggestion) => {
-    return suggestion.name
+    return `${suggestion.name} - ${suggestion.setName}`
 };
 
 const renderSuggestion = suggestion => (
     <div>
-        {suggestion.name}
+        {suggestion.name} - {suggestion.setName}
     </div>
 );
 
@@ -77,31 +76,27 @@ export default class CardNamesCall extends React.Component {
         };
     }
 
-    onChange = (event, { newValue }) => {
+    onChange = (event, { newValue , method}) =>{
+        console.log(method);
+        this.props.typedCard(newValue, method);
         this.setState({
             value: newValue
         });
     };
     onSuggestionsFetchRequested = ({ value }) => {
-
-
         Meteor.call("getAutoCompleteComplete", value, (err, data)=>{
-
             var addFoils = [];
             data.forEach((card)=>{
                 addFoils.push(card);
-                addFoils.push(Object.assign(card, {foil : true}));
             })
-
             this.setState({
                 suggestions: addFoils.length === 0 ? [] : addFoils
             });
         })
-
     };
 
     onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }){
-        console.log(suggestion, suggestionValue, suggestionIndex, sectionIndex, method );
+        this.props.typedCard(suggestion, method);
     }
 
     onSuggestionsClearRequested = () => {
@@ -113,7 +108,6 @@ export default class CardNamesCall extends React.Component {
     render() {
         const { value, suggestions } = this.state;
 
-        // Autosuggest will pass through all these props to the input element.
         const inputProps = {
             placeholder: 'Type a Card Name',
             value,
@@ -128,12 +122,11 @@ export default class CardNamesCall extends React.Component {
                     theme={theme}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
                     onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                    onSuggestionSelected={this.onSuggestionSelected}
+                    onSuggestionSelected={this.onSuggestionSelected.bind(this)}
                     getSuggestionValue={getSuggestionValue}
                     renderSuggestion={renderSuggestion}
                     inputProps={inputProps}
                 />
-                fasdfasfd
             </div>
         );
     }
