@@ -68,6 +68,13 @@ Meteor.startup(function () {
     }else{
         console.log("Collection CardsData Match ");
     }
+
+    if(MTGSetsCountFromFile() != MTGSets.find().count()){
+        console.log("MTGSets Wrong Quantity");
+        MakeMTGSets();
+    }else{
+        console.log("MTGSets CardsData Match ");
+    }
 });
 
 // var cookies = new Cookies()

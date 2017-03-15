@@ -118,9 +118,12 @@ Meteor.methods({
     findDecksByDecksNamesShells(DecksNamesShells_id){
         console.log("START: findDecksByDecksNamesShellsAll");
             var DecksNamesShellsQuery = DecksNamesShells.findOne({_id : DecksNamesShells_id});
-
-            var DecksDataQuery_ids = DecksData.find({format : DecksNamesShellsQuery.format, state: {$nin : ["manual", "perfect", "shell"]}, "main.name" : {$all : DecksNamesShellsQuery.cardTiers[0].cards}}).map((deckData)=>{
-                return deckData._id;
+            var DecksDataQuery_ids = DecksData.find({
+                    format : DecksNamesShellsQuery.format,
+                    state: {$nin : ["manual", "perfect", "shell"]},
+                    "main.name" : {$all : DecksNamesShellsQuery.deckShell}})
+                .map((deckData)=>{
+                    return deckData._id;
             });
 
             if(DecksDataQuery_ids.length){
@@ -129,14 +132,14 @@ Meteor.methods({
                     var decksDataQuery_ids = DecksData.find(
                         {
                             _id: {$in: DecksDataQuery_ids},
-                            "main.name": {$all: decksNamesShell.cardTiers[0].cards}
+                            "main.name": {$all: decksNamesShell.deckShell}
                         }
                     ).map((deckData)=>{
                         return deckData._id;
                     })
 
                     if(decksDataQuery_ids.length){
-                        array.push({DecksNamesShells_id : decksNamesShell._id, DecksNames_id: decksNamesShell.DecksNames_id, decksDataQuery_ids: decksDataQuery_ids, quantity : decksNamesShell.cardTiers[0].cards.length})
+                        array.push({DecksNamesShells_id : decksNamesShell._id, DecksNames_id: decksNamesShell.DecksNames_id, decksDataQuery_ids: decksDataQuery_ids, quantity : decksNamesShell.deckShell.cards.length})
                     }
                 });
                 var highestObject = {quantity : 0};
@@ -146,13 +149,11 @@ Meteor.methods({
                         highestObject = array[i];
                     }
                 }
-                console.log(highestObject);
-
                 DecksData.update({_id : {$in : highestObject.decksDataQuery_ids}},
                     {$set : {DecksNames_id : highestObject.DecksNames_id, state : "shell"}},
                     {multi : true}
                 )
-
+                CreateTheCardList(data.DecksNames_id);
             }
 
         console.log("   END: findDecksByDecksNamesShellsAll");

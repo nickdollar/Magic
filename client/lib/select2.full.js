@@ -3344,7 +3344,7 @@ S2.define('select2/data/array',[
 
     var $options = [];
 
-    // Filter out all items except for the one passed in the argument
+    // CollectionFilter out all items except for the one passed in the argument
     function onlyItem (item) {
       return function () {
         return $(this).val() == item.id;

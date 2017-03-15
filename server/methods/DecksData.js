@@ -264,6 +264,7 @@ Meteor.methods({
         removeNameFromDeck(data._id);
         addNameToDeck(data._id, data.DecksNames_id);
         addToDecksUniqueWithName(data._id);
+        CreateTheCardList(data.DecksNames_id);
         DecksData.update({_id : data._id},
             {
                 $set : {state : "manual"}
@@ -359,7 +360,6 @@ Meteor.methods({
         }}).fetch();
     },
     getAllCardsFromDeckArchetype(selectedCard, archetype, format){
-        console.log(archetype, format);
         var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
 
 

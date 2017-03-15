@@ -1,5 +1,5 @@
 import cheerio from "cheerio";
-import moment from "moment";
+
 
 getStarCityGamesEvents = function(format) {
     console.log("START: getStarCityGamesEvents");
@@ -10,7 +10,7 @@ getStarCityGamesEvents = function(format) {
         var eventsLinks = $resMainPage("#content_decks_" + format + " li a");
 
         for(var i = 0; i < eventsLinks.length; i++){
-            var eventPattern = /(\d+\/\d+) (?:SCG )?(Super IQ|Invi Qualifier|Invitational|Classic|Players' Championship|Open|Grand Prix|Legacy Champs|World Magic Cup) (.*), (\w\w)/i;
+            var eventPattern = /(\d+\/\d+) (?:SCG )?(Super IQ|SCG Modern Open Dallas|Magic Online World Championship|Invi Qualifier|Invitational|Classic|Players' Championship|(?:Modern|Standard|Legacy|Vintage)? ?Open|Grand Prix|Legacy Champs|World Magic Cup) (.*), ?(?:\w\w)?/i;
             var eventPatternMatch = $resMainPage(eventsLinks[i]).html().match(eventPattern);
             var event = {};
             if(eventPatternMatch == null){

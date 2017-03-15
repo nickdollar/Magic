@@ -24,6 +24,27 @@ removeToDecksUniqueWithName = function(_id){
     DecksDataUniqueWithoutQuantity.remove({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}})
 }
 
+CreateTheCardList = function(DecksNames_id){
+    var cards = DecksNames.aggregate(
+        [
+            {$match: {_id : "atZiGY27D2P9wZyHS"}},
+            {$lookup: {
+                    "from" : "DecksData",
+                    "localField" : "_id",
+                    "foreignField" : "DecksNames_id",
+                    "as" : "DecksData"}},
+            {$unwind: {path : "$DecksData"}},
+            {$project: {main : "$DecksData.main"}},
+            {$unwind: {path : "$main",}},
+            {$group: {_id : "$_id",cards : {$addToSet : "$main.name"}}}
+        ]
+    );
+    DecksNames.update({_id : DecksNames_id},
+        {
+            $set : {cards : cards.cards}
+        })
+}
+
 
 addToDecksUniqueWithName = function(_id){
     var deckData = DecksData.findOne({_id : _id});

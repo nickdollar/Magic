@@ -23,7 +23,7 @@ export default class Collection extends React.Component {
 
         if(this.state.suggestion.name){
             var request = Object.assign({}, this.state.suggestion, {quantity : isNaN(quantity) ? 0 : quantity, foil : foil});
-            Meteor.call("addCardToCollection", request);
+            Meteor.call("addCardToCollectionMethod", request);
         }
     }
 

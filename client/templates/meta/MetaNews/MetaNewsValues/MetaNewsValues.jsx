@@ -47,7 +47,6 @@ export default class NewsMetaValues extends React.Component {
     }
 
     render(){
-
         const options =
             {
                 options : {
@@ -67,9 +66,7 @@ export default class NewsMetaValues extends React.Component {
                     <TableHeaderColumn width="55" dataAlign='center' dataField="t" dataFormat={this.typeFormatted}>Type</TableHeaderColumn>
                     <TableHeaderColumn dataAlign='left' dataField="t" dataFormat={this.nameFormatted}>Name</TableHeaderColumn>
                     <TableHeaderColumn width="55" dataAlign='center' dataField="date" dataFormat={this.dateFormatted}>Date</TableHeaderColumn>
-
                 </BootstrapTable>
-
             </div>
         );
     }

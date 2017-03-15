@@ -45,15 +45,12 @@ createANewDeckName = function(deckName, format){
 
 
 addNameToDeck = function(DecksData_id, DecksNames_id){
-
     var deckData = DecksData.find({_id : DecksData_id}, {limit : 1}).fetch()[0];
     var deckName = DecksNames.find({_id : DecksNames_id}, {limit : 1}).fetch()[0];
     DecksData.update(  {_id : deckData._id},
                     {$set : {DecksNames_id : deckName._id}}
     );
-
     checkIfEventIsComplete(deckData.Events_id);
-
 };
 
 checkIfEventIsComplete = function(Events_id){

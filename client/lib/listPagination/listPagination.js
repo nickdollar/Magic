@@ -581,7 +581,7 @@
                 return result;
             },
 
-            // Filter data by "locator"
+            // CollectionFilter data by "locator"
             filterDataByLocator: function(dataSource) {
 
                 var locator = this.getLocator(attributes.locator);
