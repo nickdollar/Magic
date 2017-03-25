@@ -11,7 +11,7 @@ import CustomEventsCalendarAdmin from './CustomEventsCalendarAdmin/CustomEventsC
 import CustomZipCodesAdmin from './CustomZipCodesAdmin/CustomZipCodesAdmin.jsx';
 import CustomCardsFullDataAdmin from './CustomCardsFullDataAdmin/CustomCardsFullDataAdmin.jsx';
 import CustomArchetypesShellsAdmin from './CustomArchetypesShellsAdmin/CustomArchetypesShells.jsx';
-
+import CustomCardsCollectionSimplifiedAdmin from './CustomCardsCollectionSimplifiedAdmin/CustomCardsCollectionSimplifiedAdmin.jsx';
 
 
 export default class CustomAdmin extends React.Component{
@@ -45,6 +45,8 @@ export default class CustomAdmin extends React.Component{
             return <CustomCardsFullDataAdmin/>
         }else if (route=="ArchetypesShells"){
             return <CustomArchetypesShellsAdmin format={this.state.format}/>
+        }else if (route=="CardsCollectionSimplified"){
+            return <CustomCardsCollectionSimplifiedAdmin format={this.state.format}/>
         }
     }
 
@@ -67,7 +69,8 @@ export default class CustomAdmin extends React.Component{
     render(){
         var formats = ["standard", "modern", "legacy", "vintage"];
         var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
-                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData", "ArchetypesShells"];
+                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData", "ArchetypesShells",
+                            "CardsCollectionSimplified"];
         collections.sort()
         return (
             <div className="CustomAdminComponent">

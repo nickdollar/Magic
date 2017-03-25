@@ -1,10 +1,14 @@
 import React from "react";
 
-//initialValue
-//errorMessage
-//title
-//required
-//objectName
+
+{/*<TextFormInput*/}
+    {/*initialValue = {""}*/}
+    {/*errorMessage = {""}*/}
+    {/*title = {""}*/}
+    {/*required = {""}*/}
+    {/*objectName = {""}  */}
+{/*>*/}
+
 
 export default class textFormInput extends React.Component{
     constructor(props) {

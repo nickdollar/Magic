@@ -18,8 +18,29 @@ import User                         from    "/client/templates/User/User";
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
     this.subscribe("DecksArchetypesGlobal");
+
     this.state = new ReactiveDict;
     this.state.set("selected", null);
+
+    this.autorun(()=>{
+        this.subscribe("UserCollection", {
+            onReady(){
+                var objects = UsersCollection.find({Users_id : Meteor.userId()}, {limit : 1}).fetch();
+                var cardsObjects = {};
+                if(objects.length){
+                    for(var i = 0; i < objects[0].cards.length; ++i){
+                        var cardName = objects[0].cards[i].name;
+                        var qty = objects[0].cards[i].qty;
+                        if(!cardsObjects[cardName]){
+                            cardsObjects[cardName] = 0;
+                        }
+                        cardsObjects[cardName] += qty;
+                    }
+                }
+                Session.set("cards", cardsObjects);
+            }
+        });
+    })
 });
 
 Template.ApplicationLayout.helpers({
@@ -66,64 +87,6 @@ Template.User.helpers({
     User(){
         return User;
     }
-});
-
-Template.selectedMeta.onRendered(function(){
-
-    //$("table").each(function(index){
-    //    var length = 2;
-    //    //if($(this).hasClass("20")){
-    //    //    length = 20;
-    //    //}
-    //
-    //    var oTable = $(this).DataTable({
-    //        paging: true,
-    //        searching : false,
-    //        ordering : false,
-    //        info : false,
-    //        pagingType : "simple",
-    //        lengthChange: false,
-    //        pageLength : length,
-    //        language: {
-    //            paginate: {
-    //                first: '>>',
-    //                previous: '<',
-    //                next: '>',
-    //                last: '>>'
-    //            }
-    //        },
-    //        dom:"<'row'<'col-sm-12'tp>>"
-    //    });
-    //
-    //    $(this).closest(".customTable").find(".previous:first").click(function(){
-    //        oTable.page('previous').draw(false);
-    //    });
-    //
-    //    $(this).closest(".customTable").find(".next:first").click(function(){
-    //        oTable.page('next').draw(false);
-    //    });
-    //
-    //
-    //});
-    //
-    //var table = $('#example2').DataTable({});
-    //
-    //$('#example2 tbody').on('click', 'td.details-control', function () {
-    //    var tr = $(this).closest('tr');
-    //    var row = table.row( tr );
-    //    if ( row.child.isShown() ) {
-    //        // This row is already open - close it
-    //        row.child.hide();
-    //        tr.removeClass('shown');
-    //    }
-    //    else {
-    //        // Open this row
-    //        row.child().show();
-    //        tr.addClass('shown');
-    //    }
-    //} );
-
-
 });
 
 Template.main.helpers({

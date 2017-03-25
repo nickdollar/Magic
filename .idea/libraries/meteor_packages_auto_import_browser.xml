@@ -126,11 +126,7 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/client/main.css" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/client/main.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/config/config.css" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/util.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/config/config.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/getPubSelector.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/main.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/tableInit.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/client/main.css" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/client/main.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/callback-hook/1.0.10/web.browser/hook.js" />
@@ -138,7 +134,6 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/config/config.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteorhacks_picker/1.0.3/web.browser/packages/meteorhacks_picker.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/allow-deny/1.0.5/web.browser/allow-deny.js" />
-        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/common/Tabular.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/allow-deny/1.0.5/web.browser/allow-deny-tests.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_access-point/0.1.49/web.browser/packages/cfs_access-point.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_throttle/3.0.0/web.browser/client/main.css" />
@@ -698,11 +693,7 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/client/main.css" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/client/main.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/config/config.css" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/util.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_status/3.0.0/web.browser/config/config.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/getPubSelector.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/main.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/client/tableInit.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/client/main.css" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/client/main.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/callback-hook/1.0.10/web.browser/hook.js" />
@@ -710,7 +701,6 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_sub/3.0.0/web.browser/config/config.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteorhacks_picker/1.0.3/web.browser/packages/meteorhacks_picker.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/allow-deny/1.0.5/web.browser/allow-deny.js" />
-      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/aldeed_tabular/2.1.1/web.browser/common/Tabular.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/allow-deny/1.0.5/web.browser/allow-deny-tests.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/cfs_access-point/0.1.49/web.browser/packages/cfs_access-point.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/meteortoys_throttle/3.0.0/web.browser/client/main.css" />

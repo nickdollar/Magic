@@ -4,12 +4,7 @@ Meteor.methods({
     addCardToCollectionMethod: function ({name, setCode, foil, qty}) {
         addCardToCollection({name : name, setCode : setCode, foil : foil, qty : qty});
     },
-    getCollectionCards(colorsMatch, sort, page, itemsCountPerPage){
-        console.log(sizeof("a"));
-        console.log(sizeof(12345));
-        console.log(sizeof(UsersCollection.findOne({Users_id : Meteor.userId()})));
-
-
+    getCollectionCards({colorsMatch, sort, page, itemsCountPerPage, cardsStartingWith}){
         var cards = UsersCollection.aggregate(
             [
                 {$match: {cards : {$exists : true}, Users_id : Meteor.userId()}},
@@ -40,14 +35,16 @@ Meteor.methods({
                     qty : 1,
                     colors : "$card.colorIdentity"
                 }},
+
                 {
-                    $match : colorsMatch
+                    $match : Object.assign(colorsMatch, {_id : {$regex : `^${cardsStartingWith}`, $options: 'i'}})
                 },
                 {
                     $sort : sort
-                },
+                }
             ]
         );
+
 
         var count = cards.length;
         var slice = cards.slice(itemsCountPerPage*page, itemsCountPerPage*(page + 1));
@@ -56,13 +53,15 @@ Meteor.methods({
         }
         return {qty : 0, cards : []};
     },
+    removeCardFromCollectionMethod(cardObj){
+        removeCardFromCollection(cardObj);
+    },
     importCollectionMethod(){
         importCollection();
     }
 });
 
 addCardToCollection = function({name, setCode, foil, qty}){
-
     UsersCollection.update({Users_id : Meteor.userId()},
         {
             $setOnInsert : {cards : [{name : name, setCode : setCode, foil : foil, qty : 0}]}
@@ -87,3 +86,15 @@ addCardToCollection = function({name, setCode, foil, qty}){
         }
     )
 }
+
+removeCardFromCollection = function({name, setCode, foil}){
+    UsersCollection.update({Users_id : Meteor.userId()},
+        {
+            $pull : {cards : {name : name, setCode : setCode, foil : foil}}
+        },
+        {
+            multi : true
+        }
+    )
+}
+

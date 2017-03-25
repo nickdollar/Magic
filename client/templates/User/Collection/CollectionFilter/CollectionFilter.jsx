@@ -9,6 +9,11 @@ export default class CollectionFilter extends React.Component {
     render(){
         return(
             <div className="CollectionFilterComponent">
+                <h3>Filters</h3>
+                <div className="form-group">
+                    <label htmlFor="name">Cards Starting With:</label>
+                    <input onChange={(event)=>this.props.updateCardsStartingWith(event.target)} type="text" className="form-control" id="name" placeholder="Cards Starting With:"/>
+                </div>
                 <div>
                     {this.props.filter.colors.map((color, index)=>{
                         return <label key={color.value} className="checkbox-inline">
@@ -28,7 +33,7 @@ export default class CollectionFilter extends React.Component {
                     </div>
                 })}
                 <div className="">
-                <button className="btn btn-default" onClick={this.props.submitFilter}>Update</button>
+                <button className="btn btn-default" onClick={this.props.submitFilter}>Update/Refresh</button>
                 </div>
             </div>
         );

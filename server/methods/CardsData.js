@@ -2,8 +2,8 @@ Meteor.methods({
     methodsCardsData(){
         makeCardsData()
     },
-    getAutoComplete(term){
-        var regex = new RegExp("^" + term.term, "i");
+    getAutoComplete(value){
+        var regex = new RegExp("^" + value, "i");
         return CardsData.find({name : {$regex : regex}}, {limit : 6, fields : {name : 1}}).fetch();
     },
     getAutoCompleteComplete(value){
@@ -20,5 +20,8 @@ Meteor.methods({
         });
 
         return suggestions;
+    },
+    getCardByName(CardsData_id){
+        return CardsData.find({_id : CardsData_id}, {limit : 1}).fetch()[0]
     }
 });

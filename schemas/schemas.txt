@@ -1,0 +1,10 @@
+//card simple
+
+{
+    name : 'name',
+    colors : ["B:],
+    colorsIdentity : ["B"],
+    priceAvg : 0.45,
+    types : ["creature"],
+    layout : "normal"
+}

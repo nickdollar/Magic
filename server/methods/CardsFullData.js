@@ -3,7 +3,9 @@ createCardsFullData = function(){
     CardsFullData.remove({});
     var cardsFromFile = JSON.parse(Assets.getText('AllCards-x.json'));
     for (var key in cardsFromFile) {
-        CardsFullData.insert(cardsFromFile[key]);
+        var obj = Object.assign({}, cardsFromFile[key]);
+        obj.name = obj.name.toTitleCase();
+        CardsFullData.insert(obj);
     }
     console.log("   END: createCardsFullData");
 }

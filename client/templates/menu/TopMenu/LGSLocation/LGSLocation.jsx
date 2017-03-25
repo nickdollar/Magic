@@ -34,7 +34,7 @@ export default class LGSLocation extends React.Component {
 
     getPositionOption(){
         if(this.state.positionOption == "GPS"){
-            return <span>Distance: <input onChange={this.changeDistance.bind(this)} value={parseInt(this.state.distance)} className="distanceNumber" min="0" type="number"/></span>
+            return <span>M: <input onChange={this.changeDistance.bind(this)} value={parseInt(this.state.distance)} className="distanceNumber" min="0" type="number"/></span>
         }else if(this.state.positionOption == "state"){
             const states = ['', 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO',
                 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU',
@@ -51,7 +51,7 @@ export default class LGSLocation extends React.Component {
             })}
             </select>
         }else if(this.state.positionOption == "ZIP"){
-            return <span><input maxLength="5" onChange={this.changeZip.bind(this)} defaultValue={this.state.ZIP} className="zipNumber" type="text"/>Distance: <input onChange={this.changeDistance.bind(this)} value={this.state.distance} className="distanceNumber" min="0" type="number"/></span>
+            return <span><input maxLength="5" onChange={this.changeZip.bind(this)} defaultValue={this.state.ZIP} className="zipNumber" type="text"/>M:<input onChange={this.changeDistance.bind(this)} value={this.state.distance} className="distanceNumber" min="0" type="number"/></span>
         }
     }
 

@@ -361,8 +361,6 @@ Meteor.methods({
     },
     getAllCardsFromDeckArchetype(selectedCard, archetype, format){
         var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
-
-
         if(selectedCard.length){
             var DecksArchetypesAggregation = DecksArchetypes.aggregate(
                 [
@@ -432,9 +430,6 @@ Meteor.methods({
             );
         }
 
-
-
-        console.log(DecksArchetypesAggregation);
         return DecksArchetypesAggregation;
 
         // var deckShell = [];
@@ -449,6 +444,67 @@ Meteor.methods({
 
 
 
+    },
+    getDecksDataWithCardsInformation({DecksData_id}){
+            var deck = DecksData.aggregate(
+                [
+                    {
+                        $match: {
+                            _id : DecksData_id
+                        }
+                    },
+                    {
+                        $project: {
+                            player : 1,
+                            position : 1,
+                            victory : 1,
+                            loss : 1,
+                            DecksNames_id : 1,
+                            main : 1,
+                            sideboard : 1,
+                            cards : {
+                                $setUnion :
+                                    [
+                                        {$map : {input : "$main", as : "main", in : "$$main.name"}},
+                                        {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.name"}}
+                                    ]
+                            }
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path : "$cards"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            "from" : "CardsCollectionSimplified",
+                            "localField" : "cards",
+                            "foreignField" : "name",
+                            "as" : "cardsInfo"
+                        }
+                    },
+
+                    // Stage 5
+                    {
+                        $group: {
+                            _id : "_id",
+                            player : {$first : "$player"},
+                            position : {$first : "$position"},
+                            victory : {$first : "$victory"},
+                            loss : {$first : "$loss"},
+                            draw : {$first : "$draw"},
+                            main : {$first : "$main"},
+                            sideboard : {$first : "$sideboard"},
+                            DecksNames_id : {$first : "$DecksNames_id"},
+                            cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}}
+                        }
+                    },
+
+                ]
+            );
+
+        return deck[0];
     }
 });
 

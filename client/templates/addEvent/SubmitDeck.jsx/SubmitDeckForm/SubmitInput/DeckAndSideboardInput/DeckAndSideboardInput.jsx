@@ -65,22 +65,7 @@ export default class DeckAndSideboardInput extends React.Component{
         })
     }
 
-    changeCardDeck(e){
-        var cardName = e.target.getAttribute("data-name");
-        var mainSideboard = e.target.getAttribute("data-mainSideboard");
 
-        if(e.target.value < 0) return;
-        var deck = Object.assign({}, this.state.deck);
-
-        var itemIndex = deck[mainSideboard].findIndex((obj)=>{
-            return cardName == obj.name
-        });
-
-        deck[mainSideboard][itemIndex].name = e.params.args.data.id;
-        this.setState({
-            deck : deck
-        })
-    }
 
     removeCardDeck(e){
 

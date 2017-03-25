@@ -4,7 +4,8 @@ import cheerio from "cheerio";
 Meteor.methods({
 
     getStarCityGamesEvents(data){
-        getStarCityGamesEvents(data.format);
+        // getStarCityGamesEvents(data.format);
+        getSCGTemp();
     },
     fixEventsStandard(){
         fixEventsStandard();
@@ -97,9 +98,7 @@ Meteor.methods({
     },
     stopEventsPublished(){
         var date = new Date(new Date().getTime() - (2*24*60*60*1000));
-        console.log(date);
         Events.find({password : {$exists : true}, date : {$lt : date}}).forEach((event)=>{
-            console.log(event);
             Events.update({_id : event._id},
                 {
                     $unset : {password : "", token : ""}
@@ -113,25 +112,23 @@ Meteor.methods({
     fixLeagueDailyEvent(){
         console.log("START: fixLeagueDailyEvent");
         Events.find({type : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld", "names"]}}).forEach((event)=>{
-
             if(Events.findOne({_id : event._id}).state == "pre"){
-                console.log("pre");
-                eventLeaguePreEvent(event._id);
+                webScrapingQueue.add({func : eventLeaguePreEvent, args : {Events_id : Events_id}, wait : 10000})
+
             }
 
             if(Events.findOne({_id : event._id}).state == "notFound"){
-                console.log("notFound");
-                notFoundEvent(event._id);
+                webScrapingQueue.add({func : notFoundEvent, args : {Events_id : event._id}, wait : 10000})
+
             }
 
             if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLFail"){
-                console.log("exists");
-                eventLeagueDailyDownloadHTML(event._id);
+                webScrapingQueue.add({func : eventLeagueDailyDownloadHTML, args : {Events_id : event._id}, wait : 10000})
+
             }
 
             if(Events.findOne({_id : event._id}).state == "HTML"){
-                console.log("HTML");
-                eventLeagueDailyExtractDecks(event._id);
+                webScrapingQueue.add({func : eventLeagueDailyExtractDecks, args : {Events_id : event._id}, wait : 0})
             }
         });
         console.log("   END: fixLeagueDailyEvent");
@@ -139,18 +136,15 @@ Meteor.methods({
 
     fixMTGOPTQEvent(){
         console.log("START: fixMTGOPTQEvent");
-
         Events.find({type : "MTGOPTQ", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
             if(Events.findOne({_id : event._id}).state == "notFound"){
-                notFoundEventMTGOPTQ(event._id);
+                webScrapingQueue.add({func : notFoundEventMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
             }
             if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLFail"){
-                console.log("exists");
-                eventExistsMTGOPTQ(event._id);
+                webScrapingQueue.add({func : eventExistsMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
             }
             if(Events.findOne({_id : event._id}).state == "HTML"){
-                console.log("HTML");
-                eventHTMLMTGOPTQ(event._id);
+                webScrapingQueue.add({func : eventHTMLMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
             }
         });
         console.log("   END: fixMTGOPTQEvent");
@@ -159,37 +153,37 @@ Meteor.methods({
         console.log("START: fixGPEvent");
         Events.find({type : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
             if(Events.findOne({_id : event._id}).state == "notFound"){
-                GPEventNotFound(event._id);
+                webScrapingQueue.add({func : GPEventNotFound, args : {Events_id : event._id}, wait : 10000})
             }
             if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLMainFail"){
-                GPEventsExists(event._id);
+                webScrapingQueue.add({func : GPEventsExists, args : {Events_id : event._id}, wait : 10000})
             }
             if(Events.findOne({_id : event._id}).state == "HTMLMain" || Events.findOne({_id : event._id}).state == "HTMLFail" || Events.findOne({_id : event._id}).state == "HTMLPartial"){
-                GPEventHTMLMain(event._id);
+                webScrapingQueue.add({func : GPEventHTMLMain, args : {Events_id : event._id}, wait : 10000})
             }
             if(Events.findOne({_id : event._id}).state == "HTML" || Events.findOne({_id : event._id}).state == "partialDecks" ){
-                GPEventHTML(event._id);
+                webScrapingQueue.add({func : GPEventHTML, args : {Events_id : event._id}, wait : 10000})
             }
         });
         console.log("   END: fixGPEvent");
     },
     fixSCGEvent(){
         console.log("START: fixGPEvent");
-
-        Events.find({type : {$regex : /^SCG/}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
-
-            if(Events.findOne({_id : event._id}).state == "notFound"){
-                SCGnotFound(event._id);
-            }
-
-            if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLMainFail"){
-                SCGEventExists(event._id);
-            }
-
-            if(Events.findOne({_id : event._id}).state == "HTML" || Events.findOne({_id : event._id}).state == "partialDecks" ){
-                SCGEventHTML(event._id);
-            }
-        });
+        decksDownloadDecks();
+        // Events.find({type : {$regex : /^SCG/}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
+        //
+        //     if(Events.findOne({_id : event._id}).state == "notFound"){
+        //         webScrapingQueue.add({func : SCGnotFound, args : {Events_id : event._id}, wait : 10000})
+        //     }
+        //
+        //     if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLMainFail"){
+        //         webScrapingQueue.add({func : SCGEventExists, args : {Events_id : event._id}, wait : 10000})
+        //     }
+        //
+        //     if(Events.findOne({_id : event._id}).state == "HTML" || Events.findOne({_id : event._id}).state == "partialDecks" ){
+        //         webScrapingQueue.add({func : SCGEventHTML, args : {Events_id : event._id}, wait : 10000})
+        //     }
+        // });
         console.log("   END: fixGPEvent");
     },
     checkIfAdmin(){
@@ -265,8 +259,6 @@ fixEventsStandard = function(){
 
     var lastStandard = [];
     lastStandard.push(standards[standards.length -1]);
-    console.log(lastStandard);
-
     for(var i = 0; i <events.length; i++){
         var cardsFound = CardsFullData.find({name : {$in : events[i].cards}}).map(function(obj){
             return obj.name;
@@ -275,9 +267,9 @@ fixEventsStandard = function(){
             return obj.name;
         });
 
-        if(_.intersection(cardsFound2, cardsFound).length){
-            console.log(events[i]._id);
-        }
+        // if(_.intersection(cardsFound2, cardsFound).length){
+        //     console.log(events[i]._id);
+        // }
         var totalDifference = Math.abs(cardsFound.length - cardsFound2.length);
 
         if(_.intersection(cardsFound2, cardsFound).length < 5){

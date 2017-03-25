@@ -43,6 +43,29 @@ getHTMLColorsFromColorArray = function(colors){
 
 
 
+getHTMLFromArray = (manaCost)=> {
+
+    // console.log(manaCost);
+
+    if (typeof manaCost == "undefined") return [];
+
+
+    var manaValues = {
+        "X": 'sx', "0": 's0', "1": 's1', "2": 's2', "3": 's3', "4": 's4', "5": 's5', "6": 's6', "7": 's7', "8": 's8', "9": 's9', "10": 's10',
+        "11": 's11', "12": 's12', "13": 's13', "14": 's14', "15": 's15', "16": 's16', "17": 's17', "18": 's18', "19": 's19', "20": 's20',
+        "B": 'sb', "C": 'scl', "G": 'sg', "R": 'sr', "U": 'su', "W": 'sw',
+        "2B": 's2b', "2G": 's2g', "3R": 's3r', "2U": 's2u', "2W": 's2w',
+        "B/P": 'sbp', "G/P": 'sgp', "R/P": 'srp', "U/P": 'sup', "W/P": 'swp', "B/G": 'sbg', "B/R": 'sbr', "G/U": 'sgu', "G/W": 'sgw', "R/G": 'srg',
+        "R/W": 'srw', "U/B": 'sub', "U/R": 'sur', "W/B": 'swb', "W/U": 'swu'
+    }
+
+    var str = [];
+
+    for(var i = 0; i < manaCost.length; i ++){
+        str.push({key : i, mana :  manaValues[manaCost[i]]});
+    }
+    return str;
+}
 
 getHTMLColors = (card)=> {
     if (typeof card.manaCost == "undefined") return [];

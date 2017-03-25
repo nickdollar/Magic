@@ -32,6 +32,10 @@ Meteor.startup(function () {
     DecksData._ensureIndex({DecksNames_id : 1});
     DecksNames._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});
+    ZipCodes._ensureIndex({ZIP : 1});
+    UsersCollection._ensureIndex({"cards.name" : 1});
+    CardsCollectionSimplified._ensureIndex({"name" : 1});
+
 
     if ( Meteor.users.find().count() === 0 ){
         Accounts.createUser({
@@ -75,6 +79,8 @@ Meteor.startup(function () {
     }else{
         console.log("MTGSets CardsData Match ");
     }
+
+    createEventsTypes();
 });
 
 // var cookies = new Cookies()

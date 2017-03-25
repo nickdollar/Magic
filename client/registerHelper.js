@@ -29,6 +29,7 @@ getCssManaFromDeck = function(colors){
 }
 
 
+
 // getHTMLColors = function(colors, size){
 //     if(!size ){
 //         size = "14px";

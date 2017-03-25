@@ -11,6 +11,7 @@
     "classnames": "^2.2.5",
     "datatables.net-bs": "^1.10.13",
     "email-templates": "^2.5.4",
+    "entities": "^1.1.1",
     "fullcalendar": "^3.1.0",
     "fuse.js": "^2.6.1",
     "handlebars": "^4.0.6",
@@ -24,6 +25,8 @@
     "object-sizeof": "^1.1.1",
     "owl.carousel": "^2.2.0",
     "path": "^0.12.7",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.14",
     "react": "^15.4.2",
     "react-addons-pure-render-mixin": "^15.4.1",
     "react-autosuggest": "^9.0.0",
@@ -31,7 +34,9 @@
     "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.2",
     "react-js-pagination": "^2.0.2",
-    "react-themeable": "^1.1.0"
+    "react-themeable": "^1.1.0",
+    "request": "^2.81.0",
+    "x2js": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^3.16.1",

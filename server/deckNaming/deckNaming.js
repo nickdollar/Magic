@@ -119,7 +119,6 @@ foundDeckFromDecksDataUniqueWithoutQuantity = function(_id){
 
 findDeckComparison = function(_id){
     var template = foundDeckFromDecksDataUniqueWithoutQuantity(_id);
-    console.log(template);
     if(template){
         return [{DecksNames_id : template.DecksNames_id, name : DecksNames.findOne({_id : template.DecksNames_id}).name, result  : 1}];
     }

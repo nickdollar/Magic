@@ -26,17 +26,16 @@ export default class Collection extends React.Component {
                     {value: "all", text: "Each Card Contains all.", checked: false}
                 ]
             },
-            sort : [{key : "_id", value : 1}],
-            page : 0
+            sort : {key : "_id", value : 1},
+            page : 0,
+            cardsStartingWith : ""
         }
     }
 
     getSort(){
-        var sort = this.state.sort.concat();
+        var sort = Object.assign({}, this.state.sort);
         var sortObj = {};
-        for(var i = 0; i < sort.length; i++){
-            sortObj[sort[i].key] = sort[i].value;
-        }
+        sortObj[sort.key] = sort.value;
         return sortObj;
     }
 
@@ -82,11 +81,15 @@ export default class Collection extends React.Component {
     }
 
     getCollectionCards(){
-        var sort = this.getSort();
-        var colorsMatch = this.getColors();
-        var page = this.getActivePage();
-        var itemsCountPerPage = this.getItemsCountPerPage();
-        Meteor.call("getCollectionCards", colorsMatch, sort, page, itemsCountPerPage, (err, {qty, cards})=>{
+        var queryObj = {};
+        queryObj.sort = this.getSort();
+        queryObj.colorsMatch = this.getColors();
+        queryObj.page = this.getActivePage();
+        queryObj.itemsCountPerPage = this.getItemsCountPerPage();
+        queryObj.cardsStartingWith = this.state.cardsStartingWith;
+
+
+        Meteor.call("getCollectionCards", queryObj, (err, {qty, cards})=>{
             this.setState({cards : cards, qty : qty});
         });
     }
@@ -116,42 +119,61 @@ export default class Collection extends React.Component {
 
 
     sortByHeader(value){
-        var sort = Object.assign(this.state.sort);
-        if(sort[value] == 1){
-            sort[value] = -1;
+        var sort = Object.assign({}, this.state.sort);
+        if(sort.key == value){
+            sort.value = -sort.value;
         }else{
-            sort[value] = 1;
+            sort = {key : value, value : 1}
         }
-        this.setState({sort : sort});
+
+        this.state.sort = sort;
+        this.getCollectionCards();
     }
 
     paginationOnChangeHandler(activePage){
         this.state.activePage = activePage;
         this.setState({activePage : activePage});
         this.getCollectionCards();
+    }
 
+    updateCardsStartingWith(target){
+        console.log(target.value);
+        this.state.cardsStartingWith = target.value;
+    }
+
+    removeCard(card, index){
+        Meteor.call("removeCardFromCollectionMethod", card);
+        var cards = this.state.cards.concat();
+
+        cards.splice(index, 1);
+        this.setState({cards : cards});
     }
 
     render(){
         return(
             <div className="CollectionComponent">
-                <button onClick={()=>Meteor.call("importCollectionMethod")}> import collection</button>
-                <AddCardToCollection/>
-                <CollectionFilter filter={this.state.filter}
-                                  updateColors={this.updateColors.bind(this)}
-                                  submitFilter={this.submitFilter.bind(this)}
-                                  updateColorsQueryType={this.updateColorsQueryType.bind(this)}
-                                  updateColorless={this.updateColorless.bind(this)}
+                <h3>Your Collection</h3>
+                    <div className="content-wrapper">
+                    {/*<button onClick={()=>Meteor.call("importCollectionMethod")}> import collection</button>*/}
+                    <AddCardToCollection/>
+                    <CollectionFilter filter={this.state.filter}
+                                      updateColors={this.updateColors.bind(this)}
+                                      submitFilter={this.submitFilter.bind(this)}
+                                      updateColorsQueryType={this.updateColorsQueryType.bind(this)}
+                                      updateColorless={this.updateColorless.bind(this)}
+                                      updateCardsStartingWith={this.updateCardsStartingWith.bind(this)}
 
-                />
-                <CardsTable cards={this.state.cards}
-                            qty={this.state.qty}
-                            itemsCountPerPage={this.state.itemsCountPerPage}
-                            activePage={this.state.activePage}
-                            sortByHeader={this.sortByHeader.bind(this)}
-                            paginationOnChangeHandler={this.paginationOnChangeHandler.bind(this)}
+                    />
+                    <CardsTable cards={this.state.cards}
+                                qty={this.state.qty}
+                                itemsCountPerPage={this.state.itemsCountPerPage}
+                                activePage={this.state.activePage}
+                                sortByHeader={this.sortByHeader.bind(this)}
+                                paginationOnChangeHandler={this.paginationOnChangeHandler.bind(this)}
+                                removeCard={this.removeCard.bind(this)}
 
-                />
+                    />
+                </div>
             </div>
         );
     }

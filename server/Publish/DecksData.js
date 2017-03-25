@@ -293,7 +293,6 @@ Meteor.publish('DecksDataLeagueDailyWithWrongCardsNameComplete', function(format
                 {"main.wrongName" : true},
                 {"sideboard.wrongName" : true}
             ]
-
         })
 });
 

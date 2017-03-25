@@ -6,6 +6,7 @@ export default DeckContainer = createContainer(({DecksData_id}) => {
     return {
         currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        CardsData : CardsData.find().fetch()
+        CardsData : CardsData.find().fetch(),
+        Collection: Session.get("cards")
     };
 }, Deck);

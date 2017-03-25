@@ -65,7 +65,7 @@ fixCards = function (card) {
     card = card.replace("\xE9", "e");
     card = card.toTitleCase();
 
-    if(CardsData.find({name : card}, {limit : 1}).count()){
+    if(CardsCollectionSimplified.find({name : card}, {limit : 1}).count()){
         return card;
     }
 
@@ -78,6 +78,23 @@ fixCards = function (card) {
                 if( i < queryCard.names.length - 1){
                     card += " // ";
                 }
+            }
+        }
+    }else{
+        var allCardsNames = CardsFullData.find({}, {fields : {name : 1}}).fetch();
+        var options = {
+            keys : [{name : "name"}],
+            id : "name",
+            threshold : 0.4
+        }
+        var fuse = new Fuse(allCardsNames, options);
+        var rightName = fuse.search(card)[0];
+        var foundName = CardsFullData.find({name : rightName}, {limit : 1})[0];
+        if(obj.layout == "split"){
+            if(foundName.length > 2){
+                card = foundName.names.join("/");
+            }else{
+                card = foundName.names.join(" // ");
             }
         }
     }

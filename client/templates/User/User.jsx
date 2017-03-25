@@ -1,5 +1,8 @@
 import React from 'react' ;
 import Collection from './Collection/Collection';
+import UsersDecks from './UsersDecks/UsersDecks';
+
+
 
 export default class User extends React.Component {
     constructor(){
@@ -10,6 +13,7 @@ export default class User extends React.Component {
         return(
             <div className="UserComponent">
                 <Collection/>
+                <UsersDecks/>
             </div>
         );
     }

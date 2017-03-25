@@ -12,7 +12,6 @@ export default class Deck extends React.Component{
     }
 
 
-
     componentDidUpdate() {
         cardPopover(".js-imagePopOver");
     }
@@ -52,6 +51,16 @@ export default class Deck extends React.Component{
         return typesSeparated;
     }
 
+
+    getCardQuantity(cardList){
+        for(var i =0; i < cardList.length; i++){
+            var have = Session.get("cards")[cardList[i].name];
+            if(!have){
+                have = 0;
+            }
+            cardList[i].have = have;
+        }
+    }
 
     getDecksDataById(DecksData_id){
         Meteor.call("getDecksDataBy_id", DecksData_id, (err, data)=>{
@@ -95,7 +104,7 @@ export default class Deck extends React.Component{
     }
 
     createLink(){
-        var link = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
+        var link = `http://store.tcgplayer.com/massentry?partner=CrowdMtG&c=`;
 
         this.state.DecksData.main.forEach((card)=>{
             link += `${card.quantity} ${card.name}||`
@@ -109,13 +118,25 @@ export default class Deck extends React.Component{
     }
 
     cardPriceLink(cardName){
-        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${cardName}&partner=Crowd`}>5.55</a>
+        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${cardName}&partner=CrowdMtG`}>5.55</a>
 
+    }
+
+    cardQuantity(card){
+        if(this.props.currentUser){
+            return <span className={card.quantity > card.have ? "lessThan" : null}>{`${card.quantity}/${card.have}`}</span>
+        }
+        return card.quantity;
     }
 
     render() {
         if(this.props.listLoading){return <div>Loading...</div>};
+
+
+        this.getCardQuantity(this.state.DecksData.main);
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.state.DecksData.main);
+
+
         var resultMain = [];
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
@@ -126,7 +147,7 @@ export default class Deck extends React.Component{
                 typesSeparated[type].array.map((card)=>{
                     return  <div className="cardLine" key={card.name}>
                                 <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
-                                    <span className="quantity">{card.quantity}</span><span data-name={card.name}>{card.name}</span>
+                                    <span className="quantity">{this.cardQuantity(card)}</span><span data-name={card.name}>{card.name}</span>
                                 </div>
                                 <div className="cardInfo">
                                     <div className="manaValue">
@@ -142,12 +163,13 @@ export default class Deck extends React.Component{
                 })
             )
         }
+        this.getCardQuantity(this.state.DecksData.sideboard);
         var sideboardCards = this.addManaCostToSideboard(this.state.DecksData.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
         return <div className="cardLine" key={card.name}>
                 <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
-                    <span className="quantity">{card.quantity}</span><span className="name " data-name={card.name}>{card.name}</span>
+                    <span className="quantity">{this.cardQuantity(card)}</span><span className="name " data-name={card.name}>{card.name}</span>
                 </div>
                 <div className="cardInfo">
                     <div className="manaValue">

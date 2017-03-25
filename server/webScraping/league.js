@@ -37,55 +37,60 @@ eventLeagueGetInfoOld = function(format, days){
     }
     date.setHours(0,0,0,0);
 
+    var queue = 0;
     for(var i = 0; i < days ; i++){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = Meteor.http.get(url);
+
+        Meteor.setTimeout(()=>{
+            var day = pad(date.getDate());
+            var month = pad(date.getMonth()+1);
+            var year = date.getYear() + 1900;
+            var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
+            var res = Meteor.http.get(url);
 
 
-        if(Events.findOne({type : type, date : date, format : format})){
-            continue;
-        }
-
-        Events.update(
-            {type : type, date : date, format : format},
-            {
-                $setOnInsert : {
-                    date: date,
-                    format : format,
-                    name : leagueTypes[format],
-                    type: type,
-                    url : url,
-                    state : "startProduction",
-                    venue : "MTGO"
-                }
-            },
-            {upsert : true}
-        );
-
-        if (res.statusCode == 200) {
-            var buffer = res.content;
-            var $ = cheerio.load(buffer);
-            var deckMeta = $('#main-content');
-            var state = "notFound";
-            if(deckMeta.length == 0){
-                console.log("Page Doesn't exists");
-            }else{
-                console.log("page exists");
-                state = "exists";
+            if(Events.findOne({type : type, date : date, format : format})){
+                return;
             }
 
             Events.update(
                 {type : type, date : date, format : format},
                 {
-                    $set : {
-                        state : state
+                    $setOnInsert : {
+                        date: date,
+                        format : format,
+                        name : leagueTypes[format],
+                        type: type,
+                        url : url,
+                        state : "startProduction",
+                        venue : "MTGO"
                     }
-                }
+                },
+                {upsert : true}
             );
-        }
+
+            if (res.statusCode == 200) {
+                var buffer = res.content;
+                var $ = cheerio.load(buffer);
+                var deckMeta = $('#main-content');
+                var state = "notFound";
+                if(deckMeta.length == 0){
+                    console.log("Page Doesn't exists");
+                }else{
+                    console.log("page exists");
+                    state = "exists";
+                }
+
+                Events.update(
+                    {type : type, date : date, format : format},
+                    {
+                        $set : {
+                            state : state
+                        }
+                    }
+                );
+            }
+        }, 10000 * queue)
+
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
@@ -120,58 +125,65 @@ eventLeagueGetNewEvents = function(format){
 
     date.setHours(0,0,0,0);
 
+    var arrayQueue = 0;
     while(new Date().getTime() > date.getTime()){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = Meteor.http.get(url);
 
 
-        if(!Events.findOne({type : type, date : date, format : format})){
-            Events.update(
-                {type : type, date : date, format : format},
-                {
-                    $setOnInsert : {
-                        date: date,
-                        format : format,
-                        name : leagueTypes[format],
-                        type: type,
-                        url : url
+        Meteor.setTimeout(()=>{
+            var day = pad(date.getDate());
+            var month = pad(date.getMonth()+1);
+            var year = date.getYear() + 1900;
+            var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
+            var res = Meteor.http.get(url);
+
+
+            if(!Events.findOne({type : type, date : date, format : format})){
+                Events.update(
+                    {type : type, date : date, format : format},
+                    {
+                        $setOnInsert : {
+                            date: date,
+                            format : format,
+                            name : leagueTypes[format],
+                            type: type,
+                            url : url
+                        }
+                    },
+                    {upsert : true}
+                );
+
+                if (res.statusCode == 200) {
+                    var buffer = res.content;
+                    var $ = cheerio.load(buffer);
+                    var deckMeta = $('#main-content');
+                    var state = "pre";
+                    if(deckMeta.length == 0){
+                        console.log("Page Doesn't exists");
+                    }else{
+                        state = "exists";
                     }
-                },
-                {upsert : true}
-            );
-
-            if (res.statusCode == 200) {
-                var buffer = res.content;
-                var $ = cheerio.load(buffer);
-                var deckMeta = $('#main-content');
-                var state = "pre";
-                if(deckMeta.length == 0){
-                    console.log("Page Doesn't exists");
-                }else{
-                    state = "exists";
+                    console.log("page exists");
                 }
-                console.log("page exists");
+
+                Events.update(
+                    {type : type, date : date, format : format},
+                    {
+                        $set : {
+                            "state" : state
+                        }
+                    }
+                );
             }
+        }, 10000 * arrayQueue);
+        arrayQueue++
 
-            Events.update(
-                {type : type, date : date, format : format},
-                {
-                    $set : {
-                        "state" : state
-                    }
-                }
-            );
-        }
 
 
             date = new Date(date.setDate(date.getDate() + 1));
         }
 }
 
-eventLeaguePreEvent = function(Event_id){
+eventLeaguePreEvent = function({Event_id}){
     console.log("START: pre");
     var eventPre = Events.findOne({_id : Event_id, state : "pre"});
 

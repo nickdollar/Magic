@@ -30,7 +30,6 @@ Meteor.methods({
         LGSEvents.remove({_id : {$in : _ids}})
     },
     getLGSEventsFromId(LGS_id){
-        console.log(LGS_id);
         return LGSEvents.find({LGS_id : {$in : LGS_id}}).fetch();
     }
 })

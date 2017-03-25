@@ -37,7 +37,7 @@ export default class TopMenu extends React.Component {
             <div className="TopMenuComponent">
                 <nav className="navbar navbar-default navbar-static-top navbar-height">
                     <div className="row">
-                        <div className="col-xs-7">
+                        <div className="col-xs-8">
                             <div className="collapse navbar-collapse">
                                 <ul className="nav navbar-nav">
                                     {menu.map((link)=>{
@@ -47,7 +47,7 @@ export default class TopMenu extends React.Component {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-xs-5">
+                        <div className="col-xs-4">
                             <div className="positionLoginDistanceWrapper">
                                 <div className="LGSLocation">
                                     <LGSLocation/>

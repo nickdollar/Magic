@@ -119,32 +119,7 @@ export default class Deck extends React.Component{
         }
     }
 
-    addCardToDeck(e){
-        var cardName = $(e.target).closest(".addToMainButtonWrapper").siblings(".js-cardNameInput").find(".js-select2").val();
-        var cardQuantity = $(e.target).closest(".addToMainButtonWrapper").siblings(".quantityInput").val();
-        var mainSideboard = e.target.getAttribute("data-mainSideboard");
 
-        if(cardName.length == 0){
-            return;
-        };
-
-        cardName = cardName.toTitleCase();
-
-        if(this.state.deck[mainSideboard].findIndex((card)=>{
-                return cardName == card.name
-            }) != -1){
-            return
-        }
-
-        var deck = Object.assign({}, this.state.deck);
-
-        cardName = cardName.toTitleCase()
-
-        deck[mainSideboard].push({name : cardName, quantity : parseInt(cardQuantity)});
-
-        this.state.deck = deck;
-        this.subscribeToNewCards(cardName);
-    }
 
     shouldComponentUpdate(nextProps, nextState){
         if(nextState.listLoading == false){

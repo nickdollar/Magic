@@ -1,3 +1,4 @@
+import Entities from "entities";
 moveHtml = function(){
     console.log("moveHtml START");
     var eventsQuery = Events.find({html : {$exists : true}});
@@ -37,3 +38,11 @@ fixNamesOnDecksNames = function(){
     });
 };
 
+
+fixHtmlFromCherrios = (string)=>{
+    if(!string) return string;
+
+    string = Entities.decodeHTML(string);
+    string = string.trim()
+    return string;
+}

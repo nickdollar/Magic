@@ -1,5 +1,7 @@
 import React from 'react' ;
 import DecksNamesDecksDataList from "./DecksNamesDecksDataList/DecksNamesDecksDataList.jsx";
+import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx"
+
 
 export default class DeckTableExample extends React.Component {
     constructor(props){
@@ -20,8 +22,8 @@ export default class DeckTableExample extends React.Component {
     }
 
     selectedDeckHandle(_id){
-        if(this.state.selectedDeck_id != _id){
-            this.setState({selectedDeck_id : _id});
+        if(this.state.DecksData_id != _id){
+            this.setState({DecksData_id : _id});
         }
     }
 
@@ -41,9 +43,7 @@ export default class DeckTableExample extends React.Component {
                 </div>
                 <div className="col-xs-9">
                     <div className="row">
-                        {this.state.selectedDeck_id != "" ?
-                            <DeckContainer DecksData_id={this.state.selectedDeck_id}/> : null
-                        }
+                            <DeckAggregate DecksData_id={this.state.DecksData_id}/>
                     </div>
                 </div>
 
@@ -52,3 +52,5 @@ export default class DeckTableExample extends React.Component {
         );
     }
 }
+
+// <DeckContainer DecksData_id={this.state.selectedDeck_id}/> : null

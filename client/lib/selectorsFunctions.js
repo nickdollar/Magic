@@ -1,4 +1,5 @@
 cardPopover = function(jsClassName, confirmed){
+
     $(jsClassName).off("popover");
     $(jsClassName).popover({
         html: true,
@@ -8,9 +9,7 @@ cardPopover = function(jsClassName, confirmed){
             var html = "";
             var element = $(this).get()[0];
             var cardName = encodeURI(element.getAttribute("data-name"));
-
             if(confirmed){
-
                 var html = "";
                 var element = $(this).get()[0];
                 var cardName = encodeURI(element.getAttribute("data-name"));
