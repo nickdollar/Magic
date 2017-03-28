@@ -1,3 +1,5 @@
+import Fuse from "fuse.js";
+
 setUpColorForDeckName = function(main){
     var manaRegex = new RegExp("(?:B|C|G|R|U|W)?\/?(?:P|B|C|G|R|U|W)(?=})", 'g');
     var tempMana = {B : 0, C: 0, G : 0, R : 0, U: 0, W : 0,
@@ -61,6 +63,7 @@ String.prototype.capitalize = function(){
 };
 
 fixCards = function (card) {
+    card = card.trim();
     card = card.replace("\xC6", "Ae");
     card = card.replace("\xE9", "e");
     card = card.toTitleCase();
@@ -89,8 +92,14 @@ fixCards = function (card) {
         }
         var fuse = new Fuse(allCardsNames, options);
         var rightName = fuse.search(card)[0];
-        var foundName = CardsFullData.find({name : rightName}, {limit : 1})[0];
-        if(obj.layout == "split"){
+
+
+        var foundName = CardsFullData.find({name : rightName}, {limit : 1}).fetch()[0];
+        // console.log(card);
+        // console.log(rightName);
+        // console.log(foundName);
+        // console.log(CardsFullData.find({name : rightName}, {limit : 1}));
+        if(foundName.layout == "split"){
             if(foundName.length > 2){
                 card = foundName.names.join("/");
             }else{

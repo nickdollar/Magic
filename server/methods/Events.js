@@ -10,11 +10,9 @@ Meteor.methods({
     fixEventsStandard(){
         fixEventsStandard();
     },
-    methodEventLeagueGetNewEvents(data){
-        eventLeagueGetNewEvents(data.format);
-    },
-    methodEventLeagueGetInfoOld(data){
-        eventLeagueGetInfoOld(data.format, data.days);
+    eventLeagueDailyMethod({format, days, dateType}){
+        console.log(format, days, dateType);
+        eventLeagueGetInfoOldStartNew({format : format, days : days, dateType : dateType});
     },
     methodEventMTGOPTQGetInfoOld(data){
         getMTGOPtqEventsOLD(data.format, data.days);
@@ -23,7 +21,12 @@ Meteor.methods({
         getMTGOPtqNewEvents(data.format);
     },
     methodGetGPEvents(){
-        getGPEvents();
+        getGpEventsProTourNew();
+        // getGPEvents();
+    },
+    methodGetGPPositions(){
+        GPGetPosition();
+        // getGPEvents();
     },
     addALGSEvent(event){
         var eventQuery = Events.findOne({LGS_id : event.LGS_id, token : event.token});
@@ -169,21 +172,7 @@ Meteor.methods({
     },
     fixSCGEvent(){
         console.log("START: fixGPEvent");
-        decksDownloadDecks();
-        // Events.find({type : {$regex : /^SCG/}, state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
-        //
-        //     if(Events.findOne({_id : event._id}).state == "notFound"){
-        //         webScrapingQueue.add({func : SCGnotFound, args : {Events_id : event._id}, wait : 10000})
-        //     }
-        //
-        //     if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLMainFail"){
-        //         webScrapingQueue.add({func : SCGEventExists, args : {Events_id : event._id}, wait : 10000})
-        //     }
-        //
-        //     if(Events.findOne({_id : event._id}).state == "HTML" || Events.findOne({_id : event._id}).state == "partialDecks" ){
-        //         webScrapingQueue.add({func : SCGEventHTML, args : {Events_id : event._id}, wait : 10000})
-        //     }
-        // });
+            decksDownloadDecks();
         console.log("   END: fixGPEvent");
     },
     checkIfAdmin(){

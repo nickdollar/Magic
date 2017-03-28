@@ -1,17 +1,10 @@
 import cheerio from "cheerio";
 
-
-
-eventLeagueGetInfoOld = function(format, days){
-    if(format == null){
-        console.log("format null");
+eventLeagueGetInfoOldStartNew = function({format, days, dateType}){
+    if(format == null || days == null){
+        console.log("format null or days");
         return;
     }
-    if(days == null){
-        console.log("days null");
-        return;
-    }
-
     if(leagueTypes.hasOwnProperty(format)==false){
         console.log("format doesn't exists");
         return;
@@ -24,394 +17,106 @@ eventLeagueGetInfoOld = function(format, days){
     }else{
         type = "league";
     }
+    var eventType = EventsTypes.findOne({names : {$regex : type, $options : "i"}});
 
-    var event = Events.findOne({format : format, type : type}, {sort : {date : 1}, limit : 1});
-
-    var date = null;
-    if(event==null){
-        date = new Date();
-    }else{
-        date = new Date(event.date);
-        date.setDate(date.getDate() - 1);
-
+    var date = new Date();
+    if(dateType=="oldDays"){
+        var event = Events.findOne({format : format, EventsTypes_id : eventType._id}, {sort : {date : 1}, limit : 1});
+        if(event){
+            date = new Date(event.date);
+            date.setDate(date.getDate() - 1);
+        }
     }
+
     date.setHours(0,0,0,0);
 
-    var queue = 0;
     for(var i = 0; i < days ; i++){
-
-        Meteor.setTimeout(()=>{
-            var day = pad(date.getDate());
-            var month = pad(date.getMonth()+1);
-            var year = date.getYear() + 1900;
-            var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-            var res = Meteor.http.get(url);
-
-
-            if(Events.findOne({type : type, date : date, format : format})){
-                return;
-            }
-
-            Events.update(
-                {type : type, date : date, format : format},
-                {
-                    $setOnInsert : {
-                        date: date,
-                        format : format,
-                        name : leagueTypes[format],
-                        type: type,
-                        url : url,
-                        state : "startProduction",
-                        venue : "MTGO"
-                    }
-                },
-                {upsert : true}
-            );
-
-            if (res.statusCode == 200) {
-                var buffer = res.content;
-                var $ = cheerio.load(buffer);
-                var deckMeta = $('#main-content');
-                var state = "notFound";
-                if(deckMeta.length == 0){
-                    console.log("Page Doesn't exists");
-                }else{
-                    console.log("page exists");
-                    state = "exists";
-                }
-
-                Events.update(
-                    {type : type, date : date, format : format},
-                    {
-                        $set : {
-                            state : state
-                        }
-                    }
-                );
-            }
-        }, 10000 * queue)
-
+        var day = pad(date.getDate());
+        var month = pad(date.getMonth()+1);
+        var year = date.getYear() + 1900;
+        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
+        if(Events.find({type : type, date : date, format : format}, {limit : 1}).count()){
+            return;
+        }
+        webScrapingQueue.add({func : eventLeagueGetInfoOldStartNewHTTP, args : {date : date, format : format, url : url, eventType : eventType}, wait : 10000});
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
 
-eventLeagueGetNewEvents = function(format){
-    if(format == null){
-        console.log("format null");
-        return;
-    }
-
-    if(leagueTypes.hasOwnProperty(format)==false){
-        console.log("format doesn't exists");
-        return;
-    }
-
-    var type = "";
-
-    if(format == 'vintage'){
-        type = "daily";
-    }else{
-        type = "league";
-    }
-
-    var event = Events.findOne({format : format, type : type}, {sort : {date : -1}, limit : 1});
-    var date = null;
-    if(event==null){
-        date = new Date();
-    }else{
-        date = new Date(event.date);
-        date.setDate(date.getDate() + 1);
-    }
-
-    date.setHours(0,0,0,0);
-
-    var arrayQueue = 0;
-    while(new Date().getTime() > date.getTime()){
-
-
-        Meteor.setTimeout(()=>{
-            var day = pad(date.getDate());
-            var month = pad(date.getMonth()+1);
-            var year = date.getYear() + 1900;
-            var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-            var res = Meteor.http.get(url);
-
-
-            if(!Events.findOne({type : type, date : date, format : format})){
+eventLeagueGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
+    Meteor.http.get(url, (err, response)=>{
+        if (response.statusCode == 200) {
+            var $ = cheerio.load(response.content);
+            var decks = $('.bean--wiz-content-deck-list');
+            if(decks.length){
                 Events.update(
-                    {type : type, date : date, format : format},
+                    {EventsTypes_id : eventType._id, date : date, format : format},
                     {
                         $setOnInsert : {
                             date: date,
                             format : format,
-                            name : leagueTypes[format],
-                            type: type,
-                            url : url
+                            EventsTypes_id : eventType._id,
+                            url : url,
+                            state : "Decks"
                         }
                     },
                     {upsert : true}
                 );
 
-                if (res.statusCode == 200) {
-                    var buffer = res.content;
-                    var $ = cheerio.load(buffer);
-                    var deckMeta = $('#main-content');
-                    var state = "pre";
-                    if(deckMeta.length == 0){
-                        console.log("Page Doesn't exists");
-                    }else{
-                        state = "exists";
-                    }
-                    console.log("page exists");
-                }
+                var eventQuery = Events.findOne({EventsTypes_id : eventType._id, date : date, format : format});
+                for(var i = 0 ; i < decks.length; i++){
+                    var information = getDeckInfo($(decks[i]).find('h4').html());
+                    var data = {
+                        Events_id : eventQuery._id,
+                        date : eventQuery.date,
+                        EventsType : eventQuery.EventsTypes_id,
+                        player : information.player,
+                        format : eventQuery.format,
+                        victory : information.score.victory,
+                        loss : information.score.loss,
+                        draw : information.score.draw
+                    };
 
-                Events.update(
-                    {type : type, date : date, format : format},
-                    {
-                        $set : {
-                            "state" : state
+                    var mainCards = $(decks[i]).find('.sorted-by-overview-container .row');
+                    var main = [];
+                    for(var j = 0; j < mainCards.length; j++){
+                        var quantity = parseInt($(mainCards[j]).find('.card-count').text());
+                        var name = $(mainCards[j]).find('.card-name').text();
+                        name = fixCards(name);
+                        if(CardsData.find({ name : name}, {limit : 1}).count()){
+                            main.push(
+                                {
+                                    name : name,
+                                    quantity : quantity
+                                }
+                            );
                         }
                     }
-                );
+
+                    var sideboardCards = $(decks[i]).find('.sorted-by-sideboard-container .row');
+                    var sideboard = [];
+                    for(j = 0; j < sideboardCards.length; j++){
+                        var quantity = parseInt($(sideboardCards[j]).find('.card-count').text());
+                        var name = $(sideboardCards[j]).find('.card-name').text();
+                        name = fixCards(name);
+                        sideboard.push(
+                            {
+                                name : name,
+                                quantity : quantity
+                            }
+                        );
+                    }
+                    data.main = main;
+                    data.sideboard = sideboard;
+                    data.state = "scraped";
+                    DecksData.insert(data);
+                }
             }
-        }, 10000 * arrayQueue);
-        arrayQueue++
 
-
-
-            date = new Date(date.setDate(date.getDate() + 1));
         }
+    });
 }
 
-eventLeaguePreEvent = function({Event_id}){
-    console.log("START: pre");
-    var eventPre = Events.findOne({_id : Event_id, state : "pre"});
-
-    if(!eventPre){return};
-    var res = Meteor.http.get(eventPre.url, {timeout : 10000});
-
-    if (res.statusCode == 200) {
-        var buffer = res.content;
-        var $ = cheerio.load(buffer);
-        var deckMeta = $('#main-content');
-        if(deckMeta.length == 0){
-            console.log("Page Doesn't exists");
-        }else{
-            console.log("page exists");
-            Events.update(
-                {_id : eventPre._id},
-                {
-                    $set : {
-                        state : "exists"
-                    }
-                }
-            );
-        }
-    }else{
-        var days = 10*24*60*60*1000;
-        if((new Date) - Events.findOne({_id : Event_id}).date > days){
-            Events.update(
-                {_id : Event_id},
-                {
-                    $set : {
-                        state : "notFoundOld"
-                    }
-                }
-            );
-        }
-    }
-
-    console.log("   END: notFoundEvent");
-}
-
-notFoundEvent = function(Event_id){
-    console.log("START: notFoundEvent");
-    var eventNotFound = Events.findOne({_id : Event_id, state : "notFound"});
-
-    if(!eventNotFound){return};
-    var res = Meteor.http.get(eventNotFound.url, {timeout : 10000});
-
-    if (res.statusCode == 200) {
-        var buffer = res.content;
-        var $ = cheerio.load(buffer);
-        var deckMeta = $('#main-content');
-        if(deckMeta.length == 0){
-            console.log("Page Doesn't exists");
-        }else{
-            console.log("page exists");
-            Events.update(
-                {_id : eventNotFound._id},
-                {
-                    $set : {
-
-                        state : "exists"
-                    }
-                }
-            );
-        }
-    }else{
-        var days = 10*24*60*60*1000;
-        if((new Date) - Events.findOne({_id : "RaXQGbAdNHkHSC7dj"}).date > days){
-            Events.update(
-                {_id : Event_id},
-                {
-                    $set : {
-                        state : "notFoundOld"
-                    }
-                }
-            );
-        }
-    }
-
-    console.log("   END: notFoundEvent");
-}
-
-eventLeagueDailyDownloadHTML = function(_id){
-    console.log("START: eventLeagueDailyDownloadHTML");
-    var event = Events.findOne({_id : _id, state : {$in : ["exists", "HTMLFail"]}});
-
-    if(event == null) {
-        return;
-    }
-
-    var res = Meteor.http.get(event.url);
-
-
-    if (res.statusCode == 200) {
-        var buffer = res.content;
-        var $ = cheerio.load(buffer);
-        var deckMeta = $('#main-content');
-        if(deckMeta.length == 0){
-            console.log("Events not found");
-            Events.update(
-                {_id : _id},
-                {
-                    $set : {
-                        state : "HTMLFail"
-                    }
-                }
-            );
-        }else{
-            EventsHtmls.update(
-                {Events_id : _id},
-                {
-                    $set : {
-                        html : $(deckMeta).html(),
-                    }
-                },
-                {upsert : true}
-            );
-
-            Events.update(
-                {_id : _id},
-                {
-                    $set : {
-                        state : "HTML"
-                    }
-                }
-            );
-        }
-    }
-    console.log("   END: eventLeagueDailyDownloadHTML");
-};
-
-eventLeagueDailyExtractDecks = function(_id){
-    console.log("START: eventLeagueDailyExtractDecks");
-    var event = Events.findOne({_id : _id, state : "HTML"});
-
-    if(event == null) return;
-    DecksData.remove({Events_id : event._id});
-
-    var eventHtml = EventsHtmls.findOne({Events_id : _id});
-    var $ = cheerio.load(eventHtml.html);
-    var decks = $('.bean--wiz-content-deck-list');
-
-    for(var i = 0 ; i < decks.length; i++){
-        var information = getDeckInfo($(decks[i]).find('h4').html());
-        var data = {
-            Events_id : event._id,
-            date : event.date,
-            type : event.type,
-            player : information.player,
-            format : event.format,
-            victory : information.score.victory,
-            loss : information.score.loss,
-            draw : information.score.draw
-        };
-
-        var mainCards = $(decks[i]).find('.sorted-by-overview-container .row');
-        var main = [];
-        var totalMain = 0;
-        for(var j = 0; j < mainCards.length; j++){
-            var quantity = parseInt($(mainCards[j]).find('.card-count').text());
-            totalMain += quantity;
-            var name = $(mainCards[j]).find('.card-name').text();
-            name = fixCards(name);
-            if(CardsData.find({ name : name}, {limit : 1}).count()){
-                main.push(
-                    {
-                        name : name,
-                        quantity : quantity
-                    }
-                );
-            }else{
-                main.push(
-                    {
-                        name : name,
-                        quantity : quantity,
-                        wrongName : true
-                    }
-                );
-            }
-        }
-
-        var sideboardCards = $(decks[i]).find('.sorted-by-sideboard-container .row');
-        var totalSideboard = 0;
-        var sideboard = [];
-        for(j = 0; j < sideboardCards.length; j++){
-            var quantity = parseInt($(sideboardCards[j]).find('.card-count').text());
-            totalSideboard += quantity;
-            var name = $(sideboardCards[j]).find('.card-name').text();
-            name = fixCards(name);
-            if(CardsData.find({ name : name}, {limit : 1}).count()){
-                sideboard.push(
-                    {
-                        name : name,
-                        quantity : quantity
-                    }
-                );
-            }else{
-                sideboard.push(
-                    {
-                        name : name,
-                        quantity : quantity,
-                        wrongName : true
-                    }
-                );
-            }
-        }
-
-
-        data.totalMain = totalMain;
-        data.main = main;
-        data.totalSideboard = totalSideboard;
-        data.sideboard = sideboard;
-        data.colors = setUpColorForDeckName(main);
-        data.state = "scraped";
-        DecksData.insert(data);
-    }
-
-    Events.update(
-        {_id : event._id},
-        {
-            $set : {
-                state : "decks",
-                decks : decks.length
-            }
-        }
-    );
-    console.log("   END: eventLeagueDailyExtractDecks");
-}
 
 var leagueTypes = {
     modern : "competitive-modern-constructed-league",
