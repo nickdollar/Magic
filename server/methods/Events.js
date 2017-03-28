@@ -18,7 +18,7 @@ Meteor.methods({
         getMTGOPtqEventsOLD(data.format, data.days);
     },
     methodEventMTGOPTQNewGetEvents(data){
-        getMTGOPtqNewEvents(data.format);
+        eventMTGOPTQGetInfoOldStartNew({format : data.format, days :30, dateType : "lastDays"});
     },
     methodGetGPEvents(){
         getGpEventsProTourNew();

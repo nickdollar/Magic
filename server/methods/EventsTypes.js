@@ -26,7 +26,8 @@ createEventsTypes = ()=>{
         {name : "League",                                   venue : "http://magic.wizards.com",     names : ["League"]},
         {name : "Grand Prix",                               venue : "http://magic.wizards.com",     names : ["Grand Prix", "GP"]},
         {name : "Pro Tour Qualifier",                       venue : "http://magic.wizards.com",     names : ["Pro Tour Qualifier", "PTQ"]},
-        {name : "Local Game Store",                                                                 names : ["Local Game Store", "LGS"]},
+        {name : "Local Game Store",                         venue : "http://magic.wizards.com",     names : ["Local Game Store", "LGS"]},
+        {name : "Magic Online Pro Tour Qualifier",          venue : "http://magic.wizards.com",     names : ["MTGOPTQ", "Magic Online Pro Tour Qualifier"]},
     ]
 
     for(var i = 0; i < eventsArray.length; i++){

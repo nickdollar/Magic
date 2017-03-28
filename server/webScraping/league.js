@@ -35,7 +35,7 @@ eventLeagueGetInfoOldStartNew = function({format, days, dateType}){
         var month = pad(date.getMonth()+1);
         var year = date.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        if(Events.find({type : type, date : date, format : format}, {limit : 1}).count()){
+        if(Events.find({EventsType_id : eventType._id, date : date, format : format}, {limit : 1}).count()){
             return;
         }
         webScrapingQueue.add({func : eventLeagueGetInfoOldStartNewHTTP, args : {date : date, format : format, url : url, eventType : eventType}, wait : 10000});
@@ -69,7 +69,7 @@ eventLeagueGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
                     var data = {
                         Events_id : eventQuery._id,
                         date : eventQuery.date,
-                        EventsType : eventQuery.EventsTypes_id,
+                        EventsTypes_id : eventQuery.EventsTypes_id,
                         player : information.player,
                         format : eventQuery.format,
                         victory : information.score.victory,
