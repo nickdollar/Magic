@@ -5,25 +5,24 @@ import Fuse from "fuse.js";
 
 
 var eventsArray = [
-    {name : "Power 9 Tournament", id : "19"},
-    {name : "Classic", id : "36"},
-    {name : "Elite IQ", id : "35"},
-    {name : "Invitational", id : "21"},
+    // {name : "Power 9 Tournament", id : "19"},
+    // {name : "Classic", id : "36"},
+    // {name : "Elite IQ", id : "35"},
+    // {name : "Invitational", id : "21"},
     {name : "Invitational Qualifier", id : "29"},
-    {name : "Legacy Open", id : "20"},
-    {name : "Modern Open", id : "47"},
-    {name : "Players' Championship", id : "48"},
-    {name : "Premier IQ", id : "45"},
-    {name : "Sealed Open", id : "39"},
-    {name : "Standard Open", id : "19"},
-    {name : "Super IQ", id : "33"},
-    {name : "Team Constructed Open", id : "49"},
-    {name : "States", id : "10"},
-    {name : "Regionals", id : "7"},
+    // {name : "Legacy Open", id : "20"},
+    // {name : "Modern Open", id : "47"},
+    // {name : "Players' Championship", id : "48"},
+    // {name : "Premier IQ", id : "45"},
+    // {name : "Sealed Open", id : "39"},
+    // {name : "Standard Open", id : "19"},
+    // {name : "Super IQ", id : "33"},
+    // {name : "Team Constructed Open", id : "49"},
+    // {name : "States", id : "10"},
+    // {name : "Regionals", id : "7"},
 ]
 
-getSCGTemp = function(){
-
+getSCGEventsAndDecks = function(){
     var date = new Date();
     date.setHours(0, 0, 0, 0);
     var startDate = Moment(new Date(date.getTime() - 1000*60*60*24*30)).format("MM/DD/YYYY");
@@ -31,11 +30,11 @@ getSCGTemp = function(){
     endDate = endDate.replace(/\//g, "%2F");
     startDate = startDate.replace(/\//g, "%2F");
     for(var i = 0; i < eventsArray.length; i++) {
-        webScrapingQueue.add({func : getDecksList, args :{endDate : endDate, startDate: startDate, event : eventsArray[i], start_num : 0}, wait : 10000});
+        webScrapingQueue.add({func : getSCGEventsAndDecksHTTPRequest, args :{endDate : endDate, startDate: startDate, event : eventsArray[i], start_num : 0}, wait : httpRequestTime});
     }
 }
 
-getDecksList = ({endDate, startDate, event, start_num})=>{
+getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
     var url = `http://sales.starcitygames.com/deckdatabase/deckshow.php?&event_ID=${event.id}&start_date=${startDate}&end_date=${endDate}&start_num=${start_num}&limit=100`;
     Meteor.http.get(url, {},(err, response)=>{
         if (response.statusCode == 200) {
@@ -45,7 +44,6 @@ getDecksList = ({endDate, startDate, event, start_num})=>{
             var rows = $resDecksPages("#content table tr");
 
             if(!isNaN(qty)){
-
                 for(var i = 0; i < rows.length; i++){
                     var deckUrl = $resDecksPages(rows[i]).find("td:nth-child(1) a").attr("href");
                     var position = $resDecksPages(rows[i]).find("td:nth-child(2)").text();
@@ -67,17 +65,17 @@ getDecksList = ({endDate, startDate, event, start_num})=>{
 
                         var EventsTypeQuery = EventsTypes.findOne({names : {$regex : eventsTypeFixed, $options : "i"}}, {limit : 1});
 
-                        Events.update({EventsType_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"},
+                        Events.update({EventsTypes_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"},
                             {
-                                $setOnInsert : {EventsType_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"}
+                                $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"}
                             },
                             {
                                 upsert : true
                             })
-                        var eventQuery = Events.findOne({EventsType_id : EventsTypeQuery._id, date : date, location : {$regex : location, $options : "i"}, format : format.toLowerCase()})
-                        DecksData.update({EventsType_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, format : format},
+                        var eventQuery = Events.findOne({EventsTypes_id : EventsTypeQuery._id, date : date, location : {$regex : location, $options : "i"}, format : format.toLowerCase()})
+                        DecksData.update({EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, format : format},
                             {
-                                $set : {EventsType_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, position : position, format : format, state : "SCGCreated", deckUrl : deckUrl}
+                                $set : {EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, position : position, format : format, state : "SCGCreated", deckUrl : deckUrl}
                             },
                             {
                                 upsert : true
@@ -87,7 +85,7 @@ getDecksList = ({endDate, startDate, event, start_num})=>{
                 }
 
                 for(var i = 100 + start_num; i < qty; i += 100){
-                    webScrapingQueue.add({func : getDecksList, args :{endDate : endDate, startDate: startDate, event : event, start_num : i}, wait : 10000});
+                    webScrapingQueue.add({func : getSCGEventsAndDecksHTTPRequest, args :{endDate : endDate, startDate: startDate, event : event, start_num : i}, wait : httpRequestTime});
                 }
             }
         }
@@ -95,19 +93,17 @@ getDecksList = ({endDate, startDate, event, start_num})=>{
 }
 
 
-decksDownloadDecks = ()=>{
+getSCGDecksCards = ()=>{
     console.log("START: decksDownloadDecks");
-    var DecksDataQuery = DecksData.find({state : "SCGCreated"}, {limit : 3}).fetch();
+    var DecksDataQuery = DecksData.find({state : "SCGCreated"}).fetch();
 
     for(var i = 0 ; i < DecksDataQuery.length; i++){
-        webScrapingQueue.add({func : decksDownloadDecksHTTPRequest, args : {deckData : DecksDataQuery[i]}, wait : 10000 });
+        webScrapingQueue.add({func : getSCGDecksCardsHTTPRequest, args : {deckData : DecksDataQuery[i]}, wait : httpRequestTime });
     }
-    console.log("   END: decksDownloadDecks");
+    webScrapingQueue.add({func : getSCGDecksQTY, args : {}, wait : httpRequestTime });
 }
 
-decksDownloadDecksHTTPRequest = ({deckData})=>{
-    console.log(deckData);
-    // console.log(deckData);
+getSCGDecksCardsHTTPRequest = ({deckData})=>{
     Meteor.http.get(deckData.deckUrl, {},(err, response)=>{
         if (response.statusCode == 200) {
             var $decksBlocks = cheerio.load(response.content, {decodeEntities : false});
@@ -135,8 +131,22 @@ decksDownloadDecksHTTPRequest = ({deckData})=>{
             }
             DecksData.update({_id : deckData._id},
                 {
-                    $set : {main : main, sideboard : sideboard, state : "done"}
+                    $set : {main : main, sideboard : sideboard, state : "scraped"}
                 })
         }
     });
+}
+
+getSCGDecksQTY = ()=>{
+    console.log("START: getSCGDecksQTY");
+    var eventsTypes = EventsTypes.find({venue : "StarCityGames.com"}).map(type => type._id);
+    var events = Events.find({EventsTypes_id : {$in : eventsTypes}, state : {$ne : "decks"}}).fetch();
+    for(var i = 0; i < events.length; i++){
+        var decksQty = DecksData.find({Events_id : events[i]._id}).count();
+
+        Events.update({_id : events[i]._id },
+            {
+                $set : {decksQty : decksQty, state : "decks"}
+            })
+    }
 }

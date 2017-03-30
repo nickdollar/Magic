@@ -1,32 +1,24 @@
-import cheerio from "cheerio";
-
-
 Meteor.methods({
-
-    getStarCityGamesEvents(data){
-        // getStarCityGamesEvents(data.format);
-        getSCGTemp();
+    getSCGEventsAndDecksMethod(){
+        getSCGEventsAndDecks();
+    },
+    getSCGDecksCardsMethod(){
+        getSCGDecksCards();
     },
     fixEventsStandard(){
         fixEventsStandard();
     },
-    eventLeagueDailyMethod({format, days, dateType}){
-        console.log(format, days, dateType);
-        eventLeagueGetInfoOldStartNew({format : format, days : days, dateType : dateType});
+    getLeagueEventsAndDecksMethod({format, dateType}){
+        getLeagueEventsAndDecks({days : 5, format : format, dateType : dateType})
     },
-    methodEventMTGOPTQGetInfoOld(data){
-        getMTGOPtqEventsOLD(data.format, data.days);
+    getMTGOPTQEventsAndDecksMethod({format, dateType}){
+        getMTGOPTQEventsAndDecks({days : 10, format : format, dateType : dateType});
     },
-    methodEventMTGOPTQNewGetEvents(data){
-        eventMTGOPTQGetInfoOldStartNew({format : data.format, days :30, dateType : "lastDays"});
+    getGpEventsAndDecksMethod(){
+        getGpEventsAndDecks();
     },
-    methodGetGPEvents(){
-        getGpEventsProTourNew();
-        // getGPEvents();
-    },
-    methodGetGPPositions(){
-        GPGetPosition();
-        // getGPEvents();
+    getGPPositionMethod(){
+        getGPPosition();
     },
     addALGSEvent(event){
         var eventQuery = Events.findOne({LGS_id : event.LGS_id, token : event.token});
@@ -112,69 +104,6 @@ Meteor.methods({
 })
 
 Meteor.methods({
-    fixLeagueDailyEvent(){
-        console.log("START: fixLeagueDailyEvent");
-        Events.find({type : {$in : ["daily", "league"]}, state : {$nin : ["decks", "notFoundOld", "names"]}}).forEach((event)=>{
-            if(Events.findOne({_id : event._id}).state == "pre"){
-                webScrapingQueue.add({func : eventLeaguePreEvent, args : {Events_id : Events_id}, wait : 10000})
-
-            }
-
-            if(Events.findOne({_id : event._id}).state == "notFound"){
-                webScrapingQueue.add({func : notFoundEvent, args : {Events_id : event._id}, wait : 10000})
-
-            }
-
-            if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLFail"){
-                webScrapingQueue.add({func : eventLeagueDailyDownloadHTML, args : {Events_id : event._id}, wait : 10000})
-
-            }
-
-            if(Events.findOne({_id : event._id}).state == "HTML"){
-                webScrapingQueue.add({func : eventLeagueDailyExtractDecks, args : {Events_id : event._id}, wait : 0})
-            }
-        });
-        console.log("   END: fixLeagueDailyEvent");
-    },
-
-    fixMTGOPTQEvent(){
-        console.log("START: fixMTGOPTQEvent");
-        Events.find({type : "MTGOPTQ", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
-            if(Events.findOne({_id : event._id}).state == "notFound"){
-                webScrapingQueue.add({func : notFoundEventMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
-            }
-            if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLFail"){
-                webScrapingQueue.add({func : eventExistsMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
-            }
-            if(Events.findOne({_id : event._id}).state == "HTML"){
-                webScrapingQueue.add({func : eventHTMLMTGOPTQ, args : {Events_id : event._id}, wait : 10000})
-            }
-        });
-        console.log("   END: fixMTGOPTQEvent");
-    },
-    fixGPEvent(){
-        console.log("START: fixGPEvent");
-        Events.find({type : "GP", state : {$nin : ["decks", "notFoundOld"]}}).forEach((event)=>{
-            if(Events.findOne({_id : event._id}).state == "notFound"){
-                webScrapingQueue.add({func : GPEventNotFound, args : {Events_id : event._id}, wait : 10000})
-            }
-            if(Events.findOne({_id : event._id}).state == "exists" || Events.findOne({_id : event._id}).state == "HTMLMainFail"){
-                webScrapingQueue.add({func : GPEventsExists, args : {Events_id : event._id}, wait : 10000})
-            }
-            if(Events.findOne({_id : event._id}).state == "HTMLMain" || Events.findOne({_id : event._id}).state == "HTMLFail" || Events.findOne({_id : event._id}).state == "HTMLPartial"){
-                webScrapingQueue.add({func : GPEventHTMLMain, args : {Events_id : event._id}, wait : 10000})
-            }
-            if(Events.findOne({_id : event._id}).state == "HTML" || Events.findOne({_id : event._id}).state == "partialDecks" ){
-                webScrapingQueue.add({func : GPEventHTML, args : {Events_id : event._id}, wait : 10000})
-            }
-        });
-        console.log("   END: fixGPEvent");
-    },
-    fixSCGEvent(){
-        console.log("START: fixGPEvent");
-            decksDownloadDecks();
-        console.log("   END: fixGPEvent");
-    },
     checkIfAdmin(){
         if(Roles.userIsInRole(Meteor.user(), 'admin')){
             return true;

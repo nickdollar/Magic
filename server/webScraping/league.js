@@ -1,10 +1,11 @@
 import cheerio from "cheerio";
 
-eventLeagueGetInfoOldStartNew = function({format, days, dateType}){
+getLeagueEventsAndDecks = function({format, days, dateType}){
     if(format == null || days == null){
         console.log("format null or days");
         return;
     }
+
     if(leagueTypes.hasOwnProperty(format)==false){
         console.log("format doesn't exists");
         return;
@@ -17,6 +18,7 @@ eventLeagueGetInfoOldStartNew = function({format, days, dateType}){
     }else{
         type = "league";
     }
+
     var eventType = EventsTypes.findOne({names : {$regex : type, $options : "i"}});
 
     var date = new Date();
@@ -29,21 +31,20 @@ eventLeagueGetInfoOldStartNew = function({format, days, dateType}){
     }
 
     date.setHours(0,0,0,0);
-
     for(var i = 0; i < days ; i++){
         var day = pad(date.getDate());
         var month = pad(date.getMonth()+1);
         var year = date.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        if(Events.find({EventsType_id : eventType._id, date : date, format : format}, {limit : 1}).count()){
+        if(Events.find({EventsTypes_id : eventType._id, date : date, format : format}, {limit : 1}).count()){
             return;
         }
-        webScrapingQueue.add({func : eventLeagueGetInfoOldStartNewHTTP, args : {date : date, format : format, url : url, eventType : eventType}, wait : 10000});
+        webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequest, args : {date : date, format : format, url : url, eventType : eventType}, wait : httpRequestTime});
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
 
-eventLeagueGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
+getLeagueEventsAndDecksHTTPRequest = ({date, format, url, eventType})=>{
     Meteor.http.get(url, (err, response)=>{
         if (response.statusCode == 200) {
             var $ = cheerio.load(response.content);
@@ -57,7 +58,7 @@ eventLeagueGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
                             format : format,
                             EventsTypes_id : eventType._id,
                             url : url,
-                            state : "Decks"
+                            state : "decks"
                         }
                     },
                     {upsert : true}
@@ -111,6 +112,11 @@ eventLeagueGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
                     data.state = "scraped";
                     DecksData.insert(data);
                 }
+
+                var decksQty = DecksData.find({Events_id : eventQuery._id}).count();
+                Events.update({_id : eventQuery._id},
+                    {$set : {decksQty : decksQty}}
+                )
             }
 
         }

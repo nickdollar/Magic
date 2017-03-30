@@ -18,6 +18,7 @@ import User                         from    "/client/templates/User/User";
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
     this.subscribe("DecksArchetypesGlobal");
+    this.subscribe("EventsTypes");
 
     this.state = new ReactiveDict;
     this.state.set("selected", null);

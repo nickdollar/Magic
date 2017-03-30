@@ -4,7 +4,6 @@ import EventsTableContainer from './EventsTable/EventsTableContainer.jsx' ;
 export default class EventsTables extends React.Component {
     constructor(){
         super();
-
     }
 
     render(){
@@ -23,7 +22,7 @@ export default class EventsTables extends React.Component {
                         <div className="sectionTable">
                             <EventsTableContainer subscription="EventsSmall"
                                                   paramsServer={[["decks", "names", "published"], this.props.format, lgs_id]}
-                                                  queryClient={{state : {$in : ["decks", "names", "published"]},  format : this.props.format, $or : [{decks : {$lt : 16}}, {type : "lgs"}]}}
+                                                  queryClient={{state : {$in : ["decks", "names", "published"]},  format : this.props.format, $or : [{decksQty : {$lt : 16}}, {type : "lgs"}]}}
                             />
                         </div>
                     </div>
@@ -38,7 +37,7 @@ export default class EventsTables extends React.Component {
                         <div className="sectionTable">
                             <EventsTableContainer subscription="EventsBig"
                                                   paramsServer={[["decks", "names"], this.props.format]}
-                                                  queryClient={{state : {$in : ["decks", "names"]},  format : this.props.format, decks : {$gte : 16}}}
+                                                  queryClient={{state : {$in : ["decks", "names"]},  format : this.props.format, decksQty : {$gte : 16}}}
                                                   format = {this.props.format}
                             />
                         </div>

@@ -6,10 +6,9 @@ var mtgoPtqTypes = {
     pauper : "pauper-ptq",
     vintage : "vintage-ptq",
     legacy : "legacy-ptq"
-
 }
 
-eventMTGOPTQGetInfoOldStartNew = function({format, days, dateType}){
+getMTGOPTQEventsAndDecks = function({format, days, dateType}){
     console.log("START: eventMTGOPTQGetInfoOldStartNew");
     if(format == null || days == null){
         console.log("format null or days");
@@ -39,12 +38,12 @@ eventMTGOPTQGetInfoOldStartNew = function({format, days, dateType}){
         if(Events.find({EventsTypes_id : eventType._id, date : date, format : format}, {limit : 1}).count()){
             return;
         }
-        webScrapingQueue.add({func : eventMTGOPTQGetInfoOldStartNewHTTP, args : {date : date, format : format, url : url, eventType : eventType}, wait : 1000});
+        webScrapingQueue.add({func : getMTGOPTQEventsAndDecksHTTP, args : {date : date, format : format, url : url, eventType : eventType}, wait : httpRequestTime});
         date = new Date(date.setDate(date.getDate() - 1));
     }
 }
 
-eventMTGOPTQGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
+getMTGOPTQEventsAndDecksHTTP = ({date, format, url, eventType})=>{
     Meteor.http.get(url, (err, response)=>{
         if (response.statusCode == 200) {
             var $ = cheerio.load(response.content);
@@ -58,7 +57,7 @@ eventMTGOPTQGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
                             format : format,
                             EventsTypes_id : eventType._id,
                             url : url,
-                            state : "Decks"
+                            state : "decks"
                         }
                     },
                     {upsert : true}
@@ -122,13 +121,20 @@ eventMTGOPTQGetInfoOldStartNewHTTP = ({date, format, url, eventType})=>{
                     data.sideboard = sideboard;
                     data.state = "scraped";
                     DecksData.insert(data);
+
                 }
+                var totalDecks = DecksData.find({Events_id : eventQuery._id}).count();
+
+                Events.update({_id : eventQuery._id},
+                                {
+                                    $set : {decksQty : totalDecks}
+                                },
+                );
             }
 
         }
     });
 }
-
 
 var leagueTypes = {
     modern : "competitive-modern-constructed-league",
@@ -136,455 +142,4 @@ var leagueTypes = {
     pauper : "pauper-constructed-league",
     legacy : "competitive-legacy-constructed-league",
     vintage : "vintage-daily",
-}
-
-
-getDeckInfo = function(information){
-    var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
-    var playerPatt = /^(.*?) \(/;
-    var digitPatt = /\d+/g;
-    var temp = {};
-    var score = information.match(scorePatt)[0];
-    var results = score.match(digitPatt);
-    temp.player = information.match(playerPatt)[1];
-
-    if(results.length==2){
-        temp.score = {victory : parseInt(results[0]), loss : parseInt(results[1]), draw : 0}
-    }else if(results.length==3){
-        temp.score = {victory : parseInt(results[0]), draw : parseInt(results[1]), loss : parseInt(results[2])}
-    }
-    return temp;
-}
-
-
-getMTGOPtqEventsOLD = function(format, days){
-    console.log("STARTING: getMTGOPtqEventsOLD");
-    if(format == null || days == null){
-        return;
-    }
-
-    if(mtgoPtqTypes[format] == null){
-        console.log("Invalid Format")
-        return;
-    }
-
-
-    var event = Events.findOne({format : format, type : "MTGOPTQ"}, {sort : {date : 1}, limit : 1});
-
-    var date = null;
-    if(event==null){
-        date = new Date();
-    }else{
-        date = new Date(event.date);
-        date.setDate(date.getDate() - 1);
-    }
-    date.setHours(0,0,0,0);
-
-    for(var i = 0; i < days ; i++){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + mtgoPtqTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = Meteor.http.get(url);
-
-        if(Events.findOne({type : "MTGOPTQ", date : date, format : format})){
-            continue;
-        }
-
-        Events.update(
-            {type : "MTGOPTQ", date : date, format : format},
-            {
-                $setOnInsert : {
-                    date: date,
-                    format : format,
-                    venue : "MTGO",
-                    type: "MTGOPTQ",
-                    url : url,
-                    state: "startProduction"
-                }
-            },
-            {upsert : true}
-        );
-
-        if (res.statusCode == 200) {
-            var buffer = res.content;
-            var $ = cheerio.load(buffer);
-
-            var deckMeta = $('#main-content');
-            var state = "notFound";
-            if(deckMeta.length == 0){
-                console.log("Page Doesn't exists");
-            }else{
-                console.log("page exists");
-                state = "exists";
-            }
-            
-            Events.update(
-                {type : "MTGOPTQ", date : date, format : format},
-                {
-                    $set : {
-                        state : state
-                    }
-                }
-            );
-        }
-        date = new Date(date.setDate(date.getDate() - 1));
-    }
-    console.log("ENDING: getMTGOPtqEventsOLD");
-}
-
-getMTGOPtqNewEvents = function(format){
-    console.log("STARTING: getMTGOPtqNewEvents");
-    if(format == null){
-        return;
-    }
-
-    if(mtgoPtqTypes[format] == null){
-        console.log("Invalid Format");
-        return;
-    }
-
-    var event = Events.findOne({format : format, type : "MTGOPTQ"}, {sort : {date : -1}, limit : 1});
-
-    var date = null;
-    if(event==null){
-        date = new Date();
-    }else{
-        date = new Date(event.date);
-        date.setDate(date.getDate() + 1);
-    }
-    date.setHours(0,0,0,0);
-
-    while(new Date().getTime() > date.getTime()){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + mtgoPtqTypes[format] + "-" + year + "-" + month + "-" + day;
-        var res = Meteor.http.get(url);
-
-        if(Events.findOne({type : "MTGOPTQ", date : date, format : format})){
-            continue;
-        }
-
-        Events.update(
-            {type : "MTGOPTQ", date : date, format : format},
-            {
-                $setOnInsert : {
-                    date: date,
-                    format : format,
-                    venue : "MTGO",
-                    type: "MTGOPTQ",
-                    url : url,
-                    state: "startProduction"
-                }
-            },
-            {upsert : true}
-        );
-
-
-        if (res.statusCode == 200) {
-            var buffer = res.content;
-            var $ = cheerio.load(buffer);
-
-            var deckMeta = $('#main-content');
-            var state = "notFound";
-            if(deckMeta.length == 0){
-                console.log("Page Doesn't exists");
-            }else{
-                console.log("page exists");
-                state = "exists";
-            }
-
-            Events.update(
-                {type : "MTGOPTQ", date : date, format : format},
-                {
-                    $set : {
-                        state : state
-                    }
-                }
-            );
-        }
-        date = new Date(date.setDate(date.getDate() + 1));
-    }
-    console.log("ENDING: getMTGOPtqNewEvents");
-}
-
-notFoundEventMTGOPTQ = function(Events_id) {
-    console.log("START: notFoundEventMTGOPTQ");
-
-    var eventNotFound = Events.findOne({type: "MTGOPTQ", _id: Events_id, state: "notFound"});
-    if (!eventNotFound) {
-        return
-    };
-
-    var res = Meteor.http.get(eventNotFound.url);
-
-    if (res.statusCode == 200) {
-        var buffer = res.content;
-        var $ = cheerio.load(buffer);
-        var deckMeta = $('#main-content');
-        if (deckMeta.length == 0) {
-            console.log("Page Doesn't exists");
-        } else {
-            console.log("page exists");
-            Events.update(
-                {_id: eventNotFound._id},
-                {
-                    $set: {
-                        state: "exists"
-                    }
-                }
-            );
-        }
-    } else {
-        var days = 10 * 24 * 60 * 60 * 1000;
-        if ((new Date) - Events.findOne({_id: Events_id}).date > days) {
-            Events.update(
-                {_id: Event_id},
-                {
-                    $set: {
-                        state: "notFoundOld"
-                    }
-                }
-            );
-        }
-    }
-
-    console.log("   END: notFoundEventMTGOPTQ");
-}
-
-eventExistsMTGOPTQ = function(_id){
-    
-    var event = Events.findOne({type : "MTGOPTQ", _id : _id, state : "exists"});
-
-    if(event == null) {
-        return;
-    }
-
-    var res = Meteor.http.get(event.url);
-
-
-    if (res.statusCode == 200) {
-        var buffer = res.content;
-        var $ = cheerio.load(buffer);
-        var deckMeta = $('#main-content');
-        if(deckMeta.length == 0){
-            console.log("Events not found");
-            Events.update(
-                {_id : _id},
-                {
-                    $set : {
-                        state : "HTMLFail"
-                    }
-                }
-            );
-        }else{
-            console.log("Events found");
-            EventsHtmls.update(
-                {Events_id : _id},
-                {
-                    $set : {
-                        html : $(deckMeta).html(),
-                    }
-                },
-                {upsert : true}
-            );
-
-            Events.update(
-                {_id : _id},
-                {
-                    $set : {
-                        state : "HTML"
-                    }
-                }
-            );
-        }
-    }
-};
-
-eventHTMLMTGOPTQ = function(_id){
-    var event = Events.findOne({_id : _id, state : "HTML"});
-    DecksData.remove({Events_id : event._id});
-
-    if(event == null) return;
-
-    var eventHtml = EventsHtmls.findOne({Events_id : _id});
-    var $ = cheerio.load(eventHtml.html);
-    var decks = $('.bean--wiz-content-deck-list');
-
-    var rows = $(".even, .odd");
-    var options = $("thead th");
-
-    for(var i = 0 ; i < decks.length; i++){
-        var information = getDeckInfoFromTop8($(decks[i]).find('h4').html());
-        var data = {
-            Events_id : event._id,
-            date : event.date,
-            type : event.type,
-            player : information.player,
-            format : event.format,
-            position : information.position,
-        };
-
-        var cards = $(decks[i]).find('.sorted-by-overview-container .row');
-        var deckCards = {main : [], sideboard : []};
-        var mainDeckQuantity = 0;
-        for(var j = 0; j < cards.length; j++){
-            var quantity = parseInt($(cards[j]).find('.card-count').text());
-            mainDeckQuantity += quantity;
-            var name = $(cards[j]).find('.card-name').text();
-            name = fixCards(name);
-
-            if(CardsData.find({ name : name}, {limit : 1}).count()){
-                deckCards.main.push(
-                    {
-                        name : name,
-                        quantity : quantity
-                    }
-                );
-            }else{
-                deckCards.main.push(
-                    {
-                        name : name,
-                        quantity : quantity,
-                        wrongName : true
-                    }
-                );
-            }
-        }
-
-        var sideboard = $(decks[i]).find('.sorted-by-sideboard-container .row');
-        var sideboardQuantity = 0;
-        for(j = 0; j < sideboard.length; j++){
-            var quantity = parseInt($(sideboard[j]).find('.card-count').text());
-            sideboardQuantity += quantity;
-            var name = $(sideboard[j]).find('.card-name').text();
-            name = fixCards(name);
-
-            if(CardsData.find({ name : name}, {limit : 1}).count()){
-                deckCards.sideboard.push(
-                    {
-                        name : name,
-                        quantity : quantity
-                    }
-                );
-            }else{
-                deckCards.sideboard.push(
-                    {
-                        name : name,
-                        quantity : quantity,
-                        wrongName : true
-                    }
-                );
-            }
-
-        }
-
-        data.totalMain = mainDeckQuantity;
-        data.main = deckCards.main;
-        data.totalSideboard = sideboardQuantity;
-        data.sideboard = deckCards.sideboard;
-        var colors = setUpColorForDeckName(deckCards.main);
-        data.colors = colors;
-        data.state = "scraped";
-        DecksData.insert(data);
-
-
-    }
-
-    Events.update(
-        {_id : event._id},
-        {
-            $set : {
-                state : "decks", decks : decks.length
-            }
-        }
-    );
-}
-
-
-
-
-
-
-getTop8Bracket = function($, top8Table){
-    var quarterFinalsPlayers = {};
-    var semiFinalsPlayers = {};
-    var finalsPlayers = {};
-
-    quarterFinalsPlayers.winners = top8Table.find(".quarterfinals .dual-players strong");
-    quarterFinalsPlayers.losers = top8Table.find(" .quarterfinals .dual-players .player + .player p");
-    semiFinalsPlayers.winners = top8Table.find(".semifinals .dual-players strong");
-    semiFinalsPlayers.losers = top8Table.find(".semifinals .dual-players .player + .player p");
-    finalsPlayers.winners = top8Table.find(".finals .dual-players strong");
-    finalsPlayers.losers = top8Table.find(".finals .dual-players .player + .player p");
-
-
-    var top8 = {quarterFinals : [], semiFinals : [], finals : []};
-
-
-    for(var i = 0; i<quarterFinalsPlayers.winners.length; i++){
-        top8.quarterFinals.push(
-            {
-                winner : getInfoFromPlayerTop8Winner($(quarterFinalsPlayers.winners[i]).html()),
-                loser : getInfoFromPlayerTop8Loser($(quarterFinalsPlayers.losers[i]).html())
-            });
-
-    }
-
-    for(var i = 0; i<semiFinalsPlayers.winners.length; i++){
-        top8.semiFinals.push(
-            {
-                winner : getInfoFromPlayerTop8Winner($(semiFinalsPlayers.winners[i]).html()),
-                loser : getInfoFromPlayerTop8Loser($(semiFinalsPlayers.losers[i]).html())
-            });
-    }
-
-    for(var i = 0; i<finalsPlayers.winners.length; i++){
-        top8.finals.push(
-            {
-                winner : getInfoFromPlayerTop8Winner($(finalsPlayers.winners[i]).html()),
-                loser : getInfoFromPlayerTop8Loser($(finalsPlayers.losers[i]).html())
-            });
-    }
-
-    return top8;
-}
-
-getDeckInfoFromTop8 = function(information){
-    console.log("START: getDeckInfoFromTop8");
-    var playerPatt = /^.+(?=(?: \())/i;
-    var positionPatt = /\d*(?=(?:ST|RD|ND|TH) )/i;
-    var temp = {};
-
-    temp.player = information.match(playerPatt)[0];
-    temp.position = parseInt(information.match(positionPatt)[0]);
-    return temp;
-}
-
-getInfoFromPlayerTop8Loser = function(line){
-    var positionPatt = new RegExp(/\d+(?=\))/);
-    var namePatt = new RegExp(/(?! )(?=[a-zA-Z]).*?(?=\s*?$)/i);
-    var information = {};
-
-    information.position = positionPatt.exec(line)[0];
-    information.name = namePatt.exec(line)[0];
-    return information;
-}
-
-getInfoFromPlayerTop8Winner = function(line){
-    console.log("Line");
-    var positionPatt = new RegExp(/(?=\d\) )\d/i);
-    var scoreWinPatt = new RegExp(/\d(?=-\d$)/i);
-    var scoreLosePatt = new RegExp(/\d$/i);
-    var namePatt = new RegExp(/(?=(?:[a-zA-Z0-9][a-zA-Z0-9 ])).*(?=,)/i);
-
-    var information = {};
-
-    information.name = line.match(namePatt)[0];
-    information.wins = line.match(scoreWinPatt)[0];
-    information.losses = line.match(scoreLosePatt)[0];
-    information.position = line.match(positionPatt)[0];
-
-    return information;
 }

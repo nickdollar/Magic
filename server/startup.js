@@ -1,5 +1,5 @@
 import { Cookies } from 'meteor/ostrio:cookies';
-
+httpRequestTime = 10000;
 
 Meteor.startup(function () {
 
