@@ -10,7 +10,7 @@ export default class CustomEventsCalendar extends React.Component {
     render(){
         return(
             <div className="CustomEventsCalendarComponent">
-                <ListByStateTableContainer format={this.props.format}
+                <ListByStateTableContainer Formats_id={this.props.Formats_id}
                 />
             </div>
         );

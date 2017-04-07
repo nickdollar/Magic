@@ -66,6 +66,7 @@ export default class ValuesTable extends React.Component {
 
         }
 
+        console.log(this.props);
         return(
             <div className="MetaTableValuesComponent">
                 <BootstrapTable {...options}>

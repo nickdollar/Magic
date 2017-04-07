@@ -8,7 +8,7 @@ import CheckBox from "/client/dumbReact/FormValidate/Inputs/Checkbox/Checkbox";
 export default class CustomAdmin extends React.Component{
     constructor(props){
         super();
-        this.state = {format : "standard"};
+        this.state = {Formats_id : "standard"};
     }
 
     componentDidMount(){
@@ -16,14 +16,14 @@ export default class CustomAdmin extends React.Component{
     }
 
     defaultRadio(opt){
-        if(opt == this.state.format){
+        if(opt == this.state.Formats_id){
             return true
         }
         return false;
     }
 
-    formatChange(opt){
-        this.setState({format : opt});
+    Formats_idChange(opt){
+        this.setState({Formats_id : opt});
     }
 
     render(){
@@ -31,7 +31,7 @@ export default class CustomAdmin extends React.Component{
         return (
             <div className="AddDecksNamesComponent">
                 <h3>Add A New Deck Name</h3>
-                <FormValidate submitMethod="addDeckName" id={this.props.format} extraFields={{format : this.props.format}}>
+                <FormValidate submitMethod="addDeckName" id={this.props.Formats_id} extraFields={{Formats_id : this.props.Formats_id}}>
                     <TextInput objectName={"name"}
                                title={"Deck Name"}
                                errorMessage="Need Name."
@@ -54,8 +54,8 @@ export default class CustomAdmin extends React.Component{
                                       collection="DecksArchetypes"
                                       errorMessage="Deck Archetype Missing"
                                       subscription="DecksArchetypesFormat"
-                                      serverQuery={[this.props.format]}
-                                      clientQuery={{format : this.props.format}}
+                                      serverQuery={[this.props.Formats_id]}
+                                      clientQuery={{Formats_id : this.props.Formats_id}}
                                       projection={{fields : {_id : 1, name : 1}}}
                                       fieldUnique="_id"
                                       fieldText="name"

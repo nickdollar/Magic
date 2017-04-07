@@ -31,7 +31,7 @@ export default class DecksNamesList extends React.Component {
                                        title="Name"
                                        objectName="name"
                         />
-                        <Radio initialValue={row.format}
+                        <Radio initialValue={row.Formats_id}
                                title="Format"
                                objectName="format"
                                opts={[{value : "standard", text : "Standard"},
@@ -56,9 +56,9 @@ export default class DecksNamesList extends React.Component {
                             fieldUnique="_id"
                             fieldText="name"
                             subscription="DecksArchetypesFormat"
-                            serverQuery={row.format}
+                            serverQuery={row.Formats_id}
                             collection="DecksArchetypes"
-                            clientQuery={{format : row.format}}
+                            clientQuery={{format : row.Formats_id}}
                             initialValue={row.DecksArchetypes_id}
                         />
                     </FormValidate>
@@ -94,7 +94,7 @@ export default class DecksNamesList extends React.Component {
                 <BootstrapTable ref="table" {...options}>
                     <TableHeaderColumn isKey dataField={"_id"} dataSort>_id</TableHeaderColumn>
                     <TableHeaderColumn dataField={"name"} dataSort>Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField={"format"}>format</TableHeaderColumn>
+                    <TableHeaderColumn dataField={"Formats_id"}>format</TableHeaderColumn>
                     <TableHeaderColumn dataField={"colors"} dataFormat={this.colorsFormat}>Colors</TableHeaderColumn>
                     <TableHeaderColumn width="50px" dataField={"_id"} dataFormat={this.removeButton.bind(this)}>X</TableHeaderColumn>
                 </BootstrapTable>

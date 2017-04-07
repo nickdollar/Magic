@@ -42,8 +42,8 @@ export default class DecksWithoutNamesWrapper extends React.Component{
                 })}
                 <button data-change="-" onClick={this.changePage.bind(this)} className="btn btn-xs">-</button>
                 <button data-change="+" onClick={this.changePage.bind(this)} className="btn btn-xs">+</button>
-                <DecksWithoutNamesContainer serverQuery={[this.state.selectedState, this.props.format, this.state.perPage, this.state.page]}
-                                            clientQuery={[{state : this.state.selectedState, format : this.props.format}, {limit : this.state.perPage, skip : this.state.page}]}
+                <DecksWithoutNamesContainer serverQuery={[this.state.selectedState, this.props.Formats_id, this.state.perPage, this.state.page]}
+                                            clientQuery={[{state : this.state.selectedState, Formats_id : this.props.Formats_id}, {limit : this.state.perPage, skip : this.state.page}]}
                 />
             </div>
         )

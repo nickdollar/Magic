@@ -63,19 +63,22 @@ getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
                         var date = Moment(dateString, "YYYY-MM-DD").toDate();
                         position = parseInt(position.match(/\d+/));
 
-                        var EventsTypeQuery = EventsTypes.findOne({names : {$regex : eventsTypeFixed, $options : "i"}}, {limit : 1});
 
-                        Events.update({EventsTypes_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"},
+
+                        var EventsTypeQuery = EventsTypes.findOne({names : {$regex : eventsTypeFixed, $options : "i"}}, {limit : 1});
+                        var FormatTypeQuery = Formats.findOne({names : {$regex : format, $options : "i"}}, {limit : 1});
+
+                        Events.update({EventsTypes_id : EventsTypeQuery._id, date : date, location : location, Formats_id : FormatTypeQuery._id, state : "SCGCreated"},
                             {
-                                $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, date : date, location : location, format : format.toLowerCase(), state : "SCGCreated"}
+                                $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, date : date, location : location, Formats_id : FormatTypeQuery._id, state : "SCGCreated"}
                             },
                             {
                                 upsert : true
                             })
-                        var eventQuery = Events.findOne({EventsTypes_id : EventsTypeQuery._id, date : date, location : {$regex : location, $options : "i"}, format : format.toLowerCase()})
-                        DecksData.update({EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, format : format},
+                        var eventQuery = Events.findOne({EventsTypes_id : EventsTypeQuery._id, date : date, location : {$regex : location, $options : "i"}, Formats_id : FormatTypeQuery._id})
+                        DecksData.update({EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, Formats_id : FormatTypeQuery._id},
                             {
-                                $set : {EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, position : position, format : format, state : "SCGCreated", deckUrl : deckUrl}
+                                $set : {EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, position : position, Formats_id : FormatTypeQuery._id, state : "SCGCreated", deckUrl : deckUrl}
                             },
                             {
                                 upsert : true

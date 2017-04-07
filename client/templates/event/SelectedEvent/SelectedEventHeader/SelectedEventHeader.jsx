@@ -7,23 +7,26 @@ export default class  extends React.Component {
     }
 
     eventInfo(event){
+        var eventType = EventsTypes.findOne({_id : event.EventsTypes_id});
+
         if(_.isEmpty(event)){
             return <div className="left"></div>
         }
 
-        if(event.type == "lgs"){
+        if(eventType._id == "LGS"){
             var LGSQuery = LGS.findOne({_id : event.LGS_id});
         }
+
         return  <div className="left">
                     <div>
                         {
-                            event.type == "lgs" ? `${LGSQuery.name} (${LGSQuery.location.city ? LGSQuery.location.city : LGSQuery.location.state}) - ${event.format.toTitleCase()}` :
-                            <a href={event.url}>{eventsTypes[event.type] ? eventsTypes[event.type] : event.type} - {event.format.toTitleCase()}</a>
+                            eventType._id == "LGS" ? `${LGSQuery.name} (${LGSQuery.location.city ? LGSQuery.location.city : LGSQuery.location.state}) - ${event.format.toTitleCase()}` :
+                            <a href={event.url}>{eventType.name} - {event.format.toTitleCase()}</a>
                         }
                     </div>
 
                     <div>{Moment(event.date).format("L")}</div>
-                    <div>Published Decks: {event.decks}</div>
+                    <div>Published Decks: {event.decksQty}</div>
                 </div>
     }
 

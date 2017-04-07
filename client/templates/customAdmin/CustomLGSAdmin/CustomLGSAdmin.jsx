@@ -18,7 +18,7 @@ export default class CustomLGSAdmin extends React.Component {
                                     notState={[]}
                                     states={["pending", "confirmed"]}
                 />
-                <ListByStateTable state={state} format={this.props.format}/>
+                <ListByStateTable state={state} Formats_id={this.props.Formats_id}/>
 
             </div>
         );

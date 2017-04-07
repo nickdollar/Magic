@@ -1,19 +1,19 @@
 import cheerio from "cheerio";
 
-getLeagueEventsAndDecks = function({format, days, dateType}){
-    if(format == null || days == null){
-        console.log("format null or days");
+getLeagueEventsAndDecks = function({Formats_id, days, dateType}){
+    if(Formats_id == null || days == null){
+        console.log("Formats_id null or days");
         return;
     }
 
-    if(leagueTypes.hasOwnProperty(format)==false){
-        console.log("format doesn't exists");
+    if(leagueTypes.hasOwnProperty(Formats_id)==false){
+        console.log("Formats_id doesn't exists");
         return;
     }
 
     var type = "";
 
-    if(format == 'vintage'){
+    if(Formats_id == 'vnt'){
         type = "daily";
     }else{
         type = "league";
@@ -23,7 +23,7 @@ getLeagueEventsAndDecks = function({format, days, dateType}){
 
     var date = new Date();
     if(dateType=="oldDays"){
-        var event = Events.findOne({format : format, EventsTypes_id : eventType._id}, {sort : {date : 1}, limit : 1});
+        var event = Events.findOne({Formats_id : Formats_id, EventsTypes_id : eventType._id}, {sort : {date : 1}, limit : 1});
         if(event){
             date = new Date(event.date);
             date.setDate(date.getDate() - 1);
@@ -32,30 +32,30 @@ getLeagueEventsAndDecks = function({format, days, dateType}){
 
     date.setHours(0,0,0,0);
     for(var i = 0; i < days ; i++){
-        var day = pad(date.getDate());
-        var month = pad(date.getMonth()+1);
-        var year = date.getYear() + 1900;
-        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[format] + "-" + year + "-" + month + "-" + day;
-        if(Events.find({EventsTypes_id : eventType._id, date : date, format : format}, {limit : 1}).count()){
-            return;
+        var actualDay = date.addDays(-i);
+        var day = pad(actualDay.getDate());
+        var month = pad(actualDay.getMonth()+1);
+        var year = actualDay.getYear() + 1900;
+        var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[Formats_id] + "-" + year + "-" + month + "-" + day;
+        if(Events.find({EventsTypes_id : eventType._id, date : actualDay, Formats_id : Formats_id}, {limit : 1}).count()){
+            continue;
         }
-        webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequest, args : {date : date, format : format, url : url, eventType : eventType}, wait : httpRequestTime});
-        date = new Date(date.setDate(date.getDate() - 1));
+        webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequest, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
     }
 }
 
-getLeagueEventsAndDecksHTTPRequest = ({date, format, url, eventType})=>{
+getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
     Meteor.http.get(url, (err, response)=>{
         if (response.statusCode == 200) {
             var $ = cheerio.load(response.content);
             var decks = $('.bean--wiz-content-deck-list');
             if(decks.length){
                 Events.update(
-                    {EventsTypes_id : eventType._id, date : date, format : format},
+                    {EventsTypes_id : eventType._id, date : date, Formats_id : Formats_id},
                     {
                         $setOnInsert : {
                             date: date,
-                            format : format,
+                            Formats_id : Formats_id,
                             EventsTypes_id : eventType._id,
                             url : url,
                             state : "decks"
@@ -64,7 +64,7 @@ getLeagueEventsAndDecksHTTPRequest = ({date, format, url, eventType})=>{
                     {upsert : true}
                 );
 
-                var eventQuery = Events.findOne({EventsTypes_id : eventType._id, date : date, format : format});
+                var eventQuery = Events.findOne({EventsTypes_id : eventType._id, date : date, Formats_id : Formats_id});
                 for(var i = 0 ; i < decks.length; i++){
                     var information = getDeckInfo($(decks[i]).find('h4').html());
                     var data = {
@@ -72,7 +72,7 @@ getLeagueEventsAndDecksHTTPRequest = ({date, format, url, eventType})=>{
                         date : eventQuery.date,
                         EventsTypes_id : eventQuery.EventsTypes_id,
                         player : information.player,
-                        format : eventQuery.format,
+                        Formats_id : eventQuery.Formats_id,
                         victory : information.score.victory,
                         loss : information.score.loss,
                         draw : information.score.draw
@@ -125,15 +125,15 @@ getLeagueEventsAndDecksHTTPRequest = ({date, format, url, eventType})=>{
 
 
 var leagueTypes = {
-    modern : "competitive-modern-constructed-league",
-    standard : "competitive-standard-constructed-league",
-    pauper : "pauper-constructed-league",
-    legacy : "competitive-legacy-constructed-league",
-    vintage : "vintage-daily",
+    mod : "competitive-modern-constructed-league",
+    std : "competitive-standard-constructed-league",
+    pau : "pauper-constructed-league",
+    leg : "competitive-legacy-constructed-league",
+    vnt : "vintage-daily",
 }
 
 
-getDeckInfo = function(information){
+getDeckInfo = (information)=>{
     var scorePatt = /([0-9]{1,2}-){1,3}[0-9]{1,2}/;
     var playerPatt = /^(.*?) \(/;
     var digitPatt = /\d+/g;

@@ -4,18 +4,18 @@ import React from 'react' ;
 export default class DecksDataStates extends React.Component{
     constructor(props){
         super();
-        this.state = {format : "modern"};
+        this.state = {Formats_id : props.Formats_id};
      }
 
     defaultRadio(opt){
-        if(opt == this.state.format){
+        if(opt == this.state.Formats_id){
             return true
         }
         return false;
     }
 
-    formatChange(e){
-        this.setState({format : e});
+    Formats_idChange(e){
+        this.setState({Formats_id : e});
     }
 
 
@@ -39,7 +39,7 @@ export default class DecksDataStates extends React.Component{
                                             {state}
                                         </td>
                                         <td>
-                                            {this.props.format ? global[this.props.collection].find({state : state, format : this.props.format}).count() :
+                                            {this.props.Formats_id ? global[this.props.collection].find({state : state, Formats_id : this.props.Formats_id}).count() :
                                                 global[this.props.collection].find({state : state}).count()
                                             }
                                         </td>

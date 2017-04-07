@@ -1,7 +1,5 @@
 import React from "react";
 
-var formats = ["standard", "modern", "legacy", "vintage"];
-
 class formatInput extends React.Component{
     constructor() {
         super();
@@ -52,9 +50,9 @@ class formatInput extends React.Component{
     }
 
     render() {
-        var formatCheckboxes = formats.map((format)=>{
-            return <label className="radio-inline" key={format} >
-                    <input type="radio" name="days" value={format}/>{format}
+        var formatCheckboxes = Formats.find().map((format)=>{
+            return <label className="radio-inline" key={format._id} >
+                    <input type="radio" name="days" value={format._id}/>{format.name}
                 </label>
         });
 

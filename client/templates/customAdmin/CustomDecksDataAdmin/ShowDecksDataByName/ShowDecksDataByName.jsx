@@ -22,21 +22,21 @@ export default class ShowDecksDataByName extends React.Component {
         });
     }
 
-    getDecksNamesList(format){
-        Meteor.call("getDecksNamesByFormat", format, (err, data)=>{
+    getDecksNamesList(Formats_id){
+        Meteor.call("getDecksNamesByFormat", Formats_id, (err, data)=>{
             this.setState({decksNamesList : data})
         })
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.format != this.props.format){
-            this.getDecksNamesList(nextProps.format);
+        if(nextProps.Formats_id != this.props.Formats_id){
+            this.getDecksNamesList(nextProps.Formats_id);
         }
     }
 
     componentDidMount(){
         this.createSelect2();
-        this.getDecksNamesList(this.props.format);
+        this.getDecksNamesList(this.props.Formats_id);
     }
 
     handleHideModal(){
@@ -44,7 +44,7 @@ export default class ShowDecksDataByName extends React.Component {
     }
 
     selectDeck(DecksData_id){
-        this.setState({showModal : true, DecksData_id : DecksData_id, format : this.props.format});
+        this.setState({showModal : true, DecksData_id : DecksData_id, Formats_id : this.props.Formats_id});
     }
 
     render(){
@@ -65,7 +65,7 @@ export default class ShowDecksDataByName extends React.Component {
                 <ModalFirstPage showModal={this.state.showModal}
                                 handleHideModal={this.handleHideModal.bind(this)}
                 >
-                    <DecksNamesListSubmitContainer DecksData_id={this.state.DecksData_id} format={this.state.format}/>
+                    <DecksNamesListSubmitContainer DecksData_id={this.state.DecksData_id} Formats_id={this.state.Formats_id}/>
                     <DeckContainer DecksData_id={this.state.DecksData_id} />
                 </ModalFirstPage>
             </div>

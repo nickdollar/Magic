@@ -11,7 +11,7 @@ export default class FixDecksWithoutNames extends React.Component{
         this.state = {
             eventCheck : false,
             DecksData_id : null,
-            format : null,
+            Formats_id : null,
             showModal: false
         }
     }
@@ -48,7 +48,7 @@ export default class FixDecksWithoutNames extends React.Component{
                 createdCell : function(td, cellData, rowData, row, col){
                     $(td).addClass("js-select_id");
                     $(td).attr("data-_id", rowData._id);
-                    $(td).attr("data-format", rowData.format);
+                    $(td).attr("data-format", rowData.Formats_id);
                 }
             }],
             columns: [

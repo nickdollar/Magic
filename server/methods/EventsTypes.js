@@ -17,7 +17,8 @@ createEventsTypes = ()=>{
             short : "P9 Tour",
             size : 0,
             owner_id : 19,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Power 9 Tournament", "Power 9 Tournament"]
         },
         {
@@ -27,7 +28,8 @@ createEventsTypes = ()=>{
             short : "Classic",
             size : 0,
             owner_id : 36,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Classic", "Classic"]
         },
         {_id : "SCGEliteIQ",
@@ -36,7 +38,8 @@ createEventsTypes = ()=>{
             short : "Elite IQ",
             size : 0,
             owner_id : 35,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Elite IQ", "Elite IQ"]
         },
         {
@@ -46,7 +49,8 @@ createEventsTypes = ()=>{
             short : "Inviational",
             size : 1,
             owner_id : 21,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Invitational", "Invitational"]
         },
         {
@@ -56,28 +60,28 @@ createEventsTypes = ()=>{
             short : "Invi Qual",
             size : 0,
             owner_id : 29,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Invitational Qualifier", "Invitational Qualifier"]
         },
         {
-            _id : "SCGLegOpen",
-            name : "Legacy Open",
+            _id : "SCGOpen",
+            name : "Open",
             states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
             short : "Open",
             size : 1,
-            owner_id : 20,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Legacy Open", "Legacy Open"]
+            venue : "SCG",
+            website : "StarCityGames.com",
+            names : [
+                "StarCityGames.com Open",
+                "StarCityGames.com Legacy Open",
+                "StarCityGames.com Standard Open",
+                "StarCityGames.com Modern Open",
+                "StarCityGames.com Team Constructed Open",
+                "StarCityGames.com Sealed Open",
+                "Open"
+            ]
         },
-        {
-            _id : "SCGModOpen",
-            name : "Modern Open",
-            states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
-            short : "Open",
-            size : 1,
-            owner_id : 47,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Modern Open", "Modern Open"]},
         {
             _id : "SCGPlayersChamp",
             name : "Players' Championship",
@@ -85,8 +89,10 @@ createEventsTypes = ()=>{
             short : "Players' Champ",
             size : 0,
             owner_id : 48,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Players' Championship", "Players' Championship"]},
+            venue : "SCG",
+            website : "StarCityGames.com",
+            names : ["StarCityGames.com Players' Championship", "Players' Championship"]
+        },
         {
             _id : "SCGPremIQ",
             name : "Premier IQ",
@@ -94,46 +100,28 @@ createEventsTypes = ()=>{
             short : "Premier IQ",
             size : 0,
             owner_id : 45,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Premier IQ", "Premier IQ"]},
-        {
-            _id : "SCGSealOpen",
-            name : "Sealed Open",
-            states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
-            short : "Open",             size : 1, owner_id : 39,  venue : "StarCityGames.com",
-            names : ["StarCityGames.com Sealed Open", "Sealed Open"]},
-        {
-            _id : "SCGStaOpen",
-            name : "Standard Open",
-            states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
-            short : "Open",
-            size : 1,
-            owner_id : 19,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Standard Open", "Standard Open"]},
+            venue : "SCG",
+            website : "StarCityGames.com",
+            names : ["StarCityGames.com Premier IQ", "Premier IQ"]
+        },
         {
             _id : "SCGSuperIQ",
             name : "Super IQ",
             states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
             short : "Super IQ",
             size : 0, owner_id : 33,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Super IQ", "Super IQ"]},
-        {
-            _id : "SCGTeamConsOpen",
-            name : "Team Constructed Open",
-            states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
-            short : "Team Const Open",
-            size : 0, owner_id : 49,
-            venue : "StarCityGames.com",
-            names : ["StarCityGames.com Team Constructed Open", "Team Constructed Open"]},
+            venue : "SCG",
+            website : "StarCityGames.com",
+            names : ["StarCityGames.com Super IQ", "Super IQ"]
+        },
         {
             _id : "SCGStates",
             name : "States",
             states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
             short : "States",
             size : 0, owner_id : 10,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com States", "States"]},
         {
             _id : "SCGReg",
@@ -141,7 +129,8 @@ createEventsTypes = ()=>{
             states : [{name : "SCGCreated", order : 1}, {name : "decks", order : 2}],
             short : "Regionals",
             size : 0,
-            venue : "StarCityGames.com",
+            venue : "SCG",
+            website : "StarCityGames.com",
             names : ["StarCityGames.com Regionals", "Regionals"]},
         {
             _id : "MTGMODaily",
@@ -149,7 +138,8 @@ createEventsTypes = ()=>{
             states : [{name : "decks", order : 1}],
             short : "Daily",
             size : 0,
-            venue : "http://magic.wizards.com",
+            venue : "MTGO",
+            website : "http://magic.wizards.com",
             names : ["Daily"]},
         {
             _id : "MTGMOLeague",
@@ -157,23 +147,40 @@ createEventsTypes = ()=>{
             states : [{name : "decks", order : 1}],
             short : "League",
             size : 0,
-            venue : "http://magic.wizards.com",
-            names : ["League"]},
+            venue : "MTGO",
+            website : "http://magic.wizards.com",
+            names : ["League"]
+        },
         {
-            _id : "MTGGP",
-            name : "Grand Prix",
-            states : [{name : "created", order : 1}, {name : "finalStanding", order : 2}, {name : "decks", order : 3}],
-            short : "GP",
+            _id : "MTGMOPTQ",
+            name : "Magic Online Pro Tour Qualifier",
+            states : [{name : "decks", order : 1}],
+            short : "MO PTQ",
             size : 1,
-            venue : "http://magic.wizards.com",
-            names : ["Grand Prix", "GP"]},
+            venue : "MTGO",
+            website : "http://magic.wizards.com",
+            names : ["MTGOPTQ", "Magic Online Pro Tour Qualifier"]
+        },
         {
             _id : "MTGPTQ",
             name : "Pro Tour Qualifier",
             states : [{name : "created", order : 1}, {name : "finalStanding", order : 2}, {name : "decks", order : 3}                                    ],
             short : "PTQ",
             size : 1,
-            venue : "http://magic.wizards.com",   names : ["Pro Tour Qualifier", "PTQ"]},
+            venue : "WotC",
+            website : "http://magic.wizards.com",
+            names : ["Pro Tour Qualifier", "PTQ"]
+        },
+        {
+            _id : "MTGGP",
+            name : "Grand Prix",
+            states : [{name : "created", order : 1}, {name : "finalStanding", order : 2}, {name : "decks", order : 3}],
+            short : "GP",
+            size : 1,
+            venue : "WotC",
+            website : "http://magic.wizards.com",
+            names : ["Grand Prix", "GP"]
+        },
         {
             _id : "LGS",
             name : "Local Game Store",
@@ -181,15 +188,8 @@ createEventsTypes = ()=>{
             short : "LGS",
             size : 2,
             venue : "LGS",
-            names : ["Local Game Store", "LGS"]},
-        {
-            _id : "MTGMOPTQ",
-            name : "Magic Online Pro Tour Qualifier",
-            states : [{name : "decks", order : 1}],
-            short : "MO PTQ",
-            size : 1,
-            venue : "http://magic.wizards.com",
-            names : ["MTGOPTQ", "Magic Online Pro Tour Qualifier"]},
+            names : ["Local Game Store", "LGS"]
+        },
     ]
 
     for(var i = 0; i < eventsArray.length; i++) {

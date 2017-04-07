@@ -13,7 +13,7 @@
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places&callback=initAutocomplete" async defer></script>
                 <div class="row">
                     <div>{{> React component=TopMenuContainer}}</div>
-                    <div>{{>typeMenu}}</div>
+                    <div>{{>React component=FormatsMenu}}</div>
                 </div>
             </div>
             <div class="body" style="min-height: 700px">
@@ -32,9 +32,6 @@
 
 <template name="main">
     {{>sevenDayCalendar}}
-    <!--<div class="row">-->
-        <!--{{>latestAddedPlaylist}}-->
-    <!--</div>-->
     <div>{{> React component=LatestDecks}}</div>
 </template>
 
@@ -101,6 +98,10 @@
 
 <template name="admin">
     <div>{{> React component=CustomAdmin}}</div>
+</template>
+
+<template name="FormatsMenu">
+    <div>{{> React component=FormatsMenu}}</div>
 </template>
 
 <template name="User">

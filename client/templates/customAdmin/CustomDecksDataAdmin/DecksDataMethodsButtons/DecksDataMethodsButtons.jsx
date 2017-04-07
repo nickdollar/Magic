@@ -7,17 +7,13 @@ export default class DecksDataMethodsButtons extends React.Component {
     }
 
 
-    methodCall(method, options){
-        Meteor.call(method, ...options)
-    }
-
     render(){
         return(
             <div className="DecksNamesMethodsButtonsComponent">
                 <h3>Fix Decks Scraped</h3>
-                <button onClick={()=>this.methodCall("fixDecksScraped", [this.props.format])}>fixDecksScraped</button>
-
+                <button onClick={()=>Meteor.call("giveNamesToAllDecksScrapedMethod", {Formats_id : this.props.Formats_id})}>giveNamesToAllDecksScraped</button>
             </div>
         );
     }
+
 }

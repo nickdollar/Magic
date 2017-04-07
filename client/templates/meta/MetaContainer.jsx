@@ -5,6 +5,7 @@ export default MetaContainer = createContainer(({}) => {
     var format = FlowRouter.getParam("format");
     return {
         currentUser: Meteor.user(),
-        format : format
+        format : format,
+        LGS : LGS.find().fetch()
     };
 }, Meta);

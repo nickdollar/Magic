@@ -1,15 +1,34 @@
 import React from 'react' ;
 import EventsTableContainer from './EventsTable/EventsTableContainer.jsx' ;
+import EventsTable from './EventsTableMethod/EventsTable.jsx';
+
 
 export default class EventsTables extends React.Component {
     constructor(){
         super();
+        this.state = {eventsSmall : [], eventsBig : []};
+    }
+
+    getEventsSmall(){
+        var LGS_ids = LGS.find({}).map(lgs => lgs._id);
+        Meteor.call("eventsSmall", {format : this.props.format, LGS_ids : LGS_ids}, (err, data)=>{
+            this.setState({eventsSmall : data});
+        })
+    }
+
+    getEventsBig(){
+        var LGS_ids = LGS.find({}).map(lgs => lgs._id);
+        Meteor.call("eventsBig", {format : this.props.format, LGS_ids : LGS_ids}, (err, data)=>{
+            this.setState({eventsBig : data});
+        })
+    }
+
+    componentDidMount(){
+        this.getEventsSmall();
+        this.getEventsBig();
     }
 
     render(){
-        var lgs_id = this.props.LGS.map((LGSObj)=>{
-            return LGSObj._id
-        })
         return(
             <div className="EventsTablesComponent">
                 <div className="col-xs-6">
@@ -20,10 +39,7 @@ export default class EventsTables extends React.Component {
                             </div>
                         </div>
                         <div className="sectionTable">
-                            <EventsTableContainer subscription="EventsSmall"
-                                                  paramsServer={[["decks", "names", "published"], this.props.format, lgs_id]}
-                                                  queryClient={{state : {$in : ["decks", "names", "published"]},  format : this.props.format, $or : [{decksQty : {$lt : 16}}, {type : "lgs"}]}}
-                            />
+                            <EventsTable Events={this.state.eventsSmall}/>
                         </div>
                     </div>
                 </div>
@@ -35,11 +51,7 @@ export default class EventsTables extends React.Component {
                             </div>
                         </div>
                         <div className="sectionTable">
-                            <EventsTableContainer subscription="EventsBig"
-                                                  paramsServer={[["decks", "names"], this.props.format]}
-                                                  queryClient={{state : {$in : ["decks", "names"]},  format : this.props.format, decksQty : {$gte : 16}}}
-                                                  format = {this.props.format}
-                            />
+                            <EventsTable Events={this.state.eventsBig}/>
                         </div>
                     </div>
                 </div>

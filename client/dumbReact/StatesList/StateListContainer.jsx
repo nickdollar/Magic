@@ -1,7 +1,7 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import StateList from './StateList.jsx';
 
-export default StateListContainer = createContainer(({collection, subscription, notState, states, format}) => {
+export default StateListContainer = createContainer(({collection, subscription, notState, states, Formats_id}) => {
     var handle = Meteor.subscribe(subscription, notState);
 
     return {

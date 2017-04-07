@@ -28,14 +28,14 @@ export default class CustomDecksDataAdmin extends React.Component{
                                     subscription="DecksDataStatesList"
                                     notState={[]}
                                     states={["lgs", "scraped", "match", "perfect", "manual", "nameRemoved", "shell"]}
-                                    format={this.props.format}
+                                    Formats_id={this.props.Formats_id}
                 />
-                <FixBannedDecksdata format={this.props.format}/>
-                <DecksDataMethodsButtons format={this.props.format} />
-                <DecksWithoutNamesWrapper format={this.props.format}/>
-                <ShowDecksDataByName format={this.props.format}/>
+                <FixBannedDecksdata Formats_id={this.props.Formats_id}/>
+                <DecksDataMethodsButtons Formats_id={this.props.Formats_id} />
+                <DecksWithoutNamesWrapper Formats_id={this.props.Formats_id}/>
+                <ShowDecksDataByName Formats_id={this.props.Formats_id}/>
 
-                <DecksWithWrongCardsContainer format={this.props.format}/>
+                <DecksWithWrongCardsContainer Formats_id={this.props.Formats_id}/>
             </div>
         )
     }

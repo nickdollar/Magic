@@ -22,7 +22,6 @@ export default class UsersDecks extends React.Component {
             sideboard : {name : null,  _id : null, qty : 4},
             clear : true,
             changes : false,
-            changesRegistry : []
         }
     }
 
@@ -49,7 +48,6 @@ export default class UsersDecks extends React.Component {
 
     getSelectedDeck(){
         Meteor.call("getUsersDecksWithCardsInformation", {UsersDecks_id : this.state.UsersDeck_id}, (err, data)=>{
-            console.log(data);
             if(data){
                 for(var i = 0 ; i < data.main.length ; i++){
                     Object.assign(data.main[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.main[i].name))
@@ -57,7 +55,13 @@ export default class UsersDecks extends React.Component {
                 for(var i = 0 ; i < data.sideboard.length ; i++){
                     Object.assign(data.sideboard[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.sideboard[i].name))
                 }
-                this.setState({UsersDeckData : data})
+                this.setState({
+                    UsersDeckData : data,
+                    main : {name : null, _id : null, qty : 4},
+                    sideboard : {name : null,  _id : null, qty : 4},
+                    clear : true,
+                    changes : false,
+                })
             }
         });
     }
@@ -87,7 +91,6 @@ export default class UsersDecks extends React.Component {
     }
 
     selectADeckHandle(UsersDeck_id){
-        console.log(UsersDeck_id);
         this.state.UsersDeck_id = UsersDeck_id;
         this.getSelectedDeck();
     }
@@ -168,7 +171,6 @@ export default class UsersDecks extends React.Component {
     }
 
     render(){
-        console.log(this.state.DecksLists);
         var DecksLists = this.filterDecksLists(this.state.DecksLists);
         return(
             <div className="UsersDecksComponent">
@@ -186,15 +188,23 @@ export default class UsersDecks extends React.Component {
                             <div className="row">
                                 <DecksList  DecksData_id={this.state.DecksData_id}
                                             selectADeckHandle={this.selectADeckHandle.bind(this)}
-                                            DecksLists= {DecksLists}
+                                            DecksLists={DecksLists}
                                 />
                             </div>
                         </div>
                         <div className="col-xs-9">
                             <div className="row">
                                 {this.state.UsersDeck_id != "" ? <div className="deckArea">
-                                        <button disabled={!this.state.changes} className="btn"
-                                                onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}</button>
+                                        <div className="btnChangeAndRemoveWrapper">
+                                            <div className="btnChange">
+                                                <button disabled={!this.state.changes} className="btn"
+                                                        onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}</button>
+                                            </div>
+                                            <div className="btnRemove">
+                                                <button disabled={!this.state.changes} className="btn">Remove</button>
+                                            </div>
+                                            <div style={{clear: "both"}}></div>
+                                        </div>
                                         <div className="form-group">
                                             <label htmlFor="example-text-input" className="col-2 col-form-label">Name</label>
                                             <div className="col-10">

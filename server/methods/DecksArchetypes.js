@@ -161,6 +161,24 @@ Meteor.methods({
             Meteor.call("createShellArchetype", deckArchetype._id);
         })
         console.log("   END: createShellForFormat");
+    },
+    DecksArchetypesformatToFormats_idMethod(){
+        console.log("START: DecksArchetypesformatToFormats_idMethod")
+        Formats.find({}).map(format => {
+            var formatsRegex = [];
+            for (var i = 0; i < format.names.length; i++) {
+                formatsRegex[i] = new RegExp(format.names[i], "i");
+            }
+            DecksArchetypes.update({format : {$in : formatsRegex}},
+                {
+                    $set : {Formats_id : format._id},
+                    $unset : {format : ""}
+                },
+                {
+                    multi : true
+                })
+        });
+        console.log("   END: DecksArchetypesformatToFormats_idMethod")
     }
 
 

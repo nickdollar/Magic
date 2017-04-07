@@ -15,6 +15,7 @@ export default class MetaCardsValues extends React.Component {
     }
 
     avgColumn(cell, row){
+        console.log(cell, row);
         if(this.props.totalDecks==0){
             return 0;
         }

@@ -1,8 +1,8 @@
 import { createContainer } from 'meteor/react-meteor-data';
 import DecksWithWrongCards from './DecksWithWrongCards.jsx';
 
-export default DecksWithWrongCardsContainer = createContainer(({format}) => {
-    var handle = Meteor.subscribe("DecksDataLeagueDailyWithWrongCardsNameQuantity", format);
+export default DecksWithWrongCardsContainer = createContainer(({Formats_id}) => {
+    var handle = Meteor.subscribe("DecksDataLeagueDailyWithWrongCardsNameQuantity", Formats_id);
 
     return {
         currentUser: Meteor.user(),

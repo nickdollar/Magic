@@ -17,7 +17,11 @@ export default class NewsMetaValues extends React.Component {
     }
 
     updateValues(options, format){
-        Meteor.call("getMetaCards", format, options, (err, data)=>{
+        var LGS_ids = LGS.find({}).map((LGSObj)=>{
+            return LGSObj._id;
+        })
+
+        Meteor.call("getMetaCardsMethod", {format, format, options : options, LGS_ids : LGS_ids}, (err, data)=>{
             this.setState({tableData : data.cards, totalDecks : data.totalDecks});
         });
     }

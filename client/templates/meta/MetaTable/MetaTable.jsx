@@ -17,12 +17,11 @@ export default class MetaTable extends React.Component {
     }
 
     updateValues(options, format){
-
         var LGS_ids = LGS.find({}).map((LGSObj)=>{
-            return LGSObj;
+            return LGSObj._id;
         })
 
-        Meteor.call("MethodGetMetaAllArchetypes", format, options, LGS_ids, (err, data)=>{
+        Meteor.call("getMetaAllArchetypesMethod", {format : format, options : options, LGS_ids : LGS_ids}, (err, data)=>{
             var totalDecks = data.reduce((a, b)=>{
                 return  a + b.quantity;
             },0);

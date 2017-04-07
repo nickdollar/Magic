@@ -1,6 +1,6 @@
 import React from 'react' ;
 import SelectedEventPlayerList from './SelectedEventPlayerList/SelectedEventPlayerList.jsx' ;
-import DeckContainer from '/client/dumbReact/Deck/DeckContainer.jsx' ;
+import DeckAggregate from '/client/dumbReact/DeckAggregate/DeckAggregate.jsx' ;
 import SelectedEventHeader from './SelectedEventHeader/SelectedEventHeader.jsx';
 
 export default class LGSAddNewStore extends React.Component {
@@ -9,7 +9,7 @@ export default class LGSAddNewStore extends React.Component {
         this.state = {  DecksData_id : props.DecksData_id ? props.DecksData_id : null,
                         DecksList : [],
                         DecksData : {},
-                        event : {}
+                        Event : {}
         }
     }
 
@@ -52,6 +52,8 @@ export default class LGSAddNewStore extends React.Component {
             var DecksData;
             if(!DecksData_id){
                 data.DecksData[0] ? DecksData_id = data.DecksData[0]._id : DecksData_id = "";
+                data.DecksData[0] ? DecksData = data.DecksData[0] : DecksData_id = {};
+
             }else{
                 DecksData = data.DecksData.find((deck)=>{
                     return deck._id == DecksData_id
@@ -77,7 +79,7 @@ export default class LGSAddNewStore extends React.Component {
                 </div>
                 <div className="col-xs-9">
                     <div className="row">
-                        <DeckContainer DecksData_id={this.state.DecksData_id}/>
+                        <DeckAggregate DecksData_id={this.state.DecksData_id}/>
                     </div>
                 </div>
 

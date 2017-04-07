@@ -7,11 +7,11 @@ export default class DecksNamesShells extends React.Component {
     }
 
     createDecksNamesShellsByFormat(){
-        Meteor.call("createDecksNamesShellsByFormat", this.props.format);
+        Meteor.call("createDecksNamesShellsByFormat", this.props.Formats_id);
     }
 
     findDecksByDecksNamesShells(){
-        Meteor.call("findDecksByDecksNamesShellsAll", this.props.format);
+        Meteor.call("findDecksByDecksNamesShellsAll", this.props.Formats_id);
     }
 
     render(){

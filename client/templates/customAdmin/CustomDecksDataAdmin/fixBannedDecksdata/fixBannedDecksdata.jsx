@@ -6,7 +6,7 @@ export default class fixBannedDecksdata extends React.Component {
     }
 
     fixBannedDecksdata(){
-        Meteor.call("bannedDeck", this.props.format);
+        Meteor.call("bannedDeck", this.props.Formats_id);
     }
 
     render(){

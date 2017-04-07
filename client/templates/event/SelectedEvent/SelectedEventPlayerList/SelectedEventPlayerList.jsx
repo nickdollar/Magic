@@ -12,21 +12,8 @@ export default class PlayerList extends React.Component {
         if(deck.position){
             position += prettifyPosition(deck.position)
         }
-
         if(deck.victory != null){
-            position += "("+ deck.victory;
-
-            if(deck.loss){
-                position += "-" + deck.loss;
-
-            }else{
-                position += "-0";
-            }
-            if(deck.draw){
-                position += "-" + deck.draw;
-            }
-
-            position += ")";
+            position += `(${deck.victory}${deck.loss ? `-${deck.loss}` : "-0"}${deck.draw ? `-${deck.draw}`: ""})`;
         }
         return position;
     }
@@ -62,6 +49,7 @@ export default class PlayerList extends React.Component {
                     </div>
     }
 
+
     sortFunc(a, b, order){
         if(!a.position) return 1;
         if(a.position){
@@ -78,7 +66,6 @@ export default class PlayerList extends React.Component {
                 hideSizePerPage: true,
                 paginationSize: 3,
             },
-
             headerStyle : {display : "none"},
             hideSizePerPage: true,
             data : this.props.DecksList,

@@ -167,6 +167,25 @@ Meteor.methods({
     },
     getDecksNamesByFormat(format){
         return DecksNames.find({format : format}).fetch();
+    },
+    formatToFormats_id(){
+        console.log("START: formatToFormats_id")
+        Formats.find({}).map(format => {
+            var formatsRegex = [];
+            for (var i = 0; i < format.names.length; i++) {
+                formatsRegex[i] = new RegExp(format.names[i], "i");
+            }
+            DecksNames.update({format : {$in : formatsRegex}},
+                {
+                    $set : {Formats_id : format._id},
+                    $unset : {format : ""}
+                },
+                {
+                    multi : true
+                })
+        });
+        console.log("   END: formatToFormats_id")
+
     }
 })
 

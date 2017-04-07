@@ -17,11 +17,11 @@ export default class LGSEventsAdmin extends React.Component {
                                     subscription="LGSEventsStatesList"
                                     notState={[]}
                                     states={state}
-                                    format={this.props.format}
+                                    Formats_id={this.props.Formats_id}
                 />
 
 
-                <ListByState state={state} format={this.props.format}/>
+                <ListByState state={state} Formats_id={this.props.Formats_id}/>
             </div>
         );
     }

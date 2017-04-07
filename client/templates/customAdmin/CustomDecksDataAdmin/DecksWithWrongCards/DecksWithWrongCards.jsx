@@ -31,7 +31,7 @@ export default class DecksWithWrongCards extends React.Component {
                     <BootstrapTable {...tableOptions} height='256px'>
                         <TableHeaderColumn isKey dataField="_id">_id</TableHeaderColumn>
                         <TableHeaderColumn width="220" dataField="DecksNames_id">Events</TableHeaderColumn>
-                        <TableHeaderColumn dataField="format">Format</TableHeaderColumn>
+                        <TableHeaderColumn dataField="Formats_id">Format</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
             </div>

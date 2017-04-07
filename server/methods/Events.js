@@ -8,11 +8,11 @@ Meteor.methods({
     fixEventsStandard(){
         fixEventsStandard();
     },
-    getLeagueEventsAndDecksMethod({format, dateType}){
-        getLeagueEventsAndDecks({days : 5, format : format, dateType : dateType})
+    getLeagueEventsAndDecksMethod({Formats_id, dateType}){
+        getLeagueEventsAndDecks({days : 5, Formats_id : Formats_id, dateType : dateType})
     },
-    getMTGOPTQEventsAndDecksMethod({format, dateType}){
-        getMTGOPTQEventsAndDecks({days : 10, format : format, dateType : dateType});
+    getMTGOPTQEventsAndDecksMethod({Formats_id, dateType}){
+        getMTGOPTQEventsAndDecks({days : 10, Formats_id : Formats_id, dateType : dateType});
     },
     getGpEventsAndDecksMethod(){
         getGpEventsAndDecks();
@@ -100,6 +100,21 @@ Meteor.methods({
                 })
 
         })
+    },
+    eventsSmall({Formats_id, LGS_ids}){
+        console.log(Formats_id, LGS_ids);
+        var eventsTypes_ids = EventsTypes.find({size : 0}).map(type => type._id);
+        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
+            {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
+            {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
+        ]}).fetch();
+    },
+    eventsBig({Formats_id, LGS_ids}){
+        var eventsTypes_ids = EventsTypes.find({size : 1}).map(type => type._id);
+        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
+            {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
+            {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
+        ]}).fetch();
     }
 })
 
@@ -122,9 +137,9 @@ Meteor.methods({
 fixEventsStandard = function(){
     console.log("START: fixEventsStandard");
 
-    Events.update({format : "oldStandard"},
+    Events.update({Formats_id : "oldStandard"},
         {
-            $set : {format : "standard"},
+            $set : {Formats_id : "standard"},
             $unset : {totalDifference : ""}
         },
         {
@@ -132,9 +147,9 @@ fixEventsStandard = function(){
         }
     )
 
-    DecksData.update({format : "oldStandard"},
+    DecksData.update({Formats_id : "oldStandard"},
         {
-            $set : {format : "standard"}
+            $set : {Formats_id : "standard"}
         },
         {
             multi : true
@@ -142,7 +157,7 @@ fixEventsStandard = function(){
     )
 
     var events = Events.aggregate([
-        {$match : {format : "standard"}},
+        {$match : {Formats_id : "standard"}},
         {$lookup : {
             "from" : "DecksData",
             "localField" : "_id",
@@ -195,14 +210,14 @@ fixEventsStandard = function(){
             Events.update({_id : events[i]._id},
                           {
                               $set : {
-                                  format : "oldStandard",
+                                  Formats_id : "oldStandard",
                                   totalDifference : totalDifference
                               }
                           },
             );
             DecksData.update({Events_id :  events[i]._id},
                             {
-                                $set : { format : "oldStandard"}
+                                $set : { Formats_id : "oldStandard"}
                             },
                             {
                                 multi : true

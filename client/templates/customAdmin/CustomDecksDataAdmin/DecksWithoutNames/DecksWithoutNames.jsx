@@ -18,7 +18,7 @@ export default class DecksWithoutNames extends React.Component{
     }
 
     selectDeck(i){
-        this.setState({showModal : true, DecksData_id : this.props.DecksList[i]._id, format : this.props.DecksList[i].format});
+        this.setState({showModal : true, DecksData_id : this.props.DecksList[i]._id, Formats_id : this.props.DecksList[i].Formats_id});
     }
 
     handleHideModal(){
@@ -62,7 +62,7 @@ export default class DecksWithoutNames extends React.Component{
                 <ModalFirstPage showModal={this.state.showModal}
                                 handleHideModal={this.handleHideModal.bind(this)}
                 >
-                    <DecksNamesListSubmitContainer DecksData_id={this.state.DecksData_id} format={this.state.format}/>
+                    <DecksNamesListSubmitContainer DecksData_id={this.state.DecksData_id} Formats_id={this.state.Formats_id}/>
                     <DeckListPercentage DecksData_id={this.state.DecksData_id} />
                     <DeckContainer DecksData_id={this.state.DecksData_id} />
                 </ModalFirstPage>

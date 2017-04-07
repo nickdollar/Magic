@@ -102,31 +102,6 @@ Meteor.methods({
         }
         return "Deck Updated";
     },
-    fixDecksScraped(format){
-        console.log("START: fixDecksScraped");
-        DecksData.find({format : format, state : {$nin : ["manual", "perfect", "shell"]}}).forEach((DeckData, index, array)=>{
-            if(index % 20 == 0){
-                console.log(`${index+1} of ${array.count()}`);
-            }
-
-            if(DecksData.findOne({_id : DeckData._id}).state == "scraped"){
-                var result = findBestResultDeckComparison(DeckData._id);
-                if(result.result == 1){
-                    DecksData.update({_id : DeckData._id},
-                            {
-                                $set : {DecksNames_id : result.DecksNames_id, state : "perfect"}
-                            }
-                    )
-                }else if(result.result > 0.85){
-                    DecksData.update({_id : DeckData._id},
-                        {
-                            $set : {DecksNames_id : result.DecksNames_id, state : "match"}
-                        })
-                }
-            }
-        });
-        console.log("   END: fixDecksScraped");
-    },
     updateMainSide: function (mainSide, DecksData_id) {
 
         var main = mainSide.main.map((card)=>{
@@ -183,6 +158,12 @@ Meteor.methods({
     },
     removeDeckFromLGSEvent: function (DecksData_id) {
         DecksData.remove({_id : DecksData_id});
+    },
+    giveNamesToAllDecksScrapedMethod({format}){
+        DecksData.find({format : format, state : "scraped"}).forEach(deck=>{
+            giveNamesToAllDecksScraped({_id : deck._id});
+            // console.log(deck._id);
+        });
     },
 
     recheckDeckWithWrongCardName(format){
@@ -319,7 +300,6 @@ Meteor.methods({
         return DecksData.find({DecksNames_id : DecksNames_id, format : { $ne : {$regex : /Banned$/}}}, {sort : {name : 1}}).fetch();
     },
     getDecksDataFromArchetypes_idFormatCards(selectedCard, archetype, format){
-        console.log(selectedCard, archetype, format);
         var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
 
         var aggregation = DecksArchetypes.aggregate(

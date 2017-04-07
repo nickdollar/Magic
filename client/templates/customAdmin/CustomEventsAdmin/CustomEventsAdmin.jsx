@@ -21,11 +21,11 @@ export default class CustomAdmin extends React.Component{
                                     subscription="EventsQueryProjection"
                                     notState={[]}
                                     states={["startProduction", "notFound", "notFoundOld", "exists", "mainHTMLFail", "created", "locked", "published", "HTMLFail", "HTMLMain", "HTMLPartial", "HTML", "decks", "names"]}
-                                    format={this.props.format}
+                                    Formats_id={this.props.Formats_id}
                 />
                 <FixStandardToOldStandard/>
-                <AddEventToCollection format={this.props.format}/>
-                <LGSEventsChecksContainer format={this.props.format}/>
+                <AddEventToCollection Formats_id={this.props.Formats_id}/>
+                <LGSEventsChecksContainer Formats_id={this.props.Formats_id}/>
             </div>
         )
     }

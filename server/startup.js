@@ -81,6 +81,7 @@ Meteor.startup(function () {
     }
 
     createEventsTypes();
+    createFormats();
 });
 
 // var cookies = new Cookies()

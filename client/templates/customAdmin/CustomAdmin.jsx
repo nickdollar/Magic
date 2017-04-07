@@ -17,36 +17,36 @@ import CustomCardsCollectionSimplifiedAdmin from './CustomCardsCollectionSimplif
 export default class CustomAdmin extends React.Component{
     constructor(props){
         super();
-        this.state = {format : "standard"};
+        this.state = {Formats_id : "std"};
     }
 
     routes(route){
         if(route=="Events"){
-            return <CustomEventsAdmin format={this.state.format}/>
+            return <CustomEventsAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="CardsDatabase"){
-            return <CustomCardsDatabaseAdmin format={this.state.format}/>
+            return <CustomCardsDatabaseAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="DecksNames"){
-            return <CustomDecksNamesAdmin format={this.state.format}/>
+            return <CustomDecksNamesAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="DecksArchetypes"){
-            return <CustomDecksArchetypesAdmin format={this.state.format}/>
+            return <CustomDecksArchetypesAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="DecksData"){
-            return <CustomDecksDataAdmin format={this.state.format}/>
+            return <CustomDecksDataAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="CardsDatabase"){
-            return <CustomDecksDatabaseAdmin format={this.state.format}/>
+            return <CustomDecksDatabaseAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="LGS"){
-            return <CustomLGSAdmin format={this.state.format}/>
+            return <CustomLGSAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="LGSEvents"){
-            return <CustomLGSEventsAdmin format={this.state.format}/>
+            return <CustomLGSEventsAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="EventsCalendar"){
-            return <CustomEventsCalendarAdmin format={this.state.format}/>
+            return <CustomEventsCalendarAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="ZipCodes"){
             return <CustomZipCodesAdmin/>
         }else if (route=="CardsFullData"){
             return <CustomCardsFullDataAdmin/>
         }else if (route=="ArchetypesShells"){
-            return <CustomArchetypesShellsAdmin format={this.state.format}/>
+            return <CustomArchetypesShellsAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="CardsCollectionSimplified"){
-            return <CustomCardsCollectionSimplifiedAdmin format={this.state.format}/>
+            return <CustomCardsCollectionSimplifiedAdmin Formats_id={this.state.Formats_id}/>
         }
     }
 
@@ -56,18 +56,17 @@ export default class CustomAdmin extends React.Component{
 
 
     defaultRadio(opt){
-        if(opt == this.state.format){
+        if(opt == this.state.Formats_id){
             return true
         }
         return false;
     }
 
     formatChange(e){
-        this.setState({format : e});
+        this.setState({Formats_id : e});
     }
 
     render(){
-        var formats = ["standard", "modern", "legacy", "vintage"];
         var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
                             "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData", "ArchetypesShells",
                             "CardsCollectionSimplified"];
@@ -82,10 +81,10 @@ export default class CustomAdmin extends React.Component{
                 </div>
                 <div className="col-xs-10">
                     <div className="row">
-                        {formats.map((opt)=>{
-                            return <label key={opt} className="radio-inline"><input onChange={this.formatChange.bind(this, opt)}
-                                                                                    checked={this.defaultRadio(opt)} type="radio"
-                                                                                    value={opt}/>{opt}</label>
+                        {Formats.find({}).map(format=>{
+                            return <label key={format._id} className="radio-inline"><input onChange={this.formatChange.bind(this, format._id)}
+                                                                                    checked={this.defaultRadio(format._id)} type="radio"
+                                                                                    value={format._id}/>{format.name}</label>
                         })}
                         {this.routes(FlowRouter.getParam("collection"))}
                     </div>

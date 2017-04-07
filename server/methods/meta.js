@@ -1,23 +1,17 @@
 Meteor.methods({
-    MethodCreateMeta(format){
-        createMeta(format);
-    },
     createMetaNewThingsDaysAllFormats(){
         createMetaNewThingsDaysAllFormats();
     },
     createMetaNewest(format) {
         createMetaNewThings(format);
     },
-    getMeta(format, optionsTypes, timeSpan, deckArchetypes){
-        return getMeta(format, optionsTypes, timeSpan, deckArchetypes);
+    getMetaAllArchetypesMethod({format, options, LGS_ids}){
+        return getMetaAllArchetypes({format : format, options : options, LGS_ids : LGS_ids});
     },
-    MethodGetMetaAllArchetypes(format, optionsTypes, LGS_ids){
-        return getMetaAllArchetypes(format, optionsTypes, LGS_ids);
-    },
-    getMetaDecksNamesFromArchetype(format, optionsTypes, timeSpan, DecksArchetypes_id, positionChange){
-        return getMetaDecksNamesFromArchetype(format, optionsTypes, timeSpan, DecksArchetypes_id, positionChange);
-    },
-    getMetaCards(format, options){
-        return getMetaCards(format, options);
+    getMetaCardsMethod({format, options, LGS_ids}){
+        var response = {};
+        response.totalDecks = getTotalMetaCardsMainSideboard({format : format, options : options, LGS_ids : LGS_ids});
+        response.cards = getMetaCardsMainSideboard({format : format, options : options, LGS_ids : LGS_ids});
+        return response;
     }
 })

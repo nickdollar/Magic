@@ -59,7 +59,7 @@ export default class ListByState extends React.Component {
             {attr : {key : "title",     dataField : "title",    dataFormat: this.sortTD},   text : "Title"},
             {attr : {key : "LGS_id",    dataField : "LGS_id",   dataFormat: this.sortTD},   text : "LGS_id"},
             {attr : {key : "price",     dataField : "price"},                               text : "price"},
-            {attr : {key : "format",    dataField : "format"},                              text : "format"},
+            {attr : {key : "Formats_id",    dataField : "Formats_id"},                              text : "Formats_id"},
             {attr : {key : "rounds",    dataField : "rounds",                           },  text : "rounds"},
             {attr : {key : "day",       dataField : "day"},     text : "day"},
             {attr : {key : "start",     dataField : "start"},   text : "start"},
@@ -94,9 +94,9 @@ export default class ListByState extends React.Component {
 
                 <ReactTableContainer    collection={"LGSEvents"}
                                         subscription="LGSEventsStateFormat"
-                                        subscriptionParams={[this.props.format, this.state.selectedState]}
-                                        query={{format : this.props.format, state : this.state.selectedState}}
-                                        format={this.props.format}
+                                        subscriptionParams={[this.props.Formats_id, this.state.selectedState]}
+                                        query={{Formats_id : this.props.Formats_id, state : this.state.selectedState}}
+                                        Formats_id={this.props.Formats_id}
                                         options={options}
                                         columns={columns}
                 />

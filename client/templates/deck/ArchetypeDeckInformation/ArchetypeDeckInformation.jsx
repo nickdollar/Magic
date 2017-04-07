@@ -9,10 +9,11 @@ export default class ArchetypeDeckInformation extends React.Component {
     }
 
     render(){
+
+
+
         return(
-                <ArchetypeDeckInformationEntryContainer format={FlowRouter.getParam("format")}
-                                                        archetype={FlowRouter.getParam("archetype")}
-                />
+                <ArchetypeDeckInformationEntryContainer />
         );
     }
 }

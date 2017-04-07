@@ -12,13 +12,14 @@ import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuCo
 import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableContainer.jsx";
 import BigEventsCalendarContainer from           "/client/templates/event/eventsCalendar/BigEventsCalendarContainer.jsx";
 import User                         from    "/client/templates/User/User";
-
+import FormatsMenu from "/client/templates/menu/formatsMenu/FormatsMenu.jsx";
 
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
     this.subscribe("DecksArchetypesGlobal");
     this.subscribe("EventsTypes");
+    this.subscribe("Formats");
 
     this.state = new ReactiveDict;
     this.state.set("selected", null);
@@ -69,7 +70,10 @@ Template.ApplicationLayout.helpers({
         return function (option) {
             tmpl.state.set("selected", option);
         }
-    }
+    },
+    FormatsMenu(){
+        return FormatsMenu;
+    },
 });
 
 Template.deckSelected.helpers({

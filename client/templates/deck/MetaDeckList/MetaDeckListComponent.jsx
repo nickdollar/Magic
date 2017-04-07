@@ -3,8 +3,9 @@ import MetaDeckList from './MetaDeckList.jsx';
 
 export default MetaDeckListComponent = createContainer(({}) => {
 
+
     return {
         currentUser: Meteor.user(),
-        format : FlowRouter.getParam("format")
+        Formats_id : Formats.findOne({names : {$regex : FlowRouter.getParam("format"), $options : "i"}})
     };
 }, MetaDeckList);

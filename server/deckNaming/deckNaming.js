@@ -99,7 +99,7 @@ findDeckComparison2 = function(_id){
     }
 }
 
-foundDeckFromDecksDataUniqueWithoutQuantity = function(_id){
+giveNamesToAllDecksScraped = function({_id}){
     var cardsOnMain = DecksData.aggregate(
         [
             {$match: {_id : _id}},
@@ -112,7 +112,12 @@ foundDeckFromDecksDataUniqueWithoutQuantity = function(_id){
 
     var foundDeck = DecksDataUniqueWithoutQuantity.find({format : cardsOnMain[0].format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}, {limit : 1}).fetch()[0];
 
-    return foundDeck;
+    if(foundDeck){
+        DecksData.update({_id : _id},
+            {
+                $set : {DecksNames_id : foundDeck.DecksNames_id, state : "perfect"}
+            })
+    }
 }
 
 findDeckComparison = function(_id){

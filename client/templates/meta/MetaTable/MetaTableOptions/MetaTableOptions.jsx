@@ -5,41 +5,24 @@ export default class NewMetaTableOptions extends React.Component {
     constructor() {
         super();
 
-        var date = new Date();
+        var venues = [];
+        var eventsTypes = EventsTypes.find().fetch();
 
+        for(var i = 0; i< eventsTypes.length; i++){
+            var index = venues.findIndex(venue => eventsTypes[i].venue == venue.venue);
+            if(index == -1){
+                venues.push({venue : eventsTypes[i].venue, text : eventsTypes[i].venue, EventsTypes_ids : [{EventsTypes_id : eventsTypes[i]._id, text : eventsTypes[i].short, selected : true}]})
+            }else{
+                venues[index].EventsTypes_ids.push({EventsTypes_id : eventsTypes[i]._id, text : eventsTypes[i].short, selected : true});
+            }
+        }
 
         this.state = {
             startDate : new Date(new Date().setDate(new Date().getDate() - 60)),
             endDate : new Date(),
             startPosition : 1,
             endPosition : 64,
-            LGS : {type: "lgs", text: "LGS", selected : true},
-            venues: [
-                        {
-                            venue: "MTGO", text : "MTGO", types: [
-                            {type: "daily", text: "Daily", selected : true},
-                            {type: "league", text: "League", selected : true}
-                        ]
-                    },
-                        {
-                            venue: "WotC",  text : "WotC", types: [
-                            {type: "GP", text: "Grand Prix", selected : true},
-                        ]
-                    },
-                        {
-                            venue: "SCG", text : "SCG", types: [
-                            {type: "SCGSuperIQ", text: "Super IQ", selected : true},
-                            {type: "SCGInviQualifier", text: "Invi Qualifier", selected : true},
-                            {type: "SCGInvitational", text: "Invitational", selected : true},
-                            {type: "SCGClassic", text: "Classic", selected : true},
-                            {type: "SCGOpen", text: "Open", selected : true},
-                            {type: "Players'Championship", text: "Players' Champ", selected : true},
-                            {type: "GrandPrix", text: "Grand Prix", selected : true},
-                            {type: "LegacyChamps", text: "Legacy Champs", selected : true},
-                            {type: "WorldMagicCup", text: "World Magic Cup", selected : true}
-                        ]
-                }
-            ]
+            venues: venues
         }
     }
 
@@ -65,24 +48,10 @@ export default class NewMetaTableOptions extends React.Component {
 
     }
 
-    typeSelectedHandle(venue, type, event){
-        var tempVenues = this.state.venues.concat();
-
-        var index = tempVenues.findIndex((venueQuery)=>{
-            return venueQuery.venue == venue;
-        });
-
-        var index2 = tempVenues[index].types.findIndex((typeQuery)=>{
-            return typeQuery.type == type;
-        });
-
-        if(tempVenues[index].types[index2].selected){
-            tempVenues[index].types[index2].selected = false
-        }else{
-            tempVenues[index].types[index2].selected = true
-        }
-
-        this.setState({venues : tempVenues});
+    typeSelectedHandle(index1, index2){
+        var venues = this.state.venues.concat();
+        venues[index1].EventsTypes_ids[index2].selected = !venues[index1].EventsTypes_ids[index2].selected;
+        this.setState({venues : venues});
     }
 
     dateSelectedHandle(event, type){
@@ -100,22 +69,19 @@ export default class NewMetaTableOptions extends React.Component {
 
     requestQuery(){
         var request = {}
-        request.types = [];
+        request.EventsTypes_ids = [];
         this.state.venues.forEach((venue)=>{
-            venue.types.forEach((type)=>{
+            venue.EventsTypes_ids.forEach((type)=>{
                 if(type.selected){
-                    request.types.push(type.type);
+                    request.EventsTypes_ids.push(type.EventsTypes_id);
                 }
 
             })
         })
-
         request.startDate = this.state.startDate;
         request.endDate = this.state.endDate;
         request.startPosition = this.state.startPosition;
         request.endPosition = this.state.endPosition;
-        request.LGS = this.state.LGS.selected;
-
         return request;
     }
 
@@ -149,35 +115,26 @@ export default class NewMetaTableOptions extends React.Component {
                                 <button type="submit"
                                         onClick={this.openOption.bind(this)}
                                         className="btn btn-default btn-xs options"
-                                        style={{display: "inline"}}>Options<span className="caret"></span></button>
-
+                                        style={{display: "inline"}}>Options<span className="caret"></span>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div className="metaTitle"><h4>Meta Breakdown</h4></div>
                 </div>
                 <div className="content" ref="content">
-                    {this.state.venues.map((venue)=>{
+                    {this.state.venues.map((venue, index1)=>{
                         return <div key={venue.venue} className="custom-column">
                             <div>{venue.text}</div>
                             <ul className="list-unstyled optionsList">
-                                {venue.types.map((type)=>{
-                                    return  <li key={type.type}>
-                                        <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(venue.venue, type.type, event)} checked={type.selected}/>{type.text}
+                                {venue.EventsTypes_ids.map((type, index2)=>{
+                                    return  <li key={type.EventsTypes_id}>
+                                        <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(index1, index2)} checked={type.selected}/>{type.text}
                                     </li>
                                 })}
                             </ul>
                         </div>
                     })}
-
-                    <div className="custom-column">
-                        <div>{this.state.LGS.text}</div>
-                        <ul className="list-unstyled optionsList">
-                            <li>
-                                <input type="checkbox" onChange={(event)=> this.checkedLGS(this.state.LGS, this.state.LGS.type, event)} checked={this.state.LGS.selected}/>{this.state.LGS.text}
-                            </li>
-                        </ul>
-                    </div>
                     <div className="custom-column">
                         <div className="optionListName">Deck Date</div>
                         <div className="inputDiv">
@@ -204,7 +161,6 @@ export default class NewMetaTableOptions extends React.Component {
                         <div >
                             <button className="btn btn-xs" onClick={this.updateOptions.bind(this)} >Request Changes</button>
                         </div>
-
                     </div>
                 </div>
 

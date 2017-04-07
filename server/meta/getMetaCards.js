@@ -1,16 +1,6 @@
-getMetaCards = function(format, options){
+ getMetaCards = function({format, options, LGS_ids}){
     var result = {};
-    result.totalDecks = metaTotalDecksCards(format, options);
-    result.cards = [];
-    if(options.mainSide.length==0){
-        return result
-    }
-    if(options.mainSide.length == 2){
-        result.cards = metaCardsMainSideboard(format, options);
-    }else if(options.mainSide[0] == "main") {
-        result.cards = metaCardsMain(format, options);
-    }else if(options.mainSide[0] == "side") {
-        result.cards = metaCardsSideboard(format, options);
-    }
+    result.totalDecks = getTotalMetaCardsMainSideboard({format, format, options : options, LGS_ids : LGS_ids});
+    result.cards = getMetaCardsMainSideboard({format, format, options : options, LGS_ids : LGS_ids});
     return result;
 }
