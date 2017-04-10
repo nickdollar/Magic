@@ -64,7 +64,7 @@ Template.futuroEventsModal.helpers({
 
 Template.futuroEventsModal.onRendered(function(){
 
-   $('#eventTime').datetimepicker({
+    $('#eventTime').datetimepicker({
         minDate : new Date()
     });
 

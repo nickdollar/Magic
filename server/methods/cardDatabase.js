@@ -1,5 +1,5 @@
 makeCardsDataCount = function(){
-    console.log("START: makeCardsDataFromFullData");
+    logFunctionsStart("makeCardsDataFromFullData");
 
     var cardSet = new Set();
     CardsFullData.find().forEach((card)=>{
@@ -22,14 +22,14 @@ makeCardsDataCount = function(){
         cardSet.add(name);
     });
 
-    console.log("   END: makeCardsDataFromFullData");
+    logFunctionsEnd("makeCardsDataFromFullData");
     return cardSet.size;
 }
 
 
 makeCardsDataFromFullData = function(){
 
-    console.log("START: makeCardsDataFromFullData");
+    logFunctionsStart("makeCardsDataFromFullData");
     CardsData.remove({});
 
     CardsFullData.find().forEach((card)=>{
@@ -102,11 +102,11 @@ makeCardsDataFromFullData = function(){
             CardsData.insert(data);
         }
     });
-    console.log("   END: makeCardsDataFromFullData");
+    logFunctionsEnd("makeCardsDataFromFullData");
 }
 
 checkQuantityOfCardsFullData = function() {
-    console.log("START: checkQuantityOfCardsFullData");
+    logFunctionsStart("checkQuantityOfCardsFullData");
 
     var cardsSet = new Set();
     CardsFullData.find().forEach((card)=>{
@@ -137,13 +137,13 @@ checkQuantityOfCardsFullData = function() {
         }
         cardsSet.add(obj.name);
     });
-    console.log("   END: checkQuantityOfCards");
+    logFunctionsEnd("checkQuantityOfCards");
     return cardsSet.size;
 }
 
 makeCardsData = function(){
 
-    console.log("START: makeCardsData");
+    logFunctionsStart("makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllCards.json'));
     CardsData.remove({});
 
@@ -231,7 +231,7 @@ makeCardsData = function(){
         );
     }
 
-    console.log("   END: makeCardsData");
+    logFunctionsEnd("makeCardsData");
 }
 
 function clone(obj) {

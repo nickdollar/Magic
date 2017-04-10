@@ -4,8 +4,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 export default class ArchetypeList extends React.Component {
     constructor(props){
         super();
-
-        this.state = {DecksArchetypes : DecksArchetypes.find({format : props.format}).fetch()}
+        this.state = {DecksArchetypes : DecksArchetypes.find({Formats_id : props.Formats_id}).fetch()}
     }
 
     colorsFormat(_id, row){
@@ -13,8 +12,8 @@ export default class ArchetypeList extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.format != this.props.format){
-            this.state.DecksArchetypes = DecksArchetypes.find({format : nextProps.format}).fetch();
+        if(nextProps.Formats_id != this.props.Formats_id){
+             this.setState({DecksArchetypes : DecksArchetypes.find({Formats_id : nextProps.Formats_id}).fetch()});
         }
     }
 
@@ -68,7 +67,7 @@ export default class ArchetypeList extends React.Component {
     }
 
     nameFormat(name, row){
-        return <a href={FlowRouter.path('ArchetypeDeckInformation', {format : row.format, archetype : row.name})}>{name}</a>
+        return <a href={FlowRouter.path('ArchetypeDeckInformation', {format : getLinkFormat(row.Formats_id), DeckArchetype : row.link})}>{name}</a>
     }
 
     filterNames(decksArchetypes){
@@ -139,6 +138,7 @@ export default class ArchetypeList extends React.Component {
         }
 
         return(
+
             <div className="ArchetypeListComponent">
                 <BootstrapTable {...tableOptions}>
                     <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormat.bind(this)}>Name</TableHeaderColumn>

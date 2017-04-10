@@ -41,19 +41,19 @@ export default class DecksNamesDecksDataList extends React.Component {
                         {this.results(row)} - {row.player}
                     </div>
                     <div>
-                        <a href={FlowRouter.path("selectedEvent", {format : FlowRouter.getParam("format"), Events_id : row.Events_id, DecksData_id : row._id})}> {eventsTypes[row.type]} {Moment(row.date).format("MM/DD")}</a>
+                        <a href={FlowRouter.path("selectedEvent", {format : FlowRouter.getParam("format"), Events_id : row.Events_id, DecksData_id : row._id})}> {EventsTypes.findOne({_id : row.EventsTypes_id}).short} {Moment(row.date).format("MM/DD")}</a>
                     </div>
                 </div>
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.DecksNames_id != this.props.DecksNames_id){
-            this.getNewList(nextProps.DecksNames_id);
+        if(nextProps.DeckName._id != this.props.DeckName._id){
+            this.getNewList();
         }
     }
 
-    getNewList(DecksNames_id){
-        Meteor.call("getDecksListFromDeckName", DecksNames_id, FlowRouter.getParam("format"), (err, data)=>{
+    getNewList(){
+        Meteor.call("getDecksListFromDeckName", this.props.DeckName._id, (err, data)=>{
             if(data.length){
                 this.props.selectedDeckHandle(data[0]._id);
                 this.state.SelectedDeck = data[0]._id;
@@ -65,7 +65,7 @@ export default class DecksNamesDecksDataList extends React.Component {
     }
 
     componentDidMount(){
-        this.getNewList(this.props.DecksNames_id);
+        this.getNewList();
     }
 
     render(){

@@ -20,7 +20,7 @@ export default class AddEvent extends React.Component{
         return (
             <div >
                 <SubmitDeck />
-                <CreateEvent />
+                <CreateEvent LGS={this.props.LGS}/>
             </div>
         )
     }

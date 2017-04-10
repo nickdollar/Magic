@@ -3,8 +3,8 @@ Meteor.methods({
         global[collection].update(document, {$set : document}, {upsert : true});
         return true;
     },
-    getLastTwenty(format){
-         return MetaNewest.find({format : format, type : "lastTwenty"}, {limit : 1}).fetch()[0];
+    getLastTwenty(Formats_id){
+         return MetaNewest.find({Formats_id : Formats_id, type : "lastTwenty"}, {limit : 1}).fetch()[0];
     }
 })
 

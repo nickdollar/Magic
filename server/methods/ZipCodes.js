@@ -10,19 +10,19 @@ Meteor.methods({
 
 
 checkIfZipNeedsFixing = ()=>{
-    console.log("START: checkIfNeedNewZip" )
+    logFunctionsStart("checkIfNeedNewZip" )
     var fs = Npm.require('fs');
 
     var data =  Assets.getText("zipCodes.txt");
 
     var lines = data.split('\n');
-    console.log("   END: checkIfZipNeedsFixing")
+    logFunctionsEnd("checkIfZipNeedsFixing")
 
     return lines.length - 1;
 }
 
 makeZipCollection = function(){
-    console.log("START: makeZipCollection")
+    logFunctionsStart("makeZipCollection")
     ZipCodes.remove({});
     var fs = Npm.require('fs');
 
@@ -34,5 +34,5 @@ makeZipCollection = function(){
         var line  = {ZIP : parseInt(values[0]), LAT : parseFloat(values[1]),LNG : parseFloat(values[2])}
         ZipCodes.insert(line);
     }
-    console.log("   END: makeZipCollection");
+    logFunctionsEnd("makeZipCollection");
 }

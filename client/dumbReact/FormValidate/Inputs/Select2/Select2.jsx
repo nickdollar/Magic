@@ -41,7 +41,6 @@ export default class LGSInput extends React.Component{
 
     componentDidMount() {
         this.props.register(this);
-
         $(this.refs["input"]).select2({
             placeholder: 'Select an option'
         }).on("change", (e)=>{
@@ -51,7 +50,6 @@ export default class LGSInput extends React.Component{
             }
             this.state.clearInput = false
         });
-
     }
 
     shouldComponentUpdate(nextProps, nextStates){
@@ -62,7 +60,6 @@ export default class LGSInput extends React.Component{
     }
 
     render() {
-
         return (
             <div className="form-group">
                 <label> {this.props.title} </label>

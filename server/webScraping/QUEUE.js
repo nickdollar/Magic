@@ -11,7 +11,7 @@ class httpQueue {
         this.queue.push({func, args, wait});
 
         if(!this.running){
-            console.log(`START: httpQueue`)
+            logFunctionsStart(`httpQueue`);
             this.timer = new Date();
             this.dequeue()
         }
@@ -22,7 +22,7 @@ class httpQueue {
         this.running = this.queue.shift();
 
         if(!this.running){
-            console.log("   STOP: httpQueue");
+            logFunctionsEnd("httpQueue");
             return
         }
         Meteor.bindEnvironment(this.running.func(this.running.args))

@@ -14,15 +14,15 @@ export default class Meta extends React.Component {
             <div className="MetaComponent">
                     <div className="col-xs-8">
                         <div className="row">
-                            <MetaTable format={this.props.format} />
+                            <MetaTable Formats_id={this.props.Formats_id} />
                         </div>
                     </div>
                     <div className="col-xs-4">
                         <div className="row">
-                            <MetaCards format={this.props.format} />
+                            <MetaCards Formats_id={this.props.Formats_id} />
                         </div>
                         <div className="row">
-                            <MetaNews format={this.props.format} />
+                            <MetaNews Formats_id={this.props.Formats_id} />
                         </div>
                     </div>
             </div>

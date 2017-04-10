@@ -1,7 +1,7 @@
-getTotalMetaCardsMainSideboard = function({format, options, LGS_ids}){
+getTotalMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
+        {$project : {"Formats_id" : 1}},
+        {$match : {Formats_id : Formats_id}},
         {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
         {$unwind : "$DecksNames"},
         {$project : {DecksNames_id : "$DecksNames._id"}},
@@ -36,10 +36,10 @@ getTotalMetaCardsMainSideboard = function({format, options, LGS_ids}){
     return DecksArchetypesMeta.length;
 };
 
-getMetaCardsMainSideboard = function({format, options, LGS_ids}){
+getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
+        {$project : {"Formats_id" : 1}},
+        {$match : {Formats_id : Formats_id}},
         {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
         {$unwind : "$DecksNames"},
         {$project : {DecksNames_id : "$DecksNames._id"}},

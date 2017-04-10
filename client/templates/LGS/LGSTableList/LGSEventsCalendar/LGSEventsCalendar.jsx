@@ -177,13 +177,9 @@ export default class LGSEventsCalendar extends React.Component {
                         />
 
                         <Radio
-                            objectName={"format"}
+                            objectName={"Formats_id"}
                             title="Format"
-                            opts={[ {value : "modern", text : "modern"},
-                                    {value : "standard", text : "standard"},
-                                    {value : "legacy", text : "legacy"},
-                                    {value : "vintage", text : "vintage"}]
-                            }
+                            opts={getFormatsForForm()}
                             errorMessage="Format is Missing"
                             required={true}
                         />
@@ -250,3 +246,10 @@ function formatDate(date) {
     return hours + ":" + min + " " + AMPM;
 }
 
+
+
+getFormatsForForm = ()=>{
+    return Formats.find({active : 1}).map(format=>{
+        return Object.assign(format, {value : format._id, text : format.name});
+    })
+}

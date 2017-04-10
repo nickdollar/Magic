@@ -77,7 +77,6 @@ export default class CardNamesCall extends React.Component {
     }
 
     onChange = (event, { newValue , method}) =>{
-        console.log(method);
         this.props.typedCard(newValue, method);
         this.setState({
             value: newValue

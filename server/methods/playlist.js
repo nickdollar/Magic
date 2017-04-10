@@ -29,7 +29,6 @@ Meteor.methods({
         var file = Images.insert(playListInformation.thumbnail, function (err, fileObj) {
         });
         if (DecksNamesPlaylists.find({playlistId: playListInformation.playlistId}, {limit: 1}).count()) {
-            console.log("Playlist already exists");
             return false;
         }
 
@@ -46,7 +45,6 @@ Meteor.methods({
             likeCount: 0
         });
         return true;
-        console.log("Done insert new playlist");
     },
 })
 

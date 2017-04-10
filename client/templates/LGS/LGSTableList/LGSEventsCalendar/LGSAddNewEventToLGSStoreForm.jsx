@@ -29,8 +29,6 @@ class LGSAddNewEventToLGSStoreForm extends React.Component{
             }
         });
 
-
-
         
         if(validForm) {
             var form = {};

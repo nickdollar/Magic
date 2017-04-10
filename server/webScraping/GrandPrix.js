@@ -10,7 +10,7 @@ var monthValues = { jan : 0, january : 0, feb : 1, february : 1, mar : 2, march 
 
 //Download Events And Decks
 getGpEventsAndDecks = ()=>{
-    console.log("START: getGpEventsProTourNew");
+    logFunctionsStart("getGpEventsProTourNew");
     Meteor.http.get("http://magic.wizards.com/en/events/coverage", (err, response)=>{
         if(response.statusCode == 200) {
             var $GPsPage = cheerio.load(response.content);
@@ -26,14 +26,16 @@ getGpEventsAndDecks = ()=>{
                     var url = $GPsPage(gpsLink[i]).attr("href");
                     var completedURL = `http://magic.wizards.com${url}`;
 
-                    Events.update({  date : date, EventsTypes_id: eventType._id, format : infoMatch[5].toLowerCase(), url : completedURL},
+                    var formatQuery = Formats.findOne({names : {$regex : infoMatch[5], $options : "i"}})
+
+                    Events.update({  date : date, EventsTypes_id: eventType._id, Formats_id : formatQuery._id, url : completedURL},
                         {
-                            $setOnInsert : { date : date, EventsTypes_id: eventType._id,format : infoMatch[5].toLowerCase(), state : 'created', url : completedURL}
+                            $setOnInsert : { date : date, EventsTypes_id: eventType._id,Formats_id : formatQuery._id, state : 'created', url : completedURL}
                         },
                         {
                             upsert : true
                         })
-                    var event = Events.findOne({date : date, EventsTypes_id: eventType._id, format : infoMatch[5].toLowerCase(), url : completedURL});
+                    var event = Events.findOne({date : date, EventsTypes_id: eventType._id, Formats_id : formatQuery._id, url : completedURL});
                     if(event.state != "created"){
                         continue;
                     };
@@ -45,7 +47,7 @@ getGpEventsAndDecks = ()=>{
 }
 
 getGpEventsAndDecksHTTPRequest = ({event})=>{
-    console.log("START: getGpEventsProTourNewEachEvent");
+    logFunctionsStart("getGpEventsProTourNewEachEvent");
     Meteor.http.get(event.url, (err, response)=>{
         if(response.statusCode == 200) {
             var $GPPage = cheerio.load(response.content);
@@ -81,7 +83,7 @@ getGpEventsAndDecksHTTPRequest = ({event})=>{
 }
 
 getGPDecksHTTPRequest = ({url, event})=>{
-    console.log("START: getGPDecks");
+    logFunctionsStart("getGPDecks");
     Meteor.http.get(url, (err, response)=> {
         if(response.statusCode == 200) {
             var $DecksPages = cheerio.load(response.content);
@@ -104,8 +106,6 @@ getGPDecksHTTPRequest = ({url, event})=>{
                 }else{
                     Errors.insert({Events_id : event._id, type : "no regex match", id : player, description : information})
                 }
-
-
                 var main = [];
                 var sideboard = [];
                 var mainCards = $DecksPages(decks[i]).find('.sorted-by-overview-container .row');
@@ -130,7 +130,7 @@ getGPDecksHTTPRequest = ({url, event})=>{
                     date : event.date,
                     EventsTypes_id : event.EventsTypes_id,
                     player : player,
-                    format : event.format,
+                    Formats_id : event.Formats_id,
                     main : main,
                     sideboard : sideboard,
                     state : "scraped"
@@ -139,7 +139,6 @@ getGPDecksHTTPRequest = ({url, event})=>{
                 if(position){
                     data = Object.assign(data, {position : parseInt(position[1])})
                 }
-
                 DecksData.insert(data);
             }
         }
@@ -150,7 +149,7 @@ getGPDecksHTTPRequest = ({url, event})=>{
 
 getGPPosition = ()=> {
     var eventType = EventsTypes.find({names: {$regex: "GP", $options: "i"}}).fetch()[0];
-    var events = Events.find({EventsTypes_id: eventType._id}).fetch();
+    var events = Events.find({EventsTypes_id: eventType._id, state : "finalStanding"}).fetch();
     for (var i = 0; i < events.length; i++) {
         webScrapingQueue.add({func : getGPPositionHTTPRequest, args:{event : events[i]}, wait : httpRequestTime})
     }
@@ -203,9 +202,11 @@ getGPPositionHTTPRequest = ({event})=>{
                 Errors.insert({Events_id : event._id, type : "missing position", id : decksDataWithoutId, description : ""})
             }
 
+            var decksQty = DecksData.find({Events_id : event._id}).count();
+
             Events.update({_id : event._id},
                 {
-                    $set : {state : "decks"}
+                    $set : {state : "decks", decksQty : decksQty}
                 })
         }
     })

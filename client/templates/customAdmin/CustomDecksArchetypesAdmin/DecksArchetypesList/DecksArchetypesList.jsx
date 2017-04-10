@@ -19,11 +19,8 @@ export default class DecksNamesList extends React.Component {
                     />
                     <Radio initialValue = {row.format}
                            title="Format"
-                           objectName="format"
-                           opts={[{value : "standard", text : "Standard"},
-                               {value : "modern", text : "Modern"},
-                               {value : "vintage", text : "Vintage"},
-                               {value : "legacy", text : "Legacy"}, ]}
+                           objectName="Formats_id"
+                           opts={getFormatsForForm()}
                     />
                     <Radio initialValue = {row.type}
                            title="Type"
@@ -72,7 +69,7 @@ export default class DecksNamesList extends React.Component {
                 <BootstrapTable {...options}>
                     <TableHeaderColumn isKey dataField={"_id"} dataSort>_id</TableHeaderColumn>
                     <TableHeaderColumn dataField={"name"} dataSort >Name</TableHeaderColumn>
-                    <TableHeaderColumn dataField={"format"}>format</TableHeaderColumn>
+                    <TableHeaderColumn dataField={"Formats_id"}>format</TableHeaderColumn>
                     <TableHeaderColumn dataField={"type"}>Type</TableHeaderColumn>
                     <TableHeaderColumn width="50px" dataField={"_id"} dataFormat={this.removeButton.bind(this)}>X</TableHeaderColumn>
                 </BootstrapTable>

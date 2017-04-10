@@ -3,13 +3,13 @@ Meteor.methods({
 })
 
 createFormats = ()=>{
-    console.log("START: createFormats");
+    logFunctionsStart("createFormats");
     var formats =
         [
             {
-                _id : "std",
+                _id : "sta",
                 name : "Standard",
-                names : ["std", "standard"],
+                names : ["sta", "standard"],
                 banned :[],
                 types : [
                     {
@@ -27,7 +27,43 @@ createFormats = ()=>{
                 _id : "mod",
                 name : "Modern",
                 names : ["mod", "modern"],
-                banned :[],
+                banned :[
+                    "Ancient Den",
+                    "Birthing Pod",
+                    "Blazing Shoal",
+                    "Bloodbraid Elf",
+                    "Chrome Mox",
+                    "Cloudpost",
+                    "Dark Depths",
+                    "Deathrite Shaman",
+                    "Dig Through Time",
+                    "Dread Return",
+                    "Eye of Ugin",
+                    "Gitaxian Probe",
+                    "Glimpse of Nature",
+                    "Golgari Grave-Troll",
+                    "Great Furnace",
+                    "Green Sun's Zenith",
+                    "Hypergenesis",
+                    "Jace, the Mind Sculptor",
+                    "Mental Misstep",
+                    "Ponder",
+                    "Preordain",
+                    "Punishing Fire",
+                    "Rite of Flame",
+                    "Seat of the Synod",
+                    "Second Sunrise",
+                    "Seething Song",
+                    "Sensei's Divining Top",
+                    "Skullclamp",
+                    "Splinter Twin",
+                    "Stoneforge Mystic",
+                    "Summer Bloom",
+                    "Treasure Cruise",
+                    "Tree of Tales",
+                    "Umezawa's Jitte",
+                    "Vault of Whispers",
+                ],
                 types : [
                     {name : "main", qty : {min : 60}},
                     {name : "sideboard", qty : {max : 15}}
@@ -53,9 +89,9 @@ createFormats = ()=>{
                 ],
                 active : 1},
             {
-                _id : "vnt",
+                _id : "vin",
                 name : "Vintage",
-                names : ["vnt", "vintage"],
+                names : ["vin", "vintage"],
                 banned :[],
                 types : [
                     {
@@ -110,5 +146,5 @@ createFormats = ()=>{
     formats.forEach((format)=>{
         Formats.insert(format);
     })
-    console.log("   END: createFormats");
+    logFunctionsEnd("createFormats");
 }

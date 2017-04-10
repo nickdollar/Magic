@@ -7,8 +7,6 @@ export default class DecksCardsList extends React.Component {
     }
 
     render(){
-        console.log(this.props);
-
         var percent = 100/Object.keys(this.props.typesSeparated.typesSeparated).length;
         var result = [];
         for(var key in this.props.typesSeparated.typesSeparated){

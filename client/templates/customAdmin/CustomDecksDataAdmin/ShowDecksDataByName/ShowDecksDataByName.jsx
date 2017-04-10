@@ -47,6 +47,8 @@ export default class ShowDecksDataByName extends React.Component {
         this.setState({showModal : true, DecksData_id : DecksData_id, Formats_id : this.props.Formats_id});
     }
 
+
+
     render(){
         return(
             <div className="ShowDecksDataByNameComponent">
@@ -54,7 +56,7 @@ export default class ShowDecksDataByName extends React.Component {
                 <div>
                     <select className="js-decksNamesList" style={{width : "100%"}}>
                         <option></option>
-                        {this.state.decksNamesList.map((deckName)=>{
+                        {DecksNames.find({Formats_id : this.props.Formats_id}).map((deckName)=>{
                             return <option key={deckName._id} value={deckName._id}>{deckName.name}</option>
                         })}
                     </select>

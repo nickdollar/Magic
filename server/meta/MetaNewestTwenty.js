@@ -1,22 +1,21 @@
-createMetaNewThings = function(format){
-    console.log("createMetaNewThings");
+createMetaNewThings = function(Formats_id){
+    logFunctionsStart("createMetaNewThings");
 
-    MetaNewest.remove({type : "lastTwenty", format : format});
+    MetaNewest.remove({type : "lastTwenty", Formats_id : Formats_id});
 
     var metaNewThingsObj = {};
         metaNewThingsObj.type = "lastTwenty";
-        metaNewThingsObj.format = format;
-        metaNewThingsObj.newestDecks = createMetaNewDecks(format);
-        metaNewThingsObj.newestArchetypes = createMetaArchetypesDecks(format);
-        metaNewThingsObj.newestCards = createMetaNewCards(format);
-
+        metaNewThingsObj.Formats_id = Formats_id;
+        metaNewThingsObj.newestDecks = createMetaNewDecks(Formats_id);
+        metaNewThingsObj.newestArchetypes = createMetaArchetypesDecks(Formats_id);
+        metaNewThingsObj.newestCards = createMetaNewCards(Formats_id);
 
     MetaNewest.insert(metaNewThingsObj);
-    console.log("end");
+    logFunctionsEnd("end");
 }
 
 createMetaNewThingsDaysAllFormats = function(){
-    console.log("createMetaNewThingsDays");
+    logFunctionsStart("createMetaNewThingsDaysAllFormats");
 
     MetaNewest.remove({type : "lastDays"});
 
@@ -27,21 +26,21 @@ createMetaNewThingsDaysAllFormats = function(){
         metaNewThingsObj.newestCards = createMetaNewCardsLatestDaysAllFormats(14);
 
     MetaNewest.insert(metaNewThingsObj);
-    console.log("end");
+    logFunctionsEnd(createMetaNewThingsDaysAllFormats);
 }
 
-createMetaNewDecks = function(format){
+createMetaNewDecks = function(Formats_id){
     var newestDecks = DecksData.aggregate(
         [
             {
                 $match : {
-                    DecksNames_id : {$exists : 1}, format : format
+                    DecksNames_id : {$exists : 1}, Formats_id : Formats_id
                 }
             },
             {
                 $group : {
                     _id : "$DecksNames_id",
-                    format : {$first : "$format"},
+                    Formats_id : {$first : "$Formats_id"},
                     DecksData_id : {$first : "$_id"},
                     Events_id : {$first : "$Events_id"},
                     date : {
@@ -60,7 +59,7 @@ createMetaNewDecks = function(format){
             {
                 $project : {
                     _id : "$_id",
-                    format : "$format",
+                    Formats_id : "$Formats_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
                     date : "$date",
@@ -73,12 +72,12 @@ createMetaNewDecks = function(format){
     return newestDecks;
 }
 
-createMetaArchetypesDecks = function(format){
+createMetaArchetypesDecks = function(Formats_id){
     var newestArchetypes = DecksData.aggregate(
         [
             {
                 $match : {
-                    format : format,
+                    Formats_id : Formats_id,
                 }
             },
             {
@@ -89,7 +88,7 @@ createMetaArchetypesDecks = function(format){
             {
                 $group : {
                     _id : {DecksNames_id : "$DecksNames_id"},
-                    format : {$first : "$format"},
+                    Formats_id : {$first : "$Formats_id"},
                     DecksData_id : {$first : "$_id"},
                     Events_id : {$first : "$Events_id"},
                     date : {$min : "$date"}
@@ -109,7 +108,7 @@ createMetaArchetypesDecks = function(format){
             {
                 $group : {
                     _id : {DecksArchetypes_id : "$DecksNames.DecksArchetypes_id"},
-                    format : {$first : "$format"},
+                    Formats_id : {$first : "$Formats_id"},
                     DecksNames_id : {$first : "$DecksNames._id"},
                     DecksData_id : {$first : "$DecksData_id"},
                     Events_id : {$first : "$Events_id"},
@@ -127,7 +126,7 @@ createMetaArchetypesDecks = function(format){
             {
                 $project : {
                     _id : "$_id.DecksArchetypes_id",
-                    format : "$format",
+                    Formats_id : "Formats_id",
                     DecksNames_id : "$DecksNames_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
@@ -142,12 +141,12 @@ createMetaArchetypesDecks = function(format){
 }
 
 
-createMetaNewCards = function(format){
+createMetaNewCards = function(Formats_id){
     var newestCards = DecksData.aggregate(
         [
             {
                 $match : {
-                    format : format,
+                    Formats_id : Formats_id,
                 }
             },
             { $project :
@@ -161,7 +160,7 @@ createMetaNewCards = function(format){
                                     as: "el",
                                     in : {
                                         name : "$$el.name",
-                                        format : "$format",
+                                        Formats_id : "$Formats_id",
                                         class : {"$const" : "main"},
                                         date : "$date",
                                         DecksData_id : "$_id",
@@ -175,7 +174,7 @@ createMetaNewCards = function(format){
                                     as: "el",
                                     in : {
                                         name : "$$el.name",
-                                        format : "$format",
+                                        Formats_id : "$Formats_id",
                                         class : {"$const" : "sideboard"},
                                         date : "$date",
                                         DecksData_id : "$_id",
@@ -194,7 +193,7 @@ createMetaNewCards = function(format){
             {$group:
             {
                 _id : "$cards.name",
-                format : {$first : "$cards.format"},
+                Formats_id : {$first : "$cards.Formats_id"},
                 DecksData_id : {$first : "$cards.DecksData_id"},
                 Events_id : {$first : "$cards.Events_id"},
                 date : {$min : "$cards.date"}
@@ -209,7 +208,7 @@ createMetaNewCards = function(format){
             {
                 $project : {
                     _id : "$_id",
-                    format : "$format",
+                    Formats_id : "$Formats_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
                     date : "$date",
@@ -235,7 +234,7 @@ createMetaNewDecksLatestDaysAllFormats = function(days){
             },
             {
                 $group : {
-                    _id : {DecksNames_id : "$DecksNames_id", format : "$format"},
+                    _id : {DecksNames_id : "$DecksNames_id", Formats_id : "$Formats_id"},
                     DecksData_id : {$first : "$_id"},
                     Events_id : {$first : "$Events_id"},
                     date : {
@@ -255,7 +254,7 @@ createMetaNewDecksLatestDaysAllFormats = function(days){
             {
                 $project : {
                     _id : "$_id.DecksNames_id",
-                    format : "$_id.format",
+                    Formats_id : "$_id.Formats_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
                     date : "$date",
@@ -281,7 +280,7 @@ createMetaArchetypesDecksLatestDaysAllFormats = function(days){
             {
                 $group : {
                     _id : {DecksNames_id : "$DecksNames_id"},
-                    format : {$first : "$format"},
+                    Formats_id : {$first : "$Formats_id"},
                     DecksData_id : {$first : "$_id"},
                     Events_id : {$first : "$Events_id"},
                     date : {$min : "$date"}
@@ -301,7 +300,7 @@ createMetaArchetypesDecksLatestDaysAllFormats = function(days){
             {
                 $group : {
                     _id : {DecksArchetypes_id : "$DecksNames.DecksArchetypes_id"},
-                    format : {$first : "$format"},
+                    Formats_id : {$first : "$Formats_id"},
                     DecksNames_id : {$first : "$DecksNames._id"},
                     DecksData_id : {$first : "$DecksData_id"},
                     Events_id : {$first : "$Events_id"},
@@ -319,7 +318,7 @@ createMetaArchetypesDecksLatestDaysAllFormats = function(days){
             {
                 $project : {
                     _id : "$_id.DecksArchetypes_id",
-                    format : "$format",
+                    Formats_id : "$Formats_id",
                     DecksNames_id : "$DecksNames_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
@@ -352,7 +351,7 @@ createMetaNewCardsLatestDaysAllFormats = function(days){
                                     as: "el",
                                     in : {
                                         name : "$$el.name",
-                                        format : "$format",
+                                        Formats_id : "$Formats_id",
                                         class : {"$const" : "main"},
                                         date : "$date",
                                         DecksData_id : "$_id",
@@ -366,7 +365,7 @@ createMetaNewCardsLatestDaysAllFormats = function(days){
                                     as: "el",
                                     in : {
                                         name : "$$el.name",
-                                        format : "$format",
+                                        Formats_id : "$Formats_id",
                                         class : {"$const" : "sideboard"},
                                         date : "$date",
                                         DecksData_id : "$_id",
@@ -384,7 +383,7 @@ createMetaNewCardsLatestDaysAllFormats = function(days){
             }},
             {$group:
             {
-                _id : {name : "$cards.name", format : "$cards.format"},
+                _id : {name : "$cards.name", Formats_id : "$cards.Formats_id"},
                 DecksData_id : {$first : "$cards.DecksData_id"},
                 Events_id : {$first : "$cards.Events_id"},
                 date : {$min : "$cards.date"}

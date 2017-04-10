@@ -5,7 +5,7 @@ Meteor.methods({
 })
 
 createEventsTypes = ()=>{
-    console.log("START: createEventsTypes");
+    logFunctionsStart("createEventsTypes");
 
     EventsTypes.remove({});
 
@@ -195,5 +195,5 @@ createEventsTypes = ()=>{
     for(var i = 0; i < eventsArray.length; i++) {
         EventsTypes.insert(eventsArray[i]);
     }
-    console.log("   END: createEventsTypes");
+    logFunctionsEnd("createEventsTypes");
 }

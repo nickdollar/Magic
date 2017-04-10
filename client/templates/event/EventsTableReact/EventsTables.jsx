@@ -1,5 +1,4 @@
 import React from 'react' ;
-import EventsTableContainer from './EventsTable/EventsTableContainer.jsx' ;
 import EventsTable from './EventsTableMethod/EventsTable.jsx';
 
 
@@ -9,25 +8,29 @@ export default class EventsTables extends React.Component {
         this.state = {eventsSmall : [], eventsBig : []};
     }
 
-    getEventsSmall(){
+    getEventsSmall(Formats_id){
         var LGS_ids = LGS.find({}).map(lgs => lgs._id);
-        Meteor.call("eventsSmall", {format : this.props.format, LGS_ids : LGS_ids}, (err, data)=>{
-            this.setState({eventsSmall : data});
+        Meteor.call("eventsSmall", {Formats_id : Formats_id, LGS_ids : LGS_ids}, (err, response)=>{
+            this.setState({eventsSmall : response});
         })
     }
 
-    getEventsBig(){
+    getEventsBig(Formats_id){
         var LGS_ids = LGS.find({}).map(lgs => lgs._id);
-        Meteor.call("eventsBig", {format : this.props.format, LGS_ids : LGS_ids}, (err, data)=>{
-            this.setState({eventsBig : data});
+        Meteor.call("eventsBig", {Formats_id : Formats_id, LGS_ids : LGS_ids}, (err, response)=>{
+            this.setState({eventsBig : response});
         })
     }
 
     componentDidMount(){
-        this.getEventsSmall();
-        this.getEventsBig();
+        this.getEventsSmall(this.props.Formats_id);
+        this.getEventsBig(this.props.Formats_id);
     }
 
+    componentWillReceiveProps(nextProps){
+        this.getEventsSmall(nextProps.Formats_id);
+        this.getEventsBig(nextProps.Formats_id);
+    }
     render(){
         return(
             <div className="EventsTablesComponent">

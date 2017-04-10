@@ -9,7 +9,8 @@ export default class DecksNamesFixes extends React.Component {
     render(){
         return(
             <div className="DecksNamesFixesComponent">
-                <button onClick={Meteor.call("formatToFormats_id")}>formatToFormats_id</button>
+                <button onClick={()=>Meteor.call("formatToFormats_id")}>formatToFormats_id</button>
+                <button onClick={()=>Meteor.call("DecksNamesCreateLinkNameMethod")}>DecksNamesCreateLinkNameMethod</button>
             </div>
         );
     }

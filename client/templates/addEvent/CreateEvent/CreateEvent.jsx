@@ -74,7 +74,9 @@ class CreateEvent extends React.Component{
                     {this.state.createdEventInfo ? <CreatedEventInfoContainer closeCreatedEventInfo = {this.closeCreatedEventInfo.bind(this)}
                                                                               eventInfo={this.state.eventInfo}
                                                                               resetForm={this.resetForm.bind(this)}/>
-                        : <CreateEventForm receiveCreatedEventInfo={this.receiveCreatedEventInfo.bind(this)}/>}
+                        : <CreateEventForm receiveCreatedEventInfo={this.receiveCreatedEventInfo.bind(this)}
+                                           LGS={this.props.LGS}
+                        />}
                 </div>
             </div>
         )

@@ -102,19 +102,24 @@ Meteor.methods({
         })
     },
     eventsSmall({Formats_id, LGS_ids}){
-        console.log(Formats_id, LGS_ids);
         var eventsTypes_ids = EventsTypes.find({size : 0}).map(type => type._id);
-        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
-            {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
-            {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
-        ]}).fetch();
+        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]},
+            $or : [
+                {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
+                {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
+            ]
+        }).fetch();
     },
     eventsBig({Formats_id, LGS_ids}){
         var eventsTypes_ids = EventsTypes.find({size : 1}).map(type => type._id);
-        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
+        var events = Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
             {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
             {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
         ]}).fetch();
+        return events
+    },
+    getEventsStateQty({state, Formats_id, page, limit}){
+        return DecksData.find({state : state, Formats_id : Formats_id}, {limit : limit, skip : page*limit, fields : {Formats_id : 1, state : 1, colors : 1}}).fetch();
     }
 })
 
@@ -135,7 +140,7 @@ Meteor.methods({
 })
 
 fixEventsStandard = function(){
-    console.log("START: fixEventsStandard");
+    logFunctionsStart("fixEventsStandard");
 
     Events.update({Formats_id : "oldStandard"},
         {
@@ -200,13 +205,9 @@ fixEventsStandard = function(){
             return obj.name;
         });
 
-        // if(_.intersection(cardsFound2, cardsFound).length){
-        //     console.log(events[i]._id);
-        // }
         var totalDifference = Math.abs(cardsFound.length - cardsFound2.length);
 
         if(_.intersection(cardsFound2, cardsFound).length < 5){
-            console.log("OLD STANDARD");
             Events.update({_id : events[i]._id},
                           {
                               $set : {
@@ -225,11 +226,8 @@ fixEventsStandard = function(){
             )
         }
     }
-    console.log("   END: fixEventsStandard");
+    logFunctionsEnd("fixEventsStandard");
 }
-
-
-
 
 standardSets =
     [   {name : "BFZ", release : new Date(2015, 9, 2)},

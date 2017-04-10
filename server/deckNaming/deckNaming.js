@@ -30,20 +30,6 @@ removeNameFromDeck = function(DecksData_id){
 
 };
 
-createANewDeckName = function(deckName, format){
-    if(deckName == null || format == null){
-        return;
-    }
-    deckName = deckName.toLowerCase();
-    DecksNames.update({name : deckName, format : format},
-        {
-            $setOnInsert : { name: deckName, format: format, decks : 0, colors : {B : 0, C: 0, G : 0, R: 0, U : 0, W : 0}}
-        },
-        { upsert : true }
-    );
-};
-
-
 addNameToDeck = function(DecksData_id, DecksNames_id){
     var deckData = DecksData.find({_id : DecksData_id}, {limit : 1}).fetch()[0];
     var deckName = DecksNames.find({_id : DecksNames_id}, {limit : 1}).fetch()[0];
@@ -128,13 +114,13 @@ findDeckComparison = function(_id){
 
     return [];
 };
-addArchetype = function(archetypeName, format, type){
+addArchetype = function(archetypeName, Formats_id, type){
 
         archetypeName = archetypeName.toLowerCase();
         type = type.toLowerCase();
-        DecksArchetypes.update({name : archetypeName, format : format, type : type},
+        DecksArchetypes.update({name : archetypeName, Formats_id : Formats_id, type : type},
         {
-            $setOnInsert : {name : archetypeName, format : format, type : type}
+            $setOnInsert : {name : archetypeName, Formats_id : Formats_id, type : type}
         },
         {upsert : true}
     );

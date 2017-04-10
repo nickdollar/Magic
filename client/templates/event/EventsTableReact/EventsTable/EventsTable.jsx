@@ -9,9 +9,7 @@ export default class EventsTable extends React.Component {
     }
 
     event(data, row){
-        console.log(data);
         var eventType = EventsTypes.findOne({_id : data});
-        console.log(eventType);
         if(row.type == "lgs"){
             var LGSquery = LGS.findOne({_id : row.LGS_id});
             return <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row._id})}>{row.name} - {`${LGSquery.name} (${LGSquery.location.city ? LGSquery.location.city : LGSquery.location.state})`}</a>
@@ -21,10 +19,10 @@ export default class EventsTable extends React.Component {
     }
 
     format(data, row){
-        return data.toTitleCase();
+        return Formats.findOne({_id : data.Formats_id}).short();
     }
 
-    date(data, format){
+    date(data){
         return Moment(data).format("MM/DD");
     }
     shouldComponentUpdate(nextProps){
@@ -54,7 +52,7 @@ export default class EventsTable extends React.Component {
                 <BootstrapTable {...tableOptions} height='256px'>
                     <TableHeaderColumn isKey dataField="_id" hidden dataFormat={this.event}></TableHeaderColumn>
                     <TableHeaderColumn width="220" dataField="EventsTypes_id" dataFormat={this.event}>Events</TableHeaderColumn>
-                    <TableHeaderColumn dataField="format" dataFormat={this.format}>Format</TableHeaderColumn>
+                    <TableHeaderColumn dataField="Formats_id" dataFormat={this.format}>Format</TableHeaderColumn>
                     <TableHeaderColumn dataAlign='center' dataField="decks">Decks</TableHeaderColumn>
                     <TableHeaderColumn dataAlign='center' dataField="date" dataFormat={this.date}>Date</TableHeaderColumn>
                 </BootstrapTable>

@@ -19,7 +19,6 @@ export default class DataHoursInput extends React.Component{
     }
 
     handleChange(dateString){
-        console.log(dateString);
         this.setState({outputValue : Moment(dateString).toDate()})
     }
 

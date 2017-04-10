@@ -17,17 +17,15 @@ export default class ValuesTable extends React.Component {
         }else{
             change = "downArrow";
         }
-        var archetypeName = DecksArchetypes.findOne({_id : row._id}).name;
+        var archetypeName = DecksArchetypes.findOne({_id : row._id});
 
         var position = row.positionChange;
         if(row.positionChange==999){
             position = "";
         }
-
-
         return  <div>
                     <span>
-                        <a href={"/decks/" + FlowRouter.getParam("format") + "/" + replaceTokenWithDash(archetypeName)}> { archetypeName }  </a>
+                        <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(archetypeName.Formats_id), DeckArchetype : archetypeName.link})}> { archetypeName.name }  </a>
                     </span>
             <div className="positionChange"><span> {position} </span><span className={change}></span></div>
         </div>
@@ -66,7 +64,6 @@ export default class ValuesTable extends React.Component {
 
         }
 
-        console.log(this.props);
         return(
             <div className="MetaTableValuesComponent">
                 <BootstrapTable {...options}>

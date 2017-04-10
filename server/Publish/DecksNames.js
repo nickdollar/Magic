@@ -1,65 +1,14 @@
-Meteor.publish("_temp3ReturnFromID", function(_id){
-    return DecksNames.find({_id : _id});
-});
-
-Meteor.publish("DecksNamesWithoutArchetype", function(){
-    return DecksNames.find({$or :[{DecksArchetypes_id : {$exists : false}}, {DecksArchetypes_id : null}]});
-});
-
-Meteor.publish("DecksNames_DecksArchetypes_id", function(DecksArchetypes_id){
-    return DecksNames.find({DecksArchetypes_id : DecksArchetypes_id});
-});
-
-Meteor.publish('DecksNamesById', function(DecksNames_id) {
-    return DecksNames.find({_id : DecksNames_id});
-});
-
 Meteor.publish("DecksNames", function(){
     return DecksNames.find({});
 });
 
-Meteor.publish("DecksNamesByFormat", function(format){
-    return DecksNames.find({format : format, DecksArchetypes_id : {$ne : null}});
+Meteor.publish("DecksNamesByFormat", function(Formats_id){
+    return DecksNames.find({Formats_id : Formats_id, DecksArchetypes_id : {$ne : null}});
 });
 
 
 Meteor.publish("DecksNamesGlobal", function(){
     return DecksNames.find({}, {fields : {DecksData : 0}});
-});
-
-Meteor.publish("DecksNamesFormatNotReactive", function(format){
-    return DecksNames.find({format : format, DecksArchetypes_id : {$ne : null}, decks : {$gt : 0}}, {reactive : false});
-});
-
-Meteor.publish("DecksNamesMain", function(){
-    return DecksNames.find({}, {fields : {name : 1, DecksArchetypes_id : 1}});
-});
-
-
-Meteor.publish('DecksNamesByArchetypeRegex', function(format, DecksArchetypes) {
-    var DecksArchetypesRegex = new RegExp("^" + DecksArchetypes.replace(/[-']/g, ".") + "$", "i");
-
-    var decksArchetypes = DecksNames.find({format : format, name : {$regex : DecksArchetypesRegex}}, {limit : 1}).map((deckArchetype)=>{
-        return deckArchetype._id
-    })
-
-    return DecksNames.find({DecksArchetypes_id : decksArchetypes});
-});
-
-Meteor.publish('deckSelectedSelectedName', function(format, name){
-    format = format.replace(/-/g, ".");
-    name = name.replace(/-/g, ".");
-    var nameRegex = new RegExp(name, "g");
-    return DecksNames.find({format : format, name : {$regex : nameRegex}});
-});
-
-Meteor.publish('DecksNamesByArchetypeNameRegex', function(format, archetypeName) {
-    var deckArchetype = DecksArchetypes.findOne({format : format, name : {$regex : new RegExp(archetypeName, "i")}});
-    return DecksNames.find({format : format, decks : {$gt : 0}, DecksArchetypes_id : deckArchetype._id, decks : {$gte : 0}});
-});
-
-Meteor.publish('DecksNamesFormatDecksArchetypes_idExistsNonReactive', function(format) {
-    return DecksNames.find({format : format, DecksArchetypes_id : {$exists : true}}, {fields : {name : 1, DecksArchetypes_id : 1, colors : 1, type : 1}, reactive : false});
 });
 
 Meteor.publish('returnDecksNamesFromEvents', function(Events_id) {
@@ -96,34 +45,4 @@ Meteor.publish('returnDecksNamesFromEvents', function(Events_id) {
     ]).forEach(function(obj){
         that.added("DecksNames", obj._id, obj)
     });
-});
-
-Meteor.publishComposite("deckNamesDecksDataCardsData", function(_id) {
-    return {
-        find: function () {
-            return DecksNames.find({_id}, {limit : 1});
-        },
-        children: [
-            {
-                find: function (decksNames) {
-                    return DecksData.find({DecksNames_id : decksNames._id}, {sort : {date : 1}, limit : 1});
-                },
-                children : [
-                    {
-                        find : function(decksData){
-                            var main = decksData.main.map(function(obj){
-                                return obj.name;
-                            });
-                            var sideboard = decksData.sideboard.map(function(obj){
-                                return obj.name;
-                            });
-                            var allCards = arrayUnique(main.concat(sideboard));
-
-                            return CardsData.find({name: {$in : allCards}});
-                        }
-                    }
-                ]
-            }
-        ]
-    }
 });

@@ -200,7 +200,6 @@ export default class Deck extends React.Component{
                         <div className="manaValue">
                             {
                                 getHTMLColors(card).map((mana)=>{
-                                    console.log(mana);
                                     return <div key={mana.key} className={"mana " + mana.mana}></div>
                                 })
                             }

@@ -1,5 +1,5 @@
 import React from 'react' ;
-import StateListContainer from "/client/dumbReact/StatesList/StateListContainer.jsx"
+import StateList from "/client/dumbReact/StatesList/StateList.jsx"
 import ListByState from "./ListByState/ListByState.jsx"
 
 export default class LGSEventsAdmin extends React.Component {
@@ -13,11 +13,9 @@ export default class LGSEventsAdmin extends React.Component {
         const state = ["created", "confirmed"];
         return(
             <div className="LGSEventsAdminComponent">
-                <StateListContainer collection="LGSEvents"
-                                    subscription="LGSEventsStatesList"
-                                    notState={[]}
-                                    states={state}
-                                    Formats_id={this.props.Formats_id}
+                <StateList Method="getLGSEventsStateQty"
+                           states={state}
+                           Formats_id={this.props.Formats_id}
                 />
 
 

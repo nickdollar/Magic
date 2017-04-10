@@ -137,7 +137,6 @@ export default class Collection extends React.Component {
     }
 
     updateCardsStartingWith(target){
-        console.log(target.value);
         this.state.cardsStartingWith = target.value;
     }
 

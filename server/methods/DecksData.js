@@ -27,7 +27,6 @@ Meteor.methods({
             }
         })
 
-        // console.log(deck);
         var message = "Deck Added";
         if(DecksData.find({Events_id : deck._id, player : deck.player}, {limit : 1}).count()){
             message = "Deck Updated"
@@ -159,15 +158,16 @@ Meteor.methods({
     removeDeckFromLGSEvent: function (DecksData_id) {
         DecksData.remove({_id : DecksData_id});
     },
-    giveNamesToAllDecksScrapedMethod({format}){
-        DecksData.find({format : format, state : "scraped"}).forEach(deck=>{
+    giveNamesToAllDecksScrapedMethod({Formats_id}){
+        logFunctionsStart("giveNamesToAllDecksScrapedMethod");
+        DecksData.find({Formats_id : Formats_id, state : "scraped"}).forEach(deck=>{
             giveNamesToAllDecksScraped({_id : deck._id});
-            // console.log(deck._id);
         });
+        logFunctionsEnd("giveNamesToAllDecksScrapedMethod");
     },
 
     recheckDeckWithWrongCardName(format){
-    console.log("START: recheckDeckWithWrongCardName");
+    logFunctionsStart("recheckDeckWithWrongCardName");
         var cardsWithWrongName = DecksData.aggregate([
             {
                 $match : {
@@ -239,7 +239,7 @@ Meteor.methods({
                 )
         })
 
-    console.log("   END: recheckDeckWithWrongCardName");
+    logFunctionsEnd("recheckDeckWithWrongCardName");
     },
     methodAddNameToDeck : function(data){
         removeNameFromDeck(data._id);
@@ -253,8 +253,8 @@ Meteor.methods({
             {multi : true}
         )
     },
-    getDecksListFromDeckName(DecksNames_id, format){
-        return DecksData.find({format : format, DecksNames_id : DecksNames_id}, {sort : {date : -1}, fields : {
+    getDecksListFromDeckName(DecksNames_id){
+        return DecksData.find({DecksNames_id : DecksNames_id}, {sort : {date : -1}, fields : {
             format : 0,
             totalMain : 0,
             main : 0,
@@ -280,31 +280,30 @@ Meteor.methods({
     getDecksDataBy_id(DecksData_id){
         return DecksData.findOne({_id : DecksData_id});
     },
-    bannedDeck(format){
-        console.log("START: bannedDeck");
+    bannedDeck(Formats_id){
+        logFunctionsStart("bannedDeck");
             DecksData.update(
-                    {format : format, $or :
+                    {Formats_id : Formats_id, $or :
                         [
-                            {"main.name" : {$in : bannedCard[format]}},
-                            {"sideboard.name" : {$in :  bannedCard[format]}}
+                            {"main.name" : {$in : bannedCard[Formats_id]}},
+                            {"sideboard.name" : {$in :  bannedCard[Formats_id]}}
                         ]
                     },
-                {$set : {format : `${format}Banned`}},
+                {$set : {format : `${Formats_id}Banned`}},
                 {
                     multi : true
                 }
             )
-        console.log("   END: bannedDeck");
+        logFunctionsEnd("bannedDeck");
     },
     getDecksDataFromDecksNames(DecksNames_id){
         return DecksData.find({DecksNames_id : DecksNames_id, format : { $ne : {$regex : /Banned$/}}}, {sort : {name : 1}}).fetch();
     },
-    getDecksDataFromArchetypes_idFormatCards(selectedCard, archetype, format){
-        var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
+    getDecksDataFromArchetypes_idFormatCards({selectedCards, DecksArchetypes_id}){
 
         var aggregation = DecksArchetypes.aggregate(
             [
-                {$match: {format: format, name : {$regex : DecksArchetypesRegex}}},
+                {$match: {_id : DecksArchetypes_id}},
                 {$lookup: {
                     "from" : "DecksNames",
                     "localField" : "_id",
@@ -312,14 +311,14 @@ Meteor.methods({
                     "as" : "DecksNames_id"
                 }},
                 {$unwind: {path : "$DecksNames_id"}},
-                {$group: {_id : "$_id", DecksNames_id : {$addToSet : "$DecksNames_id._id"}}},
+                {$group: {_id : "$_id", DecksNames_ids : {$addToSet : "$DecksNames_id._id"}}},
 
             ]
         );
 
-        if(selectedCard.length){
-            return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_id}, format: format, "main.name" : {$all : selectedCard}}, {fields : {
-                format : 0,
+        if(selectedCards.length){
+            return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_ids}, "main.name" : {$all : selectedCards}}, {fields : {
+                Formats_id : 0,
                 totalMain : 0,
                 main : 0,
                 totalSideboard : 0,
@@ -328,9 +327,8 @@ Meteor.methods({
                 state : 0
             }}).fetch();
         }
-
-        return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_id}, format: format}, {fields : {
-            format : 0,
+        return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_ids}}, {fields : {
+            Formats_id : 0,
             totalMain : 0,
             main : 0,
             totalSideboard : 0,
@@ -339,13 +337,13 @@ Meteor.methods({
             state : 0
         }}).fetch();
     },
-    getAllCardsFromDeckArchetype(selectedCard, archetype, format){
-        var DecksArchetypesRegex = new RegExp("^" + archetype.replace(/[-']/g, ".") + "$", "i");
-        if(selectedCard.length){
+    getAllCardsFromDeckArchetypeMethod({selectedCards, DecksArchetypes_id}){
+
+        if(selectedCards.length){
             var DecksArchetypesAggregation = DecksArchetypes.aggregate(
                 [
 
-                    {$match: {name : {$regex : DecksArchetypesRegex}, format : format}},
+                    {$match: {_id : DecksArchetypes_id}},
                     {$lookup: {
                         "from" : "DecksNames",
                         "localField" : "_id",
@@ -360,7 +358,7 @@ Meteor.methods({
                         "as" : "DecksData"
                     }},
                     {$unwind: {path : "$DecksData"}},
-                    {$match : {"DecksData.main.name" : {$all : selectedCard}}},
+                    {$match : {"DecksData.main.name" : {$all : selectedCards}}},
                     {$project: {_id : "$DecksData._id",name : {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}}}},
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
@@ -379,7 +377,7 @@ Meteor.methods({
             var DecksArchetypesAggregation = DecksArchetypes.aggregate(
                 [
 
-                    {$match: {name : {$regex : DecksArchetypesRegex}, format : format}},
+                    {$match: {_id : DecksArchetypes_id}},
                     {$lookup: {
                         "from" : "DecksNames",
                         "localField" : "_id",
@@ -409,22 +407,8 @@ Meteor.methods({
                 ]
             );
         }
-
         return DecksArchetypesAggregation;
-
-        // var deckShell = [];
-        // for(var i = 0; i< DecksArchetypesAggregation.length; i++){
-        //     deckShell = deckShell.concat(DecksArchetypesAggregation[i].cards).unique();
-        //     if(deckShell.length >= 6){
-        //         break;
-        //     }
-        // }
-
-
-
-
-
-    },
+   },
     getDecksDataWithCardsInformation({DecksData_id}){
             var deck = DecksData.aggregate(
                 [
@@ -485,11 +469,29 @@ Meteor.methods({
             );
 
         return deck[0];
+    },
+    getDecksDataStateQty({Formats_id}){
+        var decksDataAggregate = DecksData.aggregate(
+            [
+                {$match: {Formats_id : Formats_id}},
+                {$group: {_id : "$state", qty : {$sum : 1}}},
+            ]
+        );
+        return decksDataAggregate;
+    },
+    getDecksDataByState({state, Formats_id, limit, page}){
+        var decksDataAggregate = DecksData.aggregate(
+            [
+                {$match: {Formats_id : Formats_id}},
+                {$group: {_id : "$state", qty : {$sum : 1}}},
+            ]
+        );
+        return decksDataAggregate;
     }
 });
 
 bannedCard = {
-                modern : [
+                mod : [
                     "Ancient Den",
                     "Birthing Pod",
                     "Blazing Shoal",

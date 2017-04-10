@@ -1,14 +1,14 @@
 Meteor.methods({
     //CREATE NEW
     fixDecksNamesColorsAbbreviation: function () {
-        console.log("START: " + fixDecksNamesColorsAbbreviation);
+        logFunctionsStart("" + fixDecksNamesColorsAbbreviation);
         
         DecksNames.find({}).forEach(function(obj){
             var name = deckNameAndArchetypeFix(obj.name);
             DecksNames.update({_id : obj._id}, {$set : {name : name}});
         })
 
-        console.log("   END: " + fixDecksNamesColorsAbbreviation);
+        logFunctionsEnd("" + fixDecksNamesColorsAbbreviation);
 
     },
     addDeckName(data){
@@ -45,7 +45,7 @@ Meteor.methods({
         };
     },
     createDecksNamesShell(DecksNames_id){
-        // console.log("START: createDecksNamesShell");
+        // logFunctionsStart("createDecksNamesShell");
             var decksNamesQuery = DecksNames.findOne({_id : DecksNames_id});
 
             var DecksArchetypesAggregation = DecksNames.aggregate(
@@ -106,17 +106,17 @@ Meteor.methods({
             }else{
                 DecksNamesShells.remove({DecksNames_id : DecksNames_id})
             }
-        // console.log("   END: createDecksNamesShell");
+        // logFunctionsEnd("createDecksNamesShell");
     },
-    createDecksNamesShellsByFormat(format){
-        console.log("START: createDecksNamesShellsByFormat");
-            DecksNames.find({format : format}).forEach((decksNames)=>{
+    createDecksNamesShellsByFormat(Formats_id){
+        logFunctionsStart("createDecksNamesShellsByFormat");
+            DecksNames.find({Formats_id : Formats_id}).forEach((decksNames)=>{
                 Meteor.call("createDecksNamesShell", decksNames._id);
             })
-        console.log("   END: createDecksNamesShellsByFormat");
+        logFunctionsEnd("createDecksNamesShellsByFormat");
     },
     findDecksByDecksNamesShells(DecksNamesShells_id){
-        console.log("START: findDecksByDecksNamesShellsAll");
+        logFunctionsStart("findDecksByDecksNamesShellsAll");
             var DecksNamesShellsQuery = DecksNamesShells.findOne({_id : DecksNamesShells_id});
             var DecksDataQuery_ids = DecksData.find({
                     format : DecksNamesShellsQuery.format,
@@ -156,36 +156,48 @@ Meteor.methods({
                 CreateTheCardList(data.DecksNames_id);
             }
 
-        console.log("   END: findDecksByDecksNamesShellsAll");
+        logFunctionsEnd("findDecksByDecksNamesShellsAll");
     },
-    findDecksByDecksNamesShellsAll(format){
-        console.log("START: findDecksByDecksNamesShellsAll");
-            DecksNamesShells.find({format : format}).forEach((decksNamesShells)=>{
+    findDecksByDecksNamesShellsAll(Formats_id){
+        logFunctionsStart("findDecksByDecksNamesShellsAll");
+            DecksNamesShells.find({Formats_id : Formats_id}).forEach((decksNamesShells)=>{
                 Meteor.call("findDecksByDecksNamesShells", decksNamesShells._id);
             });
-        console.log("   END: findDecksByDecksNamesShellsAll");
+        logFunctionsEnd("findDecksByDecksNamesShellsAll");
     },
-    getDecksNamesByFormat(format){
-        return DecksNames.find({format : format}).fetch();
+    getDecksNamesByFormat(Formats_id){
+        return DecksNames.find({Formats_id : Formats_id}).fetch();
     },
     formatToFormats_id(){
-        console.log("START: formatToFormats_id")
-        Formats.find({}).map(format => {
-            var formatsRegex = [];
-            for (var i = 0; i < format.names.length; i++) {
-                formatsRegex[i] = new RegExp(format.names[i], "i");
-            }
-            DecksNames.update({format : {$in : formatsRegex}},
-                {
-                    $set : {Formats_id : format._id},
-                    $unset : {format : ""}
-                },
-                {
-                    multi : true
-                })
-        });
-        console.log("   END: formatToFormats_id")
-
+        logFunctionsStart("formatToFormats_id")
+            Formats.find({}).map(format => {
+                var formatsRegex = [];
+                for (var i = 0; i < format.names.length; i++) {
+                    formatsRegex[i] = new RegExp(format.names[i], "i");
+                }
+                DecksNames.update({format : {$in : formatsRegex}},
+                    {
+                        $set : {Formats_id : format._id},
+                        $unset : {format : ""}
+                    },
+                    {
+                        multi : true
+                    })
+            });
+        logFunctionsEnd("formatToFormats_id")
+    },
+    DecksNamesCreateLinkNameMethod(){
+        logFunctionsStart("DecksNamesCreateLinkNameMethod")
+            DecksNames.find({}).map(deckName => {
+                DecksNames.update({_id : deckName._id},
+                    {
+                        $set : { link: deckName.name.replace(/[^a-zA-Z0-9-_]/g, '')},
+                    },
+                    {
+                        multi : true
+                    }
+                )
+            });
+        logFunctionsEnd("DecksNamesCreateLinkNameMethod")
     }
 })
-

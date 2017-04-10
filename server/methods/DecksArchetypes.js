@@ -1,18 +1,18 @@
 Meteor.methods({
     //CREATE NEW
     fixArchetypesColorsAbbreviation: function () {
-        console.log("START: fixArchetypesColorsAbbreviation");
+        logFunctionsStart("fixArchetypesColorsAbbreviation");
 
         DecksArchetypes.find({}).forEach(function(obj){
             var name = deckNameAndArchetypeFix(obj.name);
             DecksArchetypes.update({_id : obj._id}, {$set : {name : name}});
         })
 
-        console.log("   END: fixArchetypesColorsAbbreviation");
+        logFunctionsEnd("fixArchetypesColorsAbbreviation");
 
     },
     addArchetype: function (form) {
-        console.log("START: addArchetype");
+        logFunctionsStart("addArchetype");
 
         form.name = form.name.toTitleCase();
 
@@ -24,7 +24,7 @@ Meteor.methods({
                 upsert : true
             })
 
-        console.log("   END: addArchetype");
+        logFunctionsEnd("addArchetype");
 
     },
     updateDeckArchetype(form){
@@ -58,7 +58,7 @@ Meteor.methods({
     },
 
     createShellArchetype(DecksArchetypes_id){
-        console.log("START: DecksArchetypes_id");
+        logFunctionsStart("DecksArchetypes_id");
         var DecksArchetypesAggregation = DecksArchetypes.aggregate(
             [
                 {$match: {_id : DecksArchetypes_id}},
@@ -153,17 +153,17 @@ Meteor.methods({
                 upsert : true
             }
         )
-        console.log("   END: DecksArchetypes_id");
+        logFunctionsEnd("DecksArchetypes_id");
     },
-    createArchetypesShellsForFormat(format){
-        console.log("START: createShellForFormat");
-        DecksArchetypes.find({format : format}).forEach((deckArchetype)=>{
+    createArchetypesShellsForFormat(Formats_id){
+        logFunctionsStart("createShellForFormat");
+        DecksArchetypes.find({Formats_id : Formats_id}).forEach((deckArchetype)=>{
             Meteor.call("createShellArchetype", deckArchetype._id);
         })
-        console.log("   END: createShellForFormat");
+        logFunctionsEnd("createShellForFormat");
     },
     DecksArchetypesformatToFormats_idMethod(){
-        console.log("START: DecksArchetypesformatToFormats_idMethod")
+        logFunctionsStart("DecksArchetypesformatToFormats_idMethod")
         Formats.find({}).map(format => {
             var formatsRegex = [];
             for (var i = 0; i < format.names.length; i++) {
@@ -178,9 +178,22 @@ Meteor.methods({
                     multi : true
                 })
         });
-        console.log("   END: DecksArchetypesformatToFormats_idMethod")
+        logFunctionsEnd("DecksArchetypesformatToFormats_idMethod")
+    },
+    DecksArchetypesCreateLinkNameMethod(){
+        logFunctionsStart("DecksArchetypesCreateLinkNameMethod")
+
+        DecksArchetypes.find({}).map(deckArchetype => {
+            DecksArchetypes.update({_id : deckArchetype._id},
+                {
+                    $set : { link: deckArchetype.name.replace(/[^a-zA-Z0-9-_]/g, '')},
+                },
+                {
+                    multi : true
+                }
+            )
+        });
+        logFunctionsEnd("DecksArchetypesCreateLinkNameMethod")
     }
-
-
 })
 

@@ -17,7 +17,6 @@ export default class LatestDecks extends React.Component {
 
     nameFormat(cell, row){
         if(row.t == 1){
-            console.log(deckName)
             var deckName = DecksNames.findOne({_id : row._id});
             var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
             return  <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : archetype.name, deckSelected : deckName.name})}>{deckName.name}</a>

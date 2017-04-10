@@ -11,7 +11,7 @@ export default class NewsMetaValue extends React.Component {
 
     registerOptions(options){
         this.state.options = options;
-        Meteor.call("getLastTwenty", this.props.format, (err, data)=>{
+        Meteor.call("getLastTwenty", this.props.Formats_id, (err, data)=>{
             this.state.data = data;
             this.updateValues(options)
         });
@@ -19,8 +19,8 @@ export default class NewsMetaValue extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.props.format != nextProps.format && this.state.options){
-            Meteor.call("getLastTwenty", nextProps.format, (err, data)=>{
+        if(this.props.Formats_id != nextProps.Formats_id && this.state.options){
+            Meteor.call("getLastTwenty", nextProps.Formats_id, (err, data)=>{
                 this.state.data = data;
                 this.updateValues(this.state.options);
             });

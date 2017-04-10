@@ -17,28 +17,28 @@ Meteor.methods({
     },
     findFoilCards(set, name){
         // var test = Meteor.http.get("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=New%20Phyrexia&p=Flameborn%20Viron");
-        console.log("START: findFoilCards");
+        logFunctionsStart("findFoilCards");
         var sets = TCGPlayerCards.find({}).fetch();
             for(var i = 0; i < sets.length; i++){
                 for(var j = 0; j < sets[i].cards.length; j++){
                     cardSetName({setName : sets[i].name, cardName : sets[i].cards[j].name})
                 }
             }
-        console.log("   END: findFoilCards");
+        logFunctionsEnd("findFoilCards");
     },
     cardsDataFullDateFormat(set, name){
         // var test = Meteor.http.get("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=New%20Phyrexia&p=Flameborn%20Viron");
-        console.log("START: findFoilCards");
+        logFunctionsStart("findFoilCards");
             var sets = TCGPlayerCards.find({}).fetch();
             for(var i = 0; i < sets.length; i++){
                 for(var j = 0; j < sets[i].cards.length; j++){
                     cardsDataFullDate({setName : sets[i].name, cardName : sets[i].cards[j].name})
                 }
             }
-        console.log("   END: findFoilCards");
+        logFunctionsEnd("findFoilCards");
     },
     getTCGPLayerCardsFullDataMethods(){
-        console.log("START: getTCGPLayerCardsFullDataMethods");
+        logFunctionsStart("getTCGPLayerCardsFullDataMethods");
         var sets = TCGPlayerCards.find({state : {$ne : "cards"}}).fetch();
         for(var i = 0; i < sets.length; i++){
             if(i%15 == 0){
@@ -69,17 +69,17 @@ Meteor.methods({
                     $set : {cards : cardsList, state : "cards"}
                 })
         }
-        console.log("   END: getTCGPLayerCardsFullDataMethods");
+        logFunctionsEnd("getTCGPLayerCardsFullDataMethods");
     },
     setUpFoilNormalMethod(){
-        console.log("START: setUpFoilNormalMethod");
+        logFunctionsStart("setUpFoilNormalMethod");
         setUpFoilNormal();
-        console.log("   END: setUpFoilNormalMethod");
+        logFunctionsEnd("setUpFoilNormalMethod");
     },
     setUpFoilNormalMethod(){
-        console.log("START: setUpFoilNormalMethod");
+        logFunctionsStart("setUpFoilNormalMethod");
         setUpFoilNormal();
-        console.log("   END: setUpFoilNormalMethod");
+        logFunctionsEnd("setUpFoilNormalMethod");
     }
 })
 
@@ -191,7 +191,4 @@ getCardsPrices = ({setName, cardName, date})=>{
     document.products.product.name = cardName;
     delete document.products.product.id;
     delete document.products.product.link;
-
-    // console.log(setName, cardName);
-    // console.log(document.products.product.foilavgprice, document.products.product.avgprice);
 }

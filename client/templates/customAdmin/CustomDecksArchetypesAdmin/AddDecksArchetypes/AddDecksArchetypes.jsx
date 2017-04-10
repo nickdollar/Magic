@@ -25,14 +25,11 @@ export default class AddArchetypeName extends React.Component{
                                errorMessage="Archetype is Missing."
                                required={true}
                     />
-                    <Radio  objectName={"format"}
+                    <Radio  objectName={"Formats_id"}
                             title={"Format"}
                             errorMessage="Choose A Format."
                             required={true}
-                            opts={[ {value : "standard", text : "standard"},
-                                    {value : "modern", text : "modern"},
-                                    {value : "legacy", text : "legacy"},
-                                    {value : "vintage", text : "vintage"}]}
+                            opts={getFormatsForForm()}
                             defaultOption="standard"
                     />
                     <Radio  objectName={"type"}

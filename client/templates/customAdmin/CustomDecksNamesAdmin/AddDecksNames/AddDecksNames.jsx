@@ -27,7 +27,6 @@ export default class CustomAdmin extends React.Component{
     }
 
     render(){
-        console.log(this.props);
         return (
             <div className="AddDecksNamesComponent">
                 <h3>Add A New Deck Name</h3>

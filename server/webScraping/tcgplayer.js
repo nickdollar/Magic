@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
 
 importCollection = (URL)=>{
-    console.log("START: importCollection");
+    logFunctionsStart("importCollection");
     var URL = "http://store.tcgplayer.com/collection/view/142729"
     var resMainPage = Meteor.http.get(URL);
     if (resMainPage.statusCode == 200) {
@@ -53,7 +53,7 @@ importCollection = (URL)=>{
             }
         }
     }
-    console.log("   END: importCollection");
+    logFunctionsEnd("importCollection");
 }
 
 Meteor.methods({
@@ -61,15 +61,15 @@ Meteor.methods({
         getDeckSetsFromGoogleCache();
     },
     getCardsOfTheSetCacheMethod(){
-        console.log("START: getCardsOfTheSetcacheMethod");
+        logFunctionsStart("getCardsOfTheSetcacheMethod");
             var sets = TCGPlayerCards.find({state : {$ne : "cards"}}).map(set => set.name);
             for(var i = 0; i < sets.length; ++i){
                 webScrapingQueue.add({func : getCardsOfTheSetCache, args : {setName : sets[i]}, wait : 60000 + 15000*Math.random()});
             }
-        console.log("   END: getCardsOfTheSetcacheMethod");
+        logFunctionsEnd("getCardsOfTheSetcacheMethod");
     },
     convertCSVToJson(){
-        console.log("START: convertCSVToJson");
+        logFunctionsStart("convertCSVToJson");
             var myobject = JSON.parse(Assets.getText('convertcsv.json'));
             for(var i = 1; i < myobject.length; ++i){
                 var set = fixTCGPlayersSetNames(myobject[i]["FIELD1"]);
@@ -98,7 +98,7 @@ Meteor.methods({
                     }
                 )
             }
-        console.log("END: convertCSVToJson");
+        logFunctionsEnd("convertCSVToJson");
     }
 })
 
@@ -136,7 +136,7 @@ fixTCGPlayersSetNames = (setName)=>{
 
 
 getCardsOfTheSetCache = ({setName})=>{
-    console.log("START: getCardsOfTheSetCache");
+    logFunctionsStart("getCardsOfTheSetCache");
     var fixedSetName = setName.replace(/\s/g, "-").replace(/'/g, "").replace(/:/g, "").replace(/./g, "").toLowerCase();
     var URL = `http://webcache.googleusercontent.com/search?q=cache:http://shop.tcgplayer.com/price-guide/magic/${fixedSetName}`
     try{
@@ -191,7 +191,7 @@ getCardsOfTheSetCache = ({setName})=>{
             }
         )
     }
-    console.log("   END: getCardsOfTheSetCache");
+    logFunctionsEnd("getCardsOfTheSetCache");
 }
 
 htmlUnescape = (str)=>{
@@ -205,7 +205,7 @@ htmlUnescape = (str)=>{
 
 
 getDeckSetsFromGoogleCache = ()=>{
-    console.log("START: getDeckSetsFromGoogleCache");
+    logFunctionsStart("getDeckSetsFromGoogleCache");
         var URL = `http://webcache.googleusercontent.com/search?q=cache:http://shop.tcgplayer.com/magic/`;
         var resMainPage = Meteor.http.get(URL);
 
@@ -223,7 +223,7 @@ getDeckSetsFromGoogleCache = ()=>{
                 )
             }
         }
-    console.log("   END: getDeckSetsFromGoogleCache");
+    logFunctionsEnd("getDeckSetsFromGoogleCache");
 }
 
 
@@ -261,7 +261,6 @@ replaceEdition = (edition)=>{
 
 Meteor.methods({
     phantomjs(){
-        console.log("START PhantomJs");
         var path = require('path')
         var childProcess = require('child_process')
         var phantomjs = require('phantomjs-prebuilt')
@@ -272,10 +271,7 @@ Meteor.methods({
         ]
 
         childProcess.execFile(binPath, childArgs, function(err, stdout, stderr) {
-            console.log(`err: ${err}`);
-            console.log(`stdout:${stdout}`);
-            console.log(`stderr: ${stderr}`);
-            console.log("   END PhantomJs");
+
         })
 
         // var phantomjs = require('phantomjs-prebuilt')

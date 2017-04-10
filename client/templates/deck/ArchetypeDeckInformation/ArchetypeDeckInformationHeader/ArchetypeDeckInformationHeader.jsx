@@ -22,16 +22,11 @@ export default class ArchetypeDeckInformationHeader extends React.Component {
     }
 
     render(){
-        if(this.props.listLoading){
-            return <div>Loading...</div>
-        }
-
         return(
             <div className="ArchetypeDeckInformationHeaderComponent">
                 <div className="archetypeInfo">
-                    {this.archetypeInfo(this.props.archetype)}
+                    {this.archetypeInfo(this.props.DeckArchetype)}
                     <div className="information">
-
                         <div className="type"></div>
                     </div>
                 </div>

@@ -1,27 +1,24 @@
 import React from 'react' ;
 import DecksNamesDecksDataList from "./DecksNamesDecksDataList/DecksNamesDecksDataList.jsx";
 import DecksCardsList from "./DecksCardsList/DecksCardsList.jsx";
+import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx";
 
 export default class ArchetypesShells extends React.Component {
     constructor(){
         super();
-        this.state = {selectedCard : [], DecksData_id : "", DecksNames_id : "", DecksDataList : [], typesSeparated : null}
+        this.state = {selectedCards : [], DecksData_id : "", DecksNames_id : "", DecksDataList : [], typesSeparated : null}
     }
 
     getDecksDataList(){
-
-        Meteor.call("getDecksDataFromArchetypes_idFormatCards",
-            this.state.selectedCard,
-            FlowRouter.getParam("archetype"),
-            FlowRouter.getParam("format"),
-            (err, data)=>{
-                var dataSort = data.sort((a, b)=>{
+        Meteor.call("getDecksDataFromArchetypes_idFormatCards", {selectedCards : this.state.selectedCards, DecksArchetypes_id : this.props.DeckArchetype._id},
+            (err, response)=>{
+                var dataSort = response.sort((a, b)=>{
                     return b.date - a.date
                 });;
 
                 var DecksData_id = "";
 
-                if(data.length){
+                if(response.length){
                     DecksData_id = dataSort[0]._id;
                 }else{
                     DecksData_id = "";
@@ -31,12 +28,11 @@ export default class ArchetypesShells extends React.Component {
     }
 
     getAllCardsFromDeckArchetype(){
-        Meteor.call("getAllCardsFromDeckArchetype",
-            this.state.selectedCard,
-            FlowRouter.getParam("archetype"),
-            FlowRouter.getParam("format"),
-            (err, data)=>{
-                this.createList(data);
+        Meteor.call("getAllCardsFromDeckArchetypeMethod",
+            {selectedCards : this.state.selectedCards,
+            DecksArchetypes_id : this.props.DeckArchetype._id},
+            (err, response)=>{
+                this.createList(response);
             })
     }
 
@@ -55,19 +51,19 @@ export default class ArchetypesShells extends React.Component {
     }
 
     addCardToList(card){
-        var selectedCard = this.state.selectedCard.concat();
+        var selectedCards = this.state.selectedCards.concat();
 
-        var index = selectedCard.findIndex((cardObj)=>{
+        var index = selectedCards.findIndex((cardObj)=>{
             return card == cardObj
         })
 
         if(index > -1){
-            selectedCard.splice(index, 1);
+            selectedCards.splice(index, 1);
         }else{
 
-            selectedCard.push(card);
+            selectedCards.push(card);
         }
-        this.state.selectedCard = selectedCard.concat();
+        this.state.selectedCards = selectedCards.concat();
         this.getAllCardsFromDeckArchetype()
         this.getDecksDataList()
     }
@@ -102,7 +98,7 @@ export default class ArchetypesShells extends React.Component {
             }
 
 
-            var index = this.state.selectedCard.findIndex((card)=>{
+            var index = this.state.selectedCards.findIndex((card)=>{
                 return card == cardsList[i]._id;
             });
 
@@ -144,13 +140,14 @@ export default class ArchetypesShells extends React.Component {
                         <DecksNamesDecksDataList   DecksData_id={this.state.DecksData_id}
                                                    DecksDataList={this.state.DecksDataList}
                                                    selectADeckHandle={this.selectADeckHandle.bind(this)}
+                                                   Formats_id={this.props.Formats_id}
                         />
                     </div>
                 </div>
                 <div className="col-xs-9">
                     <div className="row">
                         {this.state.DecksData_id != "" ?
-                        <DeckContainer DecksData_id={this.state.DecksData_id}/> : null}
+                        <DeckAggregate DecksData_id={this.state.DecksData_id}/> : null}
                     </div>
                 </div>
             </div>

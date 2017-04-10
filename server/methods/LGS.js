@@ -34,5 +34,9 @@ Meteor.methods({
     },
     autoPublish(){
 
+    },
+    getLGSStateQty(){
+        var EventsAggregate = LGS.aggregate([{$group: {_id : "$state", qty : {$sum : 1}}}]);
+        return EventsAggregate;
     }
 });

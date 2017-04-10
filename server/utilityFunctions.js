@@ -95,10 +95,6 @@ fixCards = function (card) {
 
 
         var foundName = CardsFullData.find({name : rightName}, {limit : 1}).fetch()[0];
-        // console.log(card);
-        // console.log(rightName);
-        // console.log(foundName);
-        // console.log(CardsFullData.find({name : rightName}, {limit : 1}));
         if(foundName.layout == "split"){
             if(foundName.length > 2){
                 card = foundName.names.join("/");
@@ -128,4 +124,16 @@ function lower(word){
 
 function upper(word){
     return word.substr(0,1).toUpperCase() + word.substr(1);
+}
+
+logFunctionsStart=(functionName)=>{
+    console.log(`Start: ${functionName}`)
+}
+
+logFunctionsEnd=(functionName)=>{
+    console.log(`   END: ${functionName}`)
+}
+
+logErrorMessage=(error)=>{
+    console.log(`ERROR: ${error}`);
 }

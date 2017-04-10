@@ -3,13 +3,13 @@ Meteor.methods({
        MakeMTGSets();
     },
     MTGSetsCountFromFile: function () {
-        console.log("START: makeCardsData");
+        logFunctionsStart("makeCardsData");
         MTGSetsCountFromFile();
     }
 })
 
 MTGSetsCountFromFile = ()=> {
-    console.log("START: makeCardsData");
+    logFunctionsStart("makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllSets-x.json'));
     var count = 0;
 
@@ -20,7 +20,7 @@ MTGSetsCountFromFile = ()=> {
 }
 
 MakeMTGSets = ()=>{
-    console.log("START: makeCardsData");
+    logFunctionsStart("makeCardsData");
     var myobject = JSON.parse(Assets.getText('AllSets-x.json'));
     MTGSets.remove({});
     for (var key in myobject) {

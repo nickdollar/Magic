@@ -33,13 +33,15 @@ export default class CardsTables extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.props.cards.map((card, index)=>  <tr key={`${card._id}${card.set}${card.foil}`}>
-                                                            <td>{card._id} {card.foil ? " (F)" : ""}</td>
-                                                            <td>{card.setCode}</td>
-                                                            <td>{card.qty}</td>
-                                                            <td onClick={()=>this.props.removeCard({name : card._id, setCode : card.setCode, foil : card.foil}, index)} className="glyphicon glyphicon-remove"></td>
+                        {this.props.cards.map((card, index)=>{
+                            return  <tr key={`${card._id}${card.setCode}${card.foil}`}>
+                                        <td>{card._id} {card.foil ? " (F)" : ""}</td>
+                                        <td>{card.setCode}</td>
+                                        <td>{card.qty}</td>
+                                        <td onClick={()=>this.props.removeCard({name : card._id, setCode : card.setCode, foil : card.foil}, index)} className="glyphicon glyphicon-remove"></td>
+                                    </tr>
+                        }
 
-                                                        </tr>
                         )}
                     </tbody>
                 </table>

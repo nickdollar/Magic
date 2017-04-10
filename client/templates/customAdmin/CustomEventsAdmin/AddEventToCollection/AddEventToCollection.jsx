@@ -10,7 +10,6 @@ export default class AddEventToCollection extends React.Component{
     }
 
     render(){
-        console.log(this.props);
         return (
             <div className="AddEventToCollectionComponent">
                 <h3>Add Event To Collection</h3>

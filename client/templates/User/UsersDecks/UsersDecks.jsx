@@ -8,13 +8,12 @@ import DeckEditMethod from './DeckEditMethod/DeckEditMethod';
 export default class UsersDecks extends React.Component {
     constructor() {
         super();
+
+        var formats = Formats.find({active : 1}).map(format =>{
+           return Object.assign(format, {checked : true})
+        });
         this.state = {
-            formats: [
-                    {value: "modern", text: "Modern", checked : true},
-                    {value: "standard", text: "Standard", checked : true},
-                    {value: "vintage",text: "Vintage", checked : true},
-                    {value: "legacy", text: "legacy", checked : true}
-                ],
+            formats: formats,
             DecksLists : [],
             UsersDeck_id : "",
             UsersDeckData : {main : [], sideboard : []},
@@ -68,8 +67,8 @@ export default class UsersDecks extends React.Component {
 
     getUsersDeckList(){
         var params = {format : this.getFormats()}
-        Meteor.call("getUsersDecksFromUser", params, (err, data)=>{
-            this.setState({DecksLists : data});
+        Meteor.call("getUsersDecksFromUser", params, (err, response)=>{
+            this.setState({DecksLists : response});
         })
     }
 
@@ -80,9 +79,7 @@ export default class UsersDecks extends React.Component {
 
     formatCheck(index){
         var formats = this.state.formats.concat();
-        console.log(formats[index]);
         formats[index].checked = !formats[index].checked
-        console.log(formats[index]);
         this.setState({formats : formats})
     }
 
@@ -114,7 +111,6 @@ export default class UsersDecks extends React.Component {
             data.qty = selectedCard.qty;
             UsersDeckData[mainSideboard].push(data);
 
-            console.log(UsersDeckData);
             if(mainSideboard == "main"){
                 this.setState({UsersDeckData : UsersDeckData, main : {name : null, _id : null, qty : 4}, clear : !this.state.clear, changes : true});
             }else{
@@ -147,7 +143,6 @@ export default class UsersDecks extends React.Component {
     }
 
     changeName(target){
-        console.log(target.value);
         this.state.UsersDeckData.name = target.value;
         this.setState({changes : true});
 
@@ -157,17 +152,23 @@ export default class UsersDecks extends React.Component {
     submitDeck(){
         var deck = this.getDeckInfo();
         Meteor.call("updateUsersDecks", deck, (err, data)=>{
-            var DecksLists = this.state.DecksLists.concat();
-            var index = DecksLists.findIndex(deckObj => deckObj._id == deck.UsersDecks_id);
-            DecksLists[index].name = deck.name;
-            this.setState({changes : false})
+            // var DecksLists = this.state.DecksLists.concat();
+            // var index = DecksLists.findIndex(deckObj => deckObj._id == deck.UsersDecks_id);
+            // DecksLists[index].name = deck.name;
+            // this.setState({changes : false})
          })
     }
 
     filterDecksLists(DecksLists){
         return DecksLists.filter((deck)=>{
-            return this.state.formats.find(format => format.value == deck.format).checked;
+            var foundFormat = this.state.formats.find(format => {
+                return format._id == deck.Formats_id
+            });
+            return foundFormat.checked;
         })
+    }
+    deckAdded(){
+        this.getUsersDeckList();
     }
 
     render(){
@@ -175,12 +176,14 @@ export default class UsersDecks extends React.Component {
         return(
             <div className="UsersDecksComponent">
                 <h3>Yours Decks</h3>
-                <AddDeck/>
+                <AddDeck deckAdded={this.deckAdded.bind(this)}
+                         formats={this.state.formats}
+                />
                 <div className="deckListAndDecksNamesList">
                     <div className="decksCheckBoxes">
                         {this.state.formats.map((format, index)=>{
-                            return  <label className="radio-inline" key={format.value} >
-                                <input type="checkbox" onChange={()=>this.formatCheck(index)} checked={format.checked} value={format.value}/>{format.value}
+                            return  <label className="radio-inline" key={format._id} >
+                                <input type="checkbox" onChange={()=>this.formatCheck(index)} checked={format.checked} value={format._id}/>{format.name}
                             </label>
                         })}
                     </div>

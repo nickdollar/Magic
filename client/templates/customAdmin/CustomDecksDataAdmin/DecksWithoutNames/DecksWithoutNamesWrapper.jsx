@@ -1,11 +1,11 @@
 import React from 'react' ;
-import DecksWithoutNamesContainer from './DecksWithoutNamesContainer.jsx' ;
+import DecksWithoutNames from './DecksWithoutNames.jsx' ;
 
 
 export default class DecksWithoutNamesWrapper extends React.Component{
     constructor(props){
         super();
-        this.state = {page : 0, perPage : 10, selectedState : "lgs"};
+        this.state = {page : 0, limit : 10, selectedState : "lgs", DecksList : []};
     }
 
     componentDidMount(){
@@ -16,19 +16,32 @@ export default class DecksWithoutNamesWrapper extends React.Component{
         if(e.target.getAttribute("data-change") == "+"){
             var page = this.state.page;
             page++;
-            this.setState({page : page});
+            this.state.page = page;
         }else{
             var page = this.state.page;
             page--;
             if(page < 0){
                 page = 0;
             }
-            this.setState({page : page})
+            this.state.page = page;
         }
+        this.getDecks();
     }
 
     changedState(state){
-        this.setState({page : 0, selectedState : state});
+        this.state.page = 0;
+        this.state.selectedState = state;
+        this.getDecks();
+    }
+
+    componentDidMount(){
+        this.getDecks();
+    }
+
+    getDecks(){
+        Meteor.call("getEventsStateQty", {state : this.state.selectedState, Formats_id : this.props.Formats_id, page : this.state.page, limit : this.state.limit}, (err, response)=>{
+            this.setState({DecksList : response})
+        });
     }
 
     render(){
@@ -42,9 +55,7 @@ export default class DecksWithoutNamesWrapper extends React.Component{
                 })}
                 <button data-change="-" onClick={this.changePage.bind(this)} className="btn btn-xs">-</button>
                 <button data-change="+" onClick={this.changePage.bind(this)} className="btn btn-xs">+</button>
-                <DecksWithoutNamesContainer serverQuery={[this.state.selectedState, this.props.Formats_id, this.state.perPage, this.state.page]}
-                                            clientQuery={[{state : this.state.selectedState, Formats_id : this.props.Formats_id}, {limit : this.state.perPage, skip : this.state.page}]}
-                />
+                <DecksWithoutNames DecksList={this.state.DecksList}/>
             </div>
         )
     }

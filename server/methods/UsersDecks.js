@@ -3,8 +3,8 @@ Meteor.methods({
     getUsersDecksFromUser({format}) {
         return UsersDecks.find({Users_id : Meteor.userId()}, {fields : {sideboard : 0, main : 0}}).fetch();
     },
-    addNewDeckToUsersDecks({format, name}) {
-        UsersDecks.insert({Users_id : Meteor.userId(), format :format, name : name, main : [], sideboard : []});
+    addNewDeckToUsersDecksMethod({Formats_id, name}) {
+        UsersDecks.insert({Users_id : Meteor.userId(), Formats_id : Formats_id, name : name, main : [], sideboard : []});
         return true;
     },
     updateUsersDecks({UsersDecks_id, main, sideboard, name}) {

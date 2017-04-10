@@ -49,7 +49,7 @@ class LGSLatestEvents extends React.Component{
                         {slicesEvents.map((event)=>{
                             var lgs = LGS.findOne({_id : event.LGS_id});
                             return  <tr key={event._id}>
-                                        <td ><a href={FlowRouter.path("selectedEvent", {format : event.format, Events_id : event._id})}>Link</a></td>
+                                        <td ><a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(event.Formats_id), Events_id : event._id})}>Link</a></td>
                                         <td>{event.name}</td>
                                         <td>{lgs.name +" ("+ lgs.location.city +")"}</td>
                                         <td>{event.format}</td>

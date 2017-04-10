@@ -12,19 +12,20 @@ export default class EventsTable extends React.Component {
         var eventType = EventsTypes.findOne({_id : data});
         if(row.type == "lgs"){
             var LGSquery = LGS.findOne({_id : row.LGS_id});
-            return <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row._id})}>{row.name} - {`${LGSquery.name} (${LGSquery.location.city ? LGSquery.location.city : LGSquery.location.state})`}</a>
+            return <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(row.Formats_id), Events_id : row._id})}>{row.name} - {`${LGSquery.name} (${LGSquery.location.city ? LGSquery.location.city : LGSquery.location.state})`}</a>
         }else{
-            return  <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row._id})}>{eventType.short}</a>
+            return  <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(row.Formats_id), Events_id : row._id})}>{eventType.short}</a>
         }
     }
 
     format(data, row){
-        return data.toTitleCase();
+        return Formats.findOne({_id : data}).name;
     }
 
     date(data, format){
         return Moment(data).format("MM/DD");
     }
+
     shouldComponentUpdate(nextProps){
         if(nextProps.listLoading){
             return false;
@@ -33,7 +34,6 @@ export default class EventsTable extends React.Component {
     }
 
     render(){
-        console.log(this.props);
         const tableOptions = {
             options : {
                 sizePerPage : 8,
@@ -53,7 +53,7 @@ export default class EventsTable extends React.Component {
                 <BootstrapTable {...tableOptions} height='256px'>
                     <TableHeaderColumn isKey dataField="_id" hidden></TableHeaderColumn>
                     <TableHeaderColumn width="220" dataField="EventsTypes_id" dataFormat={this.event}>Events</TableHeaderColumn>
-                    <TableHeaderColumn dataField="format" dataFormat={this.format}>Format</TableHeaderColumn>
+                    <TableHeaderColumn dataField="Formats_id" dataFormat={this.format}>Format</TableHeaderColumn>
                     <TableHeaderColumn dataAlign='center' dataField="decksQty">Decks</TableHeaderColumn>
                     <TableHeaderColumn dataAlign='center' dataField="date" dataFormat={this.date}>Date</TableHeaderColumn>
                 </BootstrapTable>

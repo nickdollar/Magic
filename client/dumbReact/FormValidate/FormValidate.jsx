@@ -20,6 +20,10 @@ export default class FormValidate extends React.Component{
 
 
     shouldComponentUpdate(nextProps, nextState){
+        if(this.props.update){
+            return true;
+        }
+
         if(this.props.id != nextProps.id){
             return true;
         }
@@ -44,7 +48,6 @@ export default class FormValidate extends React.Component{
             if(this.props.extraFields){
                 Object.assign(form, this.props.extraFields);
             }
-
             Meteor.call(this.props.submitMethod, form, (error, data)=>{
                 if(error){
                     console.log("Error Adding Store");
@@ -59,6 +62,10 @@ export default class FormValidate extends React.Component{
                     this.state.Fields.forEach((field)=>{
                         field.clearInput();
                     });
+
+                    if(this.props.triggerEvent){
+                        this.props.triggerEvent()
+                    }
                 }
             });
         }

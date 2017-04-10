@@ -33,11 +33,8 @@ export default class DecksNamesList extends React.Component {
                         />
                         <Radio initialValue={row.Formats_id}
                                title="Format"
-                               objectName="format"
-                               opts={[{value : "standard", text : "Standard"},
-                                   {value : "modern", text : "Modern"},
-                                   {value : "vintage", text : "Vintage"},
-                                   {value : "legacy", text : "Legacy"}, ]}
+                               objectName="Formats_id"
+                               opts={getFormatsForForm()}
                         />
                         <Checkbox   initialValue={row.colors}
                                     title="Colors"
@@ -58,7 +55,7 @@ export default class DecksNamesList extends React.Component {
                             subscription="DecksArchetypesFormat"
                             serverQuery={row.Formats_id}
                             collection="DecksArchetypes"
-                            clientQuery={{format : row.Formats_id}}
+                            clientQuery={{Formats_id : row.Formats_id}}
                             initialValue={row.DecksArchetypes_id}
                         />
                     </FormValidate>

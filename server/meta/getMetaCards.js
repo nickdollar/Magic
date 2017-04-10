@@ -1,6 +1,6 @@
- getMetaCards = function({format, options, LGS_ids}){
+ getMetaCards = function({Formats_id, options, LGS_ids}){
     var result = {};
-    result.totalDecks = getTotalMetaCardsMainSideboard({format, format, options : options, LGS_ids : LGS_ids});
-    result.cards = getMetaCardsMainSideboard({format, format, options : options, LGS_ids : LGS_ids});
+    result.totalDecks = getTotalMetaCardsMainSideboard({Formats_id, Formats_id, options : options, LGS_ids : LGS_ids});
+    result.cards = getMetaCardsMainSideboard({Formats_id, Formats_id, options : options, LGS_ids : LGS_ids});
     return result;
 }

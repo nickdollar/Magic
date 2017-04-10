@@ -1,7 +1,7 @@
-getMetaAllArchetypes = function({format, options, LGS_ids}){
+getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
+        {$project : {"Formats_id" : 1}},
+        {$match : {Formats_id : Formats_id}},
         {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
         {$unwind : "$DecksNames"},
         {$project : {DecksNames_id : "$DecksNames._id"}},
@@ -44,8 +44,8 @@ getMetaAllArchetypes = function({format, options, LGS_ids}){
     });
 
     var DecksArchetypesMetaBeforeDate = DecksArchetypes.aggregate([
-        {$project : {"format" : 1}},
-        {$match : {format : format}},
+        {$project : {"Formats_id" : 1}},
+        {$match : {Formats_id : Formats_id}},
         {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
         {$unwind : "$DecksNames"},
         {$project : {DecksNames_id : "$DecksNames._id"}},

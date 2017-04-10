@@ -2,18 +2,18 @@ import cheerio from "cheerio";
 
 getLeagueEventsAndDecks = function({Formats_id, days, dateType}){
     if(Formats_id == null || days == null){
-        console.log("Formats_id null or days");
+        logErrorMessage(`Formats_id ${Formats_id} null or days ${days}`);
         return;
     }
 
     if(leagueTypes.hasOwnProperty(Formats_id)==false){
-        console.log("Formats_id doesn't exists");
+        logErrorMessage("Formats_id doesn't exists");
         return;
     }
 
     var type = "";
 
-    if(Formats_id == 'vnt'){
+    if(Formats_id == 'vin'){
         type = "daily";
     }else{
         type = "league";
@@ -114,8 +114,11 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
                 }
 
                 var decksQty = DecksData.find({Events_id : eventQuery._id}).count();
+
                 Events.update({_id : eventQuery._id},
-                    {$set : {decksQty : decksQty}}
+                    {
+                        $set : {decksQty : decksQty}
+                    }
                 )
             }
 
@@ -126,10 +129,10 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
 
 var leagueTypes = {
     mod : "competitive-modern-constructed-league",
-    std : "competitive-standard-constructed-league",
+    sta : "competitive-standard-constructed-league",
     pau : "pauper-constructed-league",
     leg : "competitive-legacy-constructed-league",
-    vnt : "vintage-daily",
+    vin : "vintage-daily",
 }
 
 

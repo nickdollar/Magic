@@ -1,43 +1,35 @@
 Meteor.methods({
-
-
-    //fields
-
-    //
-    getCardsByName(){
-
-    },
     createCompliedCardCollection(){
-        console.log("START: createCompliedCardCollection");
+        logFunctionsStart("createCompliedCardCollection");
         setCardNames();
         setManaCost();
         setLayout();
         setTypes();
         setPriceAvg();
-        console.log("   END: createCompliedCardCollection");
+        logFunctionsEnd("createCompliedCardCollection");
     },
 
 
     fixTcgPlayerCardsFullData(){
-        // console.log("START : fixtcg")
-        // var sets = TCGPlayerCardsFullData.find().fetch();
-        //
-        // for(var i = 0; i < sets.length; i++){
-        //     var cards = [];
-        //     for(var j = 0; j < sets[i].cards.length; j++){
-        //         var obj = Object.assign({}, sets[i].cards[j]);
-        //         obj.hiprice = parseFloat(obj.hiprice);
-        //         obj.lowprice = parseFloat(obj.lowprice);
-        //         obj.avgprice = parseFloat(obj.avgprice);
-        //         obj.foilavgprice = parseFloat(obj.foilavgprice);
-        //         cards.push(obj);
-        //     }
-        //     TCGPlayerCardsFullData.update({name : sets[i].name},
-        //         {
-        //             $set : {cards : cards}
-        //         })
-        // }
-        // console.log("   END : fixtcg")
+        logFunctionsStart("fixTcgPlayerCardsFullData")
+        var sets = TCGPlayerCardsFullData.find().fetch();
+
+        for(var i = 0; i < sets.length; i++){
+            var cards = [];
+            for(var j = 0; j < sets[i].cards.length; j++){
+                var obj = Object.assign({}, sets[i].cards[j]);
+                obj.hiprice = parseFloat(obj.hiprice);
+                obj.lowprice = parseFloat(obj.lowprice);
+                obj.avgprice = parseFloat(obj.avgprice);
+                obj.foilavgprice = parseFloat(obj.foilavgprice);
+                cards.push(obj);
+            }
+            TCGPlayerCardsFullData.update({name : sets[i].name},
+                {
+                    $set : {cards : cards}
+                })
+        }
+        logFunctionsStart("fixTcgPlayerCardsFullData");
 
     },
     getCardsBy_id({CardsCollectionSimplified_id}){
@@ -52,7 +44,7 @@ Meteor.methods({
 
 
 setCardNames = ()=>{
-    console.log("START: setCardNames");
+    logFunctionsStart("setCardNames");
 
     var cards = CardsFullData.find({}).fetch();
 
@@ -66,12 +58,12 @@ setCardNames = ()=>{
                 upsert : true
             })
     }
-    console.log("   END: setCardNames");
+    logFunctionsEnd("setCardNames");
 
 }
 
 setManaCost = ()=>{
-    console.log("START: setManaCost");
+    logFunctionsStart("setManaCost");
 
     var cards = CardsFullData.find({}).fetch();
     for(var i = 0; i < cards.length; i++){
@@ -88,11 +80,11 @@ setManaCost = ()=>{
                 $set : {manaCost : str}
             })
     }
-    console.log("   END: setManaCost");
+    logFunctionsEnd("setManaCost");
 }
 
 setLayout = ()=>{
-    console.log("START: setLayout");
+    logFunctionsStart("setLayout");
 
     var cards = CardsFullData.find({}).fetch();
 
@@ -102,11 +94,11 @@ setLayout = ()=>{
                 $set : {layout : cards[i].layout}
             })
     }
-    console.log("   END: setLayout");
+    logFunctionsEnd("setLayout");
 }
 
 // setColorsIdentity = ()=>{
-//     console.log("START: setColorsIdentity");
+//     logFunctionsStart("setColorsIdentity");
 //
 //     var cards = CardsFullData.find({}).fetch();
 //
@@ -116,11 +108,11 @@ setLayout = ()=>{
 //                 $set : {colorIdentity : cards[i].colorIdentity}
 //             })
 //     }
-//     console.log("   END: setColorsIdentity");
+//     logFunctionsEnd("setColorsIdentity");
 // }
 
 setTypes = ()=>{
-    console.log("START: setTypes");
+    logFunctionsStart("setTypes");
     var cards = CardsFullData.find({}).fetch();
     for(var i = 0; i < cards.length; i++){
         CardsCollectionSimplified.update({name : cards[i].name},
@@ -128,11 +120,11 @@ setTypes = ()=>{
                 $set : {types : cards[i].types}
             })
     }
-    console.log("   END: setTypes");
+    logFunctionsEnd("setTypes");
 }
 
 setPriceAvg = ()=>{
-    console.log("START: setPriceAvg");
+    logFunctionsStart("setPriceAvg");
     var cards = TCGPlayerCardsFullData.aggregate(
         [
             {
@@ -187,6 +179,6 @@ setPriceAvg = ()=>{
             }
          )
     }
-    console.log("   END: setPriceAvg");
+    logFunctionsEnd("setPriceAvg");
 }
 

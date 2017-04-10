@@ -1,5 +1,5 @@
 import React from 'react' ;
-import StateListContainer from "/client/dumbReact/StatesList/StateListContainer.jsx";
+import StateList from "/client/dumbReact/StatesList/StateList.jsx";
 import ListByStateTable from "./ListByState/ListByState.jsx";
 
 export default class CustomLGSAdmin extends React.Component {
@@ -13,10 +13,8 @@ export default class CustomLGSAdmin extends React.Component {
 
         return(
             <div className="CustomLGSAdminComponent">
-                <StateListContainer collection="LGS"
-                                    subscription="LGSStatesList"
-                                    notState={[]}
-                                    states={["pending", "confirmed"]}
+                <StateList Method="getLGSStateQty"
+                           states={["pending", "confirmed"]}
                 />
                 <ListByStateTable state={state} Formats_id={this.props.Formats_id}/>
 

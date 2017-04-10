@@ -1,8 +1,3 @@
-Meteor.publish('DecksDataUniqueWithoutQuantity-_id', function(_id) {
-    return DecksDataUniqueWithoutQuantity.find({_id : _id});
-});
-
-
 removeToDecksUniqueWithName = function(_id){
     var deckData = DecksData.findOne({_id : _id});
     var cardsOnMain = [];

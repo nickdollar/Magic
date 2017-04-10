@@ -11,39 +11,38 @@ export default class MetaTable extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.props.format != nextProps.format && this.state.options){
-            this.updateValues(this.state.options, nextProps.format);
+        if(this.props.Formats_id != nextProps.Formats_id && this.state.options){
+            this.updateValues(this.state.options, nextProps.Formats_id);
         }
     }
 
-    updateValues(options, format){
+    updateValues(options, Formats_id){
         var LGS_ids = LGS.find({}).map((LGSObj)=>{
             return LGSObj._id;
         })
 
-        Meteor.call("getMetaAllArchetypesMethod", {format : format, options : options, LGS_ids : LGS_ids}, (err, data)=>{
+        Meteor.call("getMetaAllArchetypesMethod", {Formats_id : Formats_id, options : options, LGS_ids : LGS_ids}, (err, data)=>{
             var totalDecks = data.reduce((a, b)=>{
                 return  a + b.quantity;
             },0);
-
             var table = [];
             table = table.concat(data)
-
             this.setState({tableData : table, totalDecks : totalDecks});
         });
     }
 
     registerOptions(options){
         this.state.options = options;
-        this.updateValues(options, this.props.format);
+        this.updateValues(options, this.props.Formats_id);
     }
 
     render(){
         return(
             <div className="MetaTableComponent">
                 <MetaTableOptions registerOptions={this.registerOptions.bind(this)}/>
-                <MetaTableValues tableData={this.state.tableData}
-                              totalDecks={this.state.totalDecks}
+                <MetaTableValues    tableData={this.state.tableData}
+                                    totalDecks={this.state.totalDecks}
+                                    Formats_id={this.props.Formats_id}
                 />
             </div>
         );

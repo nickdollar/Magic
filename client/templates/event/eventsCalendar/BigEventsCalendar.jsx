@@ -119,16 +119,9 @@ export default class BigEventsCalendar extends React.Component {
                             errorMessage="URL Wrong Syntax"
                         />
                         <CheckBox
-                            objectName={"formats"}
+                            objectName={"Formats_id"}
                             title="Format"
-                            opts={
-                                [
-                                    {value : "modern", text : "Modern"},
-                                    {value : "standard", text : "Standard"},
-                                    {value : "legacy", text : "Legacy"},
-                                    {value : "vintage", text : "Vintage"}
-                                ]
-                            }
+                            opts={getFormatsForForm()}
                             errorMessage="Format is Missing"
                             required={true}
                             minimunRequired={1}

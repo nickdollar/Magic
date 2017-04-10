@@ -17,7 +17,7 @@ import CustomCardsCollectionSimplifiedAdmin from './CustomCardsCollectionSimplif
 export default class CustomAdmin extends React.Component{
     constructor(props){
         super();
-        this.state = {Formats_id : "std"};
+        this.state = {Formats_id : "sta"};
     }
 
     routes(route){

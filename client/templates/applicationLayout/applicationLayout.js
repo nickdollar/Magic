@@ -1,11 +1,11 @@
-import AddEvent from "/client/templates/addEvent/AddEvent.jsx";
+import AddEvent from "/client/templates/addEvent/AddEventContainer.jsx";
 import AdminEvent from "/client/templates/AdminEvent/AdminEvent.jsx";
 import LGS from "/client/templates/LGS/LGS.jsx";
 import MetaDeckListComponent from "/client/templates/deck/MetaDeckList/MetaDeckListComponent.jsx";
 import CustomAdmin from "/client/templates/customAdmin/CustomAdmin.jsx";
 import CustomEventsAdmin from "/client/templates/customAdmin/CustomEventsAdmin/CustomEventsAdmin.jsx";
 import SelectedEventContainer from "/client/templates/event/SelectedEvent/SelectedEventContainer.jsx";
-import ArchetypeDeckInformation from "/client/templates/deck/ArchetypeDeckInformation/ArchetypeDeckInformation.jsx";
+import ArchetypeDeckInformationContainer from "/client/templates/deck/ArchetypeDeckInformation/ArchetypeDeckInformationContainer.jsx";
 import MetaContainer from           "/client/templates/meta/MetaContainer.jsx";
 import LatestDecksContainer from           "/client/templates/main/LatestDecksReact/LatestDecksContainer.jsx";
 import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuContainer.jsx";
@@ -127,7 +127,7 @@ Template.lgs.helpers({
 
 Template.addEvent.helpers({
     AddEvent(){
-        return AddEvent;
+        return AddEventContainer;
     },
 });
 
@@ -158,7 +158,7 @@ Template.selectedEvent.helpers({
 });
 
 Template.ArchetypeDeckInformation.helpers({
-    ArchetypeDeckInformation(){
-        return ArchetypeDeckInformation;
+    ArchetypeDeckInformationContainer(){
+        return ArchetypeDeckInformationContainer;
     },
 });

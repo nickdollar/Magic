@@ -1,6 +1,7 @@
 import React from "react";
 
-class formatInput extends React.Component{
+
+export default class formatInput extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -50,24 +51,18 @@ class formatInput extends React.Component{
     }
 
     render() {
-        var formatCheckboxes = Formats.find().map((format)=>{
-            return <label className="radio-inline" key={format._id} >
-                    <input type="radio" name="days" value={format._id}/>{format.name}
-                </label>
-        });
-
         return (
             <div className="form-group">
                 <label> {this.props.title} </label>
                 <div className="form-control" onChange={this.handleChange.bind(this)} ref={"input"} required={this.props.isRequired}>
-                    {formatCheckboxes.map((daysObj)=>{
-                        return daysObj
-                    })}
+                    {getFormatsForForm().map(format=>
+                        <label className="radio-inline" key={format._id} >
+                            <input type="radio" name="formats" value={format._id}/>{format.text}
+                        </label>
+                    )}
                 </div>
                 <span ref="error" className="error"></span>
             </div>
         )
     }
 }
-
-export default formatInput;

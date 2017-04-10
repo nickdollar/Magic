@@ -21,7 +21,7 @@ export default class  extends React.Component {
                     <div>
                         {
                             eventType._id == "LGS" ? `${LGSQuery.name} (${LGSQuery.location.city ? LGSQuery.location.city : LGSQuery.location.state}) - ${event.format.toTitleCase()}` :
-                            <a href={event.url}>{eventType.name} - {event.format.toTitleCase()}</a>
+                            <a href={event.url}>{eventType.name} - {getLinkFormat(event.Formats_id)}</a>
                         }
                     </div>
 

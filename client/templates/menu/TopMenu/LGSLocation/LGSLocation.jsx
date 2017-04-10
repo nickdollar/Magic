@@ -21,7 +21,6 @@ export default class LGSLocation extends React.Component {
                 this.setState({location : [location.coords.longitude ,location.coords.latitude] })
             },
             (error)=>{
-                console.log(error)
                 this.setState({positionOption : "state"});
             },
             {

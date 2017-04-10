@@ -35,7 +35,7 @@ export default class DecksNamesDecksDataList extends React.Component {
                         {this.results(row)} - {row.player}
                     </div>
                     <div>
-                        <a href={FlowRouter.path("selectedEvent", {format : FlowRouter.getParam("format"), Events_id : row.Events_id, DecksData_id : row._id})}> {eventsTypes[row.type]} {Moment(row.date).format("MM/DD")}</a>
+                        <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(this.props.Formats_id), Events_id : row.Events_id, DecksData_id : row._id})}> {EventsTypes.findOne({_id : row.EventsTypes_id}).short} {Moment(row.date).format("MM/DD")}</a>
                     </div>
                 </div>
     }

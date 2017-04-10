@@ -61,16 +61,20 @@ class MetaDeckList extends React.Component{
         this.setState({nameFilter : e.target.value});
     }
 
-    dumbSelect2(cardName){
-        var card = cardName.toTitleCase();
+    autoComplete(cardName){
+        var card = cardName.name;
         var index = this.state.cards.findIndex((obj)=>{
-            return cardName == obj;
+            return card.name == obj;
         });
 
         if(index == -1){
             var cards = this.state.cards.concat([card]);
             this.setState({cards : cards})
         }
+    }
+
+    componentWillReceiveProps(){
+
     }
 
     render() {
@@ -81,7 +85,7 @@ class MetaDeckList extends React.Component{
                                    updateColors={this.updateColors.bind(this)}
                                    updateContainMatch={this.updateContainMatch.bind(this)}
                                    removeFromTheListMain={this.removeFromTheListMain.bind(this)}
-                                   dumbSelect2={this.dumbSelect2.bind(this)}
+                                   autoComplete={this.autoComplete.bind(this)}
                                    nameFilter={this.nameFilter.bind(this)}
                                    state={this.state}
 
@@ -90,7 +94,7 @@ class MetaDeckList extends React.Component{
                 <div className="col-xs-9">
 
                     <ArchetypeList cards={this.state.cards}
-                                   format={this.props.format}
+                                   Formats_id={this.props.Formats_id}
                                    state={this.state}
                     />
                 </div>

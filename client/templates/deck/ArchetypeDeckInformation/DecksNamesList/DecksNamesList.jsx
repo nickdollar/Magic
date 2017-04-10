@@ -18,17 +18,12 @@ export default class DecksNamesList extends React.Component {
     }
 
     render(){
-
-        var archetypeName = replaceTokenWithDash(this.props.archetype.name);
-
         return(
-
             <div className="DecksNamesListComponent">
                 <div className="js-owl-deckOption owl-carousel owl-theme">
-                    {this.props.decksNames.map((deckName)=>{
-                        var fixedDeckName = replaceTokenWithDash(deckName.name);
+                    {this.props.DecksNames.map((deckName)=>{
                         return  <div className="deckBox" key={deckName._id}>
-                                    <a href={"/decks/" +  this.props.archetype.format + '/' + archetypeName + '/' + fixedDeckName} >
+                                    <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(deckName.Formats_id), DeckArchetype : this.props.DeckArchetype.link, DeckName : deckName.link})}>
                                         <div className="firstLine">
                                             <div className="deckName">
                                                 {deckName.name}
@@ -42,9 +37,9 @@ export default class DecksNamesList extends React.Component {
                                     </a>
                                 </div>
                     })}
-
                 </div>
             </div>
         );
     }
 }
+

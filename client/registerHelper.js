@@ -1,20 +1,3 @@
-import moment from "moment";
-
-Template.registerHelper('arrayify',function(obj){
-    var result = [];
-    for (var key in obj) result.push({name:key,value:obj[key]});
-    return result;
-});
-
-Template.registerHelper("getManaCss", function(value) {
-    return getManaCss(value);
-});
-
-
-Template.registerHelper("getCssManaFromDeck", function(colors) {
-    return getCssManaFromDeck(colors);
-});
-
 getCssManaFromDeck = function(colors){
     var manaInitials = [];
     for(var obj in colors){
@@ -28,26 +11,13 @@ getCssManaFromDeck = function(colors){
     return manaInitials;
 }
 
+getFormat_idFromLink = (formatLink)=>{
+    return Formats.findOne({names : {$regex : formatLink, $options : "i"}})._id;
+}
 
-
-// getHTMLColors = function(colors, size){
-//     if(!size ){
-//         size = "14px";
-//     } else{
-//         size = size +"px"
-//     }
-//     var html = '<span class="tableMana" style="font-size: '+size +'">';
-//     for(var obj in colors){
-//         if(obj === "B" && colors[obj]){html +=      '<span class="mana sb"></span>'}
-//         else if(obj === "G" && colors[obj]){html += '<span class="mana sg"></span>'}
-//         else if(obj === "C" && colors[obj]){html += '<span class="mana scl"></span>'}
-//         else if(obj === "R" && colors[obj]){html += '<span class="mana sr"></span>'}
-//         else if(obj === "U" && colors[obj]){html += '<span class="mana su"></span>'}
-//         else if(obj === "W" && colors[obj]){html += '<span class="mana sw"></span>'}
-//     }
-//     html += '</span>';
-//     return html;
-// }
+getLinkFormat = (Formats_id)=>{
+    return Formats.findOne({_id : Formats_id}).name;
+}
 
 getCssManaByNumberFromDeckNameById = function(DecksNames_id){
 
@@ -196,137 +166,12 @@ getDistanceBetweenTwoCoords = (coords1, coords2)=>{
     return d;
 }
 
-Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
-    lvalue = parseFloat(lvalue);
-    rvalue = parseFloat(rvalue);
-
-    return {
-        "+": lvalue + rvalue,
-        "-": lvalue - rvalue,
-        "*": lvalue * rvalue,
-        "/": lvalue / rvalue,
-        "%": lvalue % rvalue
-    }[operator];
-});
-
-Template.registerHelper("fixForLink", function() {
-    var phrase = this.name ? replaceTokenWithDash(this.name) : replaceTokenWithDash(this.archetype);
-    return phrase;
-});
-
-Template.registerHelper("fixForLinkArchetype", function() {
-    var phrase = this.name ? replaceTokenWithDash(this.name) : replaceTokenWithDash(this.name);
-    return phrase;
-});
-
-Template.registerHelper("replaceSpaceForHyphen", function() {
-    var phrase = this.archetype ? replaceTokenWithDash(this.archetype) : replaceTokenWithDash(this.archetype);
-    return phrase;
-});
-
-Template.registerHelper("hoursDateTimezone", function(date, timezone) {
-    //return moment.tz(date, timezone).format("h:mma z");
-});
-
-Template.registerHelper("datePrettify", function(date, option) {
-    return moment(date).format('MM/DD');
-    //var yy = date.getFullYear().toString().substr(2,2);
-    //var mm = (date.getMonth()+1).toString();
-    //var dd  = date.getDate().toString();
-    //if(option == "year"){
-    //    return (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]) + "-" + yy;
-    //}
-    //
-    // return (mm[1]?mm:"0"+mm[0]) + "-datetimepicker " + (dd[1]?dd:"0"+dd[0])
-});
-
-Template.registerHelper("prettifyDate", function(timestamp) {
-    var dateString = (timestamp.getMonth() + 1) + '/' + timestamp.getDate() + '/' +  timestamp.getFullYear();
-    return dateString;
-});
-
-Template.registerHelper("MathRound", function(number) {
-    return Math.round(number);
-});
-
-Template.registerHelper("getLinkAddress", function(cardName) {
-    cardName = encodeURI(cardName);
-    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-    var linkBase = "http://69.195.122.106/nicholas/mtgpics/";
-    var folderLetter = cardName.charAt(0).toLocaleLowerCase();
-    var finalDirectory = linkBase+folderLetter+"/"+cardName+".full.jpg";
-    return finalDirectory;
-});
-Template.registerHelper("convertToLink", function(cardName) {
-    cardName = encodeURI(cardName);
-    cardName = cardName.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
-    var linkBase = "http://69.195.122.106/nicholas/crops/";
-    var folderLetter = cardName.charAt(0).toLocaleLowerCase();
-    var finalDirectory = linkBase+folderLetter+"/"+cardName+".crop.jpg";
-    return finalDirectory;
-});
-Template.registerHelper("convertToTemplate", function(color) {
-    var linkBase = "http://69.195.122.106/nicholas/deckTemplates";
-    var finalDirectory = linkBase+"/"+color+".jpg";
-    return finalDirectory;
-});
-
-Template.registerHelper('capitalizeEvents', function(){
-    if(this.type == "ptq"){
-        return "PTQ";
-    } else if(this.type == "daily"){
-        return "Daily";
-    }else if(this.type == "league"){
-        return "League";
-    }
-});
-
-Template.registerHelper('deckPosition', function(){
-    if(this.position){
-        var s=["th","st","nd","rd"],
-            v=this.position%100;
-        return this.position+(s[(v-20)%10]||s[v]||s[0]);
-    } else{
-        return this.victory + "-" + this.loss;
-    }
-
-});
-
 prettifyPosition = (position)=>{
     position = parseInt(position);
     var s=["th","st","nd","rd"],
         v=position%100;
     return position+(s[(v-20)%10]||s[v]||s[0]);
 }
-
-
-Template.registerHelper('initial', function(string){
-    return string.charAt(0).toUpperCase();
-});
-
-
-Template.registerHelper('upperCase', function(string){
-    return string.toUpperCase();
-});
-
-Template.registerHelper('prettifyPercentage', function(string){
-    return prettifyPercentage(string);
-});
-
-prettifyPercentage = function(string){
-    var temp = parseFloat(string) * Math.pow(10, 2);
-    temp = parseFloat(temp.toFixed(2));
-    return temp;
-};
-
-Template.registerHelper('absoluteValue', function(string){
-    return prettifyPercentage(string);
-});
-
-Template.registerHelper('toFixed', function(string){
-   return parseFloat(string).toFixed(2);
-});
-
 
 absoluteValue = function(string){
     return Math.abs(parseFloat(string));

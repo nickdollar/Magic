@@ -15,7 +15,6 @@ export default class DeckListPercentage extends React.Component{
     }
 
     submitName(DecksNames_id){
-        console.log(DecksNames_id);
         Meteor.call("methodAddNameToDeck", {_id : this.props.DecksData_id, DecksNames_id : DecksNames_id});
     }
 

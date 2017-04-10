@@ -45,8 +45,6 @@ getHTMLColorsFromColorArray = function(colors){
 
 getHTMLFromArray = (manaCost)=> {
 
-    // console.log(manaCost);
-
     if (typeof manaCost == "undefined") return [];
 
 
