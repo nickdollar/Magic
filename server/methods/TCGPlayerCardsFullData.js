@@ -26,60 +26,42 @@ Meteor.methods({
             }
         logFunctionsEnd("findFoilCards");
     },
-    cardsDataFullDateFormat(set, name){
-        // var test = Meteor.http.get("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=New%20Phyrexia&p=Flameborn%20Viron");
-        logFunctionsStart("findFoilCards");
-            var sets = TCGPlayerCards.find({}).fetch();
-            for(var i = 0; i < sets.length; i++){
-                for(var j = 0; j < sets[i].cards.length; j++){
-                    cardsDataFullDate({setName : sets[i].name, cardName : sets[i].cards[j].name})
-                }
-            }
-        logFunctionsEnd("findFoilCards");
+    setUpFoilNormalMethod(){
+        logFunctionsStart("setUpFoilNormalMethod");
+        setUpFoilNormal();
+        logFunctionsEnd("setUpFoilNormalMethod");
     },
-    getTCGPLayerCardsFullDataMethods(){
-        logFunctionsStart("getTCGPLayerCardsFullDataMethods");
-        var sets = TCGPlayerCards.find({state : {$ne : "cards"}}).fetch();
-        for(var i = 0; i < sets.length; i++){
-            if(i%15 == 0){
-                console.log(`${i} of ${sets.length}`);
+    setUpFoilNormalMethod(){
+        logFunctionsStart("setUpFoilNormalMethod");
+        setUpFoilNormal();
+        logFunctionsEnd("setUpFoilNormalMethod");
+    },
+    getMorningDailyCardsPricesMethods(){
+        logFunctionsStart("getMorningDailyCardsPricesMethods");
+        var sets = TCGPlayerCards.find({}).fetch();
+
+        for(var i = 0; i < 10; i++){
+            for(var j = 0; j < 5; j++){
+                TCGPlayerCardsFullData.update({setName : sets[i].name},
+                    {
+                        $setOnInsert : {setName : sets[i].name, cards : []}
+                    },
+                    {$upsert : true}
+                )
+
+                var fixedSetName = sets[i].name.replace(/&/g, "%26");
+                var fixedCardName = sets[i].cards[j].name.replace(/&/g, "%26");
+                var url = encodeURI(`http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=${fixedSetName}&p=${fixedCardName}`);
+                url = url.replace(/%2526/, "%26");
+                Meteor.http.get(url, (err, response)=>{
+                    var product = getTCGPLayerCardsFullDataFromResponse({response : response, cardName : sets[i].cards[j].name});
+                    TCGPlayerCardsFullData.update({setName : sets[i].name}, {
+                        $push : {"cards" : product}
+                    })
+                });
             }
-
-            if(TCGPlayerCardsFullData.findOne({name : sets[i].name})){
-                if(sets[i].cards.length == TCGPlayerCardsFullData.findOne({name : sets[i].name}).cards.length){
-                    continue;
-                }
-            }
-
-
-            TCGPlayerCardsFullData.update({name : sets[i].name},
-                {
-                    $setOnInsert : {name : sets[i].name, cards : []}
-                },
-                {
-                    upsert : true
-                })
-
-            var cardsList = [];
-            for(var j = 0; j < sets[i].cards.length; j++){
-                cardsList.push(getTCGPLayerCardsFullData({setName : sets[i].name, cardName : sets[i].cards[j].name}));
-            }
-            TCGPlayerCardsFullData.update({name : sets[i].name},
-                {
-                    $set : {cards : cardsList, state : "cards"}
-                })
         }
-        logFunctionsEnd("getTCGPLayerCardsFullDataMethods");
-    },
-    setUpFoilNormalMethod(){
-        logFunctionsStart("setUpFoilNormalMethod");
-        setUpFoilNormal();
-        logFunctionsEnd("setUpFoilNormalMethod");
-    },
-    setUpFoilNormalMethod(){
-        logFunctionsStart("setUpFoilNormalMethod");
-        setUpFoilNormal();
-        logFunctionsEnd("setUpFoilNormalMethod");
+        logFunctionsEnd("getMorningDailyCardsPricesMethods");
     }
 })
 
@@ -95,6 +77,25 @@ cardSetName = ({setName, cardName})=>{
     var document = x2js.xml2js(test.content);
     return document.products.product;
 }
+
+
+getTCGPLayerCardsFullDataFromResponse = ({response, cardName})=>{
+    var x2js = new X2JS();
+    var document = x2js.xml2js(response.content);
+
+    document.products.product.name = cardName.toTitleCase();
+
+    if(!document.products){
+        return {name : cardName.toTitleCase(), url : url}
+    }
+
+    document.products.product.hiprice = parseFloat(document.products.product.hiprice);
+    document.products.product.lowprice = parseFloat(document.products.product.lowprice);
+    document.products.product.avgprice = parseFloat(document.products.product.avgprice);
+    document.products.product.foilavgprice = parseFloat(document.products.product.foilavgprice);
+
+    return document.products.product;
+},
 
 getTCGPLayerCardsFullData = ({setName, cardName})=>{
     var fixedSetName = setName.replace(/&/g, "%26");
@@ -118,10 +119,7 @@ getTCGPLayerCardsFullData = ({setName, cardName})=>{
     document.products.product.foilavgprice = parseFloat(document.products.product.foilavgprice);
 
     return document.products.product;
-}
-
-
-
+},
 
 
 setUpFoilNormal = ()=>{

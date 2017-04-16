@@ -17,6 +17,7 @@ class SubmitTokenForm extends React.Component{
     handleSubmit (e){
         e.preventDefault();
         var validForm = true;
+
         this.state.Fields.forEach((field)=>{
             if(typeof field.isValid === "function"){
                 var validField = field.isValid(field.refs[field.props.name]);
@@ -24,6 +25,8 @@ class SubmitTokenForm extends React.Component{
             }
         });
 
+
+        console.log(e);
         if(validForm) {
             var form = {};
             this.state.Fields.forEach((field)=>{
@@ -64,7 +67,7 @@ class SubmitTokenForm extends React.Component{
     render() {
         return (
             <div className="SubmitTokenFormComponent">
-                <form noValidate  onSubmit={this.handleSubmit.bind(this)}>
+                <form noValidate onSubmit={this.handleSubmit.bind(this)}>
                     <LGSNameFieldContainer onComponentMounted={this.register.bind(this)}
                                            objectName={"LGS_id"}
                                            title={"LGS"}
