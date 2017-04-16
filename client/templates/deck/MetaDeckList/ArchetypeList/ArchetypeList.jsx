@@ -13,7 +13,7 @@ export default class ArchetypeList extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(nextProps.Formats_id != this.props.Formats_id){
-             this.setState({DecksArchetypes : DecksArchetypes.find({Formats_id : nextProps.Formats_id}).fetch()});
+            this.setState({DecksArchetypes : DecksArchetypes.find({Formats_id : nextProps.Formats_id}).fetch()});
         }
     }
 
@@ -138,7 +138,6 @@ export default class ArchetypeList extends React.Component {
         }
 
         return(
-
             <div className="ArchetypeListComponent">
                 <BootstrapTable {...tableOptions}>
                     <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormat.bind(this)}>Name</TableHeaderColumn>

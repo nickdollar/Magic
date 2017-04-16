@@ -1,11 +1,10 @@
 import React from 'react' ;
 
-export default class SevenDayCalendarNew extends React.Component {
+export default class SevenDayCalendar extends React.Component {
     constructor(){
         super();
 
     }
-
 
     componentDidMount(){
         $('#frontMainCalendar').fullCalendar("destroy");
@@ -29,7 +28,6 @@ export default class SevenDayCalendarNew extends React.Component {
                 event.id = event._id;
                 return event;
             })
-            console.log(events);
             $('#frontMainCalendar').fullCalendar("addEventSource", events);
         })
 
@@ -37,8 +35,12 @@ export default class SevenDayCalendarNew extends React.Component {
 
     render(){
         return(
-            <div className="SevenDayCalendarNewComponent">
-                <div id="frontMainCalendar"></div>
+
+            <div className="SevenDayCalendarComponent">
+                <h3>New Events</h3>
+                <div className="mainCalendar">
+                    <div id="frontMainCalendar"></div>
+                </div>
             </div>
         );
     }

@@ -25,8 +25,7 @@ Meteor.methods({
         if(eventQuery){
             return false;
         }
-        event.venue = "lgs";
-        Object.assign(event, {type : "lgs", state : "created"});
+        Object.assign(event, {EventsTypes_id : "LGS", state : "created"});
 
         var email = event.email;
         delete event.email;

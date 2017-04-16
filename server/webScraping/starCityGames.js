@@ -1,8 +1,5 @@
 import cheerio from "cheerio";
 import Moment from "moment";
-import Entities from "entities";
-import Fuse from "fuse.js";
-
 
 var eventsArray = [
     {name : "Power 9 Tournament", id : "19"},
@@ -34,7 +31,6 @@ getSCGEventsAndDecks = function(){
         webScrapingQueue.add({func : getSCGEventsAndDecksHTTPRequest, args :{endDate : endDate, startDate: startDate, event : eventsArray[i], start_num : 0}, wait : httpRequestTime});
     }
     logFunctionsEnd("getSCGEventsAndDecks");
-
 }
 
 getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
@@ -71,9 +67,7 @@ getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
                         var EventsTypeQuery = EventsTypes.findOne({names : {$regex : eventsTypeFixed, $options : "i"}}, {limit : 1});
                         var FormatTypeQuery = Formats.findOne({names : {$regex : format, $options : "i"}}, {limit : 1});
 
-
-
-                        Events.update({EventsTypes_id : EventsTypeQuery._id, date : date, location : location, Formats_id : FormatTypeQuery._id, state : "SCGCreated"},
+                        Events.update({EventsTypes_id : EventsTypeQuery._id, date : date, location : location, Formats_id : FormatTypeQuery._id},
                             {
                                 $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, date : date, location : location, Formats_id : FormatTypeQuery._id, state : "SCGCreated"}
                             },
@@ -81,9 +75,10 @@ getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
                                 upsert : true
                             })
                         var eventQuery = Events.findOne({EventsTypes_id : EventsTypeQuery._id, date : date, location : {$regex : location, $options : "i"}, Formats_id : FormatTypeQuery._id})
+
                         DecksData.update({EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, Formats_id : FormatTypeQuery._id},
                             {
-                                $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, position : position, Formats_id : FormatTypeQuery._id, state : "SCGCreated", deckUrl : deckUrl}
+                                $setOnInsert : {EventsTypes_id : EventsTypeQuery._id, player : player, Events_id : eventQuery._id, date : date, Formats_id : FormatTypeQuery._id, position : position, state : "SCGCreated", deckUrl : deckUrl}
                             },
                             {
                                 upsert : true
@@ -116,31 +111,30 @@ getSCGDecksCardsHTTPRequest = ({deckData})=>{
     Meteor.http.get(deckData.deckUrl, {},(err, response)=>{
         if (response.statusCode == 200) {
             var $decksBlocks = cheerio.load(response.content, {decodeEntities : false});
-            var mainCards = $decksBlocks(".decklist_heading+ ul li");
-            var sideboardCards = $decksBlocks(".deck_sideboard li");
+            // var mainCards = $decksBlocks(".decklist_heading+ ul li");
+            // var sideboardCards = $decksBlocks(".deck_sideboard li");
 
             var cardPattern = /(\d+) (.*)/i;
-            var main = [];
-            for(var j = 0; j < mainCards.length; j++){
-                var regexResult = $decksBlocks(mainCards[j]).text().match(cardPattern);
-                var quantity = parseInt(regexResult[1]);
-                var cardName = regexResult[2].toTitleCase();
-                cardName = fixCards(cardName);
-                main.push({ name : cardName, quantity : quantity });
-            }
 
-            var sideboard = [];
-
-            for(var j = 0; j < sideboardCards.length; j++){
-                var regexResult = $decksBlocks(sideboardCards[j]).text().match(cardPattern);
-                var quantity = parseInt(regexResult[1]);
-                var cardName = regexResult[2].toTitleCase();
-                cardName = fixCards(cardName);
-                sideboard.push({ name : cardName, quantity : quantity });
+            var data = {main : [], sideboard : [], state : "scraped"};
+            var fieldOptions = [
+                {key : "main", css : ".decklist_heading+ ul li"},
+                {key : "sideboard", css : ".deck_sideboard li"},
+            ]
+            for(var i = 0; i < fieldOptions.length; i++){
+                var cardsExtracted = $decksBlocks(fieldOptions[i].css);
+                var cardsFixed = [];
+                for(var j = 0; j < cardsExtracted.length; j++){
+                        var regexResult = $decksBlocks(cardsExtracted[j]).text().match(cardPattern);
+                        var qty = parseInt(regexResult[1]);
+                        var cardName = fixCards(regexResult[2]);
+                        cardsFixed.push({ name : cardName, qty : qty });
+                }
+                data[fieldOptions[i].key] = cardsFixed;
             }
             DecksData.update({_id : deckData._id},
                 {
-                    $set : {main : main, sideboard : sideboard, state : "scraped"}
+                    $set : data
                 })
         }
     });
@@ -159,4 +153,31 @@ getSCGDecksQTY = ()=>{
             })
     }
     logFunctionsEnd("getSCGDecksQTY");
+}
+
+getFindEqualsEvents = ()=>{
+    logFunctionsStart("getFindEqualsEvents");
+
+    var SCGEventsProblems = Events.aggregate({
+            $group : {
+                _id : {
+                    EventsTypes_id : "$EventsTypes_id",
+                    date : "$date",
+                    location : "$location",
+                    Formats_id : "$Formats_id",
+                    state : "$state"
+                },
+               qty : {$sum : 1},
+               _ids : {$addToSet : "$id"}
+            },
+            $match : {
+                qty : {$gte : 2}
+            }
+    });
+
+    if(SCGEventsProblems.length){
+        Errors.insert({type : "Equal Events", description : SCGEventsProblems})
+    }
+
+    logFunctionsEnd("getFindEqualsEvents");
 }

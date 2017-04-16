@@ -9,7 +9,7 @@ Meteor.methods({
             }
         );
 
-        DecksDataUniqueWithoutQuantity.update({DecksNames_id : {$in : decksNames_id}},
+        DecksDataUniqueWithoutQty.update({DecksNames_id : {$in : decksNames_id}},
             {
                 $unset : {DecksNames_id : _id}
             }
@@ -33,7 +33,7 @@ Meteor.methods({
             }
         );
 
-        DecksDataUniqueWithoutQuantity.update({DecksNames_id : _id},
+        DecksDataUniqueWithoutQty.update({DecksNames_id : _id},
             {
                 $unset : {DecksNames_id : _id}
             }

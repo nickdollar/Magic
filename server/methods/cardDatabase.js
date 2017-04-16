@@ -105,8 +105,8 @@ makeCardsDataFromFullData = function(){
     logFunctionsEnd("makeCardsDataFromFullData");
 }
 
-checkQuantityOfCardsFullData = function() {
-    logFunctionsStart("checkQuantityOfCardsFullData");
+checkQtyOfCardsFullData = function() {
+    logFunctionsStart("checkQtyOfCardsFullData");
 
     var cardsSet = new Set();
     CardsFullData.find().forEach((card)=>{
@@ -137,7 +137,7 @@ checkQuantityOfCardsFullData = function() {
         }
         cardsSet.add(obj.name);
     });
-    logFunctionsEnd("checkQuantityOfCards");
+    logFunctionsEnd("checkQtyOfCards");
     return cardsSet.size;
 }
 

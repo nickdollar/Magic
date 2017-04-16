@@ -279,7 +279,7 @@ export default class Deck extends React.Component{
         return str;
     }
 
-    updateQuantity(e){
+    updateQty(e){
         if(parseInt(e.target.value) < 0){
             return
         }
@@ -297,7 +297,7 @@ export default class Deck extends React.Component{
             if(parseInt(value)< 0){
 
             }
-            tempArray[index].quantity = value;
+            tempArray[index].qty = value;
             this.setState({main : tempArray});
         }
 
@@ -307,7 +307,7 @@ export default class Deck extends React.Component{
             var index = tempArray.findIndex((card)=>{
                 return cardName == card.name;
             })
-            tempArray[index].quantity = parseInt(value);
+            tempArray[index].qty = parseInt(value);
             this.setState({sideboard : tempArray});
         }
 
@@ -319,12 +319,12 @@ export default class Deck extends React.Component{
         };
 
         var cardDataName = {"data-name" : card.name};
-        var cardQuantity = {value : card.quantity};
+        var cardQty = {value : card.qty};
 
         return  <div className="cardLine" key={card.name} >
-            <div className="cardQuantityAndNameWrapper js-imagePopOver" {...cardDataName}>
+            <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
                 <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={this.removeCardDeck.bind(this)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
-                <input type="number" className="quantityInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.updateQuantity.bind(this)} {...cardQuantity}/>
+                <input type="number" className="qtyInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.updateQty.bind(this)} {...cardQty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}
                      {...selectors}
@@ -355,12 +355,12 @@ export default class Deck extends React.Component{
         var selectors = {
             "data-mainSideboard" : mainSideboard,
         };
-        var cardQuantity = {defaultValue : 4};
+        var cardQty = {defaultValue : 4};
 
 
         return  <div className="addLine" key={mainSideboard}>
-            <div className="cardQuantityAndNameWrapper js-imagePopOver">
-                <input type="number" className="quantityInput" data-mainSideboard={mainSideboard} defaultValue="4" {...cardQuantity}/>
+            <div className="cardQtyAndNameWrapper js-imagePopOver">
+                <input type="number" className="qtyInput" data-mainSideboard={mainSideboard} defaultValue="4" {...cardQty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...selectors}
                 >
@@ -381,11 +381,11 @@ export default class Deck extends React.Component{
     totalCards(mainSideboard){
         if(mainSideboard == "main"){
             return this.state.deck.main.reduce((a, b)=>{
-                return a + b.quantity;
+                return a + b.qty;
             }, 0)
         }else{
             return this.state.deck.sideboard.reduce((a, b)=>{
-                return a + b.quantity;
+                return a + b.qty;
             }, 0)
         }
     }
@@ -399,7 +399,7 @@ export default class Deck extends React.Component{
         for(var type in typesSeparated){
             if(typesSeparated[type].length == 0) continue;
             resultMain.push(<div className="typeHeader" key={type} >{type} ({typesSeparated[type].reduce((a, b)=>{
-                return a + b.quantity;
+                return a + b.qty;
             },0)})</div>)
             resultMain.push(
                 typesSeparated[type].map((card)=>{

@@ -1,33 +1,19 @@
 createMetaNewThings = function(Formats_id){
     logFunctionsStart("createMetaNewThings");
-
-    MetaNewest.remove({type : "lastTwenty", Formats_id : Formats_id});
-
     var metaNewThingsObj = {};
-        metaNewThingsObj.type = "lastTwenty";
         metaNewThingsObj.Formats_id = Formats_id;
         metaNewThingsObj.newestDecks = createMetaNewDecks(Formats_id);
         metaNewThingsObj.newestArchetypes = createMetaArchetypesDecks(Formats_id);
         metaNewThingsObj.newestCards = createMetaNewCards(Formats_id);
 
-    MetaNewest.insert(metaNewThingsObj);
+    MetaLastAddition.update({},
+        {$set : {metaNewThingsObj}},
+        {upsert : true}
+    )
     logFunctionsEnd("end");
 }
 
-createMetaNewThingsDaysAllFormats = function(){
-    logFunctionsStart("createMetaNewThingsDaysAllFormats");
 
-    MetaNewest.remove({type : "lastDays"});
-
-    var metaNewThingsObj = {};
-        metaNewThingsObj.type = "lastDays";
-        metaNewThingsObj.newestDecks = createMetaNewDecksLatestDaysAllFormats(14);
-        metaNewThingsObj.newestArchetypes = createMetaArchetypesDecksLatestDaysAllFormats(14);
-        metaNewThingsObj.newestCards = createMetaNewCardsLatestDaysAllFormats(14);
-
-    MetaNewest.insert(metaNewThingsObj);
-    logFunctionsEnd(createMetaNewThingsDaysAllFormats);
-}
 
 createMetaNewDecks = function(Formats_id){
     var newestDecks = DecksData.aggregate(
@@ -126,7 +112,7 @@ createMetaArchetypesDecks = function(Formats_id){
             {
                 $project : {
                     _id : "$_id.DecksArchetypes_id",
-                    Formats_id : "Formats_id",
+                    Formats_id : "$Formats_id",
                     DecksNames_id : "$DecksNames_id",
                     DecksData_id : "$DecksData_id",
                     Events_id : "$Events_id",
@@ -263,6 +249,8 @@ createMetaNewDecksLatestDaysAllFormats = function(days){
             }
         ]
     )
+
+    console.log(newestDecks);
 
     return newestDecks;
 }

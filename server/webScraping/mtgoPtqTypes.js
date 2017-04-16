@@ -9,6 +9,7 @@ var mtgoPtqTypes = {
 }
 
 getMTGOPTQEventsAndDecks = function({Formats_id, days, dateType}){
+    console.log(Formats_id, days, dateType);
     logFunctionsStart("eventMTGOPTQGetInfoOldStartNew");
     if(Formats_id == null || days == null){
         logErrorMessage("format null or days");
@@ -35,10 +36,8 @@ getMTGOPTQEventsAndDecks = function({Formats_id, days, dateType}){
         var day = pad(actualDay.getDate());
         var month = pad(actualDay.getMonth()+1);
         var year = actualDay.getYear() + 1900;
-        logErrorMessage(actualDay);
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + mtgoPtqTypes[Formats_id] + "-" + year + "-" + month + "-" + day;
         if(Events.find({EventsTypes_id : eventType._id, date : actualDay, Formats_id : Formats_id}, {limit : 1}).count()){
-            logErrorMessage("EVENT FOUND");
             continue;
         }
         webScrapingQueue.add({func : getMTGOPTQEventsAndDecksHTTP, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
@@ -84,7 +83,7 @@ getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{
                     var data = {
                         Events_id : eventQuery._id,
                         date : eventQuery.date,
-                        EventsType : eventQuery.EventsTypes_id,
+                        EventsTypes_id : eventQuery.EventsTypes_id,
                         player : player,
                         Formats_id : eventQuery.Formats_id,
                         position : position,
@@ -93,14 +92,14 @@ getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{
                     var mainCards = $(decks[i]).find('.sorted-by-overview-container .row');
                     var main = [];
                     for(var j = 0; j < mainCards.length; j++){
-                        var quantity = parseInt($(mainCards[j]).find('.card-count').text());
+                        var qty = parseInt($(mainCards[j]).find('.card-count').text());
                         var name = $(mainCards[j]).find('.card-name').text();
                         name = fixCards(name);
                         if(CardsData.find({ name : name}, {limit : 1}).count()){
                             main.push(
                                 {
                                     name : name,
-                                    quantity : quantity
+                                    qty : qty
                                 }
                             );
                         }
@@ -109,13 +108,13 @@ getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{
                     var sideboardCards = $(decks[i]).find('.sorted-by-sideboard-container .row');
                     var sideboard = [];
                     for(j = 0; j < sideboardCards.length; j++){
-                        var quantity = parseInt($(sideboardCards[j]).find('.card-count').text());
+                        var qty = parseInt($(sideboardCards[j]).find('.card-count').text());
                         var name = $(sideboardCards[j]).find('.card-name').text();
                         name = fixCards(name);
                         sideboard.push(
                             {
                                 name : name,
-                                quantity : quantity
+                                qty : qty
                             }
                         );
                     }

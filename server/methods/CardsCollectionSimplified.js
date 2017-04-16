@@ -8,9 +8,7 @@ Meteor.methods({
         setPriceAvg();
         logFunctionsEnd("createCompliedCardCollection");
     },
-
-
-    fixTcgPlayerCardsFullData(){
+   fixTcgPlayerCardsFullData(){
         logFunctionsStart("fixTcgPlayerCardsFullData")
         var sets = TCGPlayerCardsFullData.find().fetch();
 
@@ -38,6 +36,14 @@ Meteor.methods({
     getAutoCompleteCardsCollectiomSimplified(value){
         var regex = new RegExp("^" + value, "i");
         return CardsCollectionSimplified.find({name : {$regex : regex}}, {limit : 6, fields : {name : 1}}).fetch();
+    },
+    getCardsFromArray({CardsArray}){
+        var regexArray = [];
+        CardsArray.forEach((card)=>{
+            return regexArray.push(new RegExp(`^${card}$`, "i"));
+        })
+        console.log(regexArray);
+        return CardsCollectionSimplified.find({name : {$in : regexArray}}).fetch();
     }
 
 })

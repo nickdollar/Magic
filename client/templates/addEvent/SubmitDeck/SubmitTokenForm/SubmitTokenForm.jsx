@@ -25,8 +25,6 @@ class SubmitTokenForm extends React.Component{
             }
         });
 
-
-        console.log(e);
         if(validForm) {
             var form = {};
             this.state.Fields.forEach((field)=>{

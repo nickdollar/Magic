@@ -1,12 +1,12 @@
 import React from "react";
 import Autosuggest from 'react-autosuggest';
 
-const theme = {
+const themeDeckEdit = {
     container: {
         position: 'relative'
     },
     input: {
-        width: 240,
+        width: 180,
         height: 30,
         padding: '5px 5px',
         fontFamily: 'Helvetica, sans-serif',
@@ -58,44 +58,40 @@ const theme = {
 };
 
 const getSuggestionValue = (suggestion) => {
-    return `${suggestion.name} - ${suggestion.setName}`
+    return `${suggestion.name}`
 };
 
 const renderSuggestion = suggestion => (
     <div>
-        {suggestion.name} - {suggestion.setName}
+        {suggestion.name}
     </div>
 );
 
-export default class DeckListAutosuggest extends React.Component {
-    constructor() {
+export default class CardNamesCall extends React.Component {
+    constructor(props) {
         super();
         this.state = {
-            value: '',
+            value: "",
             suggestions: []
         };
     }
 
     onChange = (event, { newValue , method}) =>{
-        this.props.typedCard(newValue, method);
         this.setState({
             value: newValue
         });
     };
+
     onSuggestionsFetchRequested = ({ value }) => {
-        Meteor.call("getAutoCompleteComplete", value, (err, data)=>{
-            var addFoils = [];
-            data.forEach((card)=>{
-                addFoils.push(card);
-            })
+        Meteor.call("getAutoCompleteCardsCollectiomSimplified", value, (err, data)=>{
             this.setState({
-                suggestions: addFoils.length === 0 ? [] : addFoils
+                suggestions: data.length === 0 ? [] : data
             });
         })
     };
 
     onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }){
-        this.props.typedCard(suggestion, method);
+        this.props.setCardSelected({suggestion : suggestion, mainSideboard : this.props.mainSideboard})
     }
 
     onSuggestionsClearRequested = () => {
@@ -104,27 +100,42 @@ export default class DeckListAutosuggest extends React.Component {
         });
     };
 
+    shouldRenderSuggestions(value) {
+        return value.trim().length > 1;
+    }
+
+    onBlur(){
+
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.clear != this.props.clear){
+            this.setState({value : ""})
+        }
+    }
+
     render() {
         const { value, suggestions } = this.state;
-
         const inputProps = {
             placeholder: 'Type a Card Name',
             value,
-            onChange: this.onChange
+            onChange: this.onChange,
+            onBlur : this.onBlur.bind(this)
         };
 
-        // Finally, render it!
         return (
             <div className="CardNamesCallComponent">
                 <Autosuggest
                     suggestions={suggestions}
-                    theme={theme}
+                    theme={themeDeckEdit}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
                     onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                     onSuggestionSelected={this.onSuggestionSelected.bind(this)}
                     getSuggestionValue={getSuggestionValue}
                     renderSuggestion={renderSuggestion}
                     inputProps={inputProps}
+                    highlightFirstSuggestion={true}
+                    shouldRenderSuggestions={this.shouldRenderSuggestions}
                 />
             </div>
         );

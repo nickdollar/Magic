@@ -106,38 +106,37 @@ getGPDecksHTTPRequest = ({url, event})=>{
                 }else{
                     Errors.insert({Events_id : event._id, type : "no regex match", id : player, description : information})
                 }
-                var main = [];
-                var sideboard = [];
-                var mainCards = $DecksPages(decks[i]).find('.sorted-by-overview-container .row');
 
-                for(var j = 0; j < mainCards.length; j++){
-                    var quantity = parseInt($DecksPages(mainCards[j]).find('.card-count').text());
-                    var name = $DecksPages(mainCards[j]).find('.card-name').text();
-                    name = fixCards(name);
-                    main.push({name : name, quantity : quantity});
+                var data = {};
+                var fieldOptions = [
+                    {key : "main", css : ".sorted-by-overview-container .row"},
+                    {key : "sideboard", css : ".sorted-by-sideboard-container .row"},
+                ]
+
+                for(var j = 0; j < fieldOptions.length; j++){
+                    var cardsExtracted = $DecksPages(decks[i]).find(fieldOptions[j].css);
+                    var cardsFixed = [];
+                    for(var k = 0; k < cardsExtracted.length; k++){
+                        var qty = parseInt($DecksPages(cardsExtracted[k]).find('.card-count').text());
+                        var name = $DecksPages(cardsExtracted[k]).find('.card-name').text();
+                        name = fixCards(name);
+                        cardsFixed.push({name : name, qty : qty });
+                    }
+                    data[fieldOptions[j].key] = cardsFixed;
                 }
 
-                var sideboardCards = $DecksPages(decks[i]).find('.sorted-by-sideboard-container .row');
-                for(j = 0; j < sideboardCards.length; j++){
-                    var quantity = parseInt($DecksPages(sideboardCards[j]).find('.card-count').text());
-                    var name = $DecksPages(sideboardCards[j]).find('.card-name').text();
-                    name = fixCards(name);
-                    sideboard.push({name : name, quantity : quantity});
-                }
-
-                var data = {
+                Object.assign(data, {
                     Events_id : event._id,
                     date : event.date,
                     EventsTypes_id : event.EventsTypes_id,
                     player : player,
                     Formats_id : event.Formats_id,
-                    main : main,
-                    sideboard : sideboard,
                     state : "scraped"
-                }
+                })
+
 
                 if(position){
-                    data = Object.assign(data, {position : parseInt(position[1])})
+                    Object.assign(data, {position : parseInt(position[1])})
                 }
                 DecksData.insert(data);
             }

@@ -30,7 +30,7 @@ export default class Collection extends React.Component {
         return(
             <div className="CollectionComponent">
                 <div className="addCartToCollectionWrapper">
-                    <div className="QuantityWrapper">Qty: <input className="addQuantityNumberInput" ref={(input)=>this.qty = input} type="text" defaultValue={4}/></div>
+                    <div className="QtyWrapper">Qty: <input className="addQtyNumberInput" ref={(input)=>this.qty = input} type="text" defaultValue={4}/></div>
                     <div className="foilCheckbox">Foil: <input className="checkboxStyle" ref={(input)=>this.foil = input} type="checkbox"/></div>
                     <div className="cardNamesCall"><CardNamesCall  typedCard={this.typedCard.bind(this)}/></div>
                     <div className="addToCollectionButton"><button className="btn btn-default" onClick={this.sendCardToCollection.bind(this)}>Add To Collection</button></div>

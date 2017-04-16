@@ -48,12 +48,12 @@ export default class DecksNamesDecksDataList extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(nextProps.DeckName._id != this.props.DeckName._id){
-            this.getNewList();
+            this.getNewList(nextProps.DeckName._id);
         }
     }
 
-    getNewList(){
-        Meteor.call("getDecksListFromDeckName", this.props.DeckName._id, (err, data)=>{
+    getNewList(DeckNames_id){
+        Meteor.call("getDecksListFromDeckName", DeckNames_id, (err, data)=>{
             if(data.length){
                 this.props.selectedDeckHandle(data[0]._id);
                 this.state.SelectedDeck = data[0]._id;
@@ -65,7 +65,7 @@ export default class DecksNamesDecksDataList extends React.Component {
     }
 
     componentDidMount(){
-        this.getNewList();
+        this.getNewList(this.props.DeckName._id);
     }
 
     render(){

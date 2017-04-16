@@ -103,9 +103,9 @@ export default class ArchetypesShells extends React.Component {
             });
 
             if(index > -1){
-                typesSeparated[this.findCardType(cardsList[i].cardData)].array.push( {name : cardsList[i]._id, quantity : cardsList[i].count, checked : true});
+                typesSeparated[this.findCardType(cardsList[i].cardData)].array.push( {name : cardsList[i]._id, qty : cardsList[i].count, checked : true});
             }else{
-                typesSeparated[this.findCardType(cardsList[i].cardData)].array.push( {name : cardsList[i]._id, quantity : cardsList[i].count, checked : false});
+                typesSeparated[this.findCardType(cardsList[i].cardData)].array.push( {name : cardsList[i]._id, qty : cardsList[i].count, checked : false});
             }
 
         }

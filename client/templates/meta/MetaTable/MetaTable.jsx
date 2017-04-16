@@ -23,7 +23,7 @@ export default class MetaTable extends React.Component {
 
         Meteor.call("getMetaAllArchetypesMethod", {Formats_id : Formats_id, options : options, LGS_ids : LGS_ids}, (err, data)=>{
             var totalDecks = data.reduce((a, b)=>{
-                return  a + b.quantity;
+                return  a + b.qty;
             },0);
             var table = [];
             table = table.concat(data)

@@ -38,9 +38,6 @@ Template.pastEventsYoutubePlaylistModal.onRendered(function(){
             e.preventDefault();
             var youtubePlaylistRegex = new RegExp(/https?:\/\/(?:www\.)?youtube\.com\/(watch|playlist)\?(?:(?:&.*)*((?:v=([a-zA-Z0-9_\-]+)(?:&.*)*&list=([a-zA-Z0-9_\-]+))|(?:list=([a-zA-Z0-9_\-]+?)(?:&.*)*&v=([a-zA-Z0-9_\-]+)))(?:&.*)*(?:\#.*)*|list=([a-zA-Z0-9_\-]+))/g);
 
-            //var pl = "https://www.youtube.com/playlist?list=PL55713C70BA91BD6E";
-            //var complete = "https://www.youtube.com/watch?v=k9s5H-RNjxY&index=2&list=PLMNj_r5bccUxICsS5sl_xRKIqoyZ7OOAj";
-
             var youtubePlaylistMatch = youtubePlaylistRegex.exec($(tmp.find("#youtubePlaylist")).val());
 
             var playlist = "";

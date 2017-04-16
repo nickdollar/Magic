@@ -21,6 +21,7 @@ export default class UsersDecks extends React.Component {
             sideboard : {name : null,  _id : null, qty : 4},
             clear : true,
             changes : false,
+            removeState : "Remove"
         }
     }
 
@@ -95,6 +96,7 @@ export default class UsersDecks extends React.Component {
         this.state.UsersDeckData[mainSideboard][index].qty = parseInt(target.value);
         this.setState({changes : true});
     }
+
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
         if(!selectedCard.name){
@@ -152,10 +154,10 @@ export default class UsersDecks extends React.Component {
     submitDeck(){
         var deck = this.getDeckInfo();
         Meteor.call("updateUsersDecks", deck, (err, data)=>{
-            // var DecksLists = this.state.DecksLists.concat();
-            // var index = DecksLists.findIndex(deckObj => deckObj._id == deck.UsersDecks_id);
-            // DecksLists[index].name = deck.name;
-            // this.setState({changes : false})
+            var DecksLists = this.state.DecksLists.concat();
+            var index = DecksLists.findIndex(deckObj => deckObj._id == deck.UsersDecks_id);
+            DecksLists[index].name = deck.name;
+            this.setState({changes : false})
          })
     }
 
@@ -169,6 +171,16 @@ export default class UsersDecks extends React.Component {
     }
     deckAdded(){
         this.getUsersDeckList();
+    }
+
+    removeDeck(){
+        if(this.state.removeState == "Remove"){
+            this.setState({ removeState : "Confirm"});
+        }else if(this.state.removeState == "Confirm"){
+            Meteor.call("RemoveDeck", {UsersDeck_id : this.state.UsersDeck_id}, (err, response)=>{
+                this.setState({ removeState : "Remove", UsersDeck_id : ""});
+            })
+        }
     }
 
     render(){
@@ -204,7 +216,7 @@ export default class UsersDecks extends React.Component {
                                                         onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}</button>
                                             </div>
                                             <div className="btnRemove">
-                                                <button disabled={!this.state.changes} className="btn">Remove</button>
+                                                <button onClick={this.removeDeck.bind(this)} className="btn">{this.state.removeState}</button>
                                             </div>
                                             <div style={{clear: "both"}}></div>
                                         </div>

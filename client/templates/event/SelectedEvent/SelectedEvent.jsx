@@ -74,6 +74,7 @@ export default class LGSAddNewStore extends React.Component {
                         <SelectedEventPlayerList Events_id={this.props.Events_id}
                                                  DecksData_id={this.state.DecksData_id}
                                                  DecksList={this.state.DecksList}
+                                                 Event={this.state.Event}
                        />
                     </div>
                 </div>

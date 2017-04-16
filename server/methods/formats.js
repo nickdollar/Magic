@@ -64,6 +64,14 @@ createFormats = ()=>{
                     "Umezawa's Jitte",
                     "Vault of Whispers",
                 ],
+                sets : [
+                        "8ED", "MRD", "DST", "5DN", "CHK", "BOK", "SOK", "9ED", "RAV", "GPT",
+                        "DIS", "CSP", "TSP", "PLC", "FUT", "10E", "LRW", "MOR", "SHM", "EVE",
+                        "ALA", "CON", "ARB", "M10", "ZEN", "WWK", "ROE", "M11", "SOM", "MBS",
+                        "NPH", "M12", "ISD", "DKA", "AVR", "M13", "RTR", "GTC", "DGM", "THS",
+                        "BNG", "JOU", "KTK", "FRF", "DTK", "ORI", "BFZ", "OGW", "SOI", "EMN",
+                        "KLD", "AER", "AKH", "HOU"
+                ],
                 types : [
                     {name : "main", qty : {min : 60}},
                     {name : "sideboard", qty : {max : 15}}

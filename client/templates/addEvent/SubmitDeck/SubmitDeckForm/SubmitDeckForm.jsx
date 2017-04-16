@@ -9,26 +9,28 @@ export default class SubmitDeckForm extends React.Component {
     constructor(){
         super();
         this.state = {
-            deck : {
-                main : [],
-                sideboard : [],
-                theEventExists : false
-            }
+            UsersDeckData : { main : [], sideboard : [] }
         }
     }
+
+
 
     setDeck(deck){
         var temp = Object.assign({}, deck);
         this.setState({deck : temp})
     }
 
+
+    componentDidMount(){
+    }
+
     render() {
         return (
             <div className="SubmitDeckFormComponent">
                 <button onClick={this.props.resetAll}>Close Form</button>
-                <ImportByFile setDeck={this.setDeck.bind(this)}/>
+                {/*<ImportByFile setDeck={this.setDeck.bind(this)}/>*/}
                 <ImportByDeckContainer setDeck={this.setDeck.bind(this)}/>
-                <DeckAndSideboardInput  deck={this.state.deck}
+                <DeckAndSideboardInput  UsersDeckData={this.state.UsersDeckData}
                                         event = {this.props.event}
                 />
             </div>

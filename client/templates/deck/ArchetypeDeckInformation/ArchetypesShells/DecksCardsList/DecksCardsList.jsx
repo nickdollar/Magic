@@ -15,7 +15,7 @@ export default class DecksCardsList extends React.Component {
                             {this.props.typesSeparated.typesSeparated[key].array.map((card, index)=>{
                                 var temp = key;
                             return  <li onClick={()=>this.props.checkCard(temp, index)} className={`list-group-item ${card.checked ? "checked" : ""}`} key={card.name}>
-                                        {card.quantity} {card.name}
+                                        {card.qty} {card.name}
                                     </li>
                                     })}
                         </ul>

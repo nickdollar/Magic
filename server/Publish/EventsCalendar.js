@@ -8,3 +8,4 @@ Meteor.publish('EventsCalendarNotConfirmed', function(format){
 Meteor.publish('BIGEventsCalendar', function(format){
     return EventsCalendar.find({formats : format, state : "confirmed"});
 });
+

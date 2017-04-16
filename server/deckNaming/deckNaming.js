@@ -75,7 +75,7 @@ findDeckComparison2 = function(_id){
         return obj.name;
     });
 
-    var foundDeck = DecksDataUniqueWithoutQuantity.findOne({format : deck.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}});
+    var foundDeck = DecksDataUniqueWithoutQty.findOne({format : deck.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}});
 
 
     if(foundDeck){
@@ -96,7 +96,7 @@ giveNamesToAllDecksScraped = function({_id}){
         return obj.name;
     });
 
-    var foundDeck = DecksDataUniqueWithoutQuantity.find({format : cardsOnMain[0].format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}, {limit : 1}).fetch()[0];
+    var foundDeck = DecksDataUniqueWithoutQty.find({format : cardsOnMain[0].format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}, {limit : 1}).fetch()[0];
 
     if(foundDeck){
         DecksData.update({_id : _id},
@@ -107,7 +107,7 @@ giveNamesToAllDecksScraped = function({_id}){
 }
 
 findDeckComparison = function(_id){
-    var template = foundDeckFromDecksDataUniqueWithoutQuantity(_id);
+    var template = foundDeckFromDecksDataUniqueWithoutQty(_id);
     if(template){
         return [{DecksNames_id : template.DecksNames_id, name : DecksNames.findOne({_id : template.DecksNames_id}).name, result  : 1}];
     }
@@ -212,7 +212,7 @@ getDeckNamePercentage = function(DecksNames_id){
         }
 
         var sum = filteredCardData.reduce(function(a, b){
-            return a + b.decksQuantity;
+            return a + b.decksQty;
         }, 0);
 
         DecksNames.update({_id : deckName._id, "DecksNames._id" : obj._id},

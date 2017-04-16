@@ -37,15 +37,15 @@ class ImportByFile extends React.Component{
                 if(sideboardCheck){
                     sideboardBoolean = true;
                 }
-                var quantity = line[2] ? parseInt(line[2]) : 1;
+                var qty = line[2] ? parseInt(line[2]) : 1;
 
                 if(sideboardBoolean){
-                    sideboard.push({name : line[3].toTitleCase(), quantity : quantity});
+                    sideboard.push({name : line[3].toTitleCase(), qty : qty});
                 }else{
                     if(line[1]){
-                        sideboard.push({name : line[3].toTitleCase(), quantity : quantity});
+                        sideboard.push({name : line[3].toTitleCase(), qty : qty});
                     }else{
-                        main.push({name : line[3].toTitleCase(), quantity : quantity});
+                        main.push({name : line[3].toTitleCase(), qty : qty});
                     }
                 }
             }

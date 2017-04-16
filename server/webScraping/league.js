@@ -58,7 +58,7 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
                             Formats_id : Formats_id,
                             EventsTypes_id : eventType._id,
                             url : url,
-                            state : "decks"
+                            state : "starting"
                         }
                     },
                     {upsert : true}
@@ -78,37 +78,29 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
                         draw : information.score.draw
                     };
 
-                    var mainCards = $(decks[i]).find('.sorted-by-overview-container .row');
-                    var main = [];
-                    for(var j = 0; j < mainCards.length; j++){
-                        var quantity = parseInt($(mainCards[j]).find('.card-count').text());
-                        var name = $(mainCards[j]).find('.card-name').text();
-                        name = fixCards(name);
-                        if(CardsData.find({ name : name}, {limit : 1}).count()){
-                            main.push(
+                    var fieldOptions = [
+                        {key : "main", css : ".sorted-by-overview-container .row"},
+                        {key : "sideboard", css : ".sorted-by-sideboard-container .row"},
+                    ]
+
+
+                    for(var j = 0; j < fieldOptions.length; j++){
+                        var cardsExtracted = $(decks[i]).find(fieldOptions[j].css);
+                        var cardsFixed = [];
+                        for(var k = 0; k < cardsExtracted.length; k++){
+                            var qty = parseInt($(cardsExtracted[k]).find('.card-count').text());
+                            var name = $(cardsExtracted[k]).find('.card-name').text();
+                            name = fixCards(name);
+                            cardsFixed.push(
                                 {
                                     name : name,
-                                    quantity : quantity
+                                    qty : qty
                                 }
                             );
                         }
+                        data[fieldOptions[j].key] = cardsFixed;
                     }
 
-                    var sideboardCards = $(decks[i]).find('.sorted-by-sideboard-container .row');
-                    var sideboard = [];
-                    for(j = 0; j < sideboardCards.length; j++){
-                        var quantity = parseInt($(sideboardCards[j]).find('.card-count').text());
-                        var name = $(sideboardCards[j]).find('.card-name').text();
-                        name = fixCards(name);
-                        sideboard.push(
-                            {
-                                name : name,
-                                quantity : quantity
-                            }
-                        );
-                    }
-                    data.main = main;
-                    data.sideboard = sideboard;
                     data.state = "scraped";
                     DecksData.insert(data);
                 }
@@ -117,7 +109,7 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
 
                 Events.update({_id : eventQuery._id},
                     {
-                        $set : {decksQty : decksQty}
+                        $set : {decksQty : decksQty, state : "decks"}
                     }
                 )
             }

@@ -16,7 +16,7 @@ removeToDecksUniqueWithName = function(_id){
         return obj.name;
     });
 
-    DecksDataUniqueWithoutQuantity.remove({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}})
+    DecksDataUniqueWithoutQty.remove({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}})
 }
 
 CreateTheCardList = function(DecksNames_id){
@@ -59,13 +59,13 @@ addToDecksUniqueWithName = function(_id){
         return obj.name;
     });
 
-    if(!DecksDataUniqueWithoutQuantity.find({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}).count()){
+    if(!DecksDataUniqueWithoutQty.find({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}).count()){
         console.log("New Unique Deck");
     }else{
         console.log("Unique Deck Exists");
     }
 
-    DecksDataUniqueWithoutQuantity.update({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}},
+    DecksDataUniqueWithoutQty.update({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}},
         {$set : {DecksNames_id : deckData.DecksNames_id, format : deckData.format, nonLandMain : nonLandsCards}},
         {
             upsert : true

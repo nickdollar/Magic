@@ -60,9 +60,16 @@ export default class PlayerList extends React.Component {
     }
 
     render(){
+
+        var sizePerPage = 8;
+        if(this.props.Event){
+            if(this.props.Event.EventsTypes_id == "MTGMOLeague"){
+                sizePerPage = 10;
+            }
+        }
         const tableOptions = {
             options : {
-                sizePerPage : 8,
+                sizePerPage : sizePerPage,
                 hideSizePerPage: true,
                 paginationSize: 3,
             },

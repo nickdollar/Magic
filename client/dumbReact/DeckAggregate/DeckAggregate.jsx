@@ -62,7 +62,7 @@ export default class Deck extends React.Component{
         return true;
     }
 
-    getCardQuantity(cardList){
+    getCardQty(cardList){
         for(var i =0; i < cardList.length; i++){
             var have = Session.get("cards")[cardList[i].name];
             if(!have){
@@ -106,24 +106,24 @@ export default class Deck extends React.Component{
         var totalValue = 0;
         var totalMissing = 0;
         cards.forEach((card)=>{
-            var quantity = card.quantity ? card.quantity : 0;
+            var qty = card.qty ? card.qty : 0;
             var cardAvg = card.avg ? card.avg : 0;
             var have = card.have ? card.have : 0;
 
-            var missQuantity = quantity - have;
-            missQuantity < 0 ? missQuantity = 0 : null;
+            var missQty = qty - have;
+            missQty < 0 ? missQty = 0 : null;
 
 
-            if(quantity){
-                linkAllCards += `${quantity} ${card.name}||`
+            if(qty){
+                linkAllCards += `${qty} ${card.name}||`
             }
-            if(missQuantity){
-                linkMissingCards += `${missQuantity} ${card.name}||`
+            if(missQty){
+                linkMissingCards += `${missQty} ${card.name}||`
             }
 
 
-            totalValue += quantity * cardAvg;
-            totalMissing += missQuantity * cardAvg;
+            totalValue += qty * cardAvg;
+            totalMissing += missQty * cardAvg;
 
         })
 
@@ -146,30 +146,28 @@ export default class Deck extends React.Component{
         return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.name}&partner=Crowd`}>{card.avg ? card.avg.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
     }
 
-    cardQuantity(card){
+    cardQty(card){
         if(Meteor.userId()){
-            return <span className={card.quantity > card.have ? "lessThan" : null}>{`${card.quantity}/${card.have}`}</span>
+            return <span className={card.qty > card.have ? "lessThan" : null}>{`${card.qty}/${card.have}`}</span>
         }
-        return card.quantity;
+        return card.qty;
     }
 
     render() {
 
-        if(!this.props.DecksData_id) return <div></div>;
-
-        this.getCardQuantity(this.state.DecksData.main);
+        this.getCardQty(this.state.DecksData.main);
         var typesSeparated = this.separateCardsByType(this.state.DecksData.main);
         var resultMain = [];
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
             resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
-                return a + b.quantity;
+                return a + b.qty;
             },0)})</div>)
             resultMain.push(
                 typesSeparated[type].array.map((card)=>{
                     return  <div className="cardLine" key={card.name}>
-                        <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
-                            <span className="quantity">{this.cardQuantity(card)}</span><span data-name={card.name}>{card.name}</span>
+                        <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name}>
+                            <span className="qty">{this.cardQty(card)}</span><span data-name={card.name}>{card.name}</span>
                         </div>
                         <div className="cardInfo">
                             <div className="manaValue">
@@ -185,13 +183,13 @@ export default class Deck extends React.Component{
                 })
             )
         }
-        this.getCardQuantity(this.state.DecksData.sideboard);
+        this.getCardQty(this.state.DecksData.sideboard);
         var sideboardCards = this.addManaCostToSideboard(this.state.DecksData.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
             return <div className="cardLine" key={card.name}>
-                <div className="cardQuantityAndNameWrapper js-imagePopOver" data-name={card.name}>
-                    <span className="quantity">{this.cardQuantity(card)}</span><span className="name " data-name={card.name}>{card.name}</span>
+                <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name}>
+                    <span className="qty">{this.cardQty(card)}</span><span className="name " data-name={card.name}>{card.name}</span>
                 </div>
                 <div className="cardInfo">
                     <div className="manaValue">
@@ -209,7 +207,7 @@ export default class Deck extends React.Component{
 
         return (
 
-            <div className="DeckContainer">
+            <div className="DeckAggregateContainer">
                 <div className="buyPlace">{this.createLink(this.state.DecksData)}</div>
                 <div className="mainSide">Main</div>
                 <div className="deckBlock">

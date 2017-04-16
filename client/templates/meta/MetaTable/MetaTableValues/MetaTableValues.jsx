@@ -69,7 +69,7 @@ export default class ValuesTable extends React.Component {
                 <BootstrapTable {...options}>
                     <TableHeaderColumn width="30" dataAlign='center' dataField="position" dataSort>#</TableHeaderColumn>
                     <TableHeaderColumn dataField="_id" isKey dataFormat={this.nameColumnFormatter.bind(this)} dataSort>Archetype</TableHeaderColumn>
-                    <TableHeaderColumn dataAlign='center' width="74" dataField="quantity" dataFormat={this.percentageColumn.bind(this)}>%</TableHeaderColumn>
+                    <TableHeaderColumn dataAlign='center' width="74" dataField="qty" dataFormat={this.percentageColumn.bind(this)}>%</TableHeaderColumn>
                     <TableHeaderColumn width="96" dataAlign='center' dataField="_id" dataFormat={this.colorsColumn.bind(this)}>Colors</TableHeaderColumn>
                     <TableHeaderColumn width="80" dataAlign='center' dataField="_id" dataFormat={this.typeColumns.bind(this)}>Type</TableHeaderColumn>
                 </BootstrapTable>

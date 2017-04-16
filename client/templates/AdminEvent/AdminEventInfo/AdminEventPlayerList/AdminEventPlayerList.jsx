@@ -1,26 +1,21 @@
 import React from 'react' ;
-import DeckListContainer from '/client/dumbReact/DeckEdit/DeckEditContainer.jsx' ;
+import DeckEditStandalone from '/client/dumbReact/DeckEditStandalone/DeckEditStandalone.jsx' ;
 import Moment from "moment";
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
 
 export default class AdminEventPlayerList extends React.Component {
-    constructor(){
+    constructor(props){
         super();
         this.state = {
             showDecks : [],
-            userAdmin : false
+            userAdmin : false,
+            decks : props.decks ? props.decks : [],
+            changes : false
         }
     }
 
-    removeDeck(DecksData_id){
-        Meteor.call("removeDeckFromLGSEvent", DecksData_id);
-    }
-
-    componentWillReceiveProps(nextProps){
-        
-    }
-
     toggleShowDeck(DecksData_id){
-
         var index = this.state.showDecks.findIndex((showDeckObj)=>{
             return showDeckObj == DecksData_id;
         });
@@ -36,28 +31,23 @@ export default class AdminEventPlayerList extends React.Component {
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        var decks = this.state.decks.concat([]);
+        for(var i = 0; i < nextProps.decks; i++){
+            var index = decks.findIndex(deck=>{
+                return deck._id == nextProps.decks[i];
+            })
+            if(index == -1){
+                decks.push(nextProps.decks);
+            }
+        }
+        this.setState({decks : decks});
+    }
 
     componentDidMount(){
         if(Roles.userIsInRole(Meteor.user(), "admin")){
             this.setState({userAdmin : true});
         }
-    }
-
-    confirm(e) {
-        var row = $(e.target).closest("tr").find("input");
-        var rowObject = {}
-        var DecksData_id = e.target.getAttribute("data-_id");
-
-        rowObject.player = row[0].value;
-        rowObject.position = row[1].value;
-        rowObject.victory = row[2].value;
-        rowObject.loss = row[3].value;
-        rowObject.draw = row[4].value;
-
-        Meteor.call("updatePlayerFromAdmin", DecksData_id, rowObject, ()=>{
-            this.forceUpdate();
-        });
-
     }
 
     adminConfirm(){
@@ -92,79 +82,116 @@ export default class AdminEventPlayerList extends React.Component {
         return results[state];
     }
 
+    position(){
+        return <input type="number"/>
+    }
+
+    nameChange(value, index){
+        var decks = this.state.decks.concat();
+        decks[index].player = value;
+
+        this.setState({changes : true, decks : decks});
+    }
+
+    positionChange(value, index){
+
+        var decks = this.state.decks.concat();
+
+        var value = parseInt(value);
+        if(isNaN(value)){
+            value = 0;
+        }
+        decks[index].position = value;
+
+        this.setState({changes : true, decks : decks});
+    }
+
+    victoryChange(value, index){
+        var decks = this.state.decks.concat();
+        var value = parseInt(value);
+        if(isNaN(value)){
+            value = 0;
+        }
+        decks[index].victory = value;
+        this.setState({changes : true, decks : decks});
+    }
+
+    lossChange(value, index){
+        var decks = this.state.decks.concat();
+        var value = parseInt(value);
+        if(isNaN(value)){
+            value = 0;
+        }
+        decks[index].loss = value;
+        this.setState({changes : true, decks : decks});
+    }
+
+    drawChange(value, index){
+        var decks = this.state.decks.concat();
+        var value = parseInt(value);
+        if(isNaN(value)){
+            value = 0;
+        }
+        decks[index].draw = value;
+        this.setState({changes : true, decks : decks});
+    }
+
+    confirmChanges(){
+        var decks = this.state.decks.map((deck)=>{
+           return {_id : deck._id, player : deck.player, position : deck.position ? deck.position : 0, victory : deck.victory ? deck.victory : 0, loss : deck.loss ? deck.loss : 0, draw : deck.draw ? deck.draw : 0}
+        });
+
+        Meteor.call("confirmEventAdminChanges", {decks : decks}, (err, response)=>{
+            this.setState({changes : false});
+        });
+    }
+
     render() {
         if(!this.props.decks){
             return <div>loading...</div>
         }
-        var rows = this.props.decks.map((DeckData)=>{
-            var index = this.state.showDecks.findIndex((showDeckObj)=>{
-                    return showDeckObj == DeckData._id;
+        var rows = this.state.decks.map((deck, index)=>{
+            var indexShow = this.state.showDecks.findIndex((showDeckObj)=>{
+                    return showDeckObj == deck._id;
                 })
-            var eventDeck;
-            eventDeck = <span onClick={this.toggleShowDeck.bind(this, DeckData._id)}> {index == -1 ? "Show" : "Hide"}</span>
+
+
+            var eventDeck = <span onClick={()=>this.toggleShowDeck(deck._id)}> {indexShow == -1 ? "Show" : "Hide"}</span>;
 
             var rowInfo = <tr>
-                            <td>
-                                {eventDeck}
-                            </td>
-                            <td>
-                                <input type="text" defaultValue={DeckData.player}/>
-                            </td>
-                            <td>
-                                <input type="number" className="inputNumber" min="0" defaultValue={DeckData.position == null ? 0 : DeckData.position }/>
-                            </td>
-                            <td>
-                                <input type="number" className="inputNumber" min="0" defaultValue={DeckData.victory == null ? 0 : DeckData.victory }/>
-                            </td>
-                            <td>
-                                <input type="number" className="inputNumber" min="0" defaultValue={DeckData.loss == null ? 0 : DeckData.loss }/>
-                            </td>
-                            <td>
-                                <input type="number" className="inputNumber" min="0" defaultValue={DeckData.draw == null ? 0 : DeckData.draw }/>
-                            </td>
-                            <td>
-                                <button onClick={this.confirm.bind(this)}>Confirm</button>
-                            </td>
-                            <td>
-                                <button onClick={this.removeDeck.bind(this, DeckData._id)}>remove</button>
-                            </td>
-
+                            <td>{eventDeck}</td>
+                            <td><input type="text" onChange={(e)=>this.nameChange(e.target.value, index)} value={deck.player}/></td>
+                            <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.positionChange(e.target.value, index)} value={deck.position == null ? 0 : deck.position}/></td>
+                            <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.victoryChange(e.target.value, index)} value={deck.victory == null ? 0 : deck.victory}/></td>
+                            <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.lossChange(e.target.value, index)} value={deck.loss == null ? 0 : deck.loss }/></td>
+                            <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.drawChange(e.target.value, index)} value={deck.draw == null ? 0 : deck.draw }/></td>
                         </tr>
-            if(index != -1){
-                return <tbody key={DeckData._id}>
+            if(indexShow != -1){
+                return <tbody key={deck._id}>
                             {rowInfo}
-                            <tr>
-                                <td colSpan="7"><DeckListContainer DecksData_id={DeckData._id}/></td>
-                            </tr>
+                            <tr><td colSpan="7"><DeckEditStandalone DecksData_id={deck._id}/></td></tr>
                         </tbody>
             }
-            return <tbody key={DeckData._id}>
+            return <tbody key={deck._id}>
                         {rowInfo}
                     </tbody>
         })
+
         return (
                 <div className="AdminEventPlayerListComponent">
                     <div>
                         <div>Event Will be published after request made and Admin Confirmation</div>
+
                         {this.state.userAdmin ? <button onClick={this.adminConfirm}>Publish</button> : null}
                         <div>Published At : {this.props.event.publishedDate ? Moment(this.props.event.publishedDate).format("MM/DD HH:MM") : "Not Published Yet"} - This Event Will Be Permanently locked after 2 days. Non locked Event Will be discarded.</div>
                         <div>State: {this.stateLegend(this.props.event.state)}</div>
-                        <div><button
-                                className="btn btn-xs"
-                                onClick={this.publish.bind(this)}>{this.eventsButtonStatus(this.props.event.state)}</button>
-                        </div>
+                        <div><button className="btn btn-xs" onClick={this.publish.bind(this)}>{this.eventsButtonStatus(this.props.event.state)}</button></div>
                     </div>
+                    <button className="btn" onClick={this.confirmChanges.bind(this)} disabled={!this.state.changes}>{this.state.changes ? "Confirm Changes" : "No changes"}</button>
                     <table ref="table" className="table table-sm">
                         <thead>
                             <tr>
-                                <th>Deck</th>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Wins</th>
-                                <th>Losses</th>
-                                <th>Draws</th>
-                                <th>Confirm</th>
-                                <th>Remove</th>
+                                {["Deck", "Player", "Position", "Wins", "Losses", "Draws"].map(head => <th key={head}>{head}</th>)}
                             </tr>
                         </thead>
                             {rows.map((row)=>{
@@ -176,3 +203,17 @@ export default class AdminEventPlayerList extends React.Component {
     }
 }
 
+
+// var decksTable = {
+//     data: this.props.decks,
+//     expandableRow: this.expandableRow.bind(this),
+//     expandComponent: this.expandComponent.bind(this),
+// }
+{/*<BootstrapTable {...decksTable}>*/}
+    {/*<TableHeaderColumn dataField="id" isKey={true} dataAlign="center" dataSort={true}>Hide</TableHeaderColumn>*/}
+    {/*<TableHeaderColumn dataField="player" dataSort={true}>Player</TableHeaderColumn>*/}
+    {/*<TableHeaderColumn dataField="position" dataFormat={this.position}>Position</TableHeaderColumn>*/}
+    {/*<TableHeaderColumn dataField="victory" dataAlign="center" dataSort={true}>Wins</TableHeaderColumn>*/}
+    {/*<TableHeaderColumn dataField="loss" dataSort={true}>Losses</TableHeaderColumn>*/}
+    {/*<TableHeaderColumn dataField="draw" >Draws</TableHeaderColumn>*/}
+{/*</BootstrapTable>*/}

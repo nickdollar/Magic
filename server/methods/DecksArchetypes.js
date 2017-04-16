@@ -52,7 +52,7 @@ Meteor.methods({
                     multi : true
                 }
             )
-            DecksDataUniqueWithoutQuantity.remove({DecksNames_id : {$in : decksNames_ids}});
+            DecksDataUniqueWithoutQty.remove({DecksNames_id : {$in : decksNames_ids}});
             DecksArchetypes.remove({_id : DecksArchetypes_id});
         };
     },
@@ -144,23 +144,7 @@ Meteor.methods({
 
 
         );
-        ArchetypesShells.update({DecksArchetypes_id : DecksArchetypes_id},{
-                $set : {
-                    cardTiers : DecksArchetypesAggregation
-                }
-            },
-            {
-                upsert : true
-            }
-        )
         logFunctionsEnd("DecksArchetypes_id");
-    },
-    createArchetypesShellsForFormat(Formats_id){
-        logFunctionsStart("createShellForFormat");
-        DecksArchetypes.find({Formats_id : Formats_id}).forEach((deckArchetype)=>{
-            Meteor.call("createShellArchetype", deckArchetype._id);
-        })
-        logFunctionsEnd("createShellForFormat");
     },
     DecksArchetypesformatToFormats_idMethod(){
         logFunctionsStart("DecksArchetypesformatToFormats_idMethod")
@@ -178,7 +162,7 @@ Meteor.methods({
                     multi : true
                 })
         });
-        logFunctionsEnd("DecksArchetypesformatToFormats_idMethod")
+        logFunctionsEnd("DecksArchetypesformatToFormats_idMethod" )
     },
     DecksArchetypesCreateLinkNameMethod(){
         logFunctionsStart("DecksArchetypesCreateLinkNameMethod")

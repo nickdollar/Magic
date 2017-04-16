@@ -10,9 +10,10 @@ import CustomLGSEventsAdmin from './CustomLGSEventsAdmin/CustomLGSEventsAdmin.js
 import CustomEventsCalendarAdmin from './CustomEventsCalendarAdmin/CustomEventsCalendarAdmin.jsx';
 import CustomZipCodesAdmin from './CustomZipCodesAdmin/CustomZipCodesAdmin.jsx';
 import CustomCardsFullDataAdmin from './CustomCardsFullDataAdmin/CustomCardsFullDataAdmin.jsx';
-import CustomArchetypesShellsAdmin from './CustomArchetypesShellsAdmin/CustomArchetypesShells.jsx';
 import CustomCardsCollectionSimplifiedAdmin from './CustomCardsCollectionSimplifiedAdmin/CustomCardsCollectionSimplifiedAdmin.jsx';
-
+import CustomNewestAdmin from './CustomNewestMetaAdmin/CustomNewestAdmin.jsx';
+import CustomTCGPlayerCardsDailyPricesAdmin from './CustomTCGPlayerCardsDailyPricesAdmin/CustomTCGPlayerCardsDailyPricesAdmin.jsx';
+import CustomTCGPlayerCardsFullDataAdmin from './CustomTCGPlayerCardsFullDataAdmin/CustomTCGPlayerCardsFullDataAdmin';
 
 export default class CustomAdmin extends React.Component{
     constructor(props){
@@ -43,10 +44,14 @@ export default class CustomAdmin extends React.Component{
             return <CustomZipCodesAdmin/>
         }else if (route=="CardsFullData"){
             return <CustomCardsFullDataAdmin/>
-        }else if (route=="ArchetypesShells"){
-            return <CustomArchetypesShellsAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="CardsCollectionSimplified"){
             return <CustomCardsCollectionSimplifiedAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="MetaNewest"){
+            return <CustomNewestAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="TCGPlayerCardsDailyPrices"){
+            return <CustomTCGPlayerCardsDailyPricesAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="TCGPlayerCardsFullData"){
+            return <CustomTCGPlayerCardsFullDataAdmin Formats_id={this.state.Formats_id}/>
         }
     }
 
@@ -68,8 +73,8 @@ export default class CustomAdmin extends React.Component{
 
     render(){
         var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
-                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData", "ArchetypesShells",
-                            "CardsCollectionSimplified"];
+                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData",
+                            "CardsCollectionSimplified", "MetaNewest", "TCGPlayerCardsDailyPrices", "TCGPlayerCardsFullData"];
         collections.sort()
         return (
             <div className="CustomAdminComponent">

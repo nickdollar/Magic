@@ -1,6 +1,6 @@
 
 Meteor.methods({
-    getUsersDecksFromUser({format}) {
+    getUsersDecksFromUser({}) {
         return UsersDecks.find({Users_id : Meteor.userId()}, {fields : {sideboard : 0, main : 0}}).fetch();
     },
     addNewDeckToUsersDecksMethod({Formats_id, name}) {
@@ -14,6 +14,9 @@ Meteor.methods({
             });
         return true;
     },
+    RemoveDeck({UsersDeck_id}){
+        return true;
+    },
     getUsersDeckBy_id(UsersDecks_id) {
         var deckAggregate = UsersDecks.aggregate(
             [
@@ -21,8 +24,8 @@ Meteor.methods({
                 {$project: {
                         card : {"$setUnion" :
                             [
-                                {$map : {input : "$main", as: "el", in : {name : "$$el.name", qty : "$$el.quantity", class : {"$const" : "main"}}}},
-                                {$map : { input : "$sideboard", as: "el", in : { name : "$$el.name", qty : "$$el.quantity", class : {"$const" : "sideboard"}}}}
+                                {$map : {input : "$main", as: "el", in : {name : "$$el.name", qty : "$$el.qty", class : {"$const" : "main"}}}},
+                                {$map : { input : "$sideboard", as: "el", in : { name : "$$el.name", qty : "$$el.qty", class : {"$const" : "sideboard"}}}}
                             ]
                         }
 
@@ -75,9 +78,10 @@ Meteor.methods({
                 {
                     $project: {
                         name : 1,
-                        format : 1,
+                        Formats_id : 1,
                         main : 1,
                         sideboard : 1,
+                        player : 1,
                         cards : {
                             $setUnion :
                                 [
@@ -103,8 +107,8 @@ Meteor.methods({
                 {
                     $group: {
                         _id : "$_id",
-                        format : {$first : "$name"},
-                        name : {$first : "$name"},
+                        Formats_id : {$first : "$Formats_id"},
+                        player : {$first : "$player"},
                         DecksNames_id : {$first : "$DecksNames_id"},
                         main : {$first : "$main"},
                         sideboard : {$first : "$sideboard"},
@@ -118,5 +122,6 @@ Meteor.methods({
             return UsersDecks.find({ _id : UsersDecks_id, Users_id : Meteor.userId()}).fetch()[0];
         }
         return deck[0];
-    }
+    },
+
 })

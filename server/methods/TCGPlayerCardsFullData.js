@@ -38,32 +38,89 @@ Meteor.methods({
     },
     getMorningDailyCardsPricesMethods(){
         logFunctionsStart("getMorningDailyCardsPricesMethods");
-        var sets = TCGPlayerCards.find({}).fetch();
-
-        for(var i = 0; i < 10; i++){
-            for(var j = 0; j < 5; j++){
-                TCGPlayerCardsFullData.update({setName : sets[i].name},
-                    {
-                        $setOnInsert : {setName : sets[i].name, cards : []}
-                    },
-                    {$upsert : true}
-                )
-
-                var fixedSetName = sets[i].name.replace(/&/g, "%26");
-                var fixedCardName = sets[i].cards[j].name.replace(/&/g, "%26");
-                var url = encodeURI(`http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=${fixedSetName}&p=${fixedCardName}`);
-                url = url.replace(/%2526/, "%26");
-                Meteor.http.get(url, (err, response)=>{
-                    var product = getTCGPLayerCardsFullDataFromResponse({response : response, cardName : sets[i].cards[j].name});
-                    TCGPlayerCardsFullData.update({setName : sets[i].name}, {
-                        $push : {"cards" : product}
-                    })
-                });
-            }
-        }
+        TCGPlayerCardsFullData.remove({});
+        getMorningDailyCardsPricesAddSetLoop({skip : 0});
         logFunctionsEnd("getMorningDailyCardsPricesMethods");
-    }
+    },
 })
+
+getMorningDailyCardsPricesAddSetLoop = ({skip})=>{
+    console.log(skip);
+    var set = TCGPlayerCards.findOne({}, {skip : skip});
+    if(set){
+        for(var i = 0; i < set.cards.length; i++){
+            webScrapingQueue.add({func : getTCGPLayerCardsFullDataFromResponse, args : {setName : set.name, cardName : set.cards[i].name}, wait : 80});
+        }
+        webScrapingQueue.add({func : getMorningDailyCardsPricesAddSetLoop, args : {skip : skip + 1}, wait : 0});
+    }
+}
+
+getTCGPLayerCardsFullDataFromResponse = ({setName, cardName})=>{
+    var fixedSetName = setName.replace(/&/g, "%26");
+    var fixedCardName = cardName.replace(/&/g, "%26");
+
+    var url = encodeURI(`http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=${fixedSetName}&p=${fixedCardName}`);
+    url = url.replace(/%2526/, "%26");
+
+    Meteor.http.get(url, function(err, response){
+        if(err){
+            console.log(err);
+        }
+        var x2js = new X2JS();
+        var document = x2js.xml2js(response.content);
+
+        if(!document.products){
+            Errors.insert({setName : setName, url : url, description : "Website not found"});
+            return;
+        }
+
+        document.products.product.name = cardName.toTitleCase();
+
+        document.products.product.hiprice = parseFloat(document.products.product.hiprice);
+        document.products.product.lowprice = parseFloat(document.products.product.lowprice);
+        document.products.product.avgprice = parseFloat(document.products.product.avgprice);
+        document.products.product.foilavgprice = parseFloat(document.products.product.foilavgprice);
+
+        var product = document.products.product;
+
+        TCGPlayerCardsFullData.update({setName: setName},
+            {
+                $setOnInsert: {cards: product, cards : []}
+            },
+            {
+                upsert : true
+            }
+        )
+
+        TCGPlayerCardsFullData.update({setName: setName},
+            {
+                $push: {cards: product}
+            },
+            {
+                upsert : true
+            }
+        )
+    });
+}
+
+getMorningDailyCardsPricesAddSet =({TCGPlayerCards_id})=>{
+    var set = TCGPlayerCards.findOne({_id : TCGPlayerCards_id})
+
+    for (var j = 0; j < set.cards.length; j++) {
+        TCGPlayerCardsFullData.update({setName: set.name},
+            {
+                $setOnInsert: {setName: set.name, cards: []}
+            },
+            {upsert: true}
+        )
+
+        var fixedSetName = set.name.replace(/&/g, "%26");
+        var fixedCardName = set.cards[j].name.replace(/&/g, "%26");
+        var url = encodeURI(`http://partner.tcgplayer.com/x3/phl.asmx/p?pk=CrowdMtG&s=${fixedSetName}&p=${fixedCardName}`);
+        url = url.replace(/%2526/, "%26");
+        webScrapingQueue.add({func : getTCGPLayerCardsFullDataFromResponse, args : {setName : set.name, cardName : set.cards[j].name, url : url}, wait : 300})
+    }
+}
 
 cardSetName = ({setName, cardName})=>{
 
@@ -77,25 +134,6 @@ cardSetName = ({setName, cardName})=>{
     var document = x2js.xml2js(test.content);
     return document.products.product;
 }
-
-
-getTCGPLayerCardsFullDataFromResponse = ({response, cardName})=>{
-    var x2js = new X2JS();
-    var document = x2js.xml2js(response.content);
-
-    document.products.product.name = cardName.toTitleCase();
-
-    if(!document.products){
-        return {name : cardName.toTitleCase(), url : url}
-    }
-
-    document.products.product.hiprice = parseFloat(document.products.product.hiprice);
-    document.products.product.lowprice = parseFloat(document.products.product.lowprice);
-    document.products.product.avgprice = parseFloat(document.products.product.avgprice);
-    document.products.product.foilavgprice = parseFloat(document.products.product.foilavgprice);
-
-    return document.products.product;
-},
 
 getTCGPLayerCardsFullData = ({setName, cardName})=>{
     var fixedSetName = setName.replace(/&/g, "%26");

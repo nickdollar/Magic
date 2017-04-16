@@ -7,8 +7,8 @@ export default class  extends React.Component {
     }
 
     eventInfo(event){
+        console.log(event);
         var eventType = EventsTypes.findOne({_id : event.EventsTypes_id});
-
         if(_.isEmpty(event)){
             return <div className="left"></div>
         }
@@ -20,7 +20,7 @@ export default class  extends React.Component {
         return  <div className="left">
                     <div>
                         {
-                            eventType._id == "LGS" ? `${LGSQuery.name} (${LGSQuery.location.city ? LGSQuery.location.city : LGSQuery.location.state}) - ${event.format.toTitleCase()}` :
+                            eventType._id == "lgs" ? `${LGSQuery.name} (${LGSQuery.location.city ? LGSQuery.location.city : LGSQuery.location.state}) - ${event.format.toTitleCase()}` :
                             <a href={event.url}>{eventType.name} - {getLinkFormat(event.Formats_id)}</a>
                         }
                     </div>

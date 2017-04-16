@@ -60,13 +60,11 @@ export default class Deck extends React.Component{
 
     cardRow(card, mainSideboard){
         var selectors = {"data-mainSideboard" : mainSideboard};
-
         var cardDataName = {"data-name" : card.name};
-
         return  <div className="cardLine" key={card.name} >
-            <div className="cardQuantityAndNameWrapper js-imagePopOver" {...cardDataName}>
+            <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
                 <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
-                <input type="number" className="quantityInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
+                <input type="number" className="qtyInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}
                      {...selectors}
@@ -89,8 +87,8 @@ export default class Deck extends React.Component{
 
     addRow(mainSideboard){
         return  <div className="addLine" key={mainSideboard}>
-            <div className="cardQuantityAndNameWrapper js-imagePopOver">
-                <input type="number" className="quantityInput" data-mainSideboard={mainSideboard} onChange={(event)=>this.props.mainSideboardChangeValue(event.target, mainSideboard)} defaultValue={4}/>
+            <div className="cardQtyAndNameWrapper js-imagePopOver">
+                <input type="number" className="qtyInput" data-mainSideboard={mainSideboard} onChange={(event)=>this.props.mainSideboardChangeValue(event.target, mainSideboard)} defaultValue={4}/>
                 <div className="nameSelectedWrapper">
                     <CardNamesCall
                         mainSideboard={mainSideboard}
@@ -142,7 +140,8 @@ export default class Deck extends React.Component{
     render() {
         var resultMain = this.getMainCards();
 
-        var resultSideboard = this.props.UsersDeckData.sideboard.map((card)=>{
+        var resultSideboard = this.props.UsersDeckData.sideboard.map((card, index)=>{
+            card.index = index;
             return this.cardRow(card, "sideboard", "change")
         })
 

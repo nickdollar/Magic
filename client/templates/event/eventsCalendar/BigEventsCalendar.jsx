@@ -1,5 +1,4 @@
 import React from 'react' ;
-// import LGSEventsCalendarModal  from './LGSEventsCalendarModal.jsx';
 import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
 import FormValidate from '/client/dumbReact/FormValidate/FormValidate.jsx';
 import TextFormInput from '/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput.jsx';
@@ -29,8 +28,8 @@ export default class BigEventsCalendar extends React.Component {
         this.setState({showModalAddEvent: true})
     }
 
-    componentWillReceiveProps(nextProps){
-        this.eventsUpdate(nextProps.EventsCalendar);
+    componentWillReceiveProps(){
+        this.eventsUpdate();
     }
 
     componentDidMount(){
@@ -79,17 +78,19 @@ export default class BigEventsCalendar extends React.Component {
                 });
             }
         });
-        this.eventsUpdate(this.props.EventsCalendar);
+        this.eventsUpdate();
     }
 
-    eventsUpdate(eventsCalendar){
+    eventsUpdate(){
         var calendar = this.refs["calendar"];
-        $(calendar).fullCalendar("removeEvents")
-        var events = eventsCalendar.map((event)=>{
-            event.id = event._id;
-            return event;
-        });
-        $(this.refs.calendar).fullCalendar("addEventSource", events)
+        $(calendar).fullCalendar("removeEvents");
+        Meteor.call("getBigEventsCalendar", {Formats_id : this.props.Formats_id}, (err, response)=>{
+            var events = response.map((event)=>{
+                event.id = event._id;
+                return event;
+            });
+            $(this.refs.calendar).fullCalendar("addEventSource", events)
+        })
     }
 
     render(){

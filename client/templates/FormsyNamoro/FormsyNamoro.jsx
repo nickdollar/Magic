@@ -1,6 +1,7 @@
+import React from 'react' ;
 import Formsy from 'formsy-react';
 
-export default class MyAppForm extends React.Component {
+export default class FormsyNamoro extends React.Component {
     constructor() {
         super();
         this.state = {canSubmit: false}

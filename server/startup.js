@@ -28,7 +28,7 @@ Meteor.startup(function () {
 
     CardsData._ensureIndex({name : 1});
     CardsFullData._ensureIndex({name : 1});
-    DecksDataUniqueWithoutQuantity._ensureIndex({nonLandMain : 1});
+    DecksDataUniqueWithoutQty._ensureIndex({nonLandMain : 1});
     DecksData._ensureIndex({DecksNames_id : 1});
     DecksNames._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});
@@ -54,27 +54,27 @@ Meteor.startup(function () {
     }
 
     if(checkIfZipNeedsFixing() != ZipCodes.find().count()){
-        console.log("makeZipCollection Wrong Quantity");
+        console.log("makeZipCollection Wrong Qty");
         makeZipCollection();
     }else{
         console.log("Collection ZipCodes Match");
     }
 
-    if(checkIfCardFullDataQuantity() != CardsFullData.find().count()){
-        console.log("checkIfCardFullDataQuantity Wrong Quantity");
+    if(checkIfCardFullDataQty() != CardsFullData.find().count()){
+        console.log("checkIfCardFullDataQty Wrong Qty");
         createCardsFullData();
     }else{
         console.log("Collection CardsFullData Match");
     }
     if(makeCardsDataCount() != CardsData.find().count()){
-        console.log("makeCardsData Wrong Quantity");
+        console.log("makeCardsData Wrong Qty");
         makeCardsDataFromFullData();
     }else{
         console.log("Collection CardsData Match ");
     }
 
     if(MTGSetsCountFromFile() != MTGSets.find().count()){
-        console.log("MTGSets Wrong Quantity");
+        console.log("MTGSets Wrong Qty");
         MakeMTGSets();
     }else{
         console.log("MTGSets CardsData Match ");
@@ -82,6 +82,8 @@ Meteor.startup(function () {
 
     createEventsTypes();
     createFormats();
+    databaseFixes();
+
 });
 
 // var cookies = new Cookies()

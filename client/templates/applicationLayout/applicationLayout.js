@@ -7,13 +7,14 @@ import CustomEventsAdmin from "/client/templates/customAdmin/CustomEventsAdmin/C
 import SelectedEventContainer from "/client/templates/event/SelectedEvent/SelectedEventContainer.jsx";
 import ArchetypeDeckInformationContainer from "/client/templates/deck/ArchetypeDeckInformation/ArchetypeDeckInformationContainer.jsx";
 import MetaContainer from           "/client/templates/meta/MetaContainer.jsx";
-import LatestDecksContainer from           "/client/templates/main/LatestDecksReact/LatestDecksContainer.jsx";
+import LatestDecks from           "/client/templates/main/LatestDecksReact/LatestDecks.jsx";
 import TopMenuContainer from           "/client/templates/menu/TopMenu/TopMenuContainer.jsx";
 import EventsTableComponent from           "/client/templates/event/EventsTableReact/EventsTableContainer.jsx";
 import BigEventsCalendarContainer from           "/client/templates/event/eventsCalendar/BigEventsCalendarContainer.jsx";
 import User                         from    "/client/templates/User/User";
 import FormatsMenu from "/client/templates/menu/formatsMenu/FormatsMenu.jsx";
-
+import FormsyNamoro from "/client/templates/FormsyNamoro/FormsyNamoro"
+import SevenDayCalendar from "/client/templates/main/SevenDayCalendar/SevenDayCalendar.jsx"
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
@@ -96,7 +97,13 @@ Template.User.helpers({
 
 Template.main.helpers({
     LatestDecks(){
-        return LatestDecksContainer;
+        return LatestDecks;
+    },
+    FormsyNamoro(){
+        return FormsyNamoro;
+    },
+    SevenDayCalendar(){
+        return SevenDayCalendar;
     }
 })
 

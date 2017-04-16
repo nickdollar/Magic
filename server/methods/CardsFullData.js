@@ -11,14 +11,14 @@ createCardsFullData = function(){
 }
 
 
-checkIfCardFullDataQuantity = function(){
-    logFunctionsStart("checkIfCardFullDataQuantity");
+checkIfCardFullDataQty = function(){
+    logFunctionsStart("checkIfCardFullDataQty");
     var cardFromFile = JSON.parse(Assets.getText('AllCards-x.json'));
 
-    var quantity = 0;
+    var qty = 0;
     for (var key in cardFromFile) {
-        quantity++;
+        qty++;
     }
-    logFunctionsEnd("checkIfCardFullDataQuantity");
-    return quantity;
+    logFunctionsEnd("checkIfCardFullDataQty");
+    return qty;
 }

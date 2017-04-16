@@ -41,7 +41,7 @@ Meteor.methods({
             channel: playListInformation.channel,
             link: playListInformation.link,
             playlistId: playListInformation.playlistId,
-            videosQuantity: playListInformation.videosQuantity,
+            videosQty: playListInformation.videosQty,
             likeCount: 0
         });
         return true;
@@ -81,7 +81,7 @@ getPlayListInformation = function(youtubeLink){
 
     var request = APIRequestPlayListItems(_playlistID);
 
-    var playListQuantity = request.pageInfo.totalResults;
+    var playListQty = request.pageInfo.totalResults;
     var snippetPlayListInfo = request.items[0].snippet;
 
     var information = {};
@@ -91,7 +91,7 @@ getPlayListInformation = function(youtubeLink){
     information.playlistId = snippetPlayListInfo.playlistId
     information.link = youtubeLink;
     information.thumbnail = snippetPlayListInfo.thumbnails.medium.url;
-    information.videosQuantity =  playListQuantity;
+    information.videosQty =  playListQty;
 
     return information;
 }

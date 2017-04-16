@@ -30,7 +30,7 @@ Meteor.methods({
                     multi : true
                 }
             )
-            DecksDataUniqueWithoutQuantity.remove({DecksNames_id : DecksNames_id});
+            DecksDataUniqueWithoutQty.remove({DecksNames_id : DecksNames_id});
             DecksNames.remove({_id : DecksNames_id});
         };
     },
@@ -57,8 +57,8 @@ Meteor.methods({
                             "foreignField" : "DecksNames_id",
                             "as" : "DecksData"
                     }},
-                    {$project : {DecksData : 1,DecksDataQuantity : {$size : "$DecksData"}}},
-                    {$match : {DecksDataQuantity : {$gte : 5}}},
+                    {$project : {DecksData : 1,DecksDataQty : {$size : "$DecksData"}}},
+                    {$match : {DecksDataQty : {$gte : 5}}},
                     {$unwind: {path : "$DecksData"}},
                     {$project: {_id : "$DecksData._id",name : {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}}}},
                     {$unwind: {path : "$name"}},
@@ -76,37 +76,13 @@ Meteor.methods({
                     {
                         $project : {
                             _id : 0,
-                            quantity : "$_id",
+                            qty : "$_id",
                             cards : 1
                         }
                     }
                 ]
             );
 
-
-
-            if(DecksArchetypesAggregation.length){
-                var deckShell = [];
-                for(var i = 0; i< DecksArchetypesAggregation.length; i++){
-                    deckShell = deckShell.concat(DecksArchetypesAggregation[i].cards).unique();
-                    if(deckShell.length >= 6){
-                        break;
-                    }
-                }
-                DecksNamesShells.update({DecksNames_id : DecksNames_id, name : decksNamesQuery.name, format : decksNamesQuery.format},{
-                        $set : {
-                            cardTiers : DecksArchetypesAggregation,
-                            deckShell : deckShell
-                        }
-                    },
-                    {
-                        upsert : true
-                    }
-                )
-            }else{
-                DecksNamesShells.remove({DecksNames_id : DecksNames_id})
-            }
-        // logFunctionsEnd("createDecksNamesShell");
     },
     createDecksNamesShellsByFormat(Formats_id){
         logFunctionsStart("createDecksNamesShellsByFormat");
@@ -139,13 +115,13 @@ Meteor.methods({
                     })
 
                     if(decksDataQuery_ids.length){
-                        array.push({DecksNamesShells_id : decksNamesShell._id, DecksNames_id: decksNamesShell.DecksNames_id, decksDataQuery_ids: decksDataQuery_ids, quantity : decksNamesShell.deckShell.cards.length})
+                        array.push({DecksNamesShells_id : decksNamesShell._id, DecksNames_id: decksNamesShell.DecksNames_id, decksDataQuery_ids: decksDataQuery_ids, qty : decksNamesShell.deckShell.cards.length})
                     }
                 });
-                var highestObject = {quantity : 0};
+                var highestObject = {qty : 0};
 
                 for(var i=0; i < array.length; i++){
-                    if(highestObject.quantity < array[i].quantity){
+                    if(highestObject.qty < array[i].qty){
                         highestObject = array[i];
                     }
                 }

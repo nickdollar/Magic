@@ -1,43 +1,4 @@
 import Entities from "entities";
-moveHtml = function(){
-    console.log("moveHtml START");
-    var eventsQuery = Events.find({html : {$exists : true}});
-
-    eventsQuery.forEach(function(eventsObj){
-        EventsHtmls.update({Events_id : eventsObj._id},
-            {
-                $set : {html : eventsObj.html}
-            },
-            {upsert : true}
-        )
-
-        Events.update({_id : eventsObj._id},
-            {
-                $unset : {html : 1}
-            },
-            {multi : true},
-            {upsert : true}
-        )
-    });
-    console.log("moveHtml END");
-}
-
-fixNamesOnDecksNames = function(){
-    DecksNames.find({}).forEach(function(obj){
-        var name = deckNameAndArchetype(obj.name);
-        DecksNames.update({_id : obj._id},
-            {$set : {name : name}}
-        )
-    });
-
-    DecksArchetypes.find({}).forEach(function(obj){
-        var name = deckNameAndArchetype(obj.name);
-        DecksArchetypes.update({_id : obj._id},
-            {$set : {name : name}}
-        )
-    });
-};
-
 
 fixHtmlFromCherrios = (string)=>{
     if(!string) return string;
@@ -45,4 +6,57 @@ fixHtmlFromCherrios = (string)=>{
     string = Entities.decodeHTML(string);
     string = string.trim()
     return string;
+}
+
+databaseFixes = (string)=>{
+    logFunctionsStart("databaseFixes");
+    Formats.find().forEach(format=>{
+        DecksNames.update({format : {$regex : format.name, $options : "i"}},
+            {
+                $set : {Formats_id : format._id},
+                $unset : {format : ""}
+            },
+            {
+                multi : true
+            })
+    });
+
+    Formats.find().forEach(format=>{
+        DecksArchetypes.update({format : {$regex : format.name, $options : "i"}},
+            {
+                $set : {Formats_id : format._id},
+                $unset : {format : ""}
+            },
+            {
+                multi : true
+            })
+    });
+
+    Formats.find().forEach(format=>{
+        DecksDataUniqueWithoutQty.update({format : {$regex : format.name, $options : "i"}},
+            {
+                $set : {Formats_id : format._id},
+                $unset : {format : ""}
+            },
+            {
+                multi : true
+            })
+    });
+
+    DecksNames.update({Formats_id : "std"},
+        {
+            $set : {Formats_id : "sta"},
+        },
+        {
+            multi : true
+        })
+
+    DecksArchetypes.update({Formats_id : "std"},
+        {
+            $set : {Formats_id : "sta"},
+        },
+        {
+            multi : true
+        })
+    logFunctionsEnd("databaseFixes");
 }

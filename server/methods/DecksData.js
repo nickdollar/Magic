@@ -1,98 +1,57 @@
 import Fuse from "fuse.js";
 
 Meteor.methods({
-    addALGSDecksData: function (deck) {
-        var totalMain = deck.main.reduce((a, b)=>{
-            return a + b.quantity
-        }, 0);
+    addALGSDecksData: function ({submitDeck}) {
 
-        var totalSideboard = deck.sideboard.reduce((a, b)=>{
-            return a + b.quantity
-        }, 0);
-
-        var colors = setUpColorForDeckName(deck.main);
-
-        deck.main = deck.main.map((card)=>{
-            if(CardsData.findOne({name : card.name})){
-                return {name : card.name, quantity : card.quantity }
+        console.log(submitDeck);
+        if(Events.findOne({_id : submitDeck._id})){
+            var decksData = DecksData.findOne({_id : submitDeck.DecksData_id});
+            if(decksData){
+                DecksData.update({_id : submitDeck.DecksData_id},
+                    {
+                        $set : {
+                            main : submitDeck.main,
+                            sideboard : submitDeck.sideboard,
+                        }
+                    },
+                )
+                return {DecksData_id : submitDeck.DecksData_id, message : "Deck Updated"};
             }else{
-                return {name : card.name, quantity : card.quantity , wrong : true}
-            }
-        })
-        deck.sideboard = deck.sideboard.map((card)=>{
-            if(CardsData.findOne({name : card.name})){
-                return {name : card.name, quantity : card.quantity }
-            }else{
-                return {name : card.name, quantity : card.quantity , wrong : true}
-            }
-        })
-
-        var message = "Deck Added";
-        if(DecksData.find({Events_id : deck._id, player : deck.player}, {limit : 1}).count()){
-            message = "Deck Updated"
-        }
-
-        if(Events.findOne({_id : deck._id})){
-            DecksData.update({Events_id : deck._id, player : deck.player},
-                {
-                    $set : {
-                        Events_id : deck._id,
-                        LGS_id : deck.LGS_id,
-                        format : deck.format,
+                var DecksData_id = DecksData.insert(
+                    {
+                        Events_id : submitDeck._id,
+                        LGS_id : submitDeck.LGS_id,
+                        Formats_id : submitDeck.Formats_id,
                         type : "lgs",
-                        totalMain : totalMain,
-                        main : deck.main,
-                        colors : colors,
-                        player : deck.player,
-                        totalSideboard : totalSideboard,
-                        sideboard : deck.sideboard,
-                        date : deck.date,
+                        main : submitDeck.main,
+                        player : submitDeck.player,
+                        sideboard : submitDeck.sideboard,
+                        date : submitDeck.date,
                         position : 1,
                         state : "lgs",
-
                     }
-                },
-                {
-                    upsert : true
-                }
-            )
+                )
+                return {DecksData_id : DecksData_id, message : "Deck Submitted"};
+            }
+
         }
-
-
-        var DecksDataCount = DecksData.find({Events_id : deck._id}).count();
-
-        Events.update({_id : deck._id},{
-            $set : {decks : DecksDataCount}
-        })
-
-        return message;
     },
     updateALGSDecksData: function (deck) {
-        var totalMain = deck.main.reduce((a, b)=>{
-            return a + b.quantity
-        }, 0);
 
-        var totalSideboard = deck.sideboard.reduce((a, b)=>{
-            return a + b.quantity
-        }, 0);
 
-        var colors = setUpColorForDeckName(deck.main);
 
         deck.main = deck.main.map((card)=>{
-            return {name : card.name, quantity : card.quantity }
+            return {name : card.name, qty : card.qty }
         })
         deck.sideboard = deck.sideboard.map((card)=>{
-            return {name : card.name, quantity : card.quantity }
+            return {name : card.name, qty : card.qty }
         })
 
         if(Events.findOne({_id : deck.Events_id})){
             DecksData.update({_id : deck._id},
                 {
                     $set : {
-                        colors : colors,
-                        totalMain : totalMain,
                         main : deck.main,
-                        totalSideboard : totalSideboard,
                         sideboard : deck.sideboard,
                         state : "admin"
                     }
@@ -106,7 +65,7 @@ Meteor.methods({
         var main = mainSide.main.map((card)=>{
             var cardQuery = CardsData.findOne({name : card.name});
 
-            var cardResult = {name : card.name, quantity : card.quantity}
+            var cardResult = {name : card.name, qty : card.qty}
             if(!cardQuery){
                 Object.assign(cardResult, {wrongName : true})
             }
@@ -116,7 +75,7 @@ Meteor.methods({
         var sideboard = mainSide.sideboard.map((card)=>{
             var cardQuery = CardsData.findOne({name : card.name});
 
-            var cardResult = {name : card.name, quantity : card.quantity}
+            var cardResult = {name : card.name, qty : card.qty}
             if(!cardQuery){
                 Object.assign(cardResult, {wrongName : true})
             }
@@ -124,11 +83,11 @@ Meteor.methods({
         })
 
         var totalMain = mainSide.main.reduce((a, b)=>{
-            return a + b.quantity
+            return a + b.qty
         }, 0);
 
         var totalSideboard = mainSide.sideboard.reduce((a, b)=>{
-            return a + b.quantity
+            return a + b.qty
         }, 0);
 
         var colors = setUpColorForDeckName(main);
@@ -282,11 +241,13 @@ Meteor.methods({
     },
     bannedDeck(Formats_id){
         logFunctionsStart("bannedDeck");
+
+        var format = Formats_id.findOne({Formats_id : Formats_id});
             DecksData.update(
                     {Formats_id : Formats_id, $or :
                         [
-                            {"main.name" : {$in : bannedCard[Formats_id]}},
-                            {"sideboard.name" : {$in :  bannedCard[Formats_id]}}
+                            {"main.name" : {$in : format.banned}},
+                            {"sideboard.name" : {$in :  format.banned}}
                         ]
                     },
                 {$set : {format : `${Formats_id}Banned`}},
@@ -448,8 +409,6 @@ Meteor.methods({
                             "as" : "cardsInfo"
                         }
                     },
-
-                    // Stage 5
                     {
                         $group: {
                             _id : "_id",
@@ -487,45 +446,75 @@ Meteor.methods({
             ]
         );
         return decksDataAggregate;
+    },
+    adminUpdateDeck({DecksData_id, deck}){
+        DecksData.update({_id : DecksData_id},
+            {
+                $set : deck
+            })
+    },
+    getDeckWithInformation({DecksData_id}){
+        var deck = DecksData.aggregate(
+            [
+                {
+                    $match: {
+                        _id : DecksData_id
+                    }
+                },
+                {
+                    $project: {
+                        Formats_id : 1,
+                        main : 1,
+                        sideboard : 1,
+                        player : 1,
+                        cards : {
+                            $setUnion :
+                                [
+                                    {$map : {input : "$main", as : "main", in : "$$main.name"}},
+                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.name"}}
+                                ]
+                        }
+                    }
+                },
+                {
+                    $unwind: {
+                        path : "$cards"
+                    }
+                },
+                {
+                    $lookup: {
+                        "from" : "CardsCollectionSimplified",
+                        "localField" : "cards",
+                        "foreignField" : "name",
+                        "as" : "cardsInfo"
+                    }
+                },
+                {
+                    $group: {
+                        _id : "$_id",
+                        Formats_id : {$first : "$Formats_id"},
+                        player : {$first : "$player"},
+                        DecksNames_id : {$first : "$DecksNames_id"},
+                        main : {$first : "$main"},
+                        sideboard : {$first : "$sideboard"},
+                        cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}}
+                    }
+                }
+            ]
+        );
+        if(deck.length == 0){
+            return {main : [], sideboard : [], cardsInfo : []}
+        }
+        return deck[0];
+    },
+    confirmEventAdminChanges({decks}){
+        console.log(decks);
+        for(var i =0; i < decks.length; i++){
+            DecksData.update({_id : decks[i]._id},
+                {
+                    $set : decks[i]
+                })
+        }
+        return false;
     }
 });
-
-bannedCard = {
-                mod : [
-                    "Ancient Den",
-                    "Birthing Pod",
-                    "Blazing Shoal",
-                    "Bloodbraid Elf",
-                    "Chrome Mox",
-                    "Cloudpost",
-                    "Dark Depths",
-                    "Deathrite Shaman",
-                    "Dig Through Time",
-                    "Dread Return",
-                    "Eye of Ugin",
-                    "Gitaxian Probe",
-                    "Glimpse of Nature",
-                    "Golgari Grave-Troll",
-                    "Great Furnace",
-                    "Green Sun's Zenith",
-                    "Hypergenesis",
-                    "Jace, the Mind Sculptor",
-                    "Mental Misstep",
-                    "Ponder",
-                    "Preordain",
-                    "Punishing Fire",
-                    "Rite of Flame",
-                    "Seat of the Synod",
-                    "Second Sunrise",
-                    "Seething Song",
-                    "Sensei's Divining Top",
-                    "Skullclamp",
-                    "Splinter Twin",
-                    "Stoneforge Mystic",
-                    "Summer Bloom",
-                    "Treasure Cruise",
-                    "Tree of Tales",
-                    "Umezawa's Jitte",
-                    "Vault of Whispers",
-                ]
-            }

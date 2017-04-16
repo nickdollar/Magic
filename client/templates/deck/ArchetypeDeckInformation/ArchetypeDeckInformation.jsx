@@ -39,6 +39,7 @@ export default class ArchetypeDeckInformationExit extends React.Component {
                     <div>
                         <DecksNamesList DecksNames={this.state.DecksNames}
                                         DeckArchetype={this.state.DeckArchetype}
+                                        DeckNameLink={this.props.DeckNameLink}
                         />
                         {this.state.DeckName ?
                             <DeckTableExample DeckName={this.state.DeckName}/> :

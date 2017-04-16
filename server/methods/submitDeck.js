@@ -13,15 +13,15 @@ Meteor.methods({
                 var main = [];
                 var sideboard = [];
                 for(var i = 0; i < mainQuery.length; i++){
-                    var quantity = parseInt($res(mainQuery[i]).find(".qty").attr("data-qty"));
+                    var qty = parseInt($res(mainQuery[i]).find(".qty").attr("data-qty"));
                     var name = $res(mainQuery[i]).find(".card a").attr("data-name");
-                    main.push({name : name, quantity : quantity});
+                    main.push({name : name, qty : qty});
                 }
                 var sideboardQuery = $res(".board-container h3:contains(Sideboard)").next().find("li");
                 for(var i = 0; i < sideboardQuery.length; i++){
-                    var quantity = parseInt($res(sideboardQuery[i]).find(".qty").attr("data-qty"));
+                    var qty = parseInt($res(sideboardQuery[i]).find(".qty").attr("data-qty"));
                     var name = $res(sideboardQuery[i]).find(".card a").attr("data-name");
-                    sideboard.push({name : name, quantity : quantity});
+                    sideboard.push({name : name, qty : qty});
                 }
                 return {main : main, sideboard : sideboard};
             }
@@ -38,15 +38,15 @@ Meteor.methods({
                 var main = [];
                 var sideboard = [];
                 for(var i = 0; i < mainQuery.length; i++){
-                    var quantity = parseInt($res(mainQuery[i]).find(".qty").attr("data-qty"));
+                    var qty = parseInt($res(mainQuery[i]).find(".qty").attr("data-qty"));
                     var name = $res(mainQuery[i]).find(".card a").attr("data-name");
-                    main.push({name : name, quantity : quantity});
+                    main.push({name : name, qty : qty});
                 }
                 var sideboardQuery = $res(".board-container h3:contains(Sideboard)").next().find("li");
                 for(var i = 0; i < sideboardQuery.length; i++){
-                    var quantity = parseInt($res(sideboardQuery[i]).find(".qty").attr("data-qty"));
+                    var qty = parseInt($res(sideboardQuery[i]).find(".qty").attr("data-qty"));
                     var name = $res(sideboardQuery[i]).find(".card a").attr("data-name");
-                    sideboard.push({name : name, quantity : quantity});
+                    sideboard.push({name : name, qty : qty});
                 }
                 return {main : main, sideboard : sideboard};
             }
@@ -70,14 +70,14 @@ Meteor.methods({
                     {
                         $group : {
                             _id : "$main.name",
-                            quantity : {$avg : "$main.quantity"},
+                            qty : {$avg : "$main.qty"},
                             total : {$sum : 1}
                         }
                     },
                     {
                         $project : {
                             name : "$_id",
-                            quantity : "$quantity",
+                            qty : "$qty",
                             total : "$total"
                         }
                     },
@@ -88,7 +88,7 @@ Meteor.methods({
             )
 
             for(var i = 0; i < main.length; i++){
-                main[i].quantity = Math.round(main[i].quantity)
+                main[i].qty = Math.round(main[i].qty)
             }
 
             var sideboard = DecksData.aggregate(
@@ -109,14 +109,14 @@ Meteor.methods({
                     {
                         $group : {
                             _id : "$sideboard.name",
-                            quantity : {$avg : "$sideboard.quantity"},
+                            qty : {$avg : "$sideboard.qty"},
                             total : {$sum : 1}
                         }
                     },
                     {
                         $project : {
                             name : "$_id",
-                            quantity : "$quantity",
+                            qty : "$qty",
                             total : "$total"
                         }
                     },
@@ -127,7 +127,7 @@ Meteor.methods({
             )
 
             for(var i = 0; i < sideboard.length; i++){
-                sideboard[i].quantity = Math.round(sideboard[i].quantity)
+                sideboard[i].qty = Math.round(sideboard[i].qty)
             }
 
             return {main : main, sideboard : sideboard}

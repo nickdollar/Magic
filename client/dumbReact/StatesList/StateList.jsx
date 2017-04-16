@@ -31,7 +31,7 @@ export default class DecksDataStates extends React.Component{
                     <thead>
                         <tr>
                             <th>State</th>
-                            <th>Quantity</th>
+                            <th>Qty</th>
                         </tr>
                     </thead>
                     {this.state.states.map((state)=>{

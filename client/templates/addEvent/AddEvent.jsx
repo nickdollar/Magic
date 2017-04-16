@@ -1,5 +1,5 @@
 import React from 'react' ;
-import SubmitDeck from './SubmitDeck.jsx/SubmitDeck.jsx';
+import SubmitDeck from './SubmitDeck/SubmitDeck.jsx';
 import CreateEvent from './CreateEvent/CreateEvent.jsx';
 
 

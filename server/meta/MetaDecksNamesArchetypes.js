@@ -26,17 +26,17 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
                 }
             ]
         }},
-        {$group : {	_id : "$_id", quantity : {$sum : 1}}},
-        {$sort : {quantity : -1}}
+        {$group : {	_id : "$_id", qty : {$sum : 1}}},
+        {$sort : {qty : -1}}
     ]);
 
     //give Positions
-    var currentQuantity = 9999;
+    var currentQty = 9999;
     var position = 0;
     DecksArchetypesMeta.forEach(function(DecksArchetypesMetaObj){
-        if(DecksArchetypesMetaObj.quantity < currentQuantity){
+        if(DecksArchetypesMetaObj.qty < currentQtt){
             position++;
-            currentQuantity = DecksArchetypesMetaObj.quantity;
+            currentQty = DecksArchetypesMetaObj.qty;
             DecksArchetypesMetaObj.position = position;
         }else{
             DecksArchetypesMetaObj.position = position;
@@ -70,17 +70,17 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
                 }
             ]
         }},
-        {$group : {	_id : "$_id", quantity : {$sum : 1}}},
-        {$sort : {quantity : -1}}
+        {$group : {	_id : "$_id", qty : {$sum : 1}}},
+        {$sort : {qty : -1}}
     ]);
 
     //give Positions
-    var currentQuantity = 9999;
+    var currentQty = 9999;
     var position = 0;
     DecksArchetypesMetaBeforeDate.forEach(function(DecksArchetypesMetaBeforeDateObj){
-        if(DecksArchetypesMetaBeforeDateObj.quantity < currentQuantity){
+        if(DecksArchetypesMetaBeforeDateObj.qty < currentQty){
             position++;
-            currentQuantity = DecksArchetypesMetaBeforeDateObj.quantity;
+            currentQty = DecksArchetypesMetaBeforeDateObj.qty;
             DecksArchetypesMetaBeforeDateObj.position = position;
         }else{
             DecksArchetypesMetaBeforeDateObj.position = position;
