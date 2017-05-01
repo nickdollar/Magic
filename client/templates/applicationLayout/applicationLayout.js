@@ -15,6 +15,7 @@ import User                         from    "/client/templates/User/User";
 import FormatsMenu from "/client/templates/menu/formatsMenu/FormatsMenu.jsx";
 import FormsyNamoro from "/client/templates/FormsyNamoro/FormsyNamoro"
 import SevenDayCalendar from "/client/templates/main/SevenDayCalendar/SevenDayCalendar.jsx"
+import LinksT from "/client/templates/Links.jsx";
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
@@ -168,4 +169,10 @@ Template.ArchetypeDeckInformation.helpers({
     ArchetypeDeckInformationContainer(){
         return ArchetypeDeckInformationContainer;
     },
+});
+
+Template.Links.helpers({
+    Links(){
+        return LinksT;
+    }
 });

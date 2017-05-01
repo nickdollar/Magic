@@ -1,4 +1,5 @@
 getTotalMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
+    console.log(Formats_id, options, LGS_ids);
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"Formats_id" : 1}},
         {$match : {Formats_id : Formats_id}},
@@ -80,5 +81,6 @@ getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
         {$group : {	_id : "$_id.name", total: {$sum : "$qty"}, count: {$sum : 1}}},
         {$sort : {count : -1}}
     ]);
+    console.log(DecksArchetypesMeta);
     return DecksArchetypesMeta;
 };

@@ -128,7 +128,6 @@ export default class Deck extends React.Component{
                 })
             )
         }
-
         return resultMain;
     }
 
@@ -147,7 +146,6 @@ export default class Deck extends React.Component{
 
         var mainTotal = this.totalCards(this.props.UsersDeckData.main);
         var sideboardTotal = this.totalCards(this.props.UsersDeckData.sideboard);
-
         return (
             <div className="DeckEditMethodComponent">
                 <h3>Main <span className={mainTotal < 60? "wrongCardNumber": ""}>({mainTotal})</span></h3>

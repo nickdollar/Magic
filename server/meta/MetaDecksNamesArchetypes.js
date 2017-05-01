@@ -34,7 +34,7 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
     var currentQty = 9999;
     var position = 0;
     DecksArchetypesMeta.forEach(function(DecksArchetypesMetaObj){
-        if(DecksArchetypesMetaObj.qty < currentQtt){
+        if(DecksArchetypesMetaObj.qty < currentQty){
             position++;
             currentQty = DecksArchetypesMetaObj.qty;
             DecksArchetypesMetaObj.position = position;

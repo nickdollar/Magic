@@ -10,10 +10,13 @@ import CustomLGSEventsAdmin from './CustomLGSEventsAdmin/CustomLGSEventsAdmin.js
 import CustomEventsCalendarAdmin from './CustomEventsCalendarAdmin/CustomEventsCalendarAdmin.jsx';
 import CustomZipCodesAdmin from './CustomZipCodesAdmin/CustomZipCodesAdmin.jsx';
 import CustomCardsFullDataAdmin from './CustomCardsFullDataAdmin/CustomCardsFullDataAdmin.jsx';
-import CustomCardsCollectionSimplifiedAdmin from './CustomCardsCollectionSimplifiedAdmin/CustomCardsCollectionSimplifiedAdmin.jsx';
+import CustomCardsSimpleAdmin from './CustomCardsSimpleAdmin/CustomCardsSimpleAdmin.jsx';
 import CustomNewestAdmin from './CustomNewestMetaAdmin/CustomNewestAdmin.jsx';
 import CustomTCGPlayerCardsDailyPricesAdmin from './CustomTCGPlayerCardsDailyPricesAdmin/CustomTCGPlayerCardsDailyPricesAdmin.jsx';
 import CustomTCGPlayerCardsFullDataAdmin from './CustomTCGPlayerCardsFullDataAdmin/CustomTCGPlayerCardsFullDataAdmin';
+import CustomSetsAdmin from './CustomSetsAdmin/CustomSetsAdmin.jsx';
+import CustomCardsAdmin from './CustomCardsAdmin/CustomCardsAdmin.jsx';
+import Workbench from './Workbench/Workbench.jsx';
 
 export default class CustomAdmin extends React.Component{
     constructor(props){
@@ -44,15 +47,20 @@ export default class CustomAdmin extends React.Component{
             return <CustomZipCodesAdmin/>
         }else if (route=="CardsFullData"){
             return <CustomCardsFullDataAdmin/>
-        }else if (route=="CardsCollectionSimplified"){
-            return <CustomCardsCollectionSimplifiedAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="CardsSimple"){
+            return <CustomCardsSimpleAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="MetaNewest"){
             return <CustomNewestAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="TCGPlayerCardsDailyPrices"){
             return <CustomTCGPlayerCardsDailyPricesAdmin Formats_id={this.state.Formats_id}/>
         }else if (route=="TCGPlayerCardsFullData"){
             return <CustomTCGPlayerCardsFullDataAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="Cards"){
+            return <CustomCardsAdmin Formats_id={this.state.Formats_id}/>
+        }else if (route=="Workbench"){
+            return <Workbench/>
         }
+
     }
 
     closeNav(){
@@ -72,13 +80,14 @@ export default class CustomAdmin extends React.Component{
     }
 
     render(){
-        var collections = [ "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
+        var collections = [ "Cards", "Events", "CardsDatabase", "DecksNames", "DecksArchetypes",
                             "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "CardsFullData",
-                            "CardsCollectionSimplified", "MetaNewest", "TCGPlayerCardsDailyPrices", "TCGPlayerCardsFullData"];
+                            "CardsSimple", "MetaNewest", "TCGPlayerCardsDailyPrices", "TCGPlayerCardsFullData", "Sets"];
         collections.sort()
         return (
             <div className="CustomAdminComponent">
                 <div ref="mySideNav" className="sidenav col-xs-2">
+                    <a href={FlowRouter.path("admin", {collection : "Workbench"})}>Workbench</a>
                     <a href={FlowRouter.path("admin")}>Main</a>
                     {collections.map((collection)=>{
                         return <a key={collection} href={FlowRouter.path("admin", {collection : collection})}>{collection}</a>

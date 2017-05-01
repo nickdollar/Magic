@@ -1,0 +1,217 @@
+import React from 'react' ;
+
+export default class Links extends React.Component {
+    constructor(){
+        super();
+
+    }
+
+    render(){
+        var links = []
+        {for(var i = 0; i < 261; i++){
+            links.push(<a href={`http://sales.starcitygames.com//spoiler/display.php?&lang%5B%5D=1&r_all=All&g%5BG1%5D=NM/M&sort1=4&sort2=1&sort3=10&numpage=200&display=3&startnum=${i*200}`}> {i*200}</a>)
+        }}
+
+
+        return(
+            <div className="linksComponent">
+                {links.map(link=>link)}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/masterpiece-series-amonkhet-invocationsmasterpiece-series-amonkhet-invocations">Masterpiece Series: Amonkhet Invocations</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-mind-vs-might">Duel Decks: Mind vs. Might</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/modern-masters-2017">Modern Masters 2017</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/aether-revolt">Aether Revolt</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/planechase-anthology">Planechase Anthology</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commander-2016">Commander 2016</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/kaladesh">Kaladesh</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/masterpiece-series-kaladesh-inventions">Masterpiece Series: Kaladesh Inventions</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-nissa-vs-ob-nixilis">Duel Decks: Nissa vs. Ob Nixilis</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/conspiracy-take-the-crown">Conspiracy: Take the Crown</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-lore">From the Vault: Lore</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/wmcq-promo-cards">WMCQ Promo Cards</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/eldritch-moon">Eldritch Moon</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/eternal-masters">Eternal Masters</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/shadows-over-innistrad">Shadows over Innistrad</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/welcome-deck-2016">Welcome Deck 2016</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-blessed-vs-cursed">Duel Decks: Blessed vs. Cursed</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/oath-of-the-gatewatch">Oath of the Gatewatch</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commander-2015">Commander 2015</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/battle-for-zendikar">Battle for Zendikar</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/zendikar-expeditions">Zendikar Expeditions</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-zendikar-vs-eldrazi">Duel Decks: Zendikar vs. Eldrazi</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-angels">From the Vault: Angels</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-origins">Magic Origins</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/modern-masters-2015">Modern Masters 2015</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/dragons-of-tarkir">Dragons of Tarkir</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/tarkir-dragonfury-promos">Tarkir Dragonfury Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-elspeth-vs-kiora">Duel Decks: Elspeth vs. Kiora</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fate-reforged">Fate Reforged</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/ugins-fate-promos">Ugin's Fate Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-anthology">Duel Decks: Anthology</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commander-2014">Commander 2014</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/khans-of-tarkir">Khans of Tarkir</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2015-m15">Magic 2015 (M15)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/journey-into-nyx">Journey Into Nyx</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/theros">Theros</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/heros-path-promos">Hero's Path Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/gatecrash">Gatecrash</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/return-to-ravnica">Return to Ravnica</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/scars-of-mirrodin">Scars of Mirrodin</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2011-m11">Magic 2011 (M11)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/archenemy">Archenemy</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/rise-of-the-eldrazi">Rise of the Eldrazi</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/worldwake">Worldwake</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/zendikar">Zendikar</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2010-m10">Magic 2010 (M10)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duels-of-the-planeswalkers">Duels of the Planeswalkers</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/alara-reborn">Alara Reborn</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/conflux">Conflux</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/shards-of-alara">Shards of Alara</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/eventide">Eventide</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/shadowmoor">Shadowmoor</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/morningtide">Morningtide</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/wpn-and-gateway-promos">WPN &amp; Gateway Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/lorwyn">Lorwyn</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/game-day-promos">Game Day Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/10th-edition">10th Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/future-sight">Future Sight</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/grand-prix-promos">Grand Prix Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/planar-chaos">Planar Chaos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/special-occasion">Special Occasion</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/pro-tour-promos">Pro Tour Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/time-spiral">Time Spiral</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/timeshifted">Timeshifted</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/coldsnap">Coldsnap</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/coldsnap-theme-deck-reprints">Coldsnap Theme Deck Reprints</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/dissension">Dissension</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/champs-promos">Champs Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/guildpact">Guildpact</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-premiere-shop">Magic Premiere Shop</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/ravnica">Ravnica</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/9th-edition">9th Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/saviors-of-kamigawa">Saviors of Kamigawa</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/betrayers-of-kamigawa">Betrayers of Kamigawa</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/unhinged">Unhinged</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/champions-of-kamigawa">Champions of Kamigawa</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fifth-dawn">Fifth Dawn</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/darksteel">Darksteel</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/mirrodin">Mirrodin</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/launch-party-and-release-event-promos">Launch Party &amp; Release Event Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/scourge">Scourge</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/8th-edition">8th Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/legions">Legions</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/onslaught">Onslaught</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/judgment">Judgment</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/torment">Torment</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/oversize-cards">Oversize Cards</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/odyssey">Odyssey</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/apocalypse">Apocalypse</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-player-rewards">Magic Player Rewards</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/7th-edition">7th Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/planeshift">Planeshift</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/invasion">Invasion</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/prophecy">Prophecy</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/starter-2000">Starter 2000</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/nemesis">Nemesis</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/european-lands">European Lands</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fnm-promos">FNM Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/mercadian-masques">Mercadian Masques</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/guru-lands">Guru Lands</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/unique-and-miscellaneous-promos">Unique and Miscellaneous Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/jss-mss-promos">JSS/MSS Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/judge-promos">Judge Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/urzas-destiny">Urza's Destiny</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/portal-three-kingdoms">Portal Three Kingdoms</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/classic-sixth-edition">Classic Sixth Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/starter-1999">Starter 1999</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/urzas-legacy">Urza's Legacy</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/media-promos">Media Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/anthologies">Anthologies</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/urzas-saga">Urza's Saga</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/apac-lands">APAC Lands</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/unglued">Unglued</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/exodus">Exodus</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/portal-second-age">Portal Second Age</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/stronghold">Stronghold</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/tempest">Tempest</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/prerelease-cards">Prerelease Cards</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/weatherlight">Weatherlight</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/portal">Portal</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/vanguard">Vanguard</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fifth-edition">Fifth Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/visions">Visions</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/mirage">Mirage</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/arena-promos">Arena Promos</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/alliances">Alliances</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/homelands">Homelands</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/ice-age">Ice Age</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/chronicles">Chronicles</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fourth-edition">Fourth Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fallen-empires">Fallen Empires</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/the-dark">The Dark</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/legends">Legends</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/revised-edition">Revised Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/antiquities">Antiquities</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/unlimited-edition">Unlimited Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/collectors-edition">Collector's Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/international-edition">International Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/beta-edition">Beta Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/alpha-edition">Alpha Edition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/born-of-the-gods">Born of the Gods</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2014-m14">Magic 2014 (M14)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/dragons-maze">Dragon's Maze</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2013-m13">Magic 2013 (M13)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/avacyn-restored">Avacyn Restored</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/dark-ascension">Dark Ascension</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/innistrad">Innistrad</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-2012-m12">Magic 2012 (M12)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/new-phyrexia">New Phyrexia</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/mirrodin-besieged">Mirrodin Besieged</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/modern-masters">Modern Masters</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/arabian-nights">Arabian Nights</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commanders-arsenal">Commander's Arsenal</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commander-2013">Commander 2013</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/commander">Commander</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/planechase-2012">Planechase 2012</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/planechase">Planechase</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/magic-modern-event-deck">Magic Modern Event Deck</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/conspiracy">Conspiracy</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-speed-vs-cunning">Duel Decks: Speed vs. Cunning</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-jace-vs-vraska">Duel Decks: Jace vs. Vraska</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-heroes-vs-monsters">Duel Decks: Heroes vs. Monsters</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-sorin-vs-tibalt">Duel Decks: Sorin vs. Tibalt</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-izzet-vs-golgari">Duel Decks: Izzet vs. Golgari</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-venser-vs-koth">Duel Decks: Venser vs. Koth</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-ajani-vs-nicol-bolas">Duel Decks: Ajani vs. Nicol Bolas</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-knights-vs-dragons">Duel Decks: Knights vs. Dragons</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-elspeth-vs-tezzeret">Duel Decks: Elspeth vs. Tezzeret</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-phyrexia-vs-the-coalition">Duel Decks: Phyrexia vs. the Coalition</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-garruk-vs-liliana">Duel Decks: Garruk vs. Liliana</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-divine-vs-demonic">Duel Decks: Divine vs. Demonic</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-jace-vs-chandra">Duel Decks: Jace vs. Chandra</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks-elves-vs-goblins">Duel Decks: Elves vs. Goblins</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-annihilation">From the Vault: Annihilation</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-twenty">From the Vault: Twenty</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-realms">From the Vault: Realms</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-legends">From the Vault: Legends</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-relics">From the Vault: Relics</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-exiled">From the Vault: Exiled</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/from-the-vault-dragons">From the Vault: Dragons</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/premium-deck-series-graveborn">Premium Deck Series: Graveborn</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/premium-deck-series-fire-and-lightning">Premium Deck Series: Fire and Lightning</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/premium-deck-series-slivers">Premium Deck Series: Slivers</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/deckmasters-garfield-vs-finkel">Deckmasters Garfield vs Finkel</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/beatdown-box-set">Beatdown Box Set</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/battle-royale-box-set">Battle Royale Box Set</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/astral">Astral</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/box-sets">Box Sets</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/duel-decks">Duel Decks</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fourth-edition-foreign-black-border">Fourth Edition (Foreign Black Border)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/fourth-edition-foreign-white-border">Fourth Edition (Foreign White Border)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/revised-edition-foreign-black-border">Revised Edition (Foreign Black Border)</a>*/}
+                {/*<a href="http://shop.tcgplayer.com/price-guide/magic/revised-edition-foreign-white-border">Revised Edition (Foreign White Border)</a>*/}
+
+
+            </div>
+        );
+    }
+}

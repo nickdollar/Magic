@@ -7,7 +7,6 @@ export default class  extends React.Component {
     }
 
     eventInfo(event){
-        console.log(event);
         var eventType = EventsTypes.findOne({_id : event.EventsTypes_id});
         if(_.isEmpty(event)){
             return <div className="left"></div>

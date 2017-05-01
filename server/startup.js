@@ -26,15 +26,14 @@ Meteor.startup(function () {
     //     CardsData._dropIndex(CardsData.getIndexes()[i].name);
     // }
 
-    CardsData._ensureIndex({name : 1});
     CardsFullData._ensureIndex({name : 1});
+    TCGCards._ensureIndex({name : 1});
     DecksDataUniqueWithoutQty._ensureIndex({nonLandMain : 1});
     DecksData._ensureIndex({DecksNames_id : 1});
     DecksNames._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});
     ZipCodes._ensureIndex({ZIP : 1});
     UsersCollection._ensureIndex({"cards.name" : 1});
-    CardsCollectionSimplified._ensureIndex({"name" : 1});
 
 
     if ( Meteor.users.find().count() === 0 ){
@@ -65,12 +64,6 @@ Meteor.startup(function () {
         createCardsFullData();
     }else{
         console.log("Collection CardsFullData Match");
-    }
-    if(makeCardsDataCount() != CardsData.find().count()){
-        console.log("makeCardsData Wrong Qty");
-        makeCardsDataFromFullData();
-    }else{
-        console.log("Collection CardsData Match ");
     }
 
     if(MTGSetsCountFromFile() != MTGSets.find().count()){

@@ -130,7 +130,7 @@ export default class DeckAndSideboardInput extends React.Component{
             return;
         }
 
-        Meteor.call("getCardsBy_id", {CardsCollectionSimplified_id : selectedCard._id}, (err, data)=>{
+        Meteor.call("getCardsBy_id", {CardsSimple_id : selectedCard._id}, (err, data)=>{
             data.qty = selectedCard.qty;
             UsersDeckData[mainSideboard].push(data);
             if(data._id){

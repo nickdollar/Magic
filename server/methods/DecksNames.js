@@ -44,46 +44,6 @@ Meteor.methods({
                               )
         };
     },
-    createDecksNamesShell(DecksNames_id){
-        // logFunctionsStart("createDecksNamesShell");
-            var decksNamesQuery = DecksNames.findOne({_id : DecksNames_id});
-
-            var DecksArchetypesAggregation = DecksNames.aggregate(
-                [
-                    {$match: {_id : DecksNames_id}},
-                    {$lookup: {
-                            "from" : "DecksData",
-                            "localField" : "_id",
-                            "foreignField" : "DecksNames_id",
-                            "as" : "DecksData"
-                    }},
-                    {$project : {DecksData : 1,DecksDataQty : {$size : "$DecksData"}}},
-                    {$match : {DecksDataQty : {$gte : 5}}},
-                    {$unwind: {path : "$DecksData"}},
-                    {$project: {_id : "$DecksData._id",name : {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}}}},
-                    {$unwind: {path : "$name"}},
-                    {$group: {_id : "$name", count : {$sum : 1}}},
-                    {$lookup: {
-                            "from" : "CardDatabase",
-                            "localField" : "_id",
-                            "foreignField" : "name",
-                            "as" : "cardData"
-                    }},
-                    {$unwind: {path : "$cardData"}},
-                    {$match: {"cardData.land" : false}},
-                    {$group: {_id : "$count",cards : { $push : "$_id"}}},
-                    {$sort: {_id : -1}},
-                    {
-                        $project : {
-                            _id : 0,
-                            qty : "$_id",
-                            cards : 1
-                        }
-                    }
-                ]
-            );
-
-    },
     createDecksNamesShellsByFormat(Formats_id){
         logFunctionsStart("createDecksNamesShellsByFormat");
             DecksNames.find({Formats_id : Formats_id}).forEach((decksNames)=>{

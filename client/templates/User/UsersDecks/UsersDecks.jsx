@@ -49,12 +49,15 @@ export default class UsersDecks extends React.Component {
     getSelectedDeck(){
         Meteor.call("getUsersDecksWithCardsInformation", {UsersDecks_id : this.state.UsersDeck_id}, (err, data)=>{
             if(data){
+
                 for(var i = 0 ; i < data.main.length ; i++){
-                    Object.assign(data.main[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.main[i].name))
+                    Object.assign(data.main[i], data.cardsInfo.find(cardInfo => cardInfo._id == data.main[i].name))
                 }
                 for(var i = 0 ; i < data.sideboard.length ; i++){
-                    Object.assign(data.sideboard[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.sideboard[i].name))
+                    Object.assign(data.sideboard[i], data.cardsInfo.find(cardInfo => cardInfo._id == data.sideboard[i].name))
                 }
+
+
                 this.setState({
                     UsersDeckData : data,
                     main : {name : null, _id : null, qty : 4},
@@ -109,7 +112,7 @@ export default class UsersDecks extends React.Component {
         if(index != -1){
             return;
         }
-        Meteor.call("getCardsBy_id", {CardsCollectionSimplified_id : selectedCard._id}, (err, data)=>{
+        Meteor.call("getCardsBy_id", {CardsSimple_id : selectedCard._id}, (err, data)=>{
             data.qty = selectedCard.qty;
             UsersDeckData[mainSideboard].push(data);
 
@@ -185,6 +188,7 @@ export default class UsersDecks extends React.Component {
 
     render(){
         var DecksLists = this.filterDecksLists(this.state.DecksLists);
+
         return(
             <div className="UsersDecksComponent">
                 <h3>Yours Decks</h3>

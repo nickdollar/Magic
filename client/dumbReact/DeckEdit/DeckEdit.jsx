@@ -246,12 +246,12 @@ export default class Deck extends React.Component{
             else if(matches[i] === "19") {str.push({key : i, mana :'s19'}) }
             else if(matches[i] === "20") {str.push({key : i, mana :'s20'}) }
 
-            else if(matches[i] === "B" ) {str.push({key : i, mana :'sb' }) }
-            else if(matches[i] === "C" ) {str.push({key : i, mana :'scl'}) }
-            else if(matches[i] === "G" ) {str.push({key : i, mana :'sg' }) }
-            else if(matches[i] === "R" ) {str.push({key : i, mana :'sr' }) }
-            else if(matches[i] === "U" ) {str.push({key : i, mana :'su' }) }
-            else if(matches[i] === "W" ) {str.push({key : i, mana :'sw' }) }
+            else if(matches[i] === "b" ) {str.push({key : i, mana :'sb' }) }
+            else if(matches[i] === "c" ) {str.push({key : i, mana :'scl'}) }
+            else if(matches[i] === "g" ) {str.push({key : i, mana :'sg' }) }
+            else if(matches[i] === "r" ) {str.push({key : i, mana :'sr' }) }
+            else if(matches[i] === "u" ) {str.push({key : i, mana :'su' }) }
+            else if(matches[i] === "w" ) {str.push({key : i, mana :'sw' }) }
 
             else if(matches[i] === "2B") {str.push({key : i, mana :'s2b'}) }
             else if(matches[i] === "2G") {str.push({key : i, mana :'s2g'}) }

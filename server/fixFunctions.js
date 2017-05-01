@@ -32,6 +32,18 @@ databaseFixes = (string)=>{
             })
     });
 
+    DecksArchetypes.find({}).map(deckArchetype => {
+        DecksArchetypes.update({_id : deckArchetype._id},
+            {
+                $set : { link: deckArchetype.name.replace(/[^a-zA-Z0-9-_]/g, '')},
+            },
+            {
+                multi : true
+            }
+        )
+    });
+
+
     Formats.find().forEach(format=>{
         DecksDataUniqueWithoutQty.update({format : {$regex : format.name, $options : "i"}},
             {
@@ -58,5 +70,17 @@ databaseFixes = (string)=>{
         {
             multi : true
         })
+
+    DecksNames.find({}).map(deckName => {
+        DecksNames.update({_id : deckName._id},
+            {
+                $set : { link: deckName.name.replace(/[^a-zA-Z0-9-_]/g, '')},
+            },
+            {
+                multi : true
+            }
+        )
+    });
+
     logFunctionsEnd("databaseFixes");
 }

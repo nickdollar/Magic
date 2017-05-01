@@ -86,69 +86,6 @@ getColorsFromArchetypes = function(DecksArchetypes_id){
     return colorsArray.join("");
 }
 
-getManaCss = function(value){
-    var manacost = CardsData.findOne({name : value}).manacost;
-    var manaRegex = new RegExp("(?:B|C|G|R|U|W)?\/?(?:X|P|B|C|G|R|U|W|\\d+)(?=})", 'g');
-
-    var str = [];
-    var res;
-
-    while((res = manaRegex.exec(manacost)) !== null) {
-        if(res[0] === "X"      ) {str.push({mana :'sx' }) }
-        else if(res[0] === "1" ) {str.push({mana :'s1' }) }
-        else if(res[0] === "2" ) {str.push({mana :'s2' }) }
-        else if(res[0] === "3" ) {str.push({mana :'s3' }) }
-        else if(res[0] === "4" ) {str.push({mana :'s4' }) }
-        else if(res[0] === "5" ) {str.push({mana :'s5' }) }
-        else if(res[0] === "6" ) {str.push({mana :'s6' }) }
-        else if(res[0] === "7" ) {str.push({mana :'s7' }) }
-        else if(res[0] === "8" ) {str.push({mana :'s8' }) }
-        else if(res[0] === "9" ) {str.push({mana :'s9' }) }
-        else if(res[0] === "10") {str.push({mana :'s10'}) }
-        else if(res[0] === "11") {str.push({mana :'s11'}) }
-        else if(res[0] === "12") {str.push({mana :'s12'}) }
-        else if(res[0] === "13") {str.push({mana :'s13'}) }
-        else if(res[0] === "14") {str.push({mana :'s14'}) }
-        else if(res[0] === "15") {str.push({mana :'s15'}) }
-        else if(res[0] === "16") {str.push({mana :'s16'}) }
-        else if(res[0] === "17") {str.push({mana :'s17'}) }
-        else if(res[0] === "18") {str.push({mana :'s18'}) }
-        else if(res[0] === "19") {str.push({mana :'s19'}) }
-        else if(res[0] === "20") {str.push({mana :'s20'}) }
-
-        else if(res[0] === "B" ) {str.push({mana :'sb' }) }
-        else if(res[0] === "C" ) {str.push({mana :'scl'}) }
-        else if(res[0] === "G" ) {str.push({mana :'sg' }) }
-        else if(res[0] === "R" ) {str.push({mana :'sr' }) }
-        else if(res[0] === "U" ) {str.push({mana :'su' }) }
-        else if(res[0] === "W" ) {str.push({mana :'sw' }) }
-
-        else if(res[0] === "2B") {str.push({mana :'s2b'}) }
-        else if(res[0] === "2G") {str.push({mana :'s2g'}) }
-        else if(res[0] === "3R") {str.push({mana :'s3r'}) }
-        else if(res[0] === "2U") {str.push({mana :'s2u'}) }
-        else if(res[0] === "2W") {str.push({mana :'s2w'}) }
-
-        else if(res[0] === "B/P"){str.push({mana :'sbp'}) }
-        else if(res[0] === "G/P"){str.push({mana :'sgp'}) }
-        else if(res[0] === "R/P"){str.push({mana :'srp'}) }
-        else if(res[0] === "U/P"){str.push({mana :'sup'}) }
-        else if(res[0] === "W/P"){str.push({mana :'swp'}) }
-
-        else if(res[0] === "B/G"){str.push({mana :'sbg'}) }
-        else if(res[0] === "B/R"){str.push({mana :'sbr'}) }
-        else if(res[0] === "G/U"){str.push({mana :'sgu'}) }
-        else if(res[0] === "G/W"){str.push({mana :'sgw'}) }
-        else if(res[0] === "R/G"){str.push({mana :'srg'}) }
-        else if(res[0] === "R/W"){str.push({mana :'srw'}) }
-        else if(res[0] === "U/B"){str.push({mana :'sub'}) }
-        else if(res[0] === "U/R"){str.push({mana :'sur'}) }
-        else if(res[0] === "W/B"){str.push({mana :'swb'}) }
-        else if(res[0] === "W/U"){str.push({mana :'swu'}) }
-    }
-    return str;
-}
-
 getDistanceBetweenTwoCoords = (coords1, coords2)=>{
 
     var R = 3959; // miles

@@ -14,7 +14,7 @@ export default class ArchetypesShells extends React.Component {
             (err, response)=>{
                 var dataSort = response.sort((a, b)=>{
                     return b.date - a.date
-                });;
+                });
 
                 var DecksData_id = "";
 
@@ -32,24 +32,25 @@ export default class ArchetypesShells extends React.Component {
             {selectedCards : this.state.selectedCards,
             DecksArchetypes_id : this.props.DeckArchetype._id},
             (err, response)=>{
+                console.log(response);
                 this.createList(response);
             })
     }
 
 
     findCardType(card){
-            if (card.land == true){return "land"}
-            else if(card.artifact == true && card.creature == false){return "artifact"}
-            else if (card.creature == true){return "creature"}
-            else if (card.enchantment == true && card.creature == false && card.artifact == false){return 'enchantment'}
-            else if (card.instant == true){return "instant"}
-            else if (card.planeswalker == true){return "planeswalker"}
-            else if (card.sorcery == true){return "sorcery"}
-            else {
-                return "null"
-            }
+        if(!card.types){return "null"}
+        else if (card.types.indexOf("Land") != -1){return "land"}
+        else if (card.types.indexOf("Creature") != -1){return "creature"}
+        else if (card.types.indexOf("Artifact") != -1){return "artifact"}
+        else if (card.types.indexOf("Enchantment") != -1){return "enchantment"}
+        else if (card.types.indexOf("Instant") != -1){return "instant"}
+        else if (card.types.indexOf("Planeswalker") != -1){return "planeswalker"}
+        else if (card.types.indexOf("Sorcery") != -1){return "sorcery"}
+        else {
+            return "null"
+        }
     }
-
     addCardToList(card){
         var selectedCards = this.state.selectedCards.concat();
 
@@ -71,13 +72,9 @@ export default class ArchetypesShells extends React.Component {
     checkCard(key, index){
         var typesSeparated = Object.assign({}, this.state.typesSeparated);
         typesSeparated.typesSeparated[key].array[index].checked = !typesSeparated.typesSeparated[key].array[index].checked;
-
-
         this.addCardToList(typesSeparated.typesSeparated[key].array[index].name);
         this.setState({typesSeparated : typesSeparated});
     }
-
-
 
     createList(cardsList){
         var typesSeparated = {

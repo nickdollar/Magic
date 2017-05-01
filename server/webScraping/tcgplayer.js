@@ -1,60 +1,6 @@
 import cheerio from "cheerio";
+import csv from "csvtojson";
 
-importCollection = (URL)=>{
-    logFunctionsStart("importCollection");
-    var URL = "http://store.tcgplayer.com/collection/view/142729"
-    var resMainPage = Meteor.http.get(URL);
-    if (resMainPage.statusCode == 200) {
-        var $collectionPage = cheerio.load(resMainPage.content, {decodeEntities: false});
-        var collectionTable = $collectionPage("#collectionContainer");
-
-        if(collectionTable.length){
-
-            var headers = $collectionPage(collectionTable).find("thead th");
-            var rows = $collectionPage(collectionTable).find("tbody tr");
-            var nameRegex = /(\b.+\b) *(?= - \[Foil\]|$|\(\b\w+\b\))(\(\b\w+\b\))?( - \[Foil\])?/i;
-
-            var columnPosition = {};
-            for(var i = 0; i < headers.length; i++){
-                columnPosition[$collectionPage(headers[i]).html()] = i +1;
-            }
-            for(var i = 0; i < rows.length; i++){
-                var game = $collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Game})`).html();
-                if(game != "Magic"){
-                    continue;
-                }
-                var qty = parseInt($collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Have})`).html());
-                if(isNaN(qty)){
-                    qty = 0;
-                }
-                var name = $collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Name}) a`).html();
-
-                var match = name.match(nameRegex);
-
-                var nameMatched = match[1];
-                var foil;
-
-                if(match[3]){
-                    foil = true;
-                }else{
-                    foil = false;
-                }
-                var setName = replaceEdition($collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Set})`).html());
-                if(setName == "Unique and Miscellaneous Promos"){
-                    var setCode = "PROMOS"
-                }else{
-                    var setCode = MTGSets.findOne({name : {$regex : `^${setName}`, $options : "i"}}).code;
-                }
-
-                if(!setCode){
-                    setCode = "wrongCode";
-                }
-                addCardToCollection({ qty : qty, name : nameMatched, foil : foil, setCode : setCode});
-            }
-        }
-    }
-    logFunctionsEnd("importCollection");
-}
 
 Meteor.methods({
     getDeckSetsFromGoogleCacheMethod(){
@@ -99,6 +45,30 @@ Meteor.methods({
                 )
             }
         logFunctionsEnd("convertCSVToJson");
+    },
+    CreateTCGSets(){
+        logFunctionsStart("CreateTCGSets");
+        csv({
+            delimiter : ","
+        }).fromFile('assets/app/links.csv').on('json', Meteor.bindEnvironment((jsonObj)=>{
+            TCGSets.update({_id : jsonObj.links},
+                {
+                    $setOnInsert : {_id : jsonObj.links, url : jsonObj["links-href"], cards : []}
+                },
+                {
+                    upsert : true
+                })
+
+            TCGSets.update({_id : jsonObj.links},
+                {
+                    $push : {cards : {name : jsonObj.card, rarity : jsonObj.rarity}}
+                },
+                )
+
+        })).on("done", (error)=>{
+            console.log("end")
+        })
+       logFunctionsEnd("CreateTCGSets");
     }
 })
 
@@ -201,6 +171,62 @@ htmlUnescape = (str)=>{
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&amp;/g, '&');
+}
+
+importCollection = (URL)=>{
+    logFunctionsStart("importCollection");
+    var URL = "http://store.tcgplayer.com/collection/view/142729"
+    var resMainPage = Meteor.http.get(URL);
+    if (resMainPage.statusCode == 200) {
+        var $collectionPage = cheerio.load(resMainPage.content, {decodeEntities: false});
+        var collectionTable = $collectionPage("#collectionContainer");
+
+        if(collectionTable.length){
+
+            var headers = $collectionPage(collectionTable).find("thead th");
+            var rows = $collectionPage(collectionTable).find("tbody tr");
+            var nameRegex = /(\b.+\b) *(?= - \[Foil\]|$|\(\b\w+\b\))(\(\b\w+\b\))?( - \[Foil\])?/i;
+
+            var columnPosition = {};
+            for(var i = 0; i < headers.length; i++){
+                columnPosition[$collectionPage(headers[i]).html()] = i +1;
+            }
+            for(var i = 0; i < rows.length; i++){
+                var game = $collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Game})`).html();
+                if(game != "Magic"){
+                    continue;
+                }
+                var qty = parseInt($collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Have})`).html());
+                if(isNaN(qty)){
+                    qty = 0;
+                }
+                var name = $collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Name}) a`).html();
+
+                var match = name.match(nameRegex);
+
+                var nameMatched = match[1];
+                var foil;
+
+                if(match[3]){
+                    foil = true;
+                }else{
+                    foil = false;
+                }
+                var setName = replaceEdition($collectionPage(rows[i]).find(`td:nth-child(${columnPosition.Set})`).html());
+                if(setName == "Unique and Miscellaneous Promos"){
+                    var setCode = "PROMOS"
+                }else{
+                    var setCode = MTGSets.findOne({name : {$regex : `^${setName}`, $options : "i"}}).code;
+                }
+
+                if(!setCode){
+                    setCode = "wrongCode";
+                }
+                addCardToCollection({ qty : qty, name : nameMatched, foil : foil, setCode : setCode});
+            }
+        }
+    }
+    logFunctionsEnd("importCollection");
 }
 
 

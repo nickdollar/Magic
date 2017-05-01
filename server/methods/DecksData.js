@@ -2,8 +2,6 @@ import Fuse from "fuse.js";
 
 Meteor.methods({
     addALGSDecksData: function ({submitDeck}) {
-
-        console.log(submitDeck);
         if(Events.findOne({_id : submitDeck._id})){
             var decksData = DecksData.findOne({_id : submitDeck.DecksData_id});
             if(decksData){
@@ -37,9 +35,6 @@ Meteor.methods({
         }
     },
     updateALGSDecksData: function (deck) {
-
-
-
         deck.main = deck.main.map((card)=>{
             return {name : card.name, qty : card.qty }
         })
@@ -303,7 +298,6 @@ Meteor.methods({
         if(selectedCards.length){
             var DecksArchetypesAggregation = DecksArchetypes.aggregate(
                 [
-
                     {$match: {_id : DecksArchetypes_id}},
                     {$lookup: {
                         "from" : "DecksNames",
@@ -324,13 +318,13 @@ Meteor.methods({
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
                     {$lookup: {
-                        "from" : "CardDatabase",
+                        "from" : "CardsCollectionSimplified",
                         "localField" : "_id",
                         "foreignField" : "name",
                         "as" : "cardData"
                     }},
                     {$unwind: {path : "$cardData"}},
-                    {$match: {"cardData.land" : false}},
+                    {$match: {"cardData.types" : {$ne : "land"}}},
                     {$sort: {count : -1}},
                 ]
             );
@@ -357,13 +351,13 @@ Meteor.methods({
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
                     {$lookup: {
-                        "from" : "CardDatabase",
+                        "from" : "CardsCollectionSimplified",
                         "localField" : "_id",
                         "foreignField" : "name",
                         "as" : "cardData"
                     }},
                     {$unwind: {path : "$cardData"}},
-                    {$match: {"cardData.land" : false}},
+                    {$match: {"cardData.types" : {$ne : "land"}}},
                     {$sort: {count : -1}},
                 ]
             );
@@ -403,9 +397,9 @@ Meteor.methods({
                     },
                     {
                         $lookup: {
-                            "from" : "CardsCollectionSimplified",
+                            "from" : "CardsSimple",
                             "localField" : "cards",
-                            "foreignField" : "name",
+                            "foreignField" : "_id",
                             "as" : "cardsInfo"
                         }
                     },

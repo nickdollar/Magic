@@ -7,10 +7,6 @@ Meteor.publish('DecksDataBy_id_NonReactive', function(DecksData_id) {
     return DecksData.find({_id : DecksData_id});
 });
 
-Meteor.publish('DecksDataFromEvent_idSimplified', function(Events_id) {
-    return DecksData.find({Events_id : Events_id}, {sort : {position : 1}, fields : {main : 0, sideboard : 0}});
-});
-
 Meteor.publish('DecksDataPLayerList_FromEvents', function(Events_id) {
     return DecksData.find({Events_id : Events_id}, {sort : {position : 1, victory : 1}, fields : {main : 0, sideboard : 0}});
 });

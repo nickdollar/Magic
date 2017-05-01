@@ -68,7 +68,7 @@ fixCards = function (card) {
     card = card.replace("\xE9", "e");
     card = card.toTitleCase();
 
-    if(CardsCollectionSimplified.find({name : card}, {limit : 1}).count()){
+    if(CardsSimple.find({_id : card}, {limit : 1}).count()){
         return card;
     }
 
@@ -92,7 +92,6 @@ fixCards = function (card) {
         }
         var fuse = new Fuse(allCardsNames, options);
         var rightName = fuse.search(card)[0];
-
 
         var foundName = CardsFullData.find({name : rightName}, {limit : 1}).fetch()[0];
         if(foundName.layout == "split"){

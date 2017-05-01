@@ -9,8 +9,14 @@ export default class LatestDecks extends React.Component {
     }
 
     getLastTwoWeeks(){
-        Meteor.call("getMetaNewest",(err, response)=>{
-            this.setState({List : response});
+        Meteor.call("getMetaLastAdditionMethod",(err, response)=>{
+            if(!response){
+                this.setState({List : {newestCards : [], newestDecks : [], newestArchetypes : []}})
+            }else{
+                this.setState({List : response});
+            }
+
+
         });
     }
 
@@ -106,7 +112,6 @@ export default class LatestDecks extends React.Component {
             data : newestCards,
             pagination : true
         }
-
         return(
             <div className="LatestDecksComponent">
                 <div className="sectionHeader">

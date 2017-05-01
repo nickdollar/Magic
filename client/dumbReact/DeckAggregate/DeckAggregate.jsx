@@ -73,15 +73,15 @@ export default class Deck extends React.Component{
     }
 
     getDecksDataById(DecksData_id){
-        Meteor.call("getDecksDataWithCardsInformation", {DecksData_id : DecksData_id}, (err, data)=>{
-            if(data){
-                for(var i = 0 ; i < data.main.length ; i++){
-                    Object.assign(data.main[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.main[i].name))
+        Meteor.call("getDecksDataWithCardsInformation", {DecksData_id : DecksData_id}, (err, response)=>{
+            if(response){
+                for(var i = 0 ; i < response.main.length ; i++){
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].name))
                 }
-                for(var i = 0 ; i < data.sideboard.length ; i++){
-                    Object.assign(data.sideboard[i], data.cardsInfo.find(cardInfo => cardInfo.name == data.sideboard[i].name))
+                for(var i = 0 ; i < response.sideboard.length ; i++){
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].name))
                 }
-                this.setState({DecksData : data})
+                this.setState({DecksData : response})
             }
         });
     }

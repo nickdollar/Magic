@@ -1,10 +1,4 @@
 Meteor.methods({
-    createMetaNewThingsDaysAllFormats(){
-        createMetaNewThingsDaysAllFormats();
-    },
-    createMetaNewest(Formats_id) {
-        createMetaNewThings(Formats_id);
-    },
     getMetaAllArchetypesMethod({Formats_id, options, LGS_ids}){
         return getMetaAllArchetypes({Formats_id : Formats_id, options : options, LGS_ids : LGS_ids});
     },
