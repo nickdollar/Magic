@@ -14,21 +14,20 @@ export default class LGSLocation extends React.Component {
     }
 
     navigator(){
-        format : Session.get("selectedMenuFormat"),
-
-            navigator.geolocation.getCurrentPosition((location)=> {
-                Session.set("position", [location.coords.longitude ,location.coords.latitude]);
-                this.setState({location : [location.coords.longitude ,location.coords.latitude] })
-            },
-            (error)=>{
-                this.setState({positionOption : "state"});
-            },
-            {
-                enableHighAccuracy: true,
-                timeout : 15000
-            }
-
-        );
+        // format : Session.get("selectedMenuFormat"),
+        //     navigator.geolocation.getCurrentPosition((location)=> {
+        //         Session.set("position", [location.coords.longitude ,location.coords.latitude]);
+        //         this.setState({location : [location.coords.longitude ,location.coords.latitude] })
+        //     },
+        //     (error)=>{
+        //         this.setState({positionOption : "state"});
+        //     },
+        //     {
+        //         enableHighAccuracy: true,
+        //         timeout : 15000
+        //     }
+        //
+        // );
     }
 
     getPositionOption(){
@@ -108,7 +107,7 @@ export default class LGSLocation extends React.Component {
             }
         }else if(this.state.positionOption == "ZIP") {
             if(this.state.ZIP == ""){
-                return "Bad ZIP";
+                return "**";
             }
         }
     }
@@ -126,7 +125,6 @@ export default class LGSLocation extends React.Component {
           }
         if(ZIP.length == 5){
             Meteor.call("checkIfZipExists", ZIP, (err, ZIPQuery)=>{
-                var cookies = new Cookies();
                 if(ZIPQuery){
                     Session.set("ZIP", ZIP);
                     Session.set("ZIPPosition", [ZIPQuery.LNG, ZIPQuery.LAT]);
@@ -178,7 +176,7 @@ export default class LGSLocation extends React.Component {
                 <span className="error">{this.getError()}</span>
                 <span className="distance">
                                     <select onChange={this.changedOption.bind(this)} value={this.state.positionOption}>
-                                        <option value="GPS">GPS</option>
+                                        {/*<option value="GPS">GPS</option>*/}
                                         <option value="state">State</option>
                                         <option value="ZIP">ZIP</option>
                                     </select>

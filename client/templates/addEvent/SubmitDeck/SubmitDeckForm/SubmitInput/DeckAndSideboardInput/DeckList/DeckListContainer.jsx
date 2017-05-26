@@ -13,7 +13,6 @@ export default DecklistContainer = createContainer(({deck}) => {
     var handle = Meteor.subscribe("cardsFromArray", uniqueCards);
 
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
 
     };

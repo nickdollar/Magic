@@ -2,9 +2,8 @@ import { createContainer } from 'meteor/react-meteor-data';
 import DeckList from './AdminEventInfoDeckList.jsx';
 
 export default DecklistContainer = createContainer((DecksData_id) => {
-    var handle = Meteor.subscribe("DecksDataCardsDataByDecksdata_id", DecksData_id.DecksData_id);
+    var handle = Meteor.subscribe("DecksCardsByDecksdata_id", DecksData_id.DecksData_id);
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         DecksData_id : DecksData_id.DecksData_id,
         deck : DecksData.findOne({_id : DecksData_id.DecksData_id})

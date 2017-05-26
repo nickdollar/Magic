@@ -21,12 +21,12 @@ export default class MetaTable extends React.Component {
             return LGSObj._id;
         })
 
-        Meteor.call("getMetaAllArchetypesMethod", {Formats_id : Formats_id, options : options, LGS_ids : LGS_ids}, (err, data)=>{
-            var totalDecks = data.reduce((a, b)=>{
+        Meteor.call("getMetaAllArchetypesMethod", {Formats_id : Formats_id, options : options, LGS_ids : LGS_ids}, (err, response)=>{
+            var totalDecks = response.reduce((a, b)=>{
                 return  a + b.qty;
             },0);
             var table = [];
-            table = table.concat(data)
+            table = table.concat(response)
             this.setState({tableData : table, totalDecks : totalDecks});
         });
     }

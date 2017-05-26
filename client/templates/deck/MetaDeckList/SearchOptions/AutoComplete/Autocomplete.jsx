@@ -1,9 +1,9 @@
 import React from "react";
 import Autosuggest from 'react-autosuggest';
 
-const getSuggestionValue = suggestion => suggestion.name;
+const getSuggestionValue = suggestion => suggestion._id;
 
-const renderSuggestion = suggestion =>  <div>{suggestion.name}</div>;
+const renderSuggestion = suggestion =>  <div>{suggestion._id}</div>;
 
 export default class AutoComplete extends React.Component{
     constructor() {
@@ -25,13 +25,9 @@ export default class AutoComplete extends React.Component{
         });
     };
     onSuggestionsFetchRequested = ({ value }) => {
-        Meteor.call("getAutoComplete", value, (err, data)=>{
-            var addFoils = [];
-            data.forEach((card)=>{
-                addFoils.push(card);
-            })
-            this.setState({
-                suggestions: addFoils.length === 0 ? [] : addFoils
+        Meteor.call("getListByRegex", {value : value}, (err, response)=>{
+             this.setState({
+                suggestions: response === 0 ? [] : response
             });
         })
     };

@@ -5,15 +5,15 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 class LGSInput extends TrackerReact(React.Component){
     constructor() {
         super();
-        navigator.geolocation.getCurrentPosition((location)=> {
-            this.state = {
-                subscription: {
-                    LGS: Meteor.subscribe("LGS", [location.coords.longitude ,location.coords.latitude])
-                },
-                coords : [location.coords.longitude, location.coords.latitude],
-                inputValue : 0
-            }
-        });
+        // navigator.geolocation.getCurrentPosition((location)=> {
+        //     this.state = {
+        //         subscription: {
+        //             LGS: Meteor.subscribe("LGS", [location.coords.longitude ,location.coords.latitude])
+        //         },
+        //         coords : [location.coords.longitude, location.coords.latitude],
+        //         inputValue : 0
+        //     }
+        // });
     }
 
     clearInput(){

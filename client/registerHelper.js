@@ -15,39 +15,35 @@ getFormat_idFromLink = (formatLink)=>{
     return Formats.findOne({names : {$regex : formatLink, $options : "i"}})._id;
 }
 
+updateCollectionNumbersFunction = function(){
+    var objects = UsersCollection.find({_id : Meteor.userId()}, {limit : 1}).fetch();
+
+    var cardsObjects = {};
+    if(objects.length){
+        for(var i = 0; i < objects[0].cards.length; ++i){
+            var cardName = objects[0].cards[i].name;
+            var qty = 0;
+
+            objects[0].cards[i].nQty ? qty = objects[0].cards[i].nQty : null;
+            objects[0].cards[i].fQty ? qty = objects[0].cards[i].fQty : null;
+            if(!cardsObjects[cardName]){
+                cardsObjects[cardName] = 0;
+            }
+            cardsObjects[cardName] += qty;
+        }
+    }
+
+    Session.set("cards", cardsObjects);
+}
+
 getLinkFormat = (Formats_id)=>{
     return Formats.findOne({_id : Formats_id}).name;
 }
 
-getCssManaByNumberFromDeckNameById = function(DecksNames_id){
-
-    var deckName = DecksNames.findOne({_id : DecksNames_id});
-    if(deckName == null) return;
-    var str = [];
-    for(var obj in deckName.colors){
-        if(obj === "B" && deckName.colors[obj]){str.push( {mana :'sb' })}
-        else if(obj === "G" && deckName.colors[obj]){str.push( {mana :'sg' })}
-        else if(obj === "C" && deckName.colors[obj]){str.push( {mana :'scl' })}
-        else if(obj === "R" && deckName.colors[obj]){str.push( {mana :'sr' })}
-        else if(obj === "U" && deckName.colors[obj]){str.push( {mana :'su' })}
-        else if(obj === "W" && deckName.colors[obj]){str.push( {mana :'sw' })}
-    }
-    return str;
-}
-
 getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
-
-    var colors = {B : "sb", C : "scl", G : "sg", R : "sr", U : "su", W : "sw"};
-    var decksNames = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
-    var colorsArray = [];
-    for(var i = 0; i < decksNames.length; ++i){
-        if(!decksNames[i].colors){
-            continue;
-        }
-        colorsArray = _.union(colorsArray, decksNames[i].colors);
-    }
+    var colors = {b : "sb", c : "scl", g : "sg", r : "sr", u : "su", w : "sw"};
     var html = "";
-    colorsArray.forEach((color)=>{
+    DecksArchetypes.findOne({_id : DecksArchetypes_id}).colors.forEach((color)=>{
         html += `<span class="mana ${colors[color]}"></span>`
     })
     return html;
@@ -56,7 +52,7 @@ getHTMLColorsFromArchetypes = function(DecksArchetypes_id){
 getCssColorsFromArchetypes = function(DecksArchetypes_id){
     var colors = {B: 0, C : 0, G: 0, R: 0, U: 0, W: 0};
 
-    DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).forEach(function(obj){
+    DecksArchetypes.findOne({_id : DecksArchetypes_id}).subtypes.forEach(function(obj){
         for(var color in obj.colors){
             colors[color] += obj.colors[color];
         }
@@ -72,18 +68,6 @@ getCssColorsFromArchetypes = function(DecksArchetypes_id){
         else if(obj === "W" && colors[obj]){str.push( {mana :'sw' })}
     }
     return str;
-}
-
-getColorsFromArchetypes = function(DecksArchetypes_id){
-    var decksNames = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).fetch();
-    var colorsArray = [];
-    for(var i = 0; i < decksNames.length; ++i){
-        if(!decksNames[i].colors){
-            continue;
-        }
-        colorsArray = _.union(colorsArray, decksNames[i].colors);
-    }
-    return colorsArray.join("");
 }
 
 getDistanceBetweenTwoCoords = (coords1, coords2)=>{
@@ -121,3 +105,5 @@ replaceTokenWithDash = function(string){
 replaceDashWithDotForRegex = function(string){
     return string.replace(/[-']/g, ".");
 }
+
+timeoutHandler = null;

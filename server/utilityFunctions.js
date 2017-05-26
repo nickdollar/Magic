@@ -7,7 +7,7 @@ setUpColorForDeckName = function(main){
                     "R/W" : 0, "U/B" : 0, "U/R" : 0, "W/B" : 0, "W/U" : 0,
                     "B/P" : 0, "G/P" : 0, "R/P" : 0, "U/P" : 0, "W/P" : 0};
     main.forEach(function(card){
-        var cardQuery = CardsData.find({name : card.name}, {limit : 1}).fetch()[0];
+        var cardQuery = Cards.find({_id : card.name}, {limit : 1}).fetch()[0];
         if(cardQuery){
             var mana = cardQuery.manaCost;
             var result;
@@ -47,11 +47,11 @@ pad = function(n) {
 
 getCardFromArrayWithoutLands = function(cardList){
     var resultWithoutLands = [];
-    CardsData.find(
-        {name : {$in : cardList},
+    Cards.find(
+        {_id : {$in : cardList},
             land : false
         }).forEach(function(card){
-            resultWithoutLands.push(card.name);
+            resultWithoutLands.push(card._id);
         });
     return resultWithoutLands;
 }
@@ -68,41 +68,49 @@ fixCards = function (card) {
     card = card.replace("\xE9", "e");
     card = card.toTitleCase();
 
-    if(CardsSimple.find({_id : card}, {limit : 1}).count()){
-        return card;
+    var foundCardsSimple = CardsSimple.find({_id : new RegExp(`^${card}$`, "i")}, {limit : 1});
+    if(foundCardsSimple.count()){
+        return foundCardsSimple.fetch()[0]._id;
     }
 
-    var queryCard = CardsFullData.find({name : {$regex : new RegExp("^" + card + "$"), $options :'i'}}, {limit : 1}).fetch()[0];
+
+    var queryCard = Cards.find({names : new RegExp(`^${card}$`, "i"), layout : {$nin : ["meld"]}}, {limit : 1}).fetch()[0];
     if(queryCard){
-        if(queryCard.layout == "split"){
-            card = "";
-            for(var i = 0; i < queryCard.names.length; i++){
-                card += queryCard.names[i].toTitleCase();
-                if( i < queryCard.names.length - 1){
-                    card += " // ";
+        return queryCard._id;
+    }else{
+        var allCardsNames = Cards.aggregate([
+            {
+                $project : {
+                    names : 1
+                }
+            },
+            {
+                $unwind : "$names"
+            },
+            {
+                $group : {
+                    _id : "$names",
+                    __id : {$first : "$_id"},
                 }
             }
-        }
-    }else{
-        var allCardsNames = CardsFullData.find({}, {fields : {name : 1}}).fetch();
+        ]);
+
         var options = {
-            keys : [{name : "name"}],
-            id : "name",
-            threshold : 0.4
+            keys : ["_id"],
+            id : "__id",
+            sort : true,
+            tokenize: true,
+            threshold : 0.2,
         }
         var fuse = new Fuse(allCardsNames, options);
-        var rightName = fuse.search(card)[0];
 
-        var foundName = CardsFullData.find({name : rightName}, {limit : 1}).fetch()[0];
-        if(foundName.layout == "split"){
-            if(foundName.length > 2){
-                card = foundName.names.join("/");
-            }else{
-                card = foundName.names.join(" // ");
-            }
+        var fuseFounds = fuse.search(escapeRegExp(card));
+        var fuseCard = fuseFounds[0];
+        if(fuseCard){
+            return fuseCard;
         }
     }
-    return card;
+    return `${card}`;
 }
 
 
@@ -135,4 +143,37 @@ logFunctionsEnd=(functionName)=>{
 
 logErrorMessage=(error)=>{
     console.log(`ERROR: ${error}`);
+}
+
+
+
+arrayLowercaseSorted = (array)=>{
+    var sorted = [];
+    array.forEach((item)=>{
+        sorted.push(item.toLowerCase())
+    })
+    return sorted.sort();
+}
+
+arrayLowercase = (array)=>{
+    var lowerCase = [];
+    array.forEach((item)=>{
+        lowerCase.push(item.toLowerCase())
+    })
+    return lowerCase;
+}
+
+arrayUnique = (array)=> {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+    return a;
+
+}
+escapeRegExp = (str)=>{
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }

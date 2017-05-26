@@ -1,3 +1,3 @@
-Meteor.publish('UserCollection', function() {
-    return UsersCollection.find({Users_id : this.userId});
+Meteor.publish('UserCollectionPublish', function() {
+    return UsersCollection.find({_id : this.userId});
 });

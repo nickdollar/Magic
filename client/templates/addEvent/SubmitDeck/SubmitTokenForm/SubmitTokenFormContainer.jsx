@@ -3,6 +3,6 @@ import SubmitTokenForm from './SubmitTokenForm.jsx';
 
 export default SubmitTokenFormContainer = createContainer(({tokenConfirmed}) => {
     return {
-        currentUser: Meteor.user(),
+
     };
 }, SubmitTokenForm);

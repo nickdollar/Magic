@@ -24,6 +24,7 @@ export default class DecksDataStates extends React.Component{
      }
 
     render(){
+
         return (
             <div className="StateListContainer">
                 <h3>Decks Per States</h3>
@@ -35,7 +36,7 @@ export default class DecksDataStates extends React.Component{
                         </tr>
                     </thead>
                     {this.state.states.map((state)=>{
-                        return  <tbody key={state}>
+                        return  <tbody key={state._id}>
                                     <tr>
                                         <td>
                                             {state._id}

@@ -5,8 +5,7 @@ export default LatestDecksContainer = createContainer(({}) => {
     var handle = Meteor.subscribe("metaNewestLatest");
 
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
-        List : MetaLastDayAddition.findOne({})
+        List : MetaLastDaysAdditions.findOne({})
     };
 }, LatestDecks);

@@ -2,13 +2,9 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"Formats_id" : 1}},
         {$match : {Formats_id : Formats_id}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksData"}},
         {$unwind : "$DecksData"},
         {$project : {
-            DecksNames_id : "$DecksNames_id",
             date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", EventsTypes_id : "$DecksData.EventsTypes_id", LGS_id : "$DecksData.LGS_id"}},
         {$match : {
             date : {$gte : options.startDate, $lte : options.endDate},
@@ -46,13 +42,9 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMetaBeforeDate = DecksArchetypes.aggregate([
         {$project : {"Formats_id" : 1}},
         {$match : {Formats_id : Formats_id}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$lookup : {"from" : "DecksArchetypes", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksData"}},
         {$unwind : "$DecksData"},
         {$project : {
-            DecksNames_id : "$DecksNames_id",
             date : "$DecksData.date", position : "$DecksData.position", victory : "$DecksData.victory", EventsTypes_id : "$DecksData.EventsTypes_id", LGS_id : "$DecksData.LGS_id"}},
         {$match : {
             date : {$gte : options.startDate, $lte : options.positionChange},
@@ -87,17 +79,17 @@ getMetaAllArchetypes = function({Formats_id, options, LGS_ids}){
         }
     });
 
-    DecksArchetypesMeta.forEach(function(DecksNamesMetaObj){
-        var DecksNamesMetaBeforeDateQuery = DecksArchetypesMetaBeforeDate.find(function(DecksNamesMetaBeforeDateObj){
-            return DecksNamesMetaBeforeDateObj._id == DecksNamesMetaObj._id;
+    DecksArchetypesMeta.forEach(function(decksArchetypesMetaObj){
+        var DecksNamesMetaBeforeDateQuery = DecksArchetypesMetaBeforeDate.find(function(DecksArchetypesMetaBeforeDateObj){
+            return DecksArchetypesMetaBeforeDateObj._id == decksArchetypesMetaObj._id;
         });
 
         if(DecksNamesMetaBeforeDateQuery){
-            var change = DecksNamesMetaBeforeDateQuery.position - DecksNamesMetaObj.position;
+            var change = DecksNamesMetaBeforeDateQuery.position - decksArchetypesMetaObj.position;
         }else{
             var change = 999;
         }
-        DecksNamesMetaObj.positionChange = change;
+        decksArchetypesMetaObj.positionChange = change;
     });
     return DecksArchetypesMeta;
 };

@@ -8,8 +8,8 @@ export default class CardsSimple extends React.Component {
 
     render(){
         return(
-            <div className="CardsCollectionSimplifiedComponent">
-                <button onClick={()=>Meteor.call("UpdateCardsSimple")}>UpdateCardsSimple</button>
+            <div className="CardsSimpleComponent">
+                <button onClick={()=>Meteor.call("UpdateCardsSimpleMethod")}>UpdateCardsSimpleMethod</button>
             </div>
         );
     }

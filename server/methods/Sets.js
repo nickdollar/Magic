@@ -2,86 +2,10 @@ import moment from "moment";
 import Fuse from "fuse.js";
 
 Meteor.methods({
-    createSetsMethod(){
-          createSets();
-    },
-    giveSetsTCGNamesMethod(){
-        giveSetsTCGNames();
-    },
-    compareSetsMethod(){
-        compareSets();
-    }
+
 });
 
-giveSetsTCGNames = ()=>{
 
-    var allCardsNames = Sets.find({}, {fields : {n : 1}}).fetch();
-
-    console.log(allCardsNames);
-    var options = {
-        keys : ["n"],
-        id : "n",
-        threshold : 0.4
-    }
-
-    var fuse = new Fuse(allCardsNames, options);
-
-    TCGPlayerCards.find().forEach((tcg)=>{
-
-
-        var founds = fuse.search(tcg.name);
-        if(founds.length){
-
-            console.log(Sets.findOne({n : founds[0]}));
-            Sets.update({n : founds[0]},
-                {
-                    $set : {TCG_n : tcg.name}
-                })
-        }
-    })
-}
-
-
-
-
-createSets = ()=>{
-    logFunctionsStart("createSets");
-    Sets.remove({});
-
-    MTGSets.find({}).forEach((set)=>{
-        var data = {};
-        set.name ?          data.n = set.name : null;
-        set.name ?          data.ns = [set.name] : null;
-        set.code ?          data._id = set.code : null;
-        set.gathererCode ?  data.gc = set.gatheredCode : null;
-        set.date ?          data.rd = moment(set.date, "YYYY-MM-DD").toDate() : null;
-        set.border ?        data.bo = set.border : null;
-        set.cards ?         data.q = set.cards.length : null;
-        set.type ?          data.t = set.type : null;
-
-        Sets.insert(data);
-    })
-    logFunctionsEnd("createSets");
-}
-
-
-compareSets = ()=>{
-    logFunctionsStart("compareSets");
-    MTGSets.find().forEach((set1)=>{
-        var cards1 = set1.cards.map(card=> card.name);
-        TCGPlayerCards.find().forEach((set2)=>{
-            var cards2 = set2.cards.map(card => card.name);
-            var intersection = _.intersection(cards1, cards2);
-
-            if(Math.abs(intersection.length - cards1.length) < 10 && intersection.length != 0){
-
-                console.log(intersection.length, cards1.length);
-                console.log(set1.name + "+||+" + set2.name);
-            }
-        })
-    });
-    logFunctionsEnd("compareSets");
-}
 
 /*
 c       code

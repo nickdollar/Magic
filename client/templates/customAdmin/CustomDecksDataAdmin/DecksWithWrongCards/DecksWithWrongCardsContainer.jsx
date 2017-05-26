@@ -5,7 +5,6 @@ export default DecksWithWrongCardsContainer = createContainer(({Formats_id}) => 
     var handle = Meteor.subscribe("DecksDataLeagueDailyWithWrongCardsNameQty", Formats_id);
 
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         DecksWithWrongCards : DecksData.find({
             $or :    [

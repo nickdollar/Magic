@@ -9,6 +9,8 @@ export default class AddDeck extends React.Component {
 
     }
 
+
+
     render(){
         return(
             <div className="AddDeckComponent">
@@ -22,6 +24,7 @@ export default class AddDeck extends React.Component {
                         objectName ="name"
                     />
                     <Radios
+                        initialValue="sta"
                         errorMessage ="Need Format"
                         title ="Format"
                         required ={true}

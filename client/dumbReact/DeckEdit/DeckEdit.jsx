@@ -134,13 +134,14 @@ export default class Deck extends React.Component{
     }
 
     getCardsByType(type) {
-        return CardsData.find(typeOptions[type]).map(function(p) { return {name : p.name, manaCost : p.manaCost}});
+        return Cards.find(typeOptions[type]).map(function(p) { return {name : p._id, manaCost : p.manaCost}});
     }
     getCardsSideboard() {
         var sideboard = this.state.deck.sideboard.map((card)=>{
             return card.name;
         });
-        var cardsExists = CardsData.find({name : {$in : sideboard}}).fetch();
+
+        var cardsExists = Cards.find({_id : {$in : sideboard}}).fetch();
 
         var cardsComplete = cardsExists.filter((card)=>{
             return this.state.deck.sideboard.find((queryCard)=>{
@@ -168,7 +169,7 @@ export default class Deck extends React.Component{
         };
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
             var cardComplete;
 
             if(cardQuery){
@@ -201,7 +202,7 @@ export default class Deck extends React.Component{
         var sideboard = [];
         var cardsTemp = cards.concat();
         cardsTemp.forEach((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
             var cardComplete;
             if(cardQuery){
                 cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});

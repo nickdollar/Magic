@@ -1,7 +1,7 @@
 import React from "react";
 
 
-class LGSInput extends React.Component{
+export default class LGSInput extends React.Component{
     constructor() {
         super();
 
@@ -24,9 +24,7 @@ class LGSInput extends React.Component{
         else {
             input.classList.remove('error');
             error.textContent  = "";
-
         }
-
         return true;
     }
 
@@ -66,5 +64,3 @@ class LGSInput extends React.Component{
         )
     }
 }
-
-export default LGSInput;

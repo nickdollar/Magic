@@ -10,7 +10,7 @@
     <div class="container">
         {{#if subscriptionsReady}}
             <div class="header">
-                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places&callback=initAutocomplete" async defer></script>
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places" async defer></script>
                 <div class="row">
                     <div>{{> React component=TopMenuContainer}}</div>
                     <div>{{>React component=FormatsMenu}}</div>
@@ -24,7 +24,7 @@
 
             </div>
             <div class="footer" style="background-color: white">
-                <img src="/img/comodo_secure_seal_76x26_transp.png">This site is beta development. Magic: the Gathering and its respective properties are copyright of Wizards of the Coast. Crowdmtg have no Affiliation with Wizards of the Coast and no Affiliation with Any Local Game Store.
+                This site is beta development. Magic: the Gathering and its respective properties are copyright of Wizards of the Coast. Crowdmtg have no Affiliation with Wizards of the Coast and no Affiliation with Any Local Game Store.
             </div>
         {{/if}}
     </div>
@@ -36,9 +36,6 @@
 </template>
 
 <template name="modals">
-    {{>pastEventsVodModal}}
-    {{>futuroEventsModal}}
-    {{>pastEventsYoutubePlaylistModal}}
     {{>loginModal}}
 </template>
 

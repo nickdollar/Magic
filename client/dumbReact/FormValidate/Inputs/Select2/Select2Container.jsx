@@ -6,7 +6,6 @@ export default Select2Container = createContainer(({subscription, collection, se
     var handle = Meteor.subscribe(subscription, ...serverQuery);
 
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         options : global[collection].find(clientQuery).fetch()
     };

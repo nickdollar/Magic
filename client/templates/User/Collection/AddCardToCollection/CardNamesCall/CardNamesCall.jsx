@@ -58,12 +58,12 @@ const theme = {
 };
 
 const getSuggestionValue = (suggestion) => {
-    return `${suggestion.name} - ${suggestion.setName}`
+    return `${suggestion.foil ? `F` : ""} ${suggestion.name} - ${suggestion.setCode}`;
 };
 
 const renderSuggestion = suggestion => (
     <div>
-        {suggestion.name} - {suggestion.setName}
+        {`${suggestion.foil ? `F` : ""} ${suggestion.name}`} - {suggestion.setCode}
     </div>
 );
 
@@ -82,20 +82,39 @@ export default class CardNamesCall extends React.Component {
             value: newValue
         });
     };
+
     onSuggestionsFetchRequested = ({ value }) => {
-        Meteor.call("getAutoCompleteComplete", value, (err, data)=>{
-            var addFoils = [];
-            data.forEach((card)=>{
-                addFoils.push(card);
-            })
+        Meteor.call("getCardsListMethod", {value : value}, (err, response)=>{
+            var cards = [];
+
+            response.forEach((card)=>{
+                card.printings.forEach((printing)=>{
+                    if(printing.multiverseid && printing.TCGName){
+                        var data = {};
+                        if(printing.normal){
+                            cards.push({setCode : printing.setCode, CardsUnique_id : printing.multiverseid, name : printing.TCGName, foil : false});
+                        }
+                        if(printing.foil){
+                            cards.push({setCode : printing.setCode, CardsUnique_id : printing.multiverseid, name : printing.TCGName, foil : true});
+                        }
+                    }
+                })
+            });
+
             this.setState({
-                suggestions: addFoils.length === 0 ? [] : addFoils
+                suggestions: cards
             });
         })
     };
 
     onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }){
         this.props.typedCard(suggestion, method);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.added != this.props.added){
+            this.setState({value : ""})
+        }
     }
 
     onSuggestionsClearRequested = () => {

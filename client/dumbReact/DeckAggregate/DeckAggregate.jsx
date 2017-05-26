@@ -6,16 +6,13 @@ export default class Deck extends React.Component{
         this.state = {DecksData : {main : [], sideboard : []}};
     }
 
-
-
-
     componentDidUpdate() {
-        cardPopover(".js-imagePopOver", true);
+        cardPopoverNames(".js-imagePopOver", true);
     }
 
     componentDidMount() {
         this.getDecksDataById(this.props.DecksData_id);
-        cardPopover(".js-imagePopOver", true);
+        cardPopoverNames(".js-imagePopOver", true);
     }
 
 
@@ -40,13 +37,13 @@ export default class Deck extends React.Component{
 
         main.forEach((card)=>{
             if(!card.types){typesSeparated.null.array.push(card)}
-            else if (this.checkType({card : card, type : "Land"})){typesSeparated.land.array.push(card)}
-            else if (this.checkType({card : card, type : "Artifact"}) && this.checkType({card : card, type : "Creature"})==false){typesSeparated.artifact.array.push(card)}
-            else if (this.checkType({card : card, type : "Creature"})){typesSeparated.creature.array.push(card)}
-            else if (this.checkType({card : card, type : "Enchantment"}) && this.checkType({card : card, type : "Creature"}) == false && this.checkType({card : card, type : "Artifact"}) == false){typesSeparated.enchantment.array.push(card)}
-            else if (this.checkType({card : card, type : "Instant"})){typesSeparated.instant.array.push(card)}
-            else if (this.checkType({card : card, type : "Planeswalker"})){typesSeparated.planeswalker.array.push(card)}
-            else if (this.checkType({card : card, type : "Sorcery"})){typesSeparated.sorcery.array.push(card)}
+            else if (this.checkType({card : card, type : "land"})){typesSeparated.land.array.push(card)}
+            else if (this.checkType({card : card, type : "creature"})){typesSeparated.creature.array.push(card)}
+            else if (this.checkType({card : card, type : "artifact"})){typesSeparated.artifact.array.push(card)}
+            else if (this.checkType({card : card, type : "enchantment"})){typesSeparated.enchantment.array.push(card)}
+            else if (this.checkType({card : card, type : "instant"})){typesSeparated.instant.array.push(card)}
+            else if (this.checkType({card : card, type : "planeswalker"})){typesSeparated.planeswalker.array.push(card)}
+            else if (this.checkType({card : card, type : "sorcery"})){typesSeparated.sorcery.array.push(card)}
             else {
                 typesSeparated.passChecks.array.push(card)
             }
@@ -81,6 +78,7 @@ export default class Deck extends React.Component{
                 for(var i = 0 ; i < response.sideboard.length ; i++){
                     Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].name))
                 }
+
                 this.setState({DecksData : response})
             }
         });
@@ -107,7 +105,7 @@ export default class Deck extends React.Component{
         var totalMissing = 0;
         cards.forEach((card)=>{
             var qty = card.qty ? card.qty : 0;
-            var cardAvg = card.avg ? card.avg : 0;
+            var cardAvg = card.avgPrice ? card.avgPrice : 0;
             var have = card.have ? card.have : 0;
 
             var missQty = qty - have;
@@ -120,8 +118,6 @@ export default class Deck extends React.Component{
             if(missQty){
                 linkMissingCards += `${missQty} ${card.name}||`
             }
-
-
             totalValue += qty * cardAvg;
             totalMissing += missQty * cardAvg;
 
@@ -140,10 +136,10 @@ export default class Deck extends React.Component{
     }
 
     cardPriceLink(card){
-        if(!card.avg){
-            return "ERR"
+        if(!card.avgPrice){
+            return ""
         }
-        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.name}&partner=Crowd`}>{card.avg ? card.avg.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
+        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.name}&partner=Crowd`}>{card.avgPrice ? card.avgPrice.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
     }
 
     cardQty(card){
@@ -166,13 +162,17 @@ export default class Deck extends React.Component{
             resultMain.push(
                 typesSeparated[type].array.map((card)=>{
                     return  <div className="cardLine" key={card.name}>
-                        <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name}>
+                        <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
                             <span className="qty">{this.cardQty(card)}</span><span data-name={card.name}>{card.name}</span>
                         </div>
                         <div className="cardInfo">
                             <div className="manaValue">
                                 {
                                     getHTMLFromArray(card.manaCost).map((mana)=>{
+                                        if(mana.mana == "//"){
+                                            return <span key={mana.key} className="divisionMana">//</span>
+                                        }
+
                                         return <div key={mana.key} className={"mana " + mana.mana}></div>
                                     })
                                 }
@@ -188,13 +188,16 @@ export default class Deck extends React.Component{
 
         var resultSideboard = sideboardCards.map((card)=>{
             return <div className="cardLine" key={card.name}>
-                <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name}>
-                    <span className="qty">{this.cardQty(card)}</span><span className="name " data-name={card.name}>{card.name}</span>
+                <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
+                    <span className="qty">{this.cardQty(card)}</span><span data-name={card.name}>{card.name}</span>
                 </div>
                 <div className="cardInfo">
                     <div className="manaValue">
                         {
                             getHTMLFromArray(card.manaCost).map((mana)=>{
+                                if(mana.mana == "//"){
+                                    return <span key={mana.key} className="divisionMana">//</span>
+                                }
                                 return <div key={mana.key} className={"mana " + mana.mana}></div>
                             })
                         }

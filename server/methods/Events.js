@@ -17,10 +17,13 @@ Meteor.methods({
     getGpEventsAndDecksMethod(){
         getGpEventsAndDecks();
     },
+    getPTEventsAndDecksMethod(){
+        getPTEventsAndDecks();
+    },
     getGPPositionMethod(){
         getGPPosition();
     },
-    addALGSEvent(event){
+    addALGSEventMethod(event){
         var eventQuery = Events.findOne({LGS_id : event.LGS_id, token : event.token});
         if(eventQuery){
             return false;
@@ -31,9 +34,11 @@ Meteor.methods({
         delete event.email;
         var _id = Events.insert(event);
         Object.assign(event, {Event_id : _id});
-        Meteor.call("sendConfirmationFromNewEvent", email, event);
+        if(event.email){
+            Meteor.call("sendConfirmationFromNewEvent", email, event);
+        }
 
-        return event;
+        return {confirm : true, response : event};
     },
     checkIfEventExists(form){
         var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token});
@@ -88,7 +93,7 @@ Meteor.methods({
     addBigEvent(form){
         form = Object.assign(form, {state : Roles.userIsInRole(Meteor.user(), 'admin') ? "confirmed" : "pending"});
         EventsCalendar.insert(form);
-        return true;
+        return {confirm : true};
     },
     stopEventsPublished(){
         var date = new Date(new Date().getTime() - (2*24*60*60*1000));
@@ -141,90 +146,195 @@ Meteor.methods({
 fixEventsStandard = function(){
     logFunctionsStart("fixEventsStandard");
 
-    Events.update({Formats_id : "oldStandard"},
-        {
-            $set : {Formats_id : "standard"},
-            $unset : {totalDifference : ""}
-        },
-        {
-            multi : true
+    Formats.find().forEach((format)=>{
+
+        var currentSets = {};
+
+        if(format.sets){
+            currentSets["sets"] = {$nin : format.sets}
+        }else{
+            currentSets["sets"] = {}
         }
-    )
 
-    DecksData.update({Formats_id : "oldStandard"},
-        {
-            $set : {Formats_id : "standard"}
-        },
-        {
-            multi : true
-        }
-    )
+        var bannedEvents = Events.aggregate(
+            [
+                {
+                    $match: {Formats_id : format._id}
+                },
+                {
+                    $lookup: {
+                        "from" : "DecksData",
+                        "localField" : "_id",
+                        "foreignField" : "Events_id",
+                        "as" : "DecksData"
+                    }
+                },
+                {
+                    $unwind: "$DecksData"
+                },
+                {
+                    $project: {_id : "$_id", cards : {
+                        $setUnion :
+                            [
+                                {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}},
+                                {$map : {input : "$DecksData.sideboard", as : "el", in : "$$el.name"}}
+                            ]
+                    }}
+                },
+                {
+                    $unwind: "$cards"
+                },
+                {
+                    $group: {_id : "$_id", cards : {$addToSet : "$cards"}}
+                },
+                {
+                    $unwind: {
+                        path : "$cards",
+                    }
+                },
+                {
+                    $lookup: {
+                        "from" : "CardsUnique",
+                        "localField" : "cards",
+                        "foreignField" : "name",
+                        "as" : "sets"
+                    }
+                },
+                {
+                    $unwind: {
+                        path : "$sets",
+                    }
+                },
+                {
+                    $group: {
+                        _id : {Events_id : "$_id", name : "$cards"},
+                        sets : {$addToSet : "$sets.setCode"}
+                    }
+                },
+                {
+                    $match:
+                        {
+                            "_id.name" : {$in : format.banned}
+                        },
 
-    var events = Events.aggregate([
-        {$match : {Formats_id : "standard"}},
-        {$lookup : {
-            "from" : "DecksData",
-            "localField" : "_id",
-            "foreignField" : "Events_id",
-            "as" : "DecksData"
-        }},
-        {$unwind : "$DecksData"},
-        {$project : {_id : "$_id", cards : {
-            $setUnion :
-                [
-                    {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}},
-                    {$map : {input : "$DecksData.sideboard", as : "el", in : "$$el.name"}}
-                ]
-            }}},
-        {$unwind : "$cards"},
-        {$group : {_id : "$_id", cards : {$addToSet : "$cards"}}}
-    ]);
+                },
+                {
+                    $group: {
+                        _id : "$_id.Events_id",
+                        qty : {$sum : 1},
+                        names : {$addToSet : "$_id.name"}
+                    }
+                },
 
-    var standards = [];
+            ]
+        );
 
+        var oldFormats =Events.aggregate(
+            [
+                {
+                    $match: {Formats_id : "sta"}
+                },
+                {
+                    $lookup: {
+                        "from" : "DecksData",
+                        "localField" : "_id",
+                        "foreignField" : "Events_id",
+                        "as" : "DecksData"
+                    }
+                },
+                {
+                    $unwind: "$DecksData"
+                },
+                {
+                    $project: {_id : "$_id", cards : {
+                        $setUnion :
+                            [
+                                {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}},
+                                {$map : {input : "$DecksData.sideboard", as : "el", in : "$$el.name"}}
+                            ]
+                    }}
+                },
+                {$unwind: "$cards"},
 
-    for(var i = 0; i < standardSets.length; i++){
-        if(standardSets[i].release < new Date()){
-            standards.push(standardSets[i].name);
-            if(standardSets[i].end){
-                if(standards.length == 6){
-                    break;
+                {$group: {_id : "$_id", cards : {$addToSet : "$cards"}}},
+                {$unwind: {path : "$cards",}},
+                {$lookup: {
+                        "from" : "CardsUnique",
+                        "localField" : "cards",
+                        "foreignField" : "name",
+                        "as" : "sets"
+                }},
+                {
+                    $unwind: {
+                        path : "$sets",
+                    }
+                },
+                {
+                    $group: {
+                        _id : {Events_id : "$_id", name : "$cards"},
+                        sets : {$addToSet : "$sets.setCode"}
+                    }
+                },
+                {$match: currentSets},
+                {
+                    $group: {
+                        _id : "$_id.Events_id",
+                        qty : {$sum : 1},
+                        names : {$addToSet : "$_id.name"}
+                    }
+                },
+                {
+                    $match : {
+                        qty : {$gte : 4}
+                    }
                 }
+            ]
+
+        );
+
+
+
+
+        var banned_ids = bannedEvents.map(event => event._id);
+        var old_ids = oldFormats.map(event => event._id);
+
+        Events.update({_id : {$in : banned_ids}},
+            {
+                $set : {Formats_id : `${format._id}B`}
+            },
+            {
+                multi : true
             }
-        }
-    }
+        )
 
-    var lastStandard = [];
-    lastStandard.push(standards[standards.length -1]);
-    for(var i = 0; i <events.length; i++){
-        var cardsFound = CardsFullData.find({name : {$in : events[i].cards}}).map(function(obj){
-            return obj.name;
-        });
-        var cardsFound2 = CardsFullData.find({name : {$in : events[i].cards}, printings : {$in : lastStandard}}).map(function(obj){
-            return obj.name;
-        });
+        DecksData.update({Events_id : {$in : banned_ids}},
+            {
+                $set : {Formats_id : `${format._id}B`}
+            },
+            {
+                multi : true
+            }
+        )
 
-        var totalDifference = Math.abs(cardsFound.length - cardsFound2.length);
+        Events.update({_id : {$in : old_ids}},
+            {
+                $set : {Formats_id : `${format._id}O`}
+            },
+            {
+                multi : true
+            })
+        DecksData.update({Events_id : {$in : old_ids}},
+            {
+                $set : {Formats_id : `${format._id}O`}
+            },
+            {
+                multi : true
+            }
+        )
+    })
 
-        if(_.intersection(cardsFound2, cardsFound).length < 5){
-            Events.update({_id : events[i]._id},
-                          {
-                              $set : {
-                                  Formats_id : "oldStandard",
-                                  totalDifference : totalDifference
-                              }
-                          },
-            );
-            DecksData.update({Events_id :  events[i]._id},
-                            {
-                                $set : { Formats_id : "oldStandard"}
-                            },
-                            {
-                                multi : true
-                            }
-            )
-        }
-    }
+
+
     logFunctionsEnd("fixEventsStandard");
 }
 

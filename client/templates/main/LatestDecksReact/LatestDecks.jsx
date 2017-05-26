@@ -9,14 +9,12 @@ export default class LatestDecks extends React.Component {
     }
 
     getLastTwoWeeks(){
-        Meteor.call("getMetaLastAdditionMethod",(err, response)=>{
+        Meteor.call("getMetaLastDaysAdditionMethod",(err, response)=>{
             if(!response){
-                this.setState({List : {newestCards : [], newestDecks : [], newestArchetypes : []}})
+                this.setState({List : {newestCards : [], newestArchetypes : []}})
             }else{
                 this.setState({List : response});
             }
-
-
         });
     }
 
@@ -27,25 +25,19 @@ export default class LatestDecks extends React.Component {
     }
 
     formatFormat(cell, row){
-        if(row.t == 3){
-            var format = Formats.findOne({_id : row._id.Formats_id});
+        if(row.t == 1){
+            var format = Formats.findOne({_id : row.Formats_id});
             return format.name;
         }
-        var format = Formats.findOne({_id : row.Formats_id});
+        var format = Formats.findOne({_id : row._id.Formats_id});
         return format.name;
     }
 
     nameFormat(cell, row){
         if(row.t == 1){
-            var deckName = DecksNames.findOne({_id : row._id});
-            var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
-            return  <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(row.Formats_id), DeckArchetype : archetype.link, DeckName : deckName.link})}>{deckName.name}</a>
-            return DecksNames.findOne({_id : row._id}).name;
+            var archetype = DecksArchetypes.findOne({_id : row.DecksArchetypes_id});
+            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(row.Formats_id), DeckArchetype : archetype.link})}> {DecksArchetypes.findOne({_id : row.DecksArchetypes_id}).name} </a>
         }else if(row.t == 2){
-            var deckName = DecksNames.findOne({_id : row.DecksNames_id});
-            var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
-            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(row.Formats_id), DeckArchetype : archetype.link})}> {DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name} </a>
-        }else if(row.t == 3){
 
             return  <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(row._id.Formats_id), Events_id : row.Events_id, DecksData_id : row.DecksData_id})}>
                         <div className="js-imagePopOver" data-name={row._id.name}>{row._id.name}</div>
@@ -112,6 +104,7 @@ export default class LatestDecks extends React.Component {
             data : newestCards,
             pagination : true
         }
+
         return(
             <div className="LatestDecksComponent">
                 <div className="sectionHeader">

@@ -17,11 +17,11 @@ export default class UsersDecks extends React.Component {
             DecksLists : [],
             UsersDeck_id : "",
             UsersDeckData : {main : [], sideboard : []},
-            main : {name : null, _id : null, qty : 4},
-            sideboard : {name : null,  _id : null, qty : 4},
+            main : {_id : null, qty : 4},
+            sideboard : {_id : null, qty : 4},
             clear : true,
             changes : false,
-            removeState : "Remove"
+            removeState : "Remove",
         }
     }
 
@@ -47,21 +47,21 @@ export default class UsersDecks extends React.Component {
     }
 
     getSelectedDeck(){
-        Meteor.call("getUsersDecksWithCardsInformation", {UsersDecks_id : this.state.UsersDeck_id}, (err, data)=>{
-            if(data){
-
-                for(var i = 0 ; i < data.main.length ; i++){
-                    Object.assign(data.main[i], data.cardsInfo.find(cardInfo => cardInfo._id == data.main[i].name))
+        Meteor.call("getUsersDecksWithCardsInformationMethod", {UsersDecks_id : this.state.UsersDeck_id}, (err, response)=>{
+            if(response){
+                for(var i = 0 ; i < response.main.length ; i++){
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i]._id))
                 }
-                for(var i = 0 ; i < data.sideboard.length ; i++){
-                    Object.assign(data.sideboard[i], data.cardsInfo.find(cardInfo => cardInfo._id == data.sideboard[i].name))
+
+                for(var i = 0 ; i < response.sideboard.length ; i++){
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i]._id))
                 }
 
 
                 this.setState({
-                    UsersDeckData : data,
-                    main : {name : null, _id : null, qty : 4},
-                    sideboard : {name : null,  _id : null, qty : 4},
+                    UsersDeckData : response,
+                    main : {_id : null, qty : 4},
+                    sideboard : {_id : null, qty : 4},
                     clear : true,
                     changes : false,
                 })
@@ -77,8 +77,7 @@ export default class UsersDecks extends React.Component {
     }
 
     setCardSelected({suggestion, mainSideboard}) {
-        this.state[mainSideboard].name = suggestion.name;
-        this.state[mainSideboard]._id = suggestion._id;
+        this.state[mainSideboard]._id = suggestion;
     }
 
     formatCheck(index){
@@ -102,61 +101,51 @@ export default class UsersDecks extends React.Component {
 
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
-        if(!selectedCard.name){
-            return;
-        };
-
+        if(!selectedCard._id){return;};
         var UsersDeckData = this.state.UsersDeckData;
 
-        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj.name == this.state[mainSideboard].name)
-        if(index != -1){
-            return;
-        }
-        Meteor.call("getCardsBy_id", {CardsSimple_id : selectedCard._id}, (err, data)=>{
-            data.qty = selectedCard.qty;
-            UsersDeckData[mainSideboard].push(data);
+        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj._id.match(new RegExp(`^${this.state[mainSideboard]._id}$`, "i")));
+        if(index != -1){return;}
 
+        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, response)=>{
+            response.qty = selectedCard.qty;
+
+            UsersDeckData[mainSideboard].push(response);
             if(mainSideboard == "main"){
-                this.setState({UsersDeckData : UsersDeckData, main : {name : null, _id : null, qty : 4}, clear : !this.state.clear, changes : true});
+                this.setState({UsersDeckData : UsersDeckData, main : {_id : null, qty : 4}, clear : !this.state.clear, changes : true});
             }else{
-                this.setState({UsersDeckData : UsersDeckData, sideboard : {name : null, _id : null, qty : 4}, clear : !this.state.clear, changes : true});
+                this.setState({UsersDeckData : UsersDeckData, sideboard : {_id : null, qty : 4}, clear : !this.state.clear, changes : true});
             }
         })
     }
+
     removeCardDeck(index, mainSideboard){
         var UsersDeckData = Object.assign({}, this.state.UsersDeckData);
         UsersDeckData[mainSideboard].splice(index, 1);
         this.setState({UsersDeckData : UsersDeckData, changes : true});
     }
-
-
     getDeckInfo(){
         var main = [];
         var sideboard = [];
         var UsersDecks_id = this.state.UsersDeckData._id;
         var name = this.state.UsersDeckData.name;
-
         for(var i = 0; i < this.state.UsersDeckData.main.length; i ++){
-            main.push({name : this.state.UsersDeckData.main[i].name, qty : this.state.UsersDeckData.main[i].qty})
+            main.push({_id : this.state.UsersDeckData.main[i]._id, qty : this.state.UsersDeckData.main[i].qty})
         }
-
         for(var i = 0; i < this.state.UsersDeckData.sideboard.length; i ++){
-            sideboard.push({name : this.state.UsersDeckData.sideboard[i].name, qty : this.state.UsersDeckData.sideboard[i].qty})
+            sideboard.push({_id : this.state.UsersDeckData.sideboard[i]._id, qty : this.state.UsersDeckData.sideboard[i].qty})
         }
-
         return {main : main, sideboard : sideboard, UsersDecks_id : UsersDecks_id, name : name};
     }
 
     changeName(target){
         this.state.UsersDeckData.name = target.value;
         this.setState({changes : true});
-
-
     }
 
     submitDeck(){
         var deck = this.getDeckInfo();
-        Meteor.call("updateUsersDecks", deck, (err, data)=>{
+        Meteor.call("updateUsersDecksMethod", deck, (err, data)=>{
             var DecksLists = this.state.DecksLists.concat();
             var index = DecksLists.findIndex(deckObj => deckObj._id == deck.UsersDecks_id);
             DecksLists[index].name = deck.name;
@@ -180,8 +169,15 @@ export default class UsersDecks extends React.Component {
         if(this.state.removeState == "Remove"){
             this.setState({ removeState : "Confirm"});
         }else if(this.state.removeState == "Confirm"){
-            Meteor.call("RemoveDeck", {UsersDeck_id : this.state.UsersDeck_id}, (err, response)=>{
-                this.setState({ removeState : "Remove", UsersDeck_id : ""});
+            Meteor.call("RemoveDeckMethod", {UsersDeck_id : this.state.UsersDeck_id}, (err, response)=>{
+                var DecksLists = this.state.DecksLists.concat();
+                DecksLists = DecksLists.filter((deck)=>{
+                    if(deck._id != this.state.UsersDeck_id){
+                        return true;
+                    }
+                    return false;
+                })
+                this.setState({ removeState : "Remove", UsersDeck_id : "", DecksLists : DecksLists});
             })
         }
     }
@@ -191,14 +187,14 @@ export default class UsersDecks extends React.Component {
 
         return(
             <div className="UsersDecksComponent">
-                <h3>Yours Decks</h3>
+                {/*<h3>Yours Decks</h3>*/}
                 <AddDeck deckAdded={this.deckAdded.bind(this)}
                          formats={this.state.formats}
                 />
                 <div className="deckListAndDecksNamesList">
                     <div className="decksCheckBoxes">
                         {this.state.formats.map((format, index)=>{
-                            return  <label className="radio-inline" key={format._id} >
+                            return  <label className="radio-inline" key={format._id}>
                                 <input type="checkbox" onChange={()=>this.formatCheck(index)} checked={format.checked} value={format._id}/>{format.name}
                             </label>
                         })}
@@ -216,8 +212,9 @@ export default class UsersDecks extends React.Component {
                                 {this.state.UsersDeck_id != "" ? <div className="deckArea">
                                         <div className="btnChangeAndRemoveWrapper">
                                             <div className="btnChange">
-                                                <button disabled={!this.state.changes} className="btn"
-                                                        onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}</button>
+                                                <button disabled={!this.state.changes} className={`btn ${this.state.changes ? "btn-info" : null}`}
+                                                        onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}
+                                                </button>
                                             </div>
                                             <div className="btnRemove">
                                                 <button onClick={this.removeDeck.bind(this)} className="btn">{this.state.removeState}</button>

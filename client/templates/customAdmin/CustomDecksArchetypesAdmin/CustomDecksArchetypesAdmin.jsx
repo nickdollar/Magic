@@ -17,9 +17,8 @@ export default class CustomDecksArchetypesAdmin extends React.Component{
         return (
             <div className="CustomDecksArchetypesAdmin">
                 <AddDecksArchetypes />
-                <DecksArchetypesListContainer format={this.props.Formats_id}/>
-                <DecksArchetypesFixes format={this.props.Formats_id}/>
-
+                <DecksArchetypesListContainer Formats_id={this.props.Formats_id}/>
+                <DecksArchetypesFixes Formats_id={this.props.Formats_id}/>
             </div>
         )
     }

@@ -27,24 +27,14 @@ Template.ApplicationLayout.onCreated(function(){
     this.state.set("selected", null);
 
     this.autorun(()=>{
-        this.subscribe("UserCollection", {
+        this.subscribe("UserCollectionPublish", {
             onReady(){
-                var objects = UsersCollection.find({Users_id : Meteor.userId()}, {limit : 1}).fetch();
-                var cardsObjects = {};
-                if(objects.length){
-                    for(var i = 0; i < objects[0].cards.length; ++i){
-                        var cardName = objects[0].cards[i].name;
-                        var qty = objects[0].cards[i].qty;
-                        if(!cardsObjects[cardName]){
-                            cardsObjects[cardName] = 0;
-                        }
-                        cardsObjects[cardName] += qty;
-                    }
-                }
-                Session.set("cards", cardsObjects);
-            }
+                updateCollectionNumbersFunction();
+            },
         });
     })
+
+
 });
 
 Template.ApplicationLayout.helpers({

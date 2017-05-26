@@ -8,7 +8,8 @@ export default class CustomCardsAdmin extends React.Component {
     render(){
         return(
             <div className="CustomCardsAdminComponent">
-                {/*<button onClick={()=>Meteor.call("createSetsMethod")}>createSetsMethod</button>*/}
+                <button onClick={()=>Meteor.call("giveLatestPriceForEach")}>giveLatestPriceForEach</button>
+                <button onClick={()=>Meteor.call("organizeAllCardsDatabaseMethod")}>organizeAllCardsDatabaseMethod</button>
 
             </div>
         );

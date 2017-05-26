@@ -39,7 +39,7 @@ export default class MetaCardsValues extends React.Component {
                 options : {
                     pagination : true,
                     sizePerPage : 8,
-                    paginationSize : 2,
+                    paginationSize : 1,
                     defaultSortName : "count",
                     defaultSortOrder : "desc",
                     afterTableComplete: this.handleTableComplete

@@ -28,18 +28,18 @@ getGpEventsAndDecks = ()=>{
 
                     var formatQuery = Formats.findOne({names : {$regex : infoMatch[5], $options : "i"}})
 
-                    Events.update({  date : date, EventsTypes_id: eventType._id, Formats_id : formatQuery._id, url : completedURL},
+                    Events.update({url : completedURL},
                         {
                             $setOnInsert : { date : date, EventsTypes_id: eventType._id,Formats_id : formatQuery._id, state : 'created', url : completedURL}
                         },
                         {
                             upsert : true
                         })
-                    var event = Events.findOne({date : date, EventsTypes_id: eventType._id, Formats_id : formatQuery._id, url : completedURL});
-                    if(event.state != "created"){
+                    var eventQuery = Events.findOne({url : completedURL});
+                    if(eventQuery.state != "created"){
                         continue;
                     };
-                    webScrapingQueue.add({func : getGpEventsAndDecksHTTPRequest, args : {event : event}, wait : httpRequestTime})
+                    webScrapingQueue.add({func : getGpEventsAndDecksHTTPRequest, args : {event : eventQuery}, wait : httpRequestTime})
                 }
             }
         }
@@ -47,7 +47,7 @@ getGpEventsAndDecks = ()=>{
 }
 
 getGpEventsAndDecksHTTPRequest = ({event})=>{
-    logFunctionsStart("getGpEventsProTourNewEachEvent");
+    logFunctionsStart("getGpEventsAndDecksHTTPRequest");
     Meteor.http.get(event.url, (err, response)=>{
         if(response.statusCode == 200) {
             var $GPPage = cheerio.load(response.content);
@@ -73,6 +73,7 @@ getGpEventsAndDecksHTTPRequest = ({event})=>{
                 }).filter(function(elem, index, self) {
                     return index == self.indexOf(elem);
                 })
+
                 DecksData.remove({Events_id : event._id});
                 for(var i = 0; i < filterLinks.length; i++){
                     webScrapingQueue.add({func : getGPDecksHTTPRequest, args : {url : filterLinks[i], event : event}, wait : httpRequestTime})
@@ -96,7 +97,7 @@ getGPDecksHTTPRequest = ({url, event})=>{
                 var informationMatch = information.match(namesRegex);
                 var position = information.match(positionRegex);
 
-                var player = `(error : ${i})`;
+                var player = information;
                 if(informationMatch){
                     if (informationMatch[1]) {
                         player = informationMatch[1];
@@ -131,7 +132,7 @@ getGPDecksHTTPRequest = ({url, event})=>{
                     EventsTypes_id : event.EventsTypes_id,
                     player : player,
                     Formats_id : event.Formats_id,
-                    state : "scraped"
+                    state : "pending"
                 })
 
 
@@ -147,8 +148,7 @@ getGPDecksHTTPRequest = ({url, event})=>{
 //Give Position to missing Decks
 
 getGPPosition = ()=> {
-    var eventType = EventsTypes.find({names: {$regex: "GP", $options: "i"}}).fetch()[0];
-    var events = Events.find({EventsTypes_id: eventType._id, state : "finalStanding"}).fetch();
+    var events = Events.find({EventsTypes_id: {$in : ["MTGGP", "MTGPT"]}, state : "finalStanding"}).fetch();
     for (var i = 0; i < events.length; i++) {
         webScrapingQueue.add({func : getGPPositionHTTPRequest, args:{event : events[i]}, wait : httpRequestTime})
     }
@@ -164,8 +164,14 @@ getGPPositionHTTPRequest = ({event})=>{
             var allDecksData = DecksData.find({Events_id : event._id, position : {$exists : false}}, {fields : {player : 1}}).fetch();
             var options = {
                 keys : ["player"],
-                id : "player"
+                id : "player",
+                threshold: 0.6,
+                maxPatternLength: 100,
+                tokenize: true,
             }
+
+
+
             var fuse = new Fuse(allDecksData, options);
             for (var i = 1; i < players.length; i++) {
                 if(i > 64){ break; }
@@ -173,7 +179,8 @@ getGPPositionHTTPRequest = ({event})=>{
                 $RankingPage(players[i]).find("td:nth-child(1)").text();
                 var regexMatch = $RankingPage(players[i]).find("td:nth-child(2)").text().match(regex)
                 if(regexMatch){
-                    var rightName = fuse.search(`${regexMatch[2]} ${regexMatch[1]}`);
+
+                    var rightName = fuse.search(escapeRegExp(`${regexMatch[2]} ${regexMatch[1]}`));
                     var position = parseInt($RankingPage(players[i]).find("td:nth-child(1)").text());
                     if(isNaN(position)){
                         position = 1000 + i;
@@ -195,8 +202,8 @@ getGPPositionHTTPRequest = ({event})=>{
                     Errors.insert({Events_id : event._id, type : "name regex didn't match", id : i, description : $RankingPage(players[i]).find("td:nth-child(1)").text()})
                 }
             }
-
             var decksDataWithoutId = DecksData.find({Events_id : event._id, position : {$exists : false}}).map(deckData => deckData._id);
+
             if(decksDataWithoutId.length){
                 Errors.insert({Events_id : event._id, type : "missing position", id : decksDataWithoutId, description : ""})
             }
@@ -205,7 +212,7 @@ getGPPositionHTTPRequest = ({event})=>{
 
             Events.update({_id : event._id},
                 {
-                    $set : {state : "decks", decksQty : decksQty}
+                    $set : {state : "pending", decksQty : decksQty}
                 })
         }
     })

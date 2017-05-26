@@ -3,9 +3,10 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import FormValidate from "/client/dumbReact/FormValidate/FormValidate";
 import TextFormInput from "/client/dumbReact/FormValidate/Inputs/TextFormInput/TextFormInput";
 import Radio from "/client/dumbReact/FormValidate/Inputs/Radios/Radio";
+import Checkboxed from "/client/dumbReact/FormValidate/Inputs/Checkbox/Checkbox.jsx";
 
 
-export default class DecksNamesList extends React.Component {
+export default class DecksArchetypesList extends React.Component {
     constructor(){
         super();
 
@@ -17,7 +18,7 @@ export default class DecksNamesList extends React.Component {
                                    title="Name"
                                    objectName="name"
                     />
-                    <Radio initialValue = {row.format}
+                    <Radio initialValue = {row.Formats_id}
                            title="Format"
                            objectName="Formats_id"
                            opts={getFormatsForForm()}
@@ -30,23 +31,36 @@ export default class DecksNamesList extends React.Component {
                                    {value : "control", text : "Control"},
                              ]}
                     />
+                    <Checkboxed     default = {row.type}
+                                    title="Type"
+                                    objectName="colors"
+                                    initialValue={row.colors}
+                                    opts={[ {value : "b", text : "b"},
+                                            {value : "c", text : "c"},
+                                            {value : "g", text : "g"},
+                                            {value : "r", text : "r"},
+                                            {value : "u", text : "u"},
+                                            {value : "w", text : "w"}
+                                    ]}
+                    />
                 </FormValidate>
     }
 
+    findAllDecks(cell, row){
+        return <button onClick={()=>Meteor.call("findAllDecksArchetypesMethod", {DecksArchetypes_id : row._id})}>({row.manual ? row.manual.decksQty : 0})Find All Decks</button>
+    }
 
-
-
-    removeDeckName(event, DecksNames_id){
+    removeDeckName(event, DecksArchetypes_id){
         event.stopPropagation();
-        Meteor.call("removeDecksArchetypes", DecksNames_id);
+        Meteor.call("removeDecksArchetypes", {DecksArchetypes_id : DecksArchetypes_id});
     }
 
     isExpandableRow(){
         return true;
     }
 
-    removeButton(DecksNames_id){
-        return <button onClick={(event)=>this.removeDeckName(event, DecksNames_id)}>X</button>
+    removeButton(DecksArchetypes_id){
+        return <button onClick={(event)=>this.removeDeckName(event, DecksArchetypes_id)}>X</button>
     }
 
     render(){
@@ -71,6 +85,7 @@ export default class DecksNamesList extends React.Component {
                     <TableHeaderColumn dataField={"name"} dataSort >Name</TableHeaderColumn>
                     <TableHeaderColumn dataField={"Formats_id"}>format</TableHeaderColumn>
                     <TableHeaderColumn dataField={"type"}>Type</TableHeaderColumn>
+                    <TableHeaderColumn dataField={"_id"} dataFormat={this.findAllDecks.bind(this)}>Find AllDecks</TableHeaderColumn>
                     <TableHeaderColumn width="50px" dataField={"_id"} dataFormat={this.removeButton.bind(this)}>X</TableHeaderColumn>
                 </BootstrapTable>
             </div>

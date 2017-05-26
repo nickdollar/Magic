@@ -32,10 +32,7 @@ export default class DecksList extends React.Component {
     deckInfo(cell, row){
         return  <div className={cell == this.props.DecksData_id ? "deckInfo selected" : "deckInfo"}>
             <div onClick={()=>this.props.selectADeckHandle(row._id)}>
-                {row.name} - {row._id}
-            </div>
-            <div>
-                {row.format}
+                {getLinkFormat(row.Formats_id)} - {row.name}
             </div>
         </div>
     }
@@ -45,6 +42,7 @@ export default class DecksList extends React.Component {
     }
 
     componentDidMount(){
+
     }
 
     render(){

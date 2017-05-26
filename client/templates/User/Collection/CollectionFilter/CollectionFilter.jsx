@@ -3,7 +3,6 @@ import React from 'react' ;
 export default class CollectionFilter extends React.Component {
     constructor(){
         super();
-
     }
 
     render(){

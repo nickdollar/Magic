@@ -10,6 +10,7 @@ export default class Deck extends React.Component{
     }
 
     componentWillReceiveProps(nextProps){
+
     }
 
     checkType({card, type}){
@@ -31,26 +32,26 @@ export default class Deck extends React.Component{
     separateCardsByTypeAddManaCost(main){
         var typesSeparated = {
             passChecks : {array : [], text : "Pass Checks"},
-            null : {array : [], text : "Wrong Name"},
+            null : {array : [], text : "Others(Not Found?)"},
             creature : {array : [], text : "Creature"},
             sorcery : {array : [], text : "Sorcery"},
             instant : {array : [], text : "Instant"},
             planeswalker : {array : [], text : "Planeswalker"},
             artifact : {array : [], text : "Artifact"},
             enchantment : {array : [], text : "Enchantment"},
-            land : {array : [], text : "Land"},
+            land : {array : [], text : "Land"}
         };
 
         main.forEach((card, index)=>{
             card.index = index;
             if(!card.types){typesSeparated.null.array.push(card)}
-            else if (this.checkType({card : card, type : "Land"})){typesSeparated.land.array.push(card)}
-            else if (this.checkType({card : card, type : "Artifact"}) && this.checkType({card : card, type : "Creature"})==false){typesSeparated.artifact.array.push(card)}
-            else if (this.checkType({card : card, type : "Creature"})){typesSeparated.creature.array.push(card)}
-            else if (this.checkType({card : card, type : "Enchantment"}) && this.checkType({card : card, type : "Creature"}) == false && this.checkType({card : card, type : "Artifact"}) == false){typesSeparated.enchantment.array.push(card)}
-            else if (this.checkType({card : card, type : "Instant"})){typesSeparated.instant.array.push(card)}
-            else if (this.checkType({card : card, type : "Planeswalker"})){typesSeparated.planeswalker.array.push(card)}
-            else if (this.checkType({card : card, type : "Sorcery"})){typesSeparated.sorcery.array.push(card)}
+            else if (this.checkType({card : card, type : "land"})){typesSeparated.land.array.push(card)}
+            else if (this.checkType({card : card, type : "artifact"}) && this.checkType({card : card, type : "Creature"})==false){typesSeparated.artifact.array.push(card)}
+            else if (this.checkType({card : card, type : "creature"})){typesSeparated.creature.array.push(card)}
+            else if (this.checkType({card : card, type : "enchantment"}) && this.checkType({card : card, type : "Creature"}) == false && this.checkType({card : card, type : "Artifact"}) == false){typesSeparated.enchantment.array.push(card)}
+            else if (this.checkType({card : card, type : "instant"})){typesSeparated.instant.array.push(card)}
+            else if (this.checkType({card : card, type : "planeswalker"})){typesSeparated.planeswalker.array.push(card)}
+            else if (this.checkType({card : card, type : "sorcery"})){typesSeparated.sorcery.array.push(card)}
             else {
                 typesSeparated.passChecks.array.push(card)
             }
@@ -60,8 +61,8 @@ export default class Deck extends React.Component{
 
     cardRow(card, mainSideboard){
         var selectors = {"data-mainSideboard" : mainSideboard};
-        var cardDataName = {"data-name" : card.name};
-        return  <div className="cardLine" key={card.name} >
+        var cardDataName = {"data-name" : card._id};
+        return  <div className="cardLine" key={card._id} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
                 <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
@@ -69,7 +70,7 @@ export default class Deck extends React.Component{
                      {...cardDataName}
                      {...selectors}
                 >
-                    <div>{card.name}</div>
+                    <div>{card._id}</div>
                 </div>
                 {card ? <div className="cardInfo">
                         <div className="manaValue">
@@ -79,8 +80,8 @@ export default class Deck extends React.Component{
                                 })
                             }
                         </div>
-                    </div>: null}
-
+                    </div>: null
+                }
             </div>
         </div>
     }
@@ -130,7 +131,6 @@ export default class Deck extends React.Component{
         }
         return resultMain;
     }
-
 
     shouldComponentUpdate(){
         return true;

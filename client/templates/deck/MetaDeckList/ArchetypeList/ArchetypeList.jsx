@@ -20,28 +20,32 @@ export default class ArchetypeList extends React.Component {
     filterColors(decksArchetypes, colors){
         var goodRows = [];
         decksArchetypes.forEach((deckArchetype)=>{
-            var decksNames = DecksNames.find({DecksArchetypes_id : deckArchetype._id}).fetch();
-            var colorsArray = [];
-            for(var i = 0; i < decksNames.length; ++i){
-                if(!decksNames[i].colors){
-                    continue;
-                }
-                colorsArray = _.union(colorsArray, decksNames[i].colors);
-            }
+            // var decksNames = DecksNames.find({DecksArchetypes_id : deckArchetype._id}).fetch();
+            // var colorsArray = [];
+            // for(var i = 0; i < decksNames.length; ++i){
+            //     if(!decksNames[i].colors){
+            //         continue;
+            //     }
+            //     colorsArray = _.union(colorsArray, decksNames[i].colors);
+            // }
 
-            var result;
-            if(this.props.state.containMatch[0].checked){
+
+            if(deckArchetype.colors){
+                var result;
+                if(this.props.state.containMatch[0].checked){
                     result = colors.some(function (v) {
-                        return colorsArray.indexOf(v) >= 0;
+                        return deckArchetype.colors.indexOf(v) >= 0;
                     });
 
-            }else{
-                result = _.isEqual(colorsArray.sort(), colors.sort());
-            }
-            if(result == true){
+                }else{
+                    result = _.isEqual(deckArchetype.colors.sort(), colors.sort());
+                }
+                if(result == true){
 
-                goodRows.push(deckArchetype);
+                    goodRows.push(deckArchetype);
+                }
             }
+
         })
         return goodRows;
     }
@@ -71,19 +75,11 @@ export default class ArchetypeList extends React.Component {
     }
 
     filterNames(decksArchetypes){
-        var decksArchetypes_ids = decksArchetypes.map((deckArchetype)=>{
-            return deckArchetype._id;
-        })
-
-        var adecksArchetypes = DecksNames.find({"main.name" : {$in : this.props.state.cards}, DecksArchetypes_id : {$in : decksArchetypes_ids}}).map((deckName)=>{
-            return deckName.DecksArchetypes_id;
-        });
-        adecksArchetypes.unique();
         decksArchetypes = decksArchetypes.filter((obj)=>{
-            return adecksArchetypes.findIndex((unique)=>{
-                return obj._id == unique
-            }) >= 0;
-        })
+            var foundCards = _.intersection(obj.cards, this.props.cards);
+            return foundCards.length == this.props.cards.length;
+        });
+
         return decksArchetypes;
     }
 
@@ -111,9 +107,7 @@ export default class ArchetypeList extends React.Component {
         }
 
         if(this.props.state.containMatch[0].checked == true){
-            if(colors != 6 ) {
-                goodRows = this.filterColors(goodRows, colors);
-            }
+            goodRows = this.filterColors(goodRows, colors);
         }else{
             goodRows = this.filterColors(goodRows, colors);
         }

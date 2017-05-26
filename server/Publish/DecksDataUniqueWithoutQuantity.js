@@ -6,68 +6,44 @@ removeToDecksUniqueWithName = function(_id){
         cardsOnMain.push(obj.name)
     });
 
-    var queryCards = CardsData.find({name : {$in : cardsOnMain}});
+    var queryCards = Cards.find({_id : {$in : cardsOnMain}});
     if(cardsOnMain.length != queryCards.count()){
-        console.log("A Card Doesn't Exists");
+        console.log("A Card Doesn't Exists 2");
         return;
     }
 
-    var nonLandsCards = CardsData.find({name : {$in : cardsOnMain}, land : false}).map(function(obj){
+    var nonLandsCards = Cards.find({_id : {$in : cardsOnMain}, land : false}).map(function(obj){
         return obj.name;
     });
-
-    DecksDataUniqueWithoutQty.remove({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}})
+    DecksDataUniqueWithoutQty.remove({Formats_id : deckData.Formats_id, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}})
 }
 
-CreateTheCardList = function(DecksNames_id){
-    var cards = DecksNames.aggregate(
-        [
-            {$match: {_id : "atZiGY27D2P9wZyHS"}},
-            {$lookup: {
-                    "from" : "DecksData",
-                    "localField" : "_id",
-                    "foreignField" : "DecksNames_id",
-                    "as" : "DecksData"}},
-            {$unwind: {path : "$DecksData"}},
-            {$project: {main : "$DecksData.main"}},
-            {$unwind: {path : "$main",}},
-            {$group: {_id : "$_id",cards : {$addToSet : "$main.name"}}}
-        ]
-    );
-    DecksNames.update({_id : DecksNames_id},
-        {
-            $set : {cards : cards.cards}
-        })
-}
-
-
-addToDecksUniqueWithName = function(_id){
-    var deckData = DecksData.findOne({_id : _id});
+addToDecksUniqueWithName = function({DecksData_id, DecksArchetypes_id}){
+    var deckData = DecksData.findOne({_id : DecksData_id});
     var cardsOnMain = [];
 
     deckData.main.forEach(function(obj){
         cardsOnMain.push(obj.name)
     });
 
-    var queryCards = CardsData.find({name : {$in : cardsOnMain}});
-    if(cardsOnMain.length != queryCards.count()){
-        console.log("A Card Doesn't Exists");
+    cardsOnMain = cardsOnMain.sort();
+
+    var queryCards = Cards.find({_id : {$in : cardsOnMain}}, {fields : {_id : 1}}).fetch();
+
+    if(cardsOnMain.length != queryCards.length){
+        console.log("A Card Doesn't Exists. addToDecksUniqueWithName ");
         return;
     }
 
-    var nonLandsCards = CardsData.find({name : {$in : cardsOnMain}, land : false}).map(function(obj){
-        return obj.name;
+    var nonLandsCards = Cards.find({_id : {$in : cardsOnMain}, types : {$ne : "land"}}).map(function(obj){
+        return obj._id;
     });
 
-    if(!DecksDataUniqueWithoutQty.find({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}}).count()){
-        console.log("New Unique Deck");
-    }else{
-        console.log("Unique Deck Exists");
-    }
-
-    DecksDataUniqueWithoutQty.update({format : deckData.format, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}},
-        {$set : {DecksNames_id : deckData.DecksNames_id, format : deckData.format, nonLandMain : nonLandsCards}},
-        {
-            upsert : true
-        });
+    DecksDataUniqueWithoutQty.update({format : deckData.Formats_id, nonLandMain : {$size : nonLandsCards.length, $all : nonLandsCards}},
+    {
+        $setOnInsert : {DecksArchetypes_id : DecksArchetypes_id, nonLandMain : nonLandsCards}
+    },
+    {
+     upsert : true
+    })
 }

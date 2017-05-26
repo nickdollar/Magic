@@ -43,23 +43,23 @@ export default class LGSAddNewStore extends React.Component {
 
 
     getDecksListEvents_id(Events_id){
-        Meteor.call("getDecksListEvents_id", Events_id, (err, data)=>{
-            if(data.DecksData.length!=0){
-                data.DecksData.sort(this.sortFunc);
+        Meteor.call("getDecksListEvents_id", Events_id, (err, response)=>{
+            if(response.DecksData.length!=0){
+                response.DecksData.sort(this.sortFunc);
             }
 
             var DecksData_id = this.state.DecksData_id;
             var DecksData;
             if(!DecksData_id){
-                data.DecksData[0] ? DecksData_id = data.DecksData[0]._id : DecksData_id = "";
-                data.DecksData[0] ? DecksData = data.DecksData[0] : DecksData_id = {};
+                response.DecksData[0] ? DecksData_id = response.DecksData[0]._id : DecksData_id = "";
+                response.DecksData[0] ? DecksData = response.DecksData[0] : DecksData_id = {};
 
             }else{
-                DecksData = data.DecksData.find((deck)=>{
+                DecksData = response.DecksData.find((deck)=>{
                     return deck._id == DecksData_id
                 })
             }
-            this.setState({DecksList : data.DecksData, DecksData : DecksData ? DecksData : {}, DecksData_id : DecksData_id, Event : data.Event})
+            this.setState({DecksList : response.DecksData, DecksData : DecksData ? DecksData : {}, DecksData_id : DecksData_id, Event : response.Event})
         });
     }
 

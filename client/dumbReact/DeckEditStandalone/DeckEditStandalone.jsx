@@ -82,7 +82,7 @@ export default class DeckEditStandalone extends React.Component{
             return;
         }
 
-        Meteor.call("getCardsBy_id", {CardsSimple_id : selectedCard._id}, (err, data)=>{
+        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, data)=>{
             data.qty = selectedCard.qty;
             deck[mainSideboard].push(data);
             if(data._id){

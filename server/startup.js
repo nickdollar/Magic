@@ -19,18 +19,9 @@ Meteor.startup(function () {
         return future.wait();
     };
 
-    // for(var i = 0; i< CardsData.getIndexes().length; i++){
-    //     if(CardsData.getIndexes()[i].name == "_id_"){
-    //         continue;
-    //     }
-    //     CardsData._dropIndex(CardsData.getIndexes()[i].name);
-    // }
-
-    CardsFullData._ensureIndex({name : 1});
-    TCGCards._ensureIndex({name : 1});
     DecksDataUniqueWithoutQty._ensureIndex({nonLandMain : 1});
-    DecksData._ensureIndex({DecksNames_id : 1});
-    DecksNames._ensureIndex({DecksArchetypes_id : 1});
+    CardsUnique._ensureIndex({name : 1});
+    DecksData._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});
     ZipCodes._ensureIndex({ZIP : 1});
     UsersCollection._ensureIndex({"cards.name" : 1});
@@ -59,45 +50,7 @@ Meteor.startup(function () {
         console.log("Collection ZipCodes Match");
     }
 
-    if(checkIfCardFullDataQty() != CardsFullData.find().count()){
-        console.log("checkIfCardFullDataQty Wrong Qty");
-        createCardsFullData();
-    }else{
-        console.log("Collection CardsFullData Match");
-    }
-
-    if(MTGSetsCountFromFile() != MTGSets.find().count()){
-        console.log("MTGSets Wrong Qty");
-        MakeMTGSets();
-    }else{
-        console.log("MTGSets CardsData Match ");
-    }
-
     createEventsTypes();
     createFormats();
-    databaseFixes();
 
 });
-
-// var cookies = new Cookies()
-//
-// var cookie = new Cookies({
-//     auto: false, // Do not bind as a middleware by default
-//     handler: function(cookies){
-//
-//         var cookiesArray = [{type : "distance", value : 20},
-//                             {type : "positionOption", value : "GPS"},
-//                             {type : "ZIP", value : ""},
-//                             {type : "state", value : ""}
-//         ]
-//         cookiesArray.forEach((obj)=>{
-//             if(!cookies.has(obj.type)){
-//                 cookies.set(obj.type, obj.value);
-//             }
-//         })
-//     }
-// });
-//
-// WebApp.connectHandlers.use(cookie.middleware());
-
-

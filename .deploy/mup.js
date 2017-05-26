@@ -3,41 +3,40 @@ module.exports = {
     one: {
       host: '104.131.155.67',
       username: 'root',
-      // pem:
-      password: 'MagicSit3!'
-      // or leave blank for authenticate from ssh-agent
+      password: 'MagicSit3!',
     }
   },
-
   meteor: {
     name: 'Magic',
     path: 'C:/Magic',
-	
+    docker: {
+		image: 'abernix/meteord:base' // (optional)
+    },
     servers: {
       one: {}
     },
-	docker: {
-      image: 'abernix/meteord:base'
-	},
     buildOptions: {
       serverOnly: true,
     },
     env: {
-      ROOT_URL: 'http://www.crowdmtg.com',
-      MONGO_URL: 'mongodb://localhost.com/meteor'
+      ROOT_URL: 'https://www.crowdmtg.com', // If you are using ssl, this needs to start with https
+      MONGO_URL: 'mongodb://localhost/meteor'
     },
-    deployCheckWaitTime: 600,
-	 ssl: {
-		crt: './bundle.crt', // this is a bundle of certificates
-		key: './private.key', // this is the private key of the certificate
-		port : 443
-	},
-	enableUploadProgressBar: true
+    ssl: {
+      // Enables let's encrypt (optional)
+      autogenerate: {
+        email: 'ivelacc@gmail.com',
+        domains: 'crowdmtg.com,www.crowdmtg.com' // comma seperated list of domains
+      }
+    },
+    deployCheckWaitTime: 60,
+    deployCheckPort: 80,
+    enableUploadProgressBar: true // default false.
   },
 
-  mongo: {
-    oplog: true,
+  mongo: { // (optional)
     port: 27017,
+	version: '3.2.12',
     servers: {
       one: {},
     },

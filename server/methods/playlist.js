@@ -1,29 +1,29 @@
 Meteor.methods({
-    reportAPlaylist: function (form) {
-        if (form.reportString == "bad") {
-            DecksNamesPlaylists.update(
-                {
-                    _id: form._id,
-                    bad: {$ne: Meteor.user()._id}
-                }, {
-                    $inc: {badCount: 1},
-                    $push: {bad: {_id: Meteor.user()._id}}
-                }
-            )
-        }
-
-        if (form.reportString == "wrong") {
-            DecksNamesPlaylists.update(
-                {
-                    _id: form._id,
-                    wrong: {$ne: Meteor.user()._id}
-                }, {
-                    $inc: {wrongCount: 1},
-                    $push: {wrong: {_id: Meteor.user()._id}}
-                }
-            )
-        }
-    },
+    // reportAPlaylist: function (form) {
+    //     if (form.reportString == "bad") {
+    //         DecksNamesPlaylists.update(
+    //             {
+    //                 _id: form._id,
+    //                 bad: {$ne: Meteor.user()._id}
+    //             }, {
+    //                 $inc: {badCount: 1},
+    //                 $push: {bad: {_id: Meteor.user()._id}}
+    //             }
+    //         )
+    //     }
+    //
+    //     if (form.reportString == "wrong") {
+    //         DecksNamesPlaylists.update(
+    //             {
+    //                 _id: form._id,
+    //                 wrong: {$ne: Meteor.user()._id}
+    //             }, {
+    //                 $inc: {wrongCount: 1},
+    //                 $push: {wrong: {_id: Meteor.user()._id}}
+    //             }
+    //         )
+    //     }
+    // },
     insertNewPlayList: function (form) {
         var playListInformation = getPlayListInformation(form.playlistUrl);
         var file = Images.insert(playListInformation.thumbnail, function (err, fileObj) {

@@ -1,3 +1,6 @@
+import sizeof from "object-sizeof";
+
+
 Meteor.methods({
     //CREATE NEW
     fixArchetypesColorsAbbreviation: function () {
@@ -11,21 +14,218 @@ Meteor.methods({
         logFunctionsEnd("fixArchetypesColorsAbbreviation");
 
     },
-    addArchetype: function (form) {
-        logFunctionsStart("addArchetype");
-
-        form.name = form.name.toTitleCase();
-
-        DecksArchetypes.update(form,
+    DecksArchetypesGetCardsListMethod({DecksArchetypes_id}){
+        var allCards = DecksData.aggregate([
             {
-                $set : form
+                $match : {
+                    DecksArchetypes_id : DecksArchetypes_id
+                }
             },
             {
-                upsert : true
-            })
+                $project : {
+                    main : 1
+                }
+            },
+            {
+                $unwind : "$main"
+            },
+            {
+                $group : {
+                    _id : "$main.name",
+                    _ids : {$push : "$_id"}
+                }
+            },
+            {
+                $lookup : {
+                    "from" : "CardsSimple",
+                    "localField" : "_id",
+                    "foreignField" : "_id",
+                    "as" : "info"
+                }
+            },
+            {
+                $unwind : "$info"
+            }
+        ])
 
+
+        var allDecks = DecksData.find({DecksArchetypes_id : DecksArchetypes_id},
+                        {fields : {
+                            Events_id : 1, date : 1, EventsTypes_id : 1, player : 1, position : 1, victory : 1, loss: 1, loss : 1
+        }}).fetch()
+        var response = {allCards : allCards, allDecks : allDecks}
+
+        return response
+
+    },
+    findAllDecksArchetypesMethod: function ({DecksArchetypes_id}) {
+        logFunctionsStart("findAllDecksArchetypesMethod");
+
+        var cardsFound = DecksArchetypes.aggregate([
+            {
+                $match : {
+                    _id : DecksArchetypes_id
+                },
+            },
+            {
+                $unwind : "$manual.cards"
+            },
+            {
+                $project : {
+                    name : "$manual.cards.name",
+                    qty : "$manual.cards.qty"
+
+                }
+            },
+            {
+                $lookup : {
+                    "from" : "CardsSimple",
+                    "localField" : "name",
+                    "foreignField" : "_id",
+                    "as" : "info"
+                }
+            },
+            {
+              $unwind : "$info"
+            },
+            {
+                $match : {
+                    "info.types" : {$ne : "land"}
+                }
+            },
+            {
+                $group : {
+                    _id : "$name",
+                    qty : {$first : "$qty"}
+                }
+            },
+            {
+                $sort : {
+                    qty : -1
+                }
+            }
+        ])
+
+        var cards = [];
+        for(var i = 0; i < cardsFound.length; i++){
+            if(cards.length > 5){
+                if(cardsFound[i -1].qty != cardsFound[i].qty)
+                    break;
+                }
+            cards.push(cardsFound[i]._id);
+        }
+
+        var foundDecks = DecksData.find({state : {$nin : ["manual", "pending"]}, "main.name" : {$all : cards}}, {fields : {_id : 1}}).map(deck => deck._id);
+        DecksData.update({_id : {$in : foundDecks}},
+        {
+            $set : {state : "archetypeAuto", DecksArchetypes_id : DecksArchetypes_id}
+        },
+        {
+            multi : true
+        }
+        )
+
+
+
+        logFunctionsEnd("findAllDecksArchetypesMethod");
+
+    },
+    CreateCardListMethod: function () {
+        logFunctionsStart("CreateCardListMethod");
+
+        var allArchetypesCards = DecksArchetypes.aggregate(
+
+            // Pipeline
+            [
+                // Stage 1
+                {
+                    $project: {
+                        _id : 1
+                    }
+                },
+
+                // Stage 2
+                {
+                    $lookup: {
+                        "from" : "DecksData",
+                        "localField" : "_id",
+                        "foreignField" : "DecksArchetypes_id",
+                        "as" : "DecksData"
+                    }
+                },
+
+                // Stage 3
+                {
+                    $unwind: "$DecksData"
+                },
+                {
+                    $match : {
+                        state : "manual"
+                    }
+                },
+
+                // Stage 4
+                {
+                    $project: {
+                        main : "$DecksData.main"
+                    }
+                },
+
+                // Stage 5
+                {
+                    $unwind: {
+                        path : "$main",
+                    }
+                },
+
+                // Stage 6
+                {
+                    $group: {
+                        _id : {DecksArchetypes_id : "$_id", name : "$main.name"},
+                        qty : {$sum : 1}
+                    }
+                },
+
+                // Stage 7
+                {
+                    $sort: {
+                        qty : -1
+                    }
+                },
+
+                // Stage 8
+                {
+                    $group: {
+                        _id : "$_id.DecksArchetypes_id",
+                        cards : {$push : {name : "$_id.name", qty : "$qty"}}
+                    }
+                },
+
+            ]
+        );
+
+        allArchetypesCards.forEach((archetype)=>{
+            DecksArchetypes.update({_id : archetype._id},
+                {
+                    $set : {"manual.cards" : archetype.cards, "manual.decksQty" : archetype.cards[0].qty}
+                })
+        })
+
+        logFunctionsEnd("CreateCardListMethod");
+    },
+    addArchetypeMethod(form) {
+        logFunctionsStart("addArchetype");
+            form.name = form.name.toTitleCase();
+            form.link = form.name.replace(/\s/g, "")
+            DecksArchetypes.update(form,
+                {
+                    $set : form
+                },
+                {
+                    upsert : true
+                })
         logFunctionsEnd("addArchetype");
-
+        return {confirm : true, response : ""}
     },
     updateDeckArchetype(form){
         if(Roles.userIsInRole(Meteor.user(), ['admin'])){
@@ -36,59 +236,425 @@ Meteor.methods({
             )
         };
     },
-    removeDecksArchetypes(DecksArchetypes_id){
-        if(Roles.userIsInRole(Meteor.user(), ['admin'])){
-            var decksNames_ids = DecksNames.find({DecksArchetypes_id : DecksArchetypes_id}).map((deckName)=>{
-                return deckName._id;
-            })
 
-            DecksNames.remove({DecksNames_id : {$in : decksNames_ids}});
-            DecksData.update({DecksNames_id : {$in : decksNames_ids}},
+    removeDecksArchetypes({DecksArchetypes_id}){
+        if(Roles.userIsInRole(Meteor.user(), ['admin'])){
+            DecksData.update({DecksArchetypes_id : DecksArchetypes_id},
                 {
                     $set : {state : "nameRemoved"},
-                    $unset : {DecksNames_id : ""}
+                    $unset : {DecksArchetypes_id : ""}
                 },
                 {
                     multi : true
                 }
             )
-            DecksDataUniqueWithoutQty.remove({DecksNames_id : {$in : decksNames_ids}});
+            DecksDataUniqueWithoutQty.remove({DecksArchetypes_id : DecksArchetypes_id});
             DecksArchetypes.remove({_id : DecksArchetypes_id});
         };
     },
+    findAllCardsMethodNonLands({DecksData_id}){
+        console.log("findAllCardsMethodNonLands");
+        var foundDeck = DecksData.findOne({_id : DecksData_id});
 
-   DecksArchetypesformatToFormats_idMethod(){
-        logFunctionsStart("DecksArchetypesformatToFormats_idMethod")
-        Formats.find({}).map(format => {
-            var formatsRegex = [];
-            for (var i = 0; i < format.names.length; i++) {
-                formatsRegex[i] = new RegExp(format.names[i], "i");
+        var foundCards = DecksData.aggregate(
+            [
+                {
+                    $match: {
+                        _id : DecksData_id
+                    }
+                },
+                {
+                    $project: {
+                        card : {
+                            $map : {
+                                input : "$main",
+                                as : "card",
+                                in :  "$$card.name"
+                            }
+                        }
+                    }
+                },
+                {
+                    $unwind: {
+                        path : "$card",
+                    }
+                },
+                {
+                    $lookup: {
+                        "from" : "CardsSimple",
+                        "localField" : "card",
+                        "foreignField" : "_id",
+                        "as" : "info"
+                    }
+                },
+                {
+                    $match: {
+                        "info.types" : {$ne : "land"}
+                    }
+                },
+                {
+                    $group: {
+                        _id : "$_id",
+                        cards : {$addToSet : "$card"}
+                    }
+                },
+            ]
+        );
+
+        var foundArchetypes = DecksArchetypes.find({Formats_id : foundDeck.Formats_id, cards : {$exists : true}}, {fields : {cards : 1, name : 1, decksQty : 1}}).fetch();
+
+        for(var i = 0; i < foundArchetypes.length; i++){
+            if(foundArchetypes[i].cards){
+                foundArchetypes[i].cardQty = foundArchetypes[i].cards.length;
+                foundArchetypes[i].cards = foundArchetypes[i].cards.filter((card)=>{
+                                            var index = foundCards[0].cards.findIndex((foundCard)=>{
+                                                return foundCard == card.name;
+                                            })
+                                            if(index != -1){
+                                                    // if(foundArchetypes[i].decksQty > 5){
+                                                    //     if(foundArchetypes[i].cards[index].qty/foundArchetypes[i].decksQty > 0.5){
+                                                            return true;
+                                                        // }
+                                                    // }
+                                            }
+                                            return false;
+                                            })
             }
-            DecksArchetypes.update({format : {$in : formatsRegex}},
-                {
-                    $set : {Formats_id : format._id},
-                    $unset : {format : ""}
-                },
-                {
-                    multi : true
-                })
-        });
-        logFunctionsEnd("DecksArchetypesformatToFormats_idMethod" )
-    },
-    DecksArchetypesCreateLinkNameMethod(){
-        logFunctionsStart("DecksArchetypesCreateLinkNameMethod")
+        }
 
-        DecksArchetypes.find({}).map(deckArchetype => {
-            DecksArchetypes.update({_id : deckArchetype._id},
+        var result = [];
+
+
+
+        for(var i = 0 ; i < foundArchetypes.length; i++){
+
+            var foundQty = foundArchetypes[i].cards ? foundArchetypes[i].cards.length : 0;
+            result.push({
+                foundQty : foundQty,
+                cardsQty : foundCards[0].cards.length,
+                percentage : foundQty/foundCards[0].cards.length,
+                name : foundArchetypes[i].name,
+                DecksArchetypes_id : foundArchetypes[i]._id,
+            })
+        }
+
+        result = result.sort((a, b)=>{
+            return b.percentage - a.percentage;
+        })
+
+        return result[0];
+    },
+    findAllCardsMethodWithLands({DecksData_id}){
+        console.log("findAllCardsMethodWithLands");
+        var foundDeck = DecksData.findOne({_id : DecksData_id});
+
+        var foundCards = DecksData.aggregate(
+            [
+                {$match: {_id : DecksData_id}},
                 {
-                    $set : { link: deckArchetype.name.replace(/[^a-zA-Z0-9-_]/g, '')},
+                    $project: {
+                        card : {
+                            $map : {
+                                input : "$main",
+                                as : "card",
+                                in :  "$$card.name"
+                            }
+                        }
+                    }
+                },
+                {$group: {_id : "$_id", cards : {$first : "$card"}}},
+            ]
+        );
+        var foundArchetypes = DecksArchetypes.find({Formats_id : foundDeck.Formats_id, cards : {$exists : true}}, {fields : {cards : 1, name : 1, decksQty : 1}}).fetch();
+
+        for(var i = 0; i < foundArchetypes.length; i++){
+            if(foundArchetypes[i].cards){
+                foundArchetypes[i].cards = foundArchetypes[i].cards.filter((card)=>{
+                    var index = foundCards[0].cards.findIndex((foundCard)=>{
+                        return foundCard == card.name;
+                    })
+                    if(index != -1){
+                        // if(foundArchetypes[i].decksQty > 5){
+                        //     if(foundArchetypes[i].cards[index].qty/foundArchetypes[i].decksQty > 0.5){
+                        return true;
+                        // }
+                        // }
+                    }
+                    return false;
+                })
+            }
+        }
+
+        var result = [];
+
+        for(var i = 0 ; i < foundArchetypes.length; i++){
+            var foundQty = foundArchetypes[i].cards ? foundArchetypes[i].cards.length : 0;
+            result.push({
+                foundQty : foundQty,
+                cardsQty : foundCards[0].cards.length,
+                percentage : foundQty/foundCards[0].cards.length,
+                name : foundArchetypes[i].name,
+                DecksArchetypes_id : foundArchetypes[i]._id
+            })
+        }
+
+        result = result.sort((a, b)=>{
+            return b.percentage - a.percentage;
+        })
+
+        return result[0];
+    },
+    AllArchetypesCardsMethod(){
+        logFunctionsStart("AllArchetypesCards");
+
+        var allCardsPerDeck = DecksArchetypes.aggregate(
+
+            // Pipeline
+            [
+                // Stage 1
+                {
+                    $lookup: {
+                        "from" : "DecksData",
+                        "localField" : "_id",
+                        "foreignField" : "DecksArchetypes_id",
+                        "as" : "DecksData"
+                    }
+                },
+
+                // Stage 2
+                {
+                    $unwind: "$DecksData"
+                },
+
+                // Stage 3
+                {
+                    $match: {
+                        "DecksData.state" : "manual"
+                    }
+                },
+
+                // Stage 4
+                {
+                    $group: {
+                        _id : "$_id",
+                        DecksData : {$push : "$DecksData"},
+                        qty : {$sum : 1}
+                    }
+                },
+
+                // Stage 5
+                {
+                    $match: {
+                        qty : {$gte : 5},
+                    }
+                },
+
+                // Stage 6
+                {
+                    $unwind: "$DecksData"
+                },
+
+                // Stage 7
+                {
+                    $project: {
+                        main : "$DecksData.main"
+                    }
+                },
+
+                // Stage 8
+                {
+                    $unwind: "$main"
+                },
+
+                // Stage 9
+                {
+                    $lookup: {
+                        "from" : "CardsSimple",
+                        "localField" : "main.name",
+                        "foreignField" : "_id",
+                        "as" : "info"
+                    }
+                },
+
+                // Stage 10
+                {
+                    $match: {
+                        "info.types" : {$ne : "land"}
+                    }
+                },
+
+                // Stage 11
+                {
+                    $group: {
+                        _id : {_id : "$_id", "name" : "$main.name"},
+                        qty : {$sum : 1}
+                    }
+                },
+
+                // Stage 12
+                {
+                    $sort: {
+                        qty : -1
+                    }
+                },
+
+                // Stage 13
+                {
+                    $group: {
+                        _id : "$_id._id",
+                        cards : {$push : {name : "$_id.name", qty : "$qty"}}
+                    }
+                },
+
+            ]
+
+        );
+
+        allCardsPerDeck.forEach((aggregate)=>{
+          var cards = [];
+          var top = aggregate.cards[0].qty;
+          for(var i = 0; i < aggregate.cards.length; i++){
+              if(aggregate.cards[i].qty < top){
+                if(cards.length > 5){
+                    break;
+                }
+              }
+              cards.push(aggregate.cards[i].name);
+          }
+        })
+    },
+    importFromDecksArchetypesMethod({DecksArchetypes_id, percentageMain, percentageSide}){
+        var main = DecksData.aggregate(
+            [
+                {$match : {
+                    DecksArchetypes_id : DecksArchetypes_id
+                }},
+                {
+                    $project : {
+                        main : "$main"
+                    }
                 },
                 {
-                    multi : true
+                    "$unwind" : "$main"
+                },
+                {
+                    $group : {
+                        _id : "$main.name",
+                        qty : {$avg : "$main.qty"},
+                        total : {$sum : 1}
+                    }
+                },
+                {
+                    $project : {
+                        name : "$_id",
+                        qty : "$qty",
+                        total : "$total"
+                    }
+                },
+                {
+                    $sort: { total : -1}
                 }
-            )
-        });
-        logFunctionsEnd("DecksArchetypesCreateLinkNameMethod")
+            ]
+        )
+
+        var sideboard = DecksData.aggregate(
+            [
+                {
+                    $match : {
+                        DecksArchetypes_id : DecksArchetypes_id
+                    }
+                },
+                {
+                    $project: {
+                        sideboard: "$sideboard"
+                    }
+                },
+                {
+                    "$unwind" : "$sideboard"
+                },
+                {
+                    $group : {
+                        _id : "$sideboard.name",
+                        qty : {$avg : "$sideboard.qty"},
+                        total : {$sum : 1}
+                    }
+                },
+                {
+                    $project : {
+                        name : "$_id",
+                        qty : "$qty",
+                        total : "$total"
+                    }
+                },
+                {
+                    $sort: { total : -1}
+                }
+            ]
+        )
+
+        var response = {main : [], sideboard : []};
+        for(var i = 0; i < main.length; i++){
+            if(main[i].total/main[0].total> percentageMain/100){
+                main[i].qty = Math.round(main[i].qty);
+                response.main.push(main[i]);
+            }
+        }
+
+        for(var i = 0; i < sideboard.length; i++){
+            if(sideboard[i].total/main[i].total> percentageSide/100){
+                sideboard[i].qty = Math.round(sideboard[i].qty);
+                response.sideboard.push(sideboard[i]);
+            }
+        }
+
+        return response;
     }
+
 })
 
+
+createDecksArchetypesManualCards = ({DecksArchetypes_id})=>{
+    var decksArchetypesCards = DecksData.aggregate(
+        [
+            {
+                $match: {
+                    DecksArchetypes_id : DecksArchetypes_id
+                }
+            },
+            {
+                $project: {
+                    main : 1
+                }
+            },
+            {
+                $unwind: "$main"
+            },
+            {
+                $group: {
+                    _id : "$main.name",
+                    qty : {$sum : 1}
+                }
+            },
+            {
+                $sort: {
+                    qty : -1
+                }
+            },
+            {
+                $project: {
+                    _id : 0,
+                    name : "$_id",
+                    qty : 1
+                }
+            },
+
+        ]
+    );
+
+    if(decksArchetypesCards.length){
+        DecksArchetypes.update({_id : DecksArchetypes_id},
+            {
+                $set : {"cards" : decksArchetypesCards, "decksQty" : decksArchetypesCards[0].qty}
+            })
+    }
+}

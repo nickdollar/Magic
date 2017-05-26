@@ -62,8 +62,6 @@ getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
                         var date = Moment(dateString, "YYYY-MM-DD").toDate();
                         position = parseInt(position.match(/\d+/));
 
-
-
                         var EventsTypeQuery = EventsTypes.findOne({names : {$regex : eventsTypeFixed, $options : "i"}}, {limit : 1});
                         var FormatTypeQuery = Formats.findOne({names : {$regex : format, $options : "i"}}, {limit : 1});
 
@@ -111,8 +109,6 @@ getSCGDecksCardsHTTPRequest = ({deckData})=>{
     Meteor.http.get(deckData.deckUrl, {},(err, response)=>{
         if (response.statusCode == 200) {
             var $decksBlocks = cheerio.load(response.content, {decodeEntities : false});
-            // var mainCards = $decksBlocks(".decklist_heading+ ul li");
-            // var sideboardCards = $decksBlocks(".deck_sideboard li");
 
             var cardPattern = /(\d+) (.*)/i;
 

@@ -35,15 +35,15 @@ export default class  extends React.Component {
         }
         var deckName = "(Name Pending)";
         var type = "";
-        if(deck.DecksNames_id){
-            var deckNameQuery = DecksNames.findOne({_id : deck.DecksNames_id});
-            if(deckNameQuery){
-                deckName = deckNameQuery.name;
-                type = DecksArchetypes.findOne({_id : deckNameQuery.DecksArchetypes_id}).type.toTitleCase();
+        if(deck.DecksArchetypes_id){
+            var deckArchetypesQuery = DecksArchetypes.findOne({_id : deck.DecksArchetypes_id});
+            if(deckArchetypesQuery){
+                deckName = deckArchetypesQuery.name;
+                type = deckArchetypesQuery.type.toTitleCase();
             }
         }
         return  <div className="center" >
-                    <div className="headerDeckName">{deckName} <span className="deckNamesColor">{getHTMLColorsFromDecksNamesReact(deck.DecksNames_id)}</span></div>
+                    <div className="headerDeckName">{deckName} <span className="deckNamesColor">{getHTMLColorsFromSubtypesReact({DecksArchetypes_id : deck.DecksArchetypes_id})}</span></div>
                     <div className="headerType">
                         <span>{type}</span>
                     </div>
@@ -51,7 +51,7 @@ export default class  extends React.Component {
     }
     render(){
         return(
-            <div className="SelectedEventHeaderContainer">
+            <div className="SelectedEventHeaderComponent">
                 {this.eventInfo(this.props.Event)}
                 {this.deckInfo(this.props.DecksData)}
             </div>

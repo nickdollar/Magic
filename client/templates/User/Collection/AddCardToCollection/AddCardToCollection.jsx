@@ -4,25 +4,35 @@ import CardNamesCall from "./CardNamesCall/CardNamesCall"
 export default class Collection extends React.Component {
     constructor(){
         super();
-        this.state = {suggestion : {}}
-
+        this.state = {suggestion : {}, added : false}
     }
 
     typedCard(suggestion, method){
-        if(method==="type"){
-            this.state.suggestion = {name : suggestion, printing : "custom"};
-        }else{
-            this.state.suggestion = suggestion;
-        }
+        this.setState({suggestion : suggestion});
     }
 
     sendCardToCollection(){
-        var qty = parseInt(this.qty.value);
-        var foil = this.foil.checked;
+        if(this.state.suggestion.CardsUnique_id){
+            var request = {};
+            if(!isNaN(parseInt(this.qty.value))){
+                if(this.state.suggestion.foil){
+                    request.fQty = parseInt(this.qty.value);
+                }else{
+                    request.nQty = parseInt(this.qty.value);
+                }
+            }
+            request.CardsUnique_id = this.state.suggestion.CardsUnique_id;
+            request.name = this.state.suggestion.name;
 
-        if(this.state.suggestion.name){
-            var request = Object.assign({}, {name : this.state.suggestion.name, setCode: this.state.suggestion.printing, qty : isNaN(qty) ? 0 : qty, foil : foil});
-            Meteor.call("addCardToCollectionMethod", request);
+            Meteor.call("addCardToCollectionMethod", {request : request},(err, reponse)=>{
+                this.props.getCollectionCards();
+                window.clearTimeout(timeoutHandler);
+                this.setState({added : !this.state.added, suggestion : {}});
+                timeoutHandler = window.setTimeout(()=>{
+                    updateCollectionNumbersFunction();
+                }, 15000);
+            });
+
         }
     }
 
@@ -31,9 +41,12 @@ export default class Collection extends React.Component {
             <div className="CollectionComponent">
                 <div className="addCartToCollectionWrapper">
                     <div className="QtyWrapper">Qty: <input className="addQtyNumberInput" ref={(input)=>this.qty = input} type="text" defaultValue={4}/></div>
-                    <div className="foilCheckbox">Foil: <input className="checkboxStyle" ref={(input)=>this.foil = input} type="checkbox"/></div>
-                    <div className="cardNamesCall"><CardNamesCall  typedCard={this.typedCard.bind(this)}/></div>
-                    <div className="addToCollectionButton"><button className="btn btn-default" onClick={this.sendCardToCollection.bind(this)}>Add To Collection</button></div>
+                    <div className="cardNamesCall">
+                        <CardNamesCall  typedCard={this.typedCard.bind(this)}
+                                        added={this.state.added}
+                        />
+                    </div>
+                    <div className="addToCollectionButton"><button disabled={this.state.suggestion.CardsUnique_id ? false : true} className="btn btn-default" onClick={this.sendCardToCollection.bind(this)}>Add To Collection</button></div>
                 </div>
             </div>
         );

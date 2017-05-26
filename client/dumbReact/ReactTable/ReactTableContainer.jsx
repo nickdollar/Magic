@@ -5,7 +5,6 @@ export default ReactTableContainer = createContainer(({collection, subscription,
 
     var handle = Meteor.subscribe(subscription, ...subscriptionParams);
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         rows : global[collection].find(query).fetch()
     };

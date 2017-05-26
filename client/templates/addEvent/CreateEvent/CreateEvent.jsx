@@ -18,7 +18,6 @@ class CreateEvent extends React.Component{
             },
             createdEventInfo : false
         };
-
     }
 
     resetForm(){
@@ -35,10 +34,6 @@ class CreateEvent extends React.Component{
                 createdEventInfo : false
             }
         );
-    }
-
-    componentDidMount(){
-
     }
 
     receiveCreatedEventInfo (data){

@@ -1,6 +1,7 @@
 import React from 'react' ;
 import DeckList from "./DeckList/DeckList.jsx";
 import TextDeck from "./TextDeck/TextDeck.jsx";
+import ImportByDeckContainer from './ImportByDeck/ImportByDeck.jsx' ;
 
 
 
@@ -13,10 +14,20 @@ export default class DeckAndSideboardInput extends React.Component{
             UsersDeckData : props.UsersDeckData,
             event : props.event,
             submitMessage : "",
-            main : {name : null, _id : null, qty : 4},
-            sideboard : {name : null,  _id : null, qty : 4},
+            main : {_id : null, qty : 4},
+            sideboard : {_id : null, qty : 4},
             qty : {main : 0, sideboard : 0},
             changes : false
+        }
+    }
+
+    setDeck(deck){
+        this.setDeckFromText(deck);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps != this.state.UsersDeckData){
+            this.setDeckFromText(Object.assign({}, nextProps.UsersDeckData));
         }
     }
 
@@ -25,52 +36,49 @@ export default class DeckAndSideboardInput extends React.Component{
     }
 
     setDeckFromText(UsersDeckData){
+
         var arrayOptions = ["main", "sideboard"];
         for(var i = 0; i < arrayOptions.length; i++){
             UsersDeckData[arrayOptions[i]] = UsersDeckData[arrayOptions[i]].filter((item, pos)=>{
                 var index = UsersDeckData[arrayOptions[i]].findIndex((card)=>{
-                    return item.name == card.name;
+                    return item._id == card._id;
                 });
                 return index == pos;
             });
         }
 
         var mainSideTemp = [].concat(UsersDeckData.main, UsersDeckData.sideboard);
-        var CardsArray = mainSideTemp.map((card)=>{
+
+        var cardsArray = mainSideTemp.map((card)=>{
            return card.name;
         })
 
-        CardsArray = CardsArray.filter((item, pos)=>{
-            return CardsArray.indexOf(item) == pos;
+        cardsArray = cardsArray.filter((item, pos)=>{
+            return cardsArray.indexOf(item) == pos;
         });
-
-        Meteor.call("getCardsFromArray", {CardsArray : CardsArray}, (err, response)=>{
+        Meteor.call("getCardsFromArrayMethod", {cardsArray : cardsArray}, (err, response)=>{
             var qty = {main : 0, sideboard : 0};
             for(var i = 0; i < arrayOptions.length; i++){
                 for(var j = 0; j < UsersDeckData[arrayOptions[i]].length; j++){
-
                     var foundObj = response.find((card)=>{
                         var cardRegex = new RegExp(`^${UsersDeckData[arrayOptions[i]][j].name}$`, 'i');
-                        var cardMatch = card.name.match(card.name.match(cardRegex));
-                        if(cardMatch){
-                            return true;
-                        }
+                        return card._id.match(cardRegex);
                     });
-
                     if(foundObj){
                         qty[arrayOptions[i]] += UsersDeckData[arrayOptions[i]][j].qty;
                         Object.assign(UsersDeckData[arrayOptions[i]][j], foundObj);
                     }
-                    this.setState({UsersDeckData : UsersDeckData, qty : qty})
                 }
             }
+            this.setState({UsersDeckData : UsersDeckData, qty : qty})
         })
     }
 
+
     componentWillReceiveProps(nextProps){
-        if(nextProps != this.state.deck){
-            var deckTemp = Object.assign({}, nextProps.deck)
-            this.setState({deck : deckTemp});
+        if(nextProps != this.state.UsersDeckData){
+            var deckTemp = Object.assign({}, nextProps.UsersDeckData)
+            this.setState({UsersDeckData : deckTemp});
         }
     }
 
@@ -79,7 +87,7 @@ export default class DeckAndSideboardInput extends React.Component{
         var options = ["main", "sideboard"];
         for(var i = 0; i < options.length; i++){
             submitDeck[options[i]] = submitDeck[options[i]].map((card)=>{
-                return {name : card.name, qty : card.qty}
+                return {name : card._id, qty : card.qty}
             })
         }
 
@@ -119,31 +127,30 @@ export default class DeckAndSideboardInput extends React.Component{
 
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
-        if(!selectedCard.name){
+        if(!selectedCard._id){
             return;
         };
 
         var UsersDeckData = this.state.UsersDeckData;
 
-        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj.name == this.state[mainSideboard].name)
+        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj._id == this.state[mainSideboard]._id)
         if(index != -1){
             return;
         }
 
-        Meteor.call("getCardsBy_id", {CardsSimple_id : selectedCard._id}, (err, data)=>{
+        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, response)=>{
             data.qty = selectedCard.qty;
-            UsersDeckData[mainSideboard].push(data);
+            UsersDeckData[mainSideboard].push(response);
             if(data._id){
                 this.state.qty[mainSideboard] += selectedCard.qty;
             }
             var msObject = {};
-            msObject[mainSideboard] = {name : null, _id : null, qty : 4};
+            msObject[mainSideboard] = {_id : null, qty : 4};
             this.setState(Object.assign({UsersDeckData : UsersDeckData, clear : !this.state.clear, changes : true}, msObject));
         })
     }
 
     setCardSelected({suggestion, mainSideboard}) {
-        this.state[mainSideboard].name = suggestion.name;
         this.state[mainSideboard]._id = suggestion._id;
     }
 
@@ -206,6 +213,9 @@ export default class DeckAndSideboardInput extends React.Component{
 
         return (
             <div className="DeckAndSideboardInputComponent">
+                <ImportByDeckContainer setDeck={this.setDeck.bind(this)}
+                                       event={this.props.event}
+                />
                 <div className="form-group">
                     <div onChange={this.onChangeTextOrList.bind(this)}>
                         <label className="form-check-inline">

@@ -19,12 +19,11 @@ Meteor.publish('DecksDataDecksData_idOrEvents_id', function(DecksData_id, Events
     }
 });
 
-
 Meteor.publish("DecksData", function(){
     return DecksData.find({});
 });
 
-Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_id){
+Meteor.publishComposite('DecksCardsByDecksdata_id', function(DecksData_id){
     return {
         find : function() {
             return DecksData.find({_id : DecksData_id});
@@ -32,35 +31,13 @@ Meteor.publishComposite('DecksDataCardsDataByDecksdata_id', function(DecksData_i
         children : [
             {
                 find : function(DeckData){
-                    var main = DeckData.main.map(function(obj){
-                        return obj.name;
-                    });
-                    var sideboard = DeckData.sideboard.map(function(obj){
-                        return obj.name;
-                    });
+                    var main = DeckData.main.map(function(obj){return obj.name;});
+                    var sideboard = DeckData.sideboard.map(function(obj){return obj.name;});
                     var allCards = arrayUnique(main.concat(sideboard));
-                    return CardsData.find({name: {$in : allCards}});
+                    return Cards.find({_id: {$in : allCards}});
                 }
             }
         ]
     }
 });
 
-Meteor.publish('DecksDataByDecksNames_idSimple', function(DecksNames_id){
-    if(!DecksNames_id){
-        return;
-    }
-    return DecksData.find({DecksNames_id : DecksNames_id}, {fields : {DecksNames_id : 1, state : 1}});
-
-});
-
-function arrayUnique(array) {
-    var a = array.concat();
-    for(var i=0; i<a.length; ++i) {
-        for(var j=i+1; j<a.length; ++j) {
-            if(a[i] === a[j])
-                a.splice(j--, 1);
-        }
-    }
-    return a;
-}

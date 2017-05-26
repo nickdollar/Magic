@@ -9,10 +9,18 @@ export default class Workbench extends React.Component {
     render(){
         return(
             <div className="WorkbenchComponent">
-                <button onClick={()=>Meteor.call("AddAllCardsToCardsMakeCards")}>AddAllCardsToCardsMakeCards</button>
-                <button onClick={()=>Meteor.call("createCardsCollectionFromGatherer")}>createCardsCollectionFromGatherer</button>
-                <button onClick={()=>Meteor.call("addTypes")}>addTypes</button>
-                <button onClick={()=>Meteor.call("testInsert")}>testInsert</button>
+                {/*<button onClick={()=>Meteor.call("makeCardsUnique")}>makeCardsUnique</button>*/}
+                {/*<button onClick={()=>Meteor.call("addSetsToCards")}>addSetsToCards</button>*/}
+                <button onClick={()=>Meteor.call("findAllCardsMethodNonLands", (err, response)=>{
+                    console.log(response);
+                })}>findAllCardsMethodNonLands</button>
+                <button onClick={()=>Meteor.call("findAllCardsMethodWithLands", (err, response)=>{
+                    console.log(response);
+                })}>findAllCardsMethodWithLands</button>
+                {/*<button onClick={()=>Meteor.call("createMetaLastDaysAdditionsMethod")}>createMetaLastDaysAdditionsMethod</button>*/}
+                {/*<button onClick={()=>Meteor.call("createMetaLastAdditionMethod")}>createMetaLastAdditionMethod</button>*/}
+                <button onClick={()=>Meteor.call("fixArchetypes")}>fixArchetypes</button>
+
             </div>
         );
     }

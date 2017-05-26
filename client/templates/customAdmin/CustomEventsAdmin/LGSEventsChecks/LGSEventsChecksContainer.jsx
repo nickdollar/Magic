@@ -5,7 +5,6 @@ export default LGSEventsChecksContainer = createContainer(({}) => {
     var handle = Meteor.subscribe("EventsLGS");
 
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         Events : Events.find({state : {$in : ["created", "locked", "published"]}}).fetch()
     };

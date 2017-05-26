@@ -1,8 +1,7 @@
 import React from "react";
-import moment from "moment";
+import {DateField, TransitionView, Calendar} from "react-date-picker";
 
-
-class EventDateInput extends React.Component{
+export default class EventDateInput extends React.Component{
     constructor() {
         super();
         var date = new Date()
@@ -29,6 +28,10 @@ class EventDateInput extends React.Component{
         return true;
     }
 
+    handleChange(dateString){
+        this.setState({outputValue : Moment(dateString).toDate()})
+    }
+
     clearInput(){
         this.setState({inputValue : ""});
     }
@@ -39,39 +42,44 @@ class EventDateInput extends React.Component{
         return object;
     }
 
-    handleChange(e){
-
-    }
-
     componentDidMount() {
         if (this.props.onComponentMounted) {
             this.props.onComponentMounted(this);
         }
         var date = new Date();
-
-        date.setHours(0,0,0,0);
-        $(this.refs["input"]).datetimepicker({
-            format: 'L',
-            defaultDate : date
-        }).on("dp.change", (e)=>{
-            this.setState({inputValue : new Date(e.timeStamp)});
-            this.isValid();
-        });
-
     }
 
     render() {
         return (
-            <div className="form-group">
-                <label> {this.props.title} </label>
-                <input type={"text"}
-                       ref={"input"}
-                       className='form-control'
-                       onChange={this.handleChange.bind(this)} />
-                <span ref="error" className="error"></span>
+            <div className="CheckBoxComponent">
+                <div className="form-group">
+                    <label> {this.props.title}</label>
+                    <div ref="input">
+                        <DateField
+                            forceValidDate
+                            dateFormat="YYYY-MM-DD"
+                            defaultValue={date}
+                            onChange={this.handleChange.bind(this)}
+                        >
+                        </DateField>
+                    </div>
+                    <span ref="error" className="error"></span>
+                </div>
             </div>
         )
     }
 }
 
-export default EventDateInput;
+
+
+
+// return (
+//     <div className="form-group">
+//         <label> {this.props.title} </label>
+//         <input type={"text"}
+//                ref={"input"}
+//                className='form-control'
+//                onChange={this.handleChange.bind(this)} />
+//         <span ref="error" className="error"></span>
+//     </div>
+// )

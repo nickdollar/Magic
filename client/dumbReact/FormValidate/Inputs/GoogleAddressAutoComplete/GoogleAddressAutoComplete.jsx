@@ -47,8 +47,6 @@ class GoogleAutocompleteInput extends React.Component{
 
     componentDidMount() {
         this.props.register(this);
-
-
         var input = this.refs["input"];
         this.state.autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -146,15 +144,17 @@ class GoogleAutocompleteInput extends React.Component{
 
         return (
             <div className="form-group">
-                <label> Address: (Pick from suggestions) </label>
-                <input ref={"input"}
-                       value={this.state.inputValue}
-                       className='form-control'
-                       onChange={this.handleChange.bind(this)}
-                />
-                {selectedAddress}
-                {optionsAddress}
-                <span ref="error" className="error"></span>
+                <div className="google">
+                    <label> Address: (Pick from suggestions) </label>
+                    <input ref={"input"}
+                           value={this.state.inputValue}
+                           className='form-control'
+                           onChange={this.handleChange.bind(this)}
+                    />
+                    {selectedAddress}
+                    {optionsAddress}
+                    <span ref="error" className="error"></span>
+                </div>
             </div>
         )
     }

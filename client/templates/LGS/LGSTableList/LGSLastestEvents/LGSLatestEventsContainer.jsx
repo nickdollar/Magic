@@ -9,7 +9,6 @@ export default ListContainer = createContainer(({ LGS }) => {
     });
     var handle = Meteor.subscribe("EventsByLGS_idArray", arraysOfLGS_id);
     return {
-        currentUser: Meteor.user(),
         listLoading: ! handle.ready(),
         Events: Events.find({LGS_id : {$in : arraysOfLGS_id}}).fetch(),
     };

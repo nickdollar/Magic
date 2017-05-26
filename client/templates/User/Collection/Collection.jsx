@@ -8,16 +8,16 @@ export default class Collection extends React.Component {
         super();
         this.state = {
             qty: 0,
-            itemsCountPerPage : 10,
+            itemsCountPerPage : 40,
             activePage : 1,
             cards: [],
             filter: {
                 colors: [
-                    {value: "B", css: "sb", checked: true},
-                    {value: "G", css: "sg", checked: true},
-                    {value: "R", css: "sr", checked: true},
-                    {value: "U", css: "su", checked: true},
-                    {value: "W", css: "sw", checked: true},
+                    {value: "b", css: "sb", checked: true},
+                    {value: "g", css: "sg", checked: true},
+                    {value: "r", css: "sr", checked: true},
+                    {value: "u", css: "su", checked: true},
+                    {value: "w", css: "sw", checked: true},
                 ],
                 colorless: true,
                 colorsQueryType : [
@@ -26,7 +26,7 @@ export default class Collection extends React.Component {
                     {value: "all", text: "Each Card Contains all.", checked: false}
                 ]
             },
-            sort : {key : "_id", value : 1},
+            sort : {key : "name", value : 1},
             page : 0,
             cardsStartingWith : ""
         }
@@ -59,17 +59,17 @@ export default class Collection extends React.Component {
 
         var $match = {};
         if(colorsQueryType=="one"){
-            $match = {"colors" : {$in : colors}};
+            $match = {colorIdentity : {$in : colors}};
         }else if(colorsQueryType=="only") {
 
             var allColors = ["B","G", "R", "U", "W"];
             var difference = _.difference(allColors, colors);
-            $match = {$and : [{"colors" : {$nin : difference}}, {colors : {$exists : true}}]};
+            $match = {$and : [{colorIdentity : {$nin : difference}}, {colorIdentity : {$exists : true}}]};
         }else{
-            $match = {"colors" : {$all : colors}};
+            $match = {colorIdentity : {$all : colors}};
         }
         if(this.state.filter.colorless){
-            $match = Object.assign({}, {$or : [$match, {colors : {$exists : false}}]})
+            $match = Object.assign({}, {$or : [$match, {colorIdentity : {$exists : false}}]})
         }
         return $match;
     }
@@ -87,10 +87,9 @@ export default class Collection extends React.Component {
         queryObj.page = this.getActivePage();
         queryObj.itemsCountPerPage = this.getItemsCountPerPage();
         queryObj.cardsStartingWith = this.state.cardsStartingWith;
+        Meteor.call("getCollectionCardsMethod", queryObj, (err, response)=>{
 
-
-        Meteor.call("getCollectionCards", queryObj, (err, {qty, cards})=>{
-            this.setState({cards : cards, qty : qty});
+            this.setState({cards : response.cards, qty : response.qty});
         });
     }
 
@@ -151,17 +150,16 @@ export default class Collection extends React.Component {
     render(){
         return(
             <div className="CollectionComponent">
-                <h3>Your Collection</h3>
+                {/*<h3>Your Collection</h3>*/}
                     <div className="content-wrapper">
                     {/*<button onClick={()=>Meteor.call("importCollectionMethod")}> import collection</button>*/}
-                    <AddCardToCollection/>
+                    <AddCardToCollection getCollectionCards={this.getCollectionCards.bind(this)}/>
                     <CollectionFilter filter={this.state.filter}
                                       updateColors={this.updateColors.bind(this)}
                                       submitFilter={this.submitFilter.bind(this)}
                                       updateColorsQueryType={this.updateColorsQueryType.bind(this)}
                                       updateColorless={this.updateColorless.bind(this)}
                                       updateCardsStartingWith={this.updateCardsStartingWith.bind(this)}
-
                     />
                     <CardsTable cards={this.state.cards}
                                 qty={this.state.qty}
@@ -170,7 +168,6 @@ export default class Collection extends React.Component {
                                 sortByHeader={this.sortByHeader.bind(this)}
                                 paginationOnChangeHandler={this.paginationOnChangeHandler.bind(this)}
                                 removeCard={this.removeCard.bind(this)}
-
                     />
                 </div>
             </div>

@@ -9,7 +9,6 @@ var mtgoPtqTypes = {
 }
 
 getMTGOPTQEventsAndDecks = function({Formats_id, days, dateType}){
-    console.log(Formats_id, days, dateType);
     logFunctionsStart("eventMTGOPTQGetInfoOldStartNew");
     if(Formats_id == null || days == null){
         logErrorMessage("format null or days");
@@ -95,7 +94,7 @@ getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{
                         var qty = parseInt($(mainCards[j]).find('.card-count').text());
                         var name = $(mainCards[j]).find('.card-name').text();
                         name = fixCards(name);
-                        if(CardsData.find({ name : name}, {limit : 1}).count()){
+                        if(Cards.find({ _id : name}, {limit : 1}).count()){
                             main.push(
                                 {
                                     name : name,

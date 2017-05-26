@@ -58,12 +58,12 @@ const themeDeckEdit = {
 };
 
 const getSuggestionValue = (suggestion) => {
-    return `${suggestion.name}`
+    return `${suggestion._id}`
 };
 
 const renderSuggestion = suggestion => (
     <div>
-        {suggestion.name}
+        {suggestion._id}
     </div>
 );
 
@@ -83,7 +83,7 @@ export default class CardNamesCall extends React.Component {
     };
 
     onSuggestionsFetchRequested = ({ value }) => {
-        Meteor.call("getAutoCompleteCardsCollectiomSimplified", value, (err, data)=>{
+        Meteor.call("getListByRegex", {value : value}, (err, data)=>{
             this.setState({
                 suggestions: data.length === 0 ? [] : data
             });
@@ -104,10 +104,6 @@ export default class CardNamesCall extends React.Component {
         return value.trim().length > 1;
     }
 
-    onBlur(){
-
-    }
-
     componentWillReceiveProps(nextProps){
         if(nextProps.clear != this.props.clear){
             this.setState({value : ""})
@@ -120,7 +116,6 @@ export default class CardNamesCall extends React.Component {
             placeholder: 'Type a Card Name',
             value,
             onChange: this.onChange,
-            onBlur : this.onBlur.bind(this)
         };
 
         return (

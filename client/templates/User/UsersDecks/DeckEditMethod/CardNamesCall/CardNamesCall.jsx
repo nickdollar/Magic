@@ -58,12 +58,12 @@ const themeDeckEdit = {
 };
 
 const getSuggestionValue = (suggestion) => {
-    return `${suggestion.name}`
+    return `${suggestion._id}`
 };
 
 const renderSuggestion = suggestion => (
     <div>
-        {suggestion.name}
+        {suggestion._id}
     </div>
 );
 
@@ -77,13 +77,14 @@ export default class CardNamesCall extends React.Component {
     }
 
     onChange = (event, { newValue , method}) =>{
+        this.props.setCardSelected({suggestion : newValue, mainSideboard : this.props.mainSideboard})
         this.setState({
             value: newValue
         });
     };
 
     onSuggestionsFetchRequested = ({ value }) => {
-        Meteor.call("getAutoCompleteCardsCollectiomSimplified", value, (err, data)=>{
+        Meteor.call("getListByRegex", {value : value}, (err, data)=>{
             this.setState({
                 suggestions: data.length === 0 ? [] : data
             });
@@ -91,7 +92,7 @@ export default class CardNamesCall extends React.Component {
     };
 
     onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }){
-        this.props.setCardSelected({suggestion : suggestion, mainSideboard : this.props.mainSideboard})
+        // this.props.setCardSelected({suggestion : suggestion, mainSideboard : this.props.mainSideboard})
     }
 
     onSuggestionsClearRequested = () => {
@@ -104,14 +105,14 @@ export default class CardNamesCall extends React.Component {
         return value.trim().length > 1;
     }
 
-    onBlur(){
-
-    }
-
     componentWillReceiveProps(nextProps){
         if(nextProps.clear != this.props.clear){
             this.setState({value : ""})
         }
+    }
+
+    onBlur(event, { highlightedSuggestion }){
+        this.props.setCardSelected({suggestion : highlightedSuggestion, mainSideboard : this.props.mainSideboard})
     }
 
     render() {
@@ -119,8 +120,7 @@ export default class CardNamesCall extends React.Component {
         const inputProps = {
             placeholder: 'Type a Card Name',
             value,
-            onChange: this.onChange,
-            onBlur : this.onBlur.bind(this)
+            onChange: this.onChange.bind(this)
         };
 
         return (

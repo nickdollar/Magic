@@ -30,7 +30,7 @@ export default class Deck extends React.Component{
 
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
 
             var cardComplete;
 
@@ -63,7 +63,7 @@ export default class Deck extends React.Component{
     }
 
     getDecksDataById(DecksData_id){
-        Meteor.call("getDecksDataBy_id", DecksData_id, (err, data)=>{
+        Meteor.call("getDecksDataBy_idMethod", DecksData_id, (err, data)=>{
             if(data){
                 this.setState({DecksData : data})
             }
@@ -75,7 +75,7 @@ export default class Deck extends React.Component{
         var sideboard = [];
         var cardsTemp = cards.concat();
         cardsTemp.forEach((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
             var cardComplete;
             if(cardQuery){
                 cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});
@@ -132,10 +132,8 @@ export default class Deck extends React.Component{
     render() {
         if(this.props.listLoading){return <div>Loading...</div>};
 
-
         this.getCardQty(this.state.DecksData.main);
         var typesSeparated = this.separateCardsByTypeAddManaCost(this.state.DecksData.main);
-
 
         var resultMain = [];
         for(var type in typesSeparated){
@@ -153,6 +151,9 @@ export default class Deck extends React.Component{
                                     <div className="manaValue">
                                         {
                                             getHTMLColors(card).map((mana)=>{
+                                                if(mana.mana == "//"){
+                                                    return <div>//</div>
+                                                }
                                                 return <div key={mana.key} className={"mana " + mana.mana}></div>
                                             })
                                         }
@@ -175,6 +176,9 @@ export default class Deck extends React.Component{
                     <div className="manaValue">
                         {
                             getHTMLColors(card).map((mana)=>{
+                                if(mana.mana == "//"){
+                                    return <div>//</div>
+                                }
                                 return <div key={mana.key} className={"mana " + mana.mana}></div>
                             })
                         }

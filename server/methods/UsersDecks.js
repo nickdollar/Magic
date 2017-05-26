@@ -5,20 +5,21 @@ Meteor.methods({
     },
     addNewDeckToUsersDecksMethod({Formats_id, name}) {
         UsersDecks.insert({Users_id : Meteor.userId(), Formats_id : Formats_id, name : name, main : [], sideboard : []});
-        return true;
+        return {confirm : true};
     },
-    updateUsersDecks({UsersDecks_id, main, sideboard, name}) {
+    updateUsersDecksMethod({UsersDecks_id, main, sideboard, name}) {
         UsersDecks.update({Users_id : Meteor.userId(), _id : UsersDecks_id},
             {
                 $set : {main : main, sideboard : sideboard, name : name}
             });
-        return true;
+        return {confirm : true};
     },
-    RemoveDeck({UsersDeck_id}){
-        return true;
+    RemoveDeckMethod({UsersDeck_id}){
+        UsersDecks.remove({_id : UsersDeck_id, Users_id : Meteor.userId()});
+        return {confirm : true};
     },
 
-    getUsersDecksWithCardsInformation({UsersDecks_id}){
+    getUsersDecksWithCardsInformationMethod({UsersDecks_id}){
         var deck = UsersDecks.aggregate(
             [
                 {
@@ -32,19 +33,19 @@ Meteor.methods({
                         Formats_id : 1,
                         main : 1,
                         sideboard : 1,
-                        player : 1,
                         cards : {
                             $setUnion :
                                 [
-                                    {$map : {input : "$main", as : "main", in : "$$main.name"}},
-                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.name"}}
+                                    {$map : {input : "$main", as : "main", in : "$$main._id"}},
+                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard._id"}}
                                 ]
                         }
                     }
                 },
                 {
                     $unwind: {
-                        path : "$cards"
+                        path : "$cards",
+                        preserveNullAndEmptyArrays : true
                     }
                 },
                 {
@@ -59,8 +60,7 @@ Meteor.methods({
                     $group: {
                         _id : "$_id",
                         Formats_id : {$first : "$Formats_id"},
-                        player : {$first : "$player"},
-                        DecksNames_id : {$first : "$DecksNames_id"},
+                        name : {$first : "$name"},
                         main : {$first : "$main"},
                         sideboard : {$first : "$sideboard"},
                         cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}}
@@ -68,10 +68,6 @@ Meteor.methods({
                 }
             ]
         );
-
-        if(deck.length == 0){
-            return UsersDecks.find({ _id : UsersDecks_id, Users_id : Meteor.userId()}).fetch()[0];
-        }
         return deck[0];
     },
 

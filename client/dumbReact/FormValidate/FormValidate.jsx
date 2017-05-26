@@ -48,23 +48,22 @@ export default class FormValidate extends React.Component{
             if(this.props.extraFields){
                 Object.assign(form, this.props.extraFields);
             }
-            Meteor.call(this.props.submitMethod, form, (error, data)=>{
+            Meteor.call(this.props.submitMethod, form, (error, {confirm, response})=>{
                 if(error){
                     logError("Error Adding Store");
                     return;
                 }
 
-                if(data!=true){
+                if(!confirm){
                     this.setState({
-                        ServerMessage: data
+                        ServerMessage: response
                     });
                 }else{
                     this.state.Fields.forEach((field)=>{
                         field.clearInput();
                     });
-
                     if(this.props.triggerEvent){
-                        this.props.triggerEvent()
+                        this.props.triggerEvent(response);
                     }
                 }
             });

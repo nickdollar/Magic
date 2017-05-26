@@ -9,8 +9,8 @@ class MetaDeckList extends React.Component{
         super();
         this.state = {
             types: [{value : "aggro", text : "Aggro", checked : true}, {value : "combo", text : "Combo", checked : true}, {value : "control", text : "Control", checked : true}],
-            colors: [{value : "B", css : "sb", checked : true}, {value : "C", css : "scl", checked : true}, {value : "G", css : "sg", checked : true},
-                {value : "R", css : "sr", checked : true}, {value : "U", css : "su", checked : true}, {value : "W", css : "sw", checked : true}],
+            colors: [{value : "b", css : "sb", checked : true}, {value : "c", css : "scl", checked : true}, {value : "g", css : "sg", checked : true},
+                {value : "r", css : "sr", checked : true}, {value : "u", css : "su", checked : true}, {value : "w", css : "sw", checked : true}],
             containMatch : [{value : "contain", text : "Contain", checked : true}, {value : "match", text : "Match", checked : false}],
             cards : [],
             nameFilter : ""
@@ -62,9 +62,9 @@ class MetaDeckList extends React.Component{
     }
 
     autoComplete(cardName){
-        var card = cardName.name;
+        var card = cardName._id;
         var index = this.state.cards.findIndex((obj)=>{
-            return card.name == obj;
+            return card._id == obj;
         });
 
         if(index == -1){
@@ -92,7 +92,6 @@ class MetaDeckList extends React.Component{
                     />
                 </div>
                 <div className="col-xs-9">
-
                     <ArchetypeList cards={this.state.cards}
                                    Formats_id={this.props.Formats_id}
                                    state={this.state}

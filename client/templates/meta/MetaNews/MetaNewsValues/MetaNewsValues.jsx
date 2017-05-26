@@ -9,24 +9,17 @@ export default class NewsMetaValues extends React.Component {
 
     nameFormatted(cell, row){
         if(cell == 1){
-            var deckName = DecksNames.findOne({_id : row._id});
-            var archetype = DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id});
-            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : archetype.name, deckSelected : deckName.name})}> {deckName.name} </a>
-            return DecksNames.findOne({_id : row._id}).name;
+            var deckArchetype = DecksArchetypes.findOne({_id : row._id});
+            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : getLinkFormat(deckArchetype.Formats_id), DeckArchetype : deckArchetype.link})}> {deckArchetype.name} </a>
         }else if(cell == 2){
-            var deckName = DecksNames.findOne({_id : row.DecksNames_id});
-            return <a href={FlowRouter.path("ArchetypeDeckInformation", {format : row.format, archetype : DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name})}> {DecksArchetypes.findOne({_id : deckName.DecksArchetypes_id}).name} </a>
-        }else if(cell == 3){
-            return <a href={FlowRouter.path("selectedEvent", {format : row.format, Events_id : row.Events_id, DecksData_id : row.DecksData_id})}><div className="js-imagePopOver" data-name={row._id}>{row._id}</div></a>
+            return <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(row.Formats_id), Events_id : row.Events_id, DecksData_id : row.DecksData_id})}><div className="js-imagePopOver" data-name={row._id}>{row._id}</div></a>
         }
     }
 
     typeFormatted(cell, row){
         if(cell == 1){
-            return "Deck";
-        }else if(cell == 2){
             return "Arch."
-        }else if(cell == 3){
+        }else if(cell == 2){
             return "Card"
         }
     }
@@ -54,6 +47,7 @@ export default class NewsMetaValues extends React.Component {
                     sizePerPage : 10,
                     paginationSize : 2,
                     afterTableComplete: this.handleTableComplete.bind(this),
+                    hideSizePerPage: true
                 },
                 data : this.props.tableData,
                 pagination : true

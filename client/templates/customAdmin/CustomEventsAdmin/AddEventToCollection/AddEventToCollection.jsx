@@ -19,6 +19,8 @@ export default class AddEventToCollection extends React.Component{
                         type="button" style={{backgroundColor : "#3399ff"}} className="btn btn-primary btn-block">getLeagueEventsAndDecks - oldDays</button>
                 <button onClick={()=>this.callFunction("getMTGOPTQEventsAndDecksMethod", {Formats_id : this.props.Formats_id, dateType : "oldDays"})} type="button" className="btn btn-primary btn-block">getMTGOPTQEventsAndDecks - oldDays</button>
                 <button onClick={()=>this.callFunction("getMTGOPTQEventsAndDecksMethod", {Formats_id : this.props.Formats_id, dateType : "lastDays"})} type="button" className="btn btn-primary btn-block">getMTGOPTQEventsAndDecks - lastDays</button>
+                <button onClick={()=>this.callFunction("getPTEventsAndDecksMethod")}
+                        type="button" style={{backgroundColor : "red"}} className="btn btn-block">getPTEventsAndDecksMethod</button>
                 <button onClick={()=>this.callFunction("getGpEventsAndDecksMethod", {})}
                         type="button" style={{backgroundColor : "red"}} className="btn btn-block">getGpEventsAndDecks</button>
                 <button onClick={()=>this.callFunction("getGPPositionMethod", {Formats_id : this.props.Formats_id, days : 5})}
@@ -27,6 +29,7 @@ export default class AddEventToCollection extends React.Component{
                         type="button" style={{backgroundColor : "green"}} className="btn btn-block">getSCGEventsAndDecksMethod</button>
                 <button onClick={()=>this.callFunction("getSCGDecksCardsMethod")} type="button"
                         style={{backgroundColor : "green"}} className="btn btn-primary btn-block">getSCGDecksCards</button>
+
             </div>
         )
     }

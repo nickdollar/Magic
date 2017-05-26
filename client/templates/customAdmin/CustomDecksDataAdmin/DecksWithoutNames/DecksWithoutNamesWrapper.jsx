@@ -5,7 +5,7 @@ import DecksWithoutNames from './DecksWithoutNames.jsx' ;
 export default class DecksWithoutNamesWrapper extends React.Component{
     constructor(props){
         super();
-        this.state = {page : 0, limit : 10, selectedState : "lgs", DecksList : []};
+        this.state = {page : 0, limit : 10, selectedState : "scraped", DecksList : []};
     }
 
     componentDidMount(){
@@ -48,14 +48,17 @@ export default class DecksWithoutNamesWrapper extends React.Component{
         return (
             <div className="DecksWithoutNamesWrapperContainer">
                 <h3>Deck List By State</h3>
-                {["lgs", "scraped", "match", "perfect", "nameRemoved", "manual", "shell"].map((state)=>{
+                {["lgs", "scraped", "manual", "perfect", "nameRemoved", "shell"].map((state)=>{
                     return  <label key={state} className="radio-inline">
                                 <input type="radio" onChange={()=>this.changedState(state)} value={state} name="optradio" checked={this.state.selectedState == state ? true : false}/> {state}
                             </label>
                 })}
                 <button data-change="-" onClick={this.changePage.bind(this)} className="btn btn-xs">-</button>
                 <button data-change="+" onClick={this.changePage.bind(this)} className="btn btn-xs">+</button>
-                <DecksWithoutNames DecksList={this.state.DecksList}/>
+                <DecksWithoutNames  DecksList={this.state.DecksList}
+                                    Formats_id={this.props.Formats_id}
+                                    getDecks={this.getDecks.bind(this)}
+                />
             </div>
         )
     }

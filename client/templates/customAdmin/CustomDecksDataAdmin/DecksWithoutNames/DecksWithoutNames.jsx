@@ -1,24 +1,19 @@
 import React from 'react' ;
 import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
-import DeckContainer from '/client/dumbReact/Deck/DeckContainer' ;
-import DecksNamesListSubmitContainer from "/client/dumbReact/DeckNameListSubmit/DeckNameListSubmitContainer.jsx";
-import DeckListPercentage from "/client/dumbReact/DeckListPercentage/DeckListPercentage.jsx";
+import DecksArchetypesListSubmit from "/client/dumbReact/DecksArchetypesListSubmit/DecksArchetypesListSubmit.jsx";
+import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx";
+import FoundDeckListArchetypeOption from "./FoundDeckListArchetypeOption/FoundDeckListArchetypeOption.jsx";
 
-export default class DecksWithoutNames extends React.Component{
+export default class DecksWithoutArchetypes extends React.Component{
     constructor(props){
         super();
         this.state = {
-            DecksData_id : null,
-            showModal: false
+            showModal: false,
         }
     }
 
-    componentDidMount(){
-
-    }
-
     selectDeck(i){
-        this.setState({showModal : true, DecksData_id : this.props.DecksList[i]._id, Formats_id : this.props.DecksList[i].Formats_id});
+        this.setState({showModal : true, DecksData_id : this.props.DecksList[i]._id});
     }
 
     handleHideModal(){
@@ -30,15 +25,7 @@ export default class DecksWithoutNames extends React.Component{
             <div>
                 <table className="table">
                     <thead>
-                        <tr>
-                            <th>
-                                _id
-                            </th>
-                            <th>
-                                State
-                            </th>
-
-                        </tr>
+                        <tr><th>_id</th><th>State</th></tr>
                     </thead>
                     <tbody>
                     {this.props.DecksList.map((deck, i)=>{
@@ -50,13 +37,18 @@ export default class DecksWithoutNames extends React.Component{
 
                     </tbody>
                 </table>
-
                 <ModalFirstPage showModal={this.state.showModal}
                                 handleHideModal={this.handleHideModal.bind(this)}
                 >
-                    <DecksNamesListSubmitContainer DecksData_id={this.state.DecksData_id} Formats_id={this.state.Formats_id}/>
-                    <DeckListPercentage DecksData_id={this.state.DecksData_id} />
-                    <DeckContainer DecksData_id={this.state.DecksData_id} />
+                    <DecksArchetypesListSubmit DecksData_id={this.state.DecksData_id}
+                                               Formats_id={this.props.Formats_id}
+                                               getDecks={this.props.getDecks}
+                    />
+                    <FoundDeckListArchetypeOption DecksData_id={this.state.DecksData_id}
+                                                  getDecks={this.props.getDecks}
+                    />
+
+                    <DeckAggregate DecksData_id={this.state.DecksData_id} />
                 </ModalFirstPage>
             </div>
         )

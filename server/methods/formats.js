@@ -10,8 +10,8 @@ createFormats = ()=>{
                 _id : "sta",
                 name : "Standard",
                 names : ["sta", "standard"],
-                banned :["Emrakul, the Promised End", "Reflector Mage", "Smuggler’s Copter"],
-                sets : [],
+                banned :["Emrakul, the Promised End", "Reflector Mage", "Smuggler’s Copter", "Felidar Guardian"],
+                sets : ["BFZ", "OGW", "SOI", "EMN", "KLD", "AER", "AKH"],
                 types : [
                     {
                         name : "main",
@@ -51,13 +51,15 @@ createFormats = ()=>{
                 _id : "leg",
                 name : "Legacy",
                 names : ["leg", "legacy"],
-                banned :["Adriana's Valor", "Advantageous Proclamation", "Amulet of Quoz", "Ancient Den", "Assemble the Rank and Vile", "Backup Plan", "Birthing Pod", "Blazing Shoal", "Bloodbraid Elf",
-                        "Brago's Favor", "Bronze Tablet", "Chrome Mox", "Cloudpost", "Dark Depths", "Darkpact", "Deathrite Shaman", "Demonic Attorney", "Dig Through Time", "Double Stroke", "Dread Return",
-                        "Echoing Boon", "Emissary's Ploy", "Eye of Ugin", "Gitaxian Probe", "Glimpse of Nature", "Golgari Grave-Troll", "Great Furnace", "Green Sun's Zenith", "Hired Heist", "Hold the Perimeter",
-                        "Hymn of the Wilds", "Hypergenesis", "Immediate Action", "Incendiary Dissent", "Iterative Analysis", "Jace, the Mind Sculptor", "Jeweled Bird", "Mental Misstep", "Muzzio's Preparations",
-                        "Natural Unity", "Ponder", "Power Play", "Preordain", "Punishing Fire", "Rebirth", "Rite of Flame", "Seat of the Synod", "Second Sunrise", "Secrets of Paradise", "Secret Summoning",
-                        "Seething Song", "Sensei's Divining Top", "Sentinel Dispatch", "Skullclamp", "Sovereign's Realm", "Splinter Twin", "Stoneforge Mystic", "Summer Bloom", "Summoner's Bond", "Tempest Efreet",
-                        "Timmerian Fiends", "Treasure Cruise", "Tree of Tales", "Umezawa's Jitte", "Unexpected Potential", "Vault of Whispers", "Weight Advantage", "Worldknits"],
+                banned :[["Adriana's Valor", "Advantageous Proclamation", "Amulet of Quoz", "Ancestral Recall", "Assemble the Rank and Vile", "Backup Plan", "Balance", "Bazaar of Baghdad", "Black Lotus",
+                            "Brago's Favor", "Bronze Tablet", "Channel", "Chaos Orb", "Darkpact", "Demonic Attorney", "Demonic Consultation", "Demonic Tutor", "Dig Through Time", "Double Stroke",
+                            "Dread Return", "Earthcraft", "Echoing Boon", "Emissary's Ploy", "Falling Star", "Fastbond", "Flash", "Frantic Search", "Goblin Recruiter", "Gush", "Hermit Druid", "Hired Heist",
+                            "Hold the Perimeter", "Hymn of the Wilds", "Immediate Action", "Imperial Seal", "Incendiary Dissent", "Iterative Analysis", "Jeweled Bird", "Library of Alexandria", "Mana Crypt",
+                            "Mana Drain", "Mana Vault", "Memory Jar", "Mental Misstep", "Mind Twist", "Mind's Desire", "Mishra's Workshop", "Mox Emerald", "Mox Jet", "Mox Pearl", "Mox Ruby", "Mox Sapphire",
+                            "Muzzio's Preparations", "Mystical Tutor", "Natural Unity", "Necropotence", "Oath of Druids", "Power Play", "Rebirth", "Second Sunrise", "Secret Summoning", "Secrets of Paradise",
+                            "Sensei's Divining Top", "Sentinel Dispatch", "Shahrazad", "Skullclamp", "Skullclamp", "Sol Ring", "Sovereign's Realm", "Strip Mine", "Summoner's Bond", "Survival of the Fittest",
+                            "Tempest Efreet", "Time Vault", "Time Walk", "Timetwister", "Timmerian Fiends", "Tinker", "Tolarian Academy", "Treasure Cruise", "Unexpected Potential", "Vampiric Tutor", "Weight Advantage",
+                            "Wheel of Fortune", "Windfall", "Worldknits", "Yawgmoth's Bargain", "Yawgmoth's Will"]],
                 types : [
                     {
                         name : "main",
@@ -94,13 +96,17 @@ createFormats = ()=>{
                         qty : {max : 15}
                     }
                 ],
-                active : 1
+                active : 0
             },
             {
                 _id : "edh",
                 name : "EDH",
                 names : ["EDH", "EDH Commander"],
-                banned :[],
+                banned :["Ancestral Recall", "Balance", "Biorhythm", "Black Lotus", "Braids, Cabal Minion", "Coalition Victory", "Channel", "Emrakul, the Aeons Torn", "Erayo, Soratami Ascendant",
+                    "Fastbond", "Gifts Ungiven", "Griselbrand", "Karakas", "Leovold, Emissary of Trest", "Library of Alexandria", "Limited Resources", "Mox Sapphire", "Mox Ruby", "Mox Pearl", "Mox Emerald", "Mox Jet",
+                    "Painter's Servant", "Panoptic Mirror", "Primeval Titan", "Prophet of Kruphix", "Recurring Nightmare", "Rofellos, Llanowar Emissary", "Sway of the Stars", "Sundering Titan", "Sylvan Primordial",
+                    "Time Vault", "Time Walk", "Tinker", "Tolarian Academy", "Trade Secrets", "Upheaval", "Worldfire", "Yawgmoth's Bargain"
+                ],
                 types : [
                     {
                         name : "main",
@@ -118,7 +124,7 @@ createFormats = ()=>{
                 _id : "pau",
                 name : "Pauper",
                 names : ["pau", "Pauper"],
-                banned :[],
+                banned :["Cloud of Faeries", "Cloudpost", "Cranial Plating", "Empty the Warrens", "Frantic Search", "Grapeshot", "Invigorate", "Peregrine Drake", "Temporal Fissure", "Treasure Cruise"],
                 types : [
                     {
                         name : "main",

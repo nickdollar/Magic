@@ -39,10 +39,13 @@
 //     autocomplete = new google.maps.places.Autocomplete(
 //         (document.getElementsByClassName('js-autocomplete')[0]),
 //         {types: ['geocode']});
-//     // When the user selects an address from the dropdown, populate the address
-//     // fields in the FormValidate.
-//     // autocomplete.addListener('place_changed', fillInAddress);
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the FormValidate.
+    // autocomplete.addListener('place_changed', fillInAddress);
 // }
+
+
+
 //
 // returnLocation = function() {
 //     // Get the place details from the autocomplete object.\

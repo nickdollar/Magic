@@ -3,7 +3,6 @@ import LGSNameField from './LGSNameField.jsx';
 
 export default LGSNameFieldContainer = createContainer(({ onComponenetMounted, objectName, title, errorMessage }) => {
     return {
-        currentUser: Meteor.user(),
         LGSByLocationDistance: LGSEvents.find().fetch(),
         onComponenetMounted : onComponenetMounted,
         title : title,

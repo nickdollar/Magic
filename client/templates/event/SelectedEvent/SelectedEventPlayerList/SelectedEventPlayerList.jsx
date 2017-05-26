@@ -31,9 +31,9 @@ export default class PlayerList extends React.Component {
 
     deckInfo(data, row){
             var deckName = "(Name Pending)";
-            if(row.DecksNames_id){
-                if(DecksNames.findOne({_id : row.DecksNames_id})){
-                    deckName = DecksNames.findOne({_id : row.DecksNames_id}).name;
+            if(row.DecksArchetypes_id){
+                if(DecksArchetypes.findOne({_id : row.DecksArchetypes_id})){
+                    deckName = DecksArchetypes.findOne({_id : row.DecksArchetypes_id}).name;
                 }
             }
             return  <div  className="tablePlayerInfo">
@@ -42,7 +42,7 @@ export default class PlayerList extends React.Component {
                                     <a href={FlowRouter.path("selectedEvent", {format : FlowRouter.getParam("format"), Events_id : FlowRouter.getParam("Events_id"), DecksData_id : row._id})}> {this.positionVictory(row)} {deckName}</a>
                                </div>
                                <div className="manaValues">
-                                    {getHTMLColorsFromDecksNamesReact(row.DecksNames_id)}
+                                    {getHTMLColorsFromSubtypesReact({DecksArchetypes_id : row.DecksArchetypes_id})}
                                </div>
                            </div>
                         <div>{row.player ? row.player : "Missing Name"}</div>

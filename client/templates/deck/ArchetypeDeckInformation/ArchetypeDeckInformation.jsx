@@ -1,53 +1,158 @@
 import React from 'react' ;
 import ArchetypeDeckInformationHeader from "./ArchetypeDeckInformationHeader/ArchetypeDeckInformationHeader.jsx"
-import DecksNamesList from "./DecksNamesList/DecksNamesList.jsx"
-import DeckTableExample from "./DeckTableExample/DeckTableExample.jsx"
-import ArchetypesShells from "./ArchetypesShells/ArchetypesShells"
+import DeckTableExample from "./DeckTableExample/DeckTableExample.jsx";
+import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx";
 
-export default class ArchetypeDeckInformationExit extends React.Component {
+import DecksArchetypesCards from "./DecksArchetypesCards/DecksArchetypesCards.jsx"
+import DecksDataDecksArchetypesList from "./DecksDataDecksArchetypesList/DecksDataDecksArchetypesList.jsx";
+
+
+export default class ArchetypeDeckInformation extends React.Component {
     constructor(props){
         super();
-        var DeckArchetypeQuery = DecksArchetypes.findOne({Formats_id : props.Formats_id, link : props.DeckArchetypeLink});
-        var DecksNamesQuery = DecksNames.find({DecksArchetypes_id : DeckArchetypeQuery._id}).fetch();
-        this.state = {beta : false, DeckArchetype : DeckArchetypeQuery, DecksNames : DecksNamesQuery, DeckName : DecksNames.findOne({link : props.DeckNameLink})};
+        this.state = {allCards : [], allDecks : [], DeckArchetype : {}, typesSeparated : {max : 0, typesSeparated : {}}, intersectedDecksData_id : [], DecksData_id : ""};
     }
 
-    changeToBeta(){
-        if(this.state.beta== false){
-            this.setState({beta : true})
-        }else{
-            this.setState({beta : false})
-        }
+    getCardsList(){
+        var DeckArchetype = DecksArchetypes.findOne({Formats_id : this.props.Formats_id, link : this.props.DeckArchetypeLink});
+
+
+        Meteor.call("DecksArchetypesGetCardsListMethod", {DecksArchetypes_id : DeckArchetype._id}, (err, response)=>{
+            var allCards = response.allCards.sort((a, b)=>{
+                return b._ids.length - a._ids.length;
+            }).map((card, index)=> Object.assign(card, {checked : false, index : index}))
+            var DecksData_id = "";
+            if(response.allDecks.length){
+                DecksData_id = response.allDecks[0]._id;
+            }
+            this.state.intersectedDecksData_id = response.allDecks.map(decks=>decks._id);
+            var typesSeparated = this.createList({allCards : allCards});
+
+            this.setState({allCards : allCards, allDecks : response.allDecks, deckArchetype : DeckArchetype, typesSeparated : typesSeparated, DecksData_id : DecksData_id});
+        })
+    }
+
+    componentDidMount(){
+        this.getCardsList();
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.props.DeckNameLink != nextProps.DeckNameLink){
-            this.setState({DeckName : DecksNames.findOne({link : nextProps.DeckNameLink})})
+
+    }
+
+    removeDecks(){
+        var selectedCardsIntersectionsArray = this.state.allDecks.map(allDecks=>allDecks._id).concat();
+        this.state.allCards.forEach((card)=>{
+            if(card.checked){
+                selectedCardsIntersectionsArray = _.intersection(selectedCardsIntersectionsArray, card._ids);
+            }
+        });
+
+        this.state.intersectedDecksData_id = selectedCardsIntersectionsArray;
+    }
+
+    checkCard(index){
+        var allCards = this.state.allCards.concat();
+        allCards[index].checked = !allCards[index].checked;
+        this.removeDecks();
+        var typesSeparated = this.createList({allCards : allCards});
+        this.setState({typesSeparated : typesSeparated})
+    }
+
+
+    findCardType(card){
+        if(!card.types){return "null"}
+        else if (card.types.indexOf("land") != -1)          { return "land"}
+        else if (card.types.indexOf("creature") != -1)      { return "creature"}
+        else if (card.types.indexOf("artifact") != -1)      { return "artifact"}
+        else if (card.types.indexOf("enchantment") != -1)   { return "enchantment"}
+        else if (card.types.indexOf("instant") != -1)       { return "instant"}
+        else if (card.types.indexOf("planeswalker") != -1)  { return "planeswalker"}
+        else if (card.types.indexOf("sorcery") != -1)       { return "sorcery"}
+        else {
+            return "null"
         }
     }
 
+    createList({allCards}){
+        var typesSeparated = {
+            null : {array : [], text : "Wrong Name"},
+            creature : {array : [], text : "Creature"},
+            sorcery : {array : [], text : "Sorcery"},
+            instant : {array : [], text : "Instant"},
+            planeswalker : {array : [], text : "Planeswalker"},
+            artifact : {array : [], text : "Artifact"},
+            enchantment : {array : [], text : "Enchantment"},
+            land : {array : [], text : "Land"},
+        };
+
+        var max = 0;
+        for(var i=0; i < allCards.length; i ++){
+            var intersectionQty = _.intersection(allCards[i]._ids, this.state.intersectedDecksData_id).length;
+            if(intersectionQty == 0){
+                continue;
+            }
+
+            if(max < allCards[i]._ids.length){
+                max = allCards[i]._ids.length;
+            }
+
+            typesSeparated[this.findCardType(allCards[i].info)].array.push( {name : allCards[i]._id, qty : _.intersection(allCards[i]._ids, this.state.intersectedDecksData_id).length, checked : allCards[i].checked, index : allCards[i].index});
+        }
+
+        for(var key in typesSeparated){
+            if(!typesSeparated[key].array.length){
+                delete typesSeparated[key];
+            }
+        }
+        return {maxValue : max, typesSeparated : typesSeparated};
+    }
+
+    selectDecksData_id(DecksData_id){
+        this.setState({DecksData_id : DecksData_id});
+    }
+
     render(){
+        var decksLists = []
+        this.state.intersectedDecksData_id.forEach((deck)=>{
+            var index = this.state.allDecks.findIndex((allDeck)=>{
+                return allDeck._id == deck;
+            })
+
+            if(index != -1){
+                decksLists.push(this.state.allDecks[index]);
+            }
+        })
+
+
+        var deckArchetypes = DecksArchetypes.findOne({link : this.props.DeckArchetypeLink});
+
         return(
             <div className="ArchetypeDeckInformationComponent">
-                <input type="checkbox" onChange={this.changeToBeta.bind(this)} checked={this.state.beta}/>Beta
-                <ArchetypeDeckInformationHeader DeckArchetype={this.state.DeckArchetype}/>
-                {this.state.beta ?
-                    <ArchetypesShells Formats_id={this.props.Formats_id}
-                                      DeckArchetype={this.state.DeckArchetype}
+                <ArchetypeDeckInformationHeader DeckArchetype={deckArchetypes}/>
+                    <DecksArchetypesCards   Formats_id={this.props.Formats_id}
+                                            checkCard={this.checkCard.bind(this)}
+                                            typesSeparated={this.state.typesSeparated}
                     />
-                    :
-                    <div>
-                        <DecksNamesList DecksNames={this.state.DecksNames}
-                                        DeckArchetype={this.state.DeckArchetype}
-                                        DeckNameLink={this.props.DeckNameLink}
-                        />
-                        {this.state.DeckName ?
-                            <DeckTableExample DeckName={this.state.DeckName}/> :
-                            null
-                        }
+                <div>
+                    <div className="col-xs-3">
+                        <div className="row">
+                            <DecksDataDecksArchetypesList allDecks={decksLists}
+                                                          selectDecksData_id={this.selectDecksData_id.bind(this)}
+                                                          DecksData_id={this.state.DecksData_id}
+
+
+                            />
+                        </div>
                     </div>
-                }
+                    <div className="col-xs-9">
+                        <div className="row">
+                            {this.state.DecksData_id ? <DeckAggregate DecksData_id={this.state.DecksData_id}/> : null}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
 }
+

@@ -5,7 +5,6 @@ export default EventsTableSmallContainer = createContainer(({subscription, param
     var handle = Meteor.subscribe(subscription, ...paramsServer);
 
     return {
-        currentUser: Meteor.user(),
         listLoading: !handle.ready(),
         Events : Events.find(queryClient).fetch()
     };

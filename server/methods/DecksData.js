@@ -58,9 +58,9 @@ Meteor.methods({
     updateMainSide: function (mainSide, DecksData_id) {
 
         var main = mainSide.main.map((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
 
-            var cardResult = {name : card.name, qty : card.qty}
+            var cardResult = {name : card._id, qty : card.qty}
             if(!cardQuery){
                 Object.assign(cardResult, {wrongName : true})
             }
@@ -68,9 +68,9 @@ Meteor.methods({
         })
 
         var sideboard = mainSide.sideboard.map((card)=>{
-            var cardQuery = CardsData.findOne({name : card.name});
+            var cardQuery = Cards.findOne({_id : card.name});
 
-            var cardResult = {name : card.name, qty : card.qty}
+            var cardResult = {name : card._id, qty : card.qty}
             if(!cardQuery){
                 Object.assign(cardResult, {wrongName : true})
             }
@@ -159,11 +159,11 @@ Meteor.methods({
             }
         ])
 
-        var allCardsNames = CardsData.find({}, {fields : {name : 1}}).fetch();
+        var allCardsNames = Cards.find({}, {fields : {name : 1}}).fetch();
 
         var options = {
-            keys : [{name : "name"}],
-            id : "name",
+            keys : [{_id : "_id"}],
+            id : "_id",
             threshold : 0.4
 
         }
@@ -171,7 +171,7 @@ Meteor.methods({
         var fuse = new Fuse(allCardsNames, options);
 
         cardsWithWrongName.forEach((card, index)=>{
-            var rightName = fuse.search(card._id)[0];
+            var rightName = fuse.search(escapeRegExp(card._id))[0];
               DecksData.update  (  {"main.name" : card._id},
                                    {
                                     $unset : { "main.$.wrongName" : ""},
@@ -195,29 +195,18 @@ Meteor.methods({
 
     logFunctionsEnd("recheckDeckWithWrongCardName");
     },
-    methodAddNameToDeck : function(data){
-        removeNameFromDeck(data._id);
-        addNameToDeck(data._id, data.DecksNames_id);
-        addToDecksUniqueWithName(data._id);
-        CreateTheCardList(data.DecksNames_id);
-        DecksData.update({_id : data._id},
+    addDecksArchetypesToDecksDataMethod({DecksArchetypes_id, DecksData_id}){
+        console.log(DecksArchetypes_id, DecksData_id);
+        addToDecksUniqueWithName({DecksData_id : DecksData_id, DecksArchetypes_id : DecksArchetypes_id});
+        DecksData.update({_id : DecksData_id},
             {
-                $set : {state : "manual"}
+                $set : {state : "manual", DecksArchetypes_id : DecksArchetypes_id}
             },
             {multi : true}
         )
+        createDecksArchetypesManualCards({DecksArchetypes_id});
     },
-    getDecksListFromDeckName(DecksNames_id){
-        return DecksData.find({DecksNames_id : DecksNames_id}, {sort : {date : -1}, fields : {
-            format : 0,
-            totalMain : 0,
-            main : 0,
-            totalSideboard : 0,
-            sideboard : 0,
-            colors : 0,
-            state : 0
-        }}).fetch()
-    },
+
     getDecksListEvents_id(Events_id){
         var EventQuery = Events.findOne({_id : Events_id});
         var DecksDataQuery = DecksData.find({Events_id : Events_id}, {fields : {
@@ -228,10 +217,11 @@ Meteor.methods({
             sideboard : 0,
             colors : 0,
             state : 0
-        }}).fetch()
+        }}).fetch();
+
         return {Event : EventQuery, DecksData : DecksDataQuery};
     },
-    getDecksDataBy_id(DecksData_id){
+    getDecksDataBy_idMethod({DecksData_id}){
         return DecksData.findOne({_id : DecksData_id});
     },
     bannedDeck(Formats_id){
@@ -318,9 +308,9 @@ Meteor.methods({
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
                     {$lookup: {
-                        "from" : "CardsCollectionSimplified",
+                        "from" : "CardsSimple",
                         "localField" : "_id",
-                        "foreignField" : "name",
+                        "foreignField" : "_id",
                         "as" : "cardData"
                     }},
                     {$unwind: {path : "$cardData"}},
@@ -351,9 +341,9 @@ Meteor.methods({
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
                     {$lookup: {
-                        "from" : "CardsCollectionSimplified",
+                        "from" : "CardsSimple",
                         "localField" : "_id",
-                        "foreignField" : "name",
+                        "foreignField" : "_id",
                         "as" : "cardData"
                     }},
                     {$unwind: {path : "$cardData"}},
@@ -412,9 +402,10 @@ Meteor.methods({
                             loss : {$first : "$loss"},
                             draw : {$first : "$draw"},
                             main : {$first : "$main"},
+                            avgPrice : {$first : "$avgPrice"},
                             sideboard : {$first : "$sideboard"},
                             DecksNames_id : {$first : "$DecksNames_id"},
-                            cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}}
+                            cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}},
                         }
                     },
 
@@ -477,9 +468,9 @@ Meteor.methods({
                 },
                 {
                     $lookup: {
-                        "from" : "CardsCollectionSimplified",
+                        "from" : "CardsSimple",
                         "localField" : "cards",
-                        "foreignField" : "name",
+                        "foreignField" : "_id",
                         "as" : "cardsInfo"
                     }
                 },
@@ -502,7 +493,6 @@ Meteor.methods({
         return deck[0];
     },
     confirmEventAdminChanges({decks}){
-        console.log(decks);
         for(var i =0; i < decks.length; i++){
             DecksData.update({_id : decks[i]._id},
                 {
@@ -510,5 +500,181 @@ Meteor.methods({
                 })
         }
         return false;
+    },
+    getBestMatchMethod({DecksData_id}){
+
+        var deckData = DecksData.findOne({_id: DecksData_id});
+
+        var decksArchetypes = [];
+        var allDecksArchetypes = DecksArchetypes.aggregate(
+            [
+                {
+                    $match: {Formats_id: deckData.Formats_id}
+                },
+                {
+                    $lookup: {
+                        "from": "DecksData",
+                        "localField": "_id",
+                        "foreignField": "DecksArchetypes_id",
+                        "as": "DecksData"
+                    }
+                },
+                {
+                    $unwind: "$DecksData"
+                },
+                {
+                    $match: {
+                        "DecksData.state": "manual"
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        DecksData: {$push: "$DecksData"},
+                        qty: {$sum: 1}
+                    }
+                },
+                {
+                    $unwind: "$DecksData"
+                },
+
+                // Stage 7
+                {
+                    $project: {
+                        main: "$DecksData.main"
+                    }
+                },
+
+                // Stage 8
+                {
+                    $unwind: "$main"
+                },
+
+                // Stage 9
+                {
+                    $lookup: {
+                        "from": "CardsSimple",
+                        "localField": "main.name",
+                        "foreignField": "_id",
+                        "as": "info"
+                    }
+                },
+
+                // Stage 10
+                {
+                    $match: {
+                        "info.types": {$ne: "land"}
+                    }
+                },
+
+                // Stage 11
+                {
+                    $group: {
+                        _id: {_id: "$_id", "name": "$main.name"},
+                        qty: {$sum: 1}
+                    }
+                },
+                {
+                    $match: {
+                        qty: {$gte: 4},
+                    }
+                },
+                // Stage 12
+                {
+                    $sort: {
+                        qty: -1
+                    }
+                },
+
+                // Stage 13
+                {
+                    $group: {
+                        _id: "$_id._id",
+                        cards: {$push: {name: "$_id.name", qty: "$qty"}}
+                    }
+                },
+
+            ]
+        );
+
+
+        var foundArchetypes = [];
+        allDecksArchetypes.forEach((aggregate) => {
+            var cards = [];
+            var cardsTest = [];
+
+            var top = aggregate.cards[0].qty;
+            for (var i = 0; i < aggregate.cards.length; i++) {
+                if (cards.length > 5) {
+                    if (aggregate.cards[i].qty != aggregate.cards[i - 1].qty) {
+                        break;
+                    }
+                }
+                cards.push(aggregate.cards[i].name);
+                cardsTest.push(aggregate.cards[i]);
+
+            }
+            var foundDecks = DecksData.findOne({_id: DecksData_id, "main.name": {$all: cards}});
+            if (foundDecks) {
+                foundArchetypes.push(aggregate._id);
+            }
+
+
+        })
+
+        if (foundArchetypes.length == 2) {
+            var cardsWithoutLands = DecksData.aggregate([
+                    {$match: {_id: deckData._id}},
+                    {$project: {main: 1}},
+                    {$unwind: {path: "$main"}},
+                    {
+                        $lookup: {
+                            "from": "CardsSimple",
+                            "localField": "main.name",
+                            "foreignField": "_id",
+                            "as": "info"
+                        }
+                    },
+                    {
+                        $unwind: "$info"
+                    },
+                    {
+                        $match: {
+                            "info.types": {$ne: "land"}
+                        }
+                    },
+                    {
+                        $group: {
+                            _id : "$main.name",
+                        }
+                    },
+                ]
+            );
+
+            var results = [];
+
+            for (var i = 0; i < foundArchetypes.length; i++) {
+                var foundArchetypeTest = DecksArchetypes.findOne({_id: foundArchetypes[i]});
+                var foundCards = {found : [], notFound : []};
+                cardsWithoutLands.forEach((deckDataCard) => {
+                    var threashold = foundArchetypeTest.manual.cards[0].qty/2;
+                    var index = foundArchetypeTest.manual.cards.findIndex((archetypesCard) =>{
+                        if(archetypesCard.qty < threashold){
+                            return false;
+                        }
+                        return archetypesCard.name == deckDataCard._id;
+                    })
+                    index != -1 ? foundCards.found.push(deckDataCard._id) : foundCards.notFound.push(deckDataCard._id);
+                })
+
+                results.push({_id : foundArchetypes[i], cards : foundCards});
+            }
+            results = results.sort((a, b)=>{
+                return b.cards.found.length - a.cards.found.length;
+            })
+            return results.map(result => result._id);
+        }
+
+        return foundArchetypes;
     }
 });

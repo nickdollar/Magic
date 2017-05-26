@@ -7,7 +7,7 @@ import React from "react";
     {/*title = {""}*/}
     {/*required = {""}*/}
     {/*objectName = {""}  */}
-{/*>*/}
+{/*/>*/}
 
 
 export default class textFormInput extends React.Component{

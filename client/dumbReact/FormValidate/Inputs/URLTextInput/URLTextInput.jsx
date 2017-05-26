@@ -35,14 +35,14 @@ class LGSNameField extends React.Component{
     }
 
     handleChange(e){
-        this.setState({outputValue : e.target.value})
-        this.isValid();
+        this.setState({outputValue : e.target.value}, (err, response)=>{
+            this.isValid();
+        })
+
     }
 
     clearInput(){
-        var object = [];
-        object[this.props.objectName] = this.state.outputValue;
-        return object
+        this.setState({outputValue : ""});
     }
 
     validateURL(value){

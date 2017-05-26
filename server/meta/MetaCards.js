@@ -1,12 +1,7 @@
 getTotalMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
-    console.log(Formats_id, options, LGS_ids);
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"Formats_id" : 1}},
-        {$match : {Formats_id : Formats_id}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksData"}},
         {$unwind : "$DecksData"},
         {$project : {
             _id : "$DecksData._id",
@@ -41,10 +36,7 @@ getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
     var DecksArchetypesMeta = DecksArchetypes.aggregate([
         {$project : {"Formats_id" : 1}},
         {$match : {Formats_id : Formats_id}},
-        {$lookup : {"from" : "DecksNames", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksNames"}},
-        {$unwind : "$DecksNames"},
-        {$project : {DecksNames_id : "$DecksNames._id"}},
-        {$lookup : {"from" : "DecksData", "localField" : "DecksNames_id", "foreignField" : "DecksNames_id", "as" : "DecksData"}},
+        {$lookup : {"from" : "DecksData", "localField" : "_id", "foreignField" : "DecksArchetypes_id", "as" : "DecksData"}},
         {$unwind : "$DecksData"},
         {$project : {
                 _id : "$DecksData._id",
@@ -81,6 +73,5 @@ getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
         {$group : {	_id : "$_id.name", total: {$sum : "$qty"}, count: {$sum : 1}}},
         {$sort : {count : -1}}
     ]);
-    console.log(DecksArchetypesMeta);
     return DecksArchetypesMeta;
 };
