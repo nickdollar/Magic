@@ -2,7 +2,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import Select2 from './Select2.jsx';
 
 export default Select2Container = createContainer(({subscription, collection, serverQuery, clientQuery, objectName, title, fieldUnique, fieldText, initialValue}) => {
-
+    console.log("ReactTableContainer");
     var handle = Meteor.subscribe(subscription, ...serverQuery);
 
     return {

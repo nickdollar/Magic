@@ -1,215 +1,147 @@
 import React from 'react' ;
 import DeckEditStandalone from '/client/dumbReact/DeckEditStandalone/DeckEditStandalone.jsx' ;
 import Moment from "moment";
+import AddEvent from "./AddEvent/AddEvent.jsx";
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import UserCreatedEventInfo from "./UserCreatedEventInfo/UserCreatedEventInfo.jsx";
+
 
 export default class AdminEventInfo extends React.Component {
     constructor(props){
         super();
         this.state = {
-            showDecks : [],
             userAdmin : false,
-            decks : props.decks ? props.decks : [],
             changes : false,
+            Events : [],
+            selectedRow_id : {}
         }
     }
-
-    toggleShowDeck(DecksData_id){
-        var index = this.state.showDecks.findIndex((showDeckObj)=>{
-            return showDeckObj == DecksData_id;
-        });
-
-        var tempShowDecks = this.state.showDecks.concat();
-
-        if(index > -1){
-            tempShowDecks.splice(index, 1)
-            this.setState({showDecks : tempShowDecks});
-        }else{
-            tempShowDecks.push(DecksData_id);
-            this.setState({showDecks : tempShowDecks});
-        }
-    }
-
-    getAllDeckFromEvent(){
-
-    }
-
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps);
-        var decks = this.state.decks.concat([]);
-        for(var i = 0; i < nextProps.decks; i++){
-            var index = decks.findIndex(deck=>{
-                return deck._id == nextProps.decks[i];
-            })
-            if(index == -1){
-                decks.push(nextProps.decks);
-            }
-        }
-
-        console.log("DECKS");
-        console.log(nextProps);
-        console.log(decks);
-        this.setState({decks : decks});
+    getUsersCreatedEvent(){
+        Meteor.call("getUsersCreatedEventsMethod", (err, response)=>{
+            this.setState({Events : response});
+        })
     }
 
     componentDidMount(){
-        if(Roles.userIsInRole(Meteor.user(), "admin")){
-            this.setState({userAdmin : true});
-        }
+        this.getUsersCreatedEvent();
     }
 
-    adminConfirm(){
-        Meteor.call("confirmLGSPrePublish", FlowRouter.getParam("Event_id"), (err, data)=>{
+    expandComponent(row){
+        return <UserCreatedEventInfo Events_id={row._id}/>;
+    }
 
+    isExpandableRow (row){
+        return this.state.selectedRow_id[row._id];
+    }
+
+    componentWillUnmount(){
+
+    }
+
+    publishEvent({e, row}){
+        e.stopPropagation();
+        var events = this.state.Events.concat();
+        var index = events.findIndex((event)=>{return event._id == row._id;})
+        var nextState = "";
+
+        if(row.state == "lgsCreated"){
+            nextState = "pending";
+        }else{
+            nextState = "lgsCreated"
+        }
+        Meteor.call("publishUsersEvent", {Events_id : events[index]._id, nextState : nextState}, (err, response)=>{
+            events[index].state = nextState;
+            this.setState({Events : events});
         });
     }
 
-    publish(){
-        Meteor.call("publishLGSEvent", FlowRouter.getParam("Event_id"), ()=>{
+    formatPublishEvent(cell, row){
 
-        });
-    }
-
-    eventsButtonStatus(state){
-
-        var results = {
-            published : "Unpublish and Unlock",
-            locked : "Unpublish and Unlock",
-            created : "Lock And Request",
+        if(row.state == "names"){
+            return "locked";
         }
-
-        return results[state];
+        return <button className="btn btn-xs" onClick={(e)=>{e.stopPropagation(); this.publishEvent({e : e, row: row})}}>{row.state != "lgsCreated" ? "unpublish" : "publish"}</button>
     }
 
-    stateLegend(state){
-        var results = {
-            created : "Created - Decks can be Added",
-            published : "Published - Admin confirmed. Event is public now.",
-            locked : "Locked - Decks Cannot be added. Decks Data Can be Edited",
+    deleteEvent({e, row}){
+        var events = this.state.Events.concat();
+        var index = events.findIndex((event)=>{return event._id == row._id;})
+        if(row.remove){
+            Meteor.call("removeUsersEventsMethod", {Events_id : events[index]._id}, (err, response)=>{
+                // events.splice(index, 1)
+                events[index].state = "removed";
+                this.setState({Events : events});
+            });
+            return;
         }
-        return results[state];
+        events[index].remove = true;
+        this.setState({Events : events});
     }
 
-    position(){
-        return <input type="number"/>
-    }
-
-    nameChange(value, index){
-        var decks = this.state.decks.concat();
-        decks[index].player = value;
-
-        this.setState({changes : true, decks : decks});
-    }
-
-    positionChange(value, index){
-
-        var decks = this.state.decks.concat();
-
-        var value = parseInt(value);
-        if(isNaN(value)){
-            value = 0;
+    remove(cell, row){
+        if(row.state=="names"){
+            return <button className={`btn btn-xs ${row.remove ? "btn-danger": "btn-warning"}`} disabled={row.state=="names" ? true : false} onClick={(e)=>{e.stopPropagation(); this.deleteEvent ({e:e, row : row})}}>{row.remove ? "confirm" : "remove"}</button>
         }
-        decks[index].position = value;
+        return null;
+     }
 
-        this.setState({changes : true, decks : decks});
-    }
-
-    victoryChange(value, index){
-        var decks = this.state.decks.concat();
-        var value = parseInt(value);
-        if(isNaN(value)){
-            value = 0;
+    expand(row){
+        var selectedRow_id = Object.assign({}, this.state.selectedRow_id);
+        if(selectedRow_id[row._id]){
+            selectedRow_id[row._id] = false;
+        }else{
+            selectedRow_id[row._id] = true;
         }
-        decks[index].victory = value;
-        this.setState({changes : true, decks : decks});
+        this.setState({selectedRow_id : selectedRow_id});
     }
 
-    lossChange(value, index){
-        var decks = this.state.decks.concat();
-        var value = parseInt(value);
-        if(isNaN(value)){
-            value = 0;
-        }
-        decks[index].loss = value;
-        this.setState({changes : true, decks : decks});
+    formatExpand(cell, row){
+        return <button className="btn btn-xs" style={{width : "100%"}} onClick={()=>this.expand(row)}>+</button>
     }
 
-    drawChange(value, index){
-        var decks = this.state.decks.concat();
-        var value = parseInt(value);
-        if(isNaN(value)){
-            value = 0;
-        }
-        decks[index].draw = value;
-        this.setState({changes : true, decks : decks});
+    formatLink(cell, row){
+        return <a href={FlowRouter.path("selectedEvent", {format : row.Formats_id, Events_id : cell})}>link</a>
     }
 
-    confirmChanges(){
-        var decks = this.state.decks.map((deck)=>{
-            return {_id : deck._id, player : deck.player, position : deck.position ? deck.position : 0, victory : deck.victory ? deck.victory : 0, loss : deck.loss ? deck.loss : 0, draw : deck.draw ? deck.draw : 0}
-        });
-
-        Meteor.call("confirmEventAdminChanges", {decks : decks}, (err, response)=>{
-            this.setState({changes : false});
-        });
+    formatDate(cell, row){
+        return Moment(cell).format("MM-DD");
     }
+
+
 
     render() {
-        if(!this.props.decks){
-            return <div>loading...</div>
+        const options = {
+            data : this.state.Events,
+            options : {
+                expandBy: 'column'
+            },
+            expandComponent : this.expandComponent.bind(this),
+            expandableRow : this.isExpandableRow.bind(this),
         }
-        var rows = this.state.decks.map((deck, index)=>{
-            var indexShow = this.state.showDecks.findIndex((showDeckObj)=>{
-                return showDeckObj == deck._id;
-            })
-
-
-            var eventDeck = <span onClick={()=>this.toggleShowDeck(deck._id)}> {indexShow == -1 ? "Show" : "Hide"}</span>;
-
-            var rowInfo = <tr>
-                <td>{eventDeck}</td>
-                <td><input type="text" onChange={(e)=>this.nameChange(e.target.value, index)} value={deck.player}/></td>
-                <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.positionChange(e.target.value, index)} value={deck.position == null ? 0 : deck.position}/></td>
-                <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.victoryChange(e.target.value, index)} value={deck.victory == null ? 0 : deck.victory}/></td>
-                <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.lossChange(e.target.value, index)} value={deck.loss == null ? 0 : deck.loss }/></td>
-                <td><input type="number" className="inputNumber" min="0" onChange={(e)=>this.drawChange(e.target.value, index)} value={deck.draw == null ? 0 : deck.draw }/></td>
-                <td><button className="btn">Remove</button></td>
-
-            </tr>
-            if(indexShow != -1){
-                return <tbody key={deck._id}>
-                {rowInfo}
-                <tr><td colSpan="7"><DeckEditStandalone DecksData_id={deck._id}/></td></tr>
-                </tbody>
-            }
-            return <tbody key={deck._id}>
-            {rowInfo}
-            </tbody>
-        })
-        console.log("STATE");
-
-        console.log(this.state);
 
         return (
             <div className="AdminEventPlayerListComponent">
                 <div>
-                    <div>Event Will be published after request made and Admin Confirmation</div>
+                    <div>States: lgsCreated->pending->published->names</div>
+                    <div>lgsCreated: New deck can be added.</div>
+                    <div>pending: No new decks can be added after this point, waiting admin approval.</div>
+                    <div>published: Accepted by admin.</div>
+                    <div>names: Decks have names and is part of the Crowdmtg.com.</div>
+                    <div>Removes: Will be deleted after 48 hours</div>
 
-                    {this.state.userAdmin ? <button onClick={this.adminConfirm}>Publish</button> : null}
-                    <div>Published At : {this.props.event.publishedDate ? Moment(this.props.event.publishedDate).format("MM/DD HH:MM") : "Not Published Yet"} - This Event Will Be Permanently locked after 2 days. Non locked Event Will be discarded.</div>
-                    <div>State: {this.stateLegend(this.props.event.state)}</div>
-                    <div><button className="btn btn-xs" onClick={this.publish.bind(this)}>{this.eventsButtonStatus(this.props.event.state)}</button></div>
                 </div>
-                <button className="btn" onClick={this.confirmChanges.bind(this)} disabled={!this.state.changes}>{this.state.changes ? "Confirm Changes" : "No changes"}</button>
-                <table ref="table" className="table table-sm">
-                    <thead>
-                    <tr>
-                        {["Deck", "Player", "Position", "Wins", "Losses", "Draws", "Remove"].map(head => <th key={head}>{head}</th>)}
-                    </tr>
-                    </thead>
-                    {rows.map((row)=>{
-                        return row;
-                    })}
-                </table>
+                <BootstrapTable {...options}>
+                    <TableHeaderColumn dataField="_id"                             dataFormat={this.formatExpand.bind(this)}>+</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.formatLink} isKey >_id</TableHeaderColumn>
+                    <TableHeaderColumn dataField="name"         expandable={false}>name</TableHeaderColumn>
+                    <TableHeaderColumn dataField="date"         expandable={false} dataFormat={this.formatDate}>Date</TableHeaderColumn>
+                    <TableHeaderColumn dataField="token"        expandable={false}>Token</TableHeaderColumn>
+                    <TableHeaderColumn dataField="Formats_id"   expandable={false}>Format</TableHeaderColumn>
+                    <TableHeaderColumn dataField="state"        expandable={false}>State</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.formatPublishEvent.bind(this)} >Publish</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.remove.bind(this)} >Remove</TableHeaderColumn>
+                </BootstrapTable>
+            <AddEvent getUsersCreatedEvent={this.getUsersCreatedEvent.bind(this)}/>
             </div>
         )
     }

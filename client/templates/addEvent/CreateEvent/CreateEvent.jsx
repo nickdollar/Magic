@@ -2,8 +2,7 @@ import React from 'react' ;
 import CreateEventForm from './CreateEventForm/CreateEventForm.jsx';
 import CreatedEventInfoContainer from './CreatedEventInfo/CreatedEventInfoContainer.jsx';
 
-
-class CreateEvent extends React.Component{
+export default class CreateEvent extends React.Component{
 
     constructor(props){
         super();
@@ -77,5 +76,3 @@ class CreateEvent extends React.Component{
         )
     }
 }
-
-export default CreateEvent;

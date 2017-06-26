@@ -51,6 +51,7 @@ export default class DecksDataDecksArchetypesList extends React.Component {
     }
 
     render(){
+
         const tableOptions = {
             options : {
                 sizePerPage : 8,
@@ -64,6 +65,7 @@ export default class DecksDataDecksArchetypesList extends React.Component {
         return(
             <div className="DecksNamesDecksDataListComponent">
                 <BootstrapTable {...tableOptions}>
+                    <TableHeaderColumn dataField="_id" hidden>Player</TableHeaderColumn>
                     <TableHeaderColumn isKey dataField="_id" dataSort sortFunc={this.sortFunc} dataFormat={this.deckInfo.bind(this)}>Player</TableHeaderColumn>
                 </BootstrapTable>
             </div>

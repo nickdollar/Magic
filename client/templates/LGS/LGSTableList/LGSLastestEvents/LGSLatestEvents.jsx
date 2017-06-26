@@ -22,7 +22,7 @@ class LGSLatestEvents extends React.Component{
             <div className="LGSLatestEvents">
                 <div className="titlePaginationWrapper">
                     <div className="eventTitle">
-                        <h3>LGS Published Events</h3>
+                        <h3>Local Game Store Published Events</h3>
                     </div>
                     <div className="eventPagination">
                         <Pagination
@@ -52,7 +52,7 @@ class LGSLatestEvents extends React.Component{
                                         <td ><a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(event.Formats_id), Events_id : event._id})}>Link</a></td>
                                         <td>{event.name}</td>
                                         <td>{lgs.name +" ("+ lgs.location.city +")"}</td>
-                                        <td>{event.format}</td>
+                                        <td>{Formats.findOne({_id : event.Formats_id}) ? Formats.findOne({_id : event.Formats_id}).name : event.Formats_id}</td>
                                         <td>{Moment(event.date).format("L")}</td>
 
                                     </tr>

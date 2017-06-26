@@ -6,6 +6,12 @@ export default class FixDecksWithoutNames extends React.Component{
         $(ReactDOM.findDOMNode(this)).modal('show');
         $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
     }
+
+
+    componentWillReceiveProps(){
+        console.log("Modal: componentWillReceiveProps");
+    }
+
     render(){
         return (
             <div className="modal fade" id="topModal">

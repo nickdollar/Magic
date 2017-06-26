@@ -8,10 +8,6 @@ export default class DecksWithoutNamesWrapper extends React.Component{
         this.state = {page : 0, limit : 10, selectedState : "scraped", DecksList : []};
     }
 
-    componentDidMount(){
-
-    }
-
     changePage(e){
         if(e.target.getAttribute("data-change") == "+"){
             var page = this.state.page;

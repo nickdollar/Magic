@@ -64,7 +64,7 @@ export default class Deck extends React.Component{
         var cardDataName = {"data-name" : card._id};
         return  <div className="cardLine" key={card._id} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
-                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" min={0} className="qtyInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}

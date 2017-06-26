@@ -14,6 +14,7 @@ export default class DecksArchetypesFixesFixes extends React.Component {
                 <button onClick={()=>Meteor.call("CreateCardListMethod")}>CreateCardListMethod</button>
                 <button onClick={()=>Meteor.call("AllArchetypesCards")}>AllArchetypesCards</button>
                 <button onClick={()=>Meteor.call("DecksArchetypesGetCardsListMethod")}>DecksArchetypesGetCardsListMethod</button>
+                <button onClick={()=>Meteor.call("createMainSideboardsMethod")}>createMainSideboardsMethod</button>
 
             </div>
         );

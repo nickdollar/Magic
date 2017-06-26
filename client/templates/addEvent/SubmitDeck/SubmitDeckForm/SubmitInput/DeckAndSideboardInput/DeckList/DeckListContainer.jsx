@@ -2,6 +2,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import DeckList from './DeckList.jsx';
 
 export default DecklistContainer = createContainer(({deck}) => {
+    console.log("DecklistContainer");
     var cards = deck.main.map((card)=>{
         return card.name
     })

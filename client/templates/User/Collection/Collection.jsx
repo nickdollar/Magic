@@ -2,11 +2,14 @@ import React from 'react' ;
 import AddCardToCollection from './AddCardToCollection/AddCardToCollection.jsx';
 import CardsTable from './CardsTable/CardsTables.jsx';
 import CollectionFilter from "./CollectionFilter/CollectionFilter.jsx";
+import ModalFirstPage from "/client/dumbReact/Modal/ModalFirstPage.jsx";
+import ImportOptions from "./ImportOptions/ImportOptions.jsx";
 
 export default class Collection extends React.Component {
     constructor() {
         super();
         this.state = {
+            showOptionsModal : false,
             qty: 0,
             itemsCountPerPage : 40,
             activePage : 1,
@@ -147,12 +150,43 @@ export default class Collection extends React.Component {
         this.setState({cards : cards});
     }
 
+    handlerHideImportCollectionModal(){
+        this.setState({showOptionsModal : false})
+    }
+
+    openModal(){
+        this.setState({showOptionsModal : true})
+    }
+
+    downloadFile(){
+        Meteor.call("exportCollectionMethod", {}, (err, response)=>{
+            var cardsCSV = `${response.keys.toString()}\r\n`;
+            cardsCSV += ConvertToCSV(response.cardsAggregate);
+            var a         = document.createElement('a');
+            a.href        = 'data:attachment/csv,' +  encodeURIComponent(cardsCSV);
+            a.target      = '_blank';
+            a.download    = 'myCollection.csv';
+            document.body.appendChild(a);
+            a.click();
+        })
+    }
+
     render(){
         return(
             <div className="CollectionComponent">
                 {/*<h3>Your Collection</h3>*/}
                     <div className="content-wrapper">
-                    {/*<button onClick={()=>Meteor.call("importCollectionMethod")}> import collection</button>*/}
+                    <h3>Export/Import</h3>
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" className="btn btn-default" onClick={this.downloadFile}>Export</button>
+                        <button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>
+                    </div>
+                    <h3>Add Card To Collection</h3>
+                    <ModalFirstPage handleHideModal={this.handlerHideImportCollectionModal.bind(this)}
+                                showModal={this.state.showOptionsModal}
+                    >
+                            <ImportOptions/>
+                    </ModalFirstPage>
                     <AddCardToCollection getCollectionCards={this.getCollectionCards.bind(this)}/>
                     <CollectionFilter filter={this.state.filter}
                                       updateColors={this.updateColors.bind(this)}

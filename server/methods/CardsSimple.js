@@ -5,6 +5,7 @@ Meteor.methods({
        logFunctionsEnd("UpdateCardsSimple");
    },
     getCardsBy_idMethod({CardsSimple_id}){
+       console.log(CardsSimple_id);
        var foundCard = CardsSimple.find({_id : new RegExp(`^${CardsSimple_id}$`, "i")}, {limit : 1});
        if(foundCard.count()){
            return foundCard.fetch()[0];

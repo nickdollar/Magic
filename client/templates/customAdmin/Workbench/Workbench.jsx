@@ -20,6 +20,7 @@ export default class Workbench extends React.Component {
                 {/*<button onClick={()=>Meteor.call("createMetaLastDaysAdditionsMethod")}>createMetaLastDaysAdditionsMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("createMetaLastAdditionMethod")}>createMetaLastAdditionMethod</button>*/}
                 <button onClick={()=>Meteor.call("fixArchetypes")}>fixArchetypes</button>
+                <button onClick={()=>Meteor.call("giveStarCityCards_idMethod")}>giveStarCityCards_idMethod</button>
 
             </div>
         );

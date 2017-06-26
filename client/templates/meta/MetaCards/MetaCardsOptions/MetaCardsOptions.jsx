@@ -48,8 +48,6 @@ export default class NewMetaTableOptions extends React.Component {
         var index = tempArray.findIndex((arrayItem)=>{
             return mainSide  == arrayItem.value
         });
-
-
     }
 
     typeSelectedHandle(index1, index2){

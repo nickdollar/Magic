@@ -1,6 +1,6 @@
 import React from 'react' ;
 import AdminEventSubmitPasswordContainer from "./AdminEventSubmitPassword/AdminEventSubmitPasswordContainer.jsx";
-import EventInfoContainer from "./AdminEventInfo/AdminEventInfoContainer.jsx";
+// import EventInfoContainer from "./AdminEventInfo/AdminEventInfoContainer.jsx";
 
 
 export default class AdminEvent extends React.Component {

@@ -167,7 +167,7 @@ export default class DeckEditStandalone extends React.Component{
         var cardDataName = {"data-name" : card.name};
         return  <div className="cardLine" key={card.name} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
-                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={()=>this.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs " onClick={()=>this.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" onChange={(event)=>this.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}
@@ -279,6 +279,10 @@ export default class DeckEditStandalone extends React.Component{
         return (
             <div className="DeckEditMethodComponent">
                 <span><button className="btn" disabled={this.submitDeckState()} onClick={this.submitDeck.bind(this)}>{this.deckState()}</button></span>
+                <div className="btn-group" role="group" aria-label="Basic example">
+                    <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
+                    {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
+                </div>
                 <h3>Main <span className={this.state.qty.main < 60? "wrongCardNumber": ""}>({this.state.qty.main})</span></h3>
                 {this.addRow("main")}
                 <div className="deckBlock">

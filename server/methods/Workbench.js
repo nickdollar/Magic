@@ -47,7 +47,6 @@ Meteor.methods({
     },
 
     fixArchetypes(){
-        console.log("BBBBBBBBBBBBBBBB");
         DecksArchetypes.find().forEach((deckArchetype)=>{
             if(deckArchetype.manual){
                 DecksArchetypes.update({_id : deckArchetype._id},{
@@ -57,8 +56,20 @@ Meteor.methods({
             }
 
         })
-        console.log("gggggggggggggggg");
-    }
+    },
+    giveStarCityCards_idMethod(){
+        logFunctionsStart("giveStarCityCards_id");
+            TCGPrices.find({}).forEach((card)=>{
+                var foundCard = CardsUnique.findOne({TCGName : card.cardName, TCGSet : card.setName});
+                if(foundCard){
+                    CardsUnique.update({_id : foundCard._id},
+                        {
+                            $set : {TCGId : card.product.id}
+                        })
+                }
+            })
+        logFunctionsEnd("giveStarCityCards_id");
+    },
 })
 
 getTypesRegex = ({card})=>{

@@ -182,7 +182,7 @@ export default class Deck extends React.Component{
 
         return  <div className="cardLine" key={card.name} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
-                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={this.props.removeCardDeck}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={this.props.removeCardDeck}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.props.updateQty.bind(this)} {...cardQty}/>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}
@@ -274,7 +274,7 @@ export default class Deck extends React.Component{
 
         return (
             <div className="deckEdit">
-                <button onClick={this.props.submitDeck.bind(this)}>Submit Changes </button>
+                <button onClick={this.props.submitDeck.bind(this)}>Submit Changes</button>
                 <span className="error">{this.props.submitMessage}</span>
 
                 <h3>Main <span className={this.totalCards("main") < 60? "wrongCardNumber": ""}>({this.totalCards("main")})</span></h3>

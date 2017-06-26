@@ -3,10 +3,7 @@ import Meta from './Meta.jsx';
 
 export default MetaContainer = createContainer(({}) => {
 
-    console.log("MetaContainer2");
-
     return {
-        Formats_id : getFormat_idFromLink(FlowRouter.getParam("format")),
-        // LGS : LGS.find({}).fetch()
+        Formats_id : FlowRouter.getParam("format").substring(0,3).toLowerCase(),
     };
 }, Meta);

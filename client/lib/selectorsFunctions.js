@@ -68,7 +68,6 @@ cardPopoverNames = function(jsClassName){
             var html = "";
             var element = $(this).get()[0];
             var layout = element.getAttribute("data-layout");
-            var name = JSON.parse(element.getAttribute("data-names"));
             var names = JSON.parse(element.getAttribute("data-names"));
             var linkBase = "https://storage.googleapis.com/magiccards/";
 
@@ -97,7 +96,7 @@ cardPopoverNames = function(jsClassName){
             }else if(layout.match(meldCardRegex)){
 
             }else{
-                var replacedName = names.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
+                var replacedName = names[0].replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "%22;").replace(/'/g, "%27");
                 var finalDirectory = linkBase+replacedName+".original.jpg";
                 html += '<span><img src="'+finalDirectory +'" style="height: 310px; width: 223px"/></span>';
             }

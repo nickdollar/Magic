@@ -50,9 +50,11 @@ export default class FormValidate extends React.Component{
             }
             Meteor.call(this.props.submitMethod, form, (error, {confirm, response})=>{
                 if(error){
-                    logError("Error Adding Store");
+                    logError("Error Submitting Form");
                     return;
                 }
+
+                console.log(confirm, response);
 
                 if(!confirm){
                     this.setState({
@@ -62,8 +64,8 @@ export default class FormValidate extends React.Component{
                     this.state.Fields.forEach((field)=>{
                         field.clearInput();
                     });
-                    if(this.props.triggerEvent){
-                        this.props.triggerEvent(response);
+                    if(this.props.callback){
+                        this.props.callback(response);
                     }
                 }
             });

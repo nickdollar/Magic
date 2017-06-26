@@ -37,7 +37,7 @@ export default class SevenDayCalendar extends React.Component {
         return(
 
             <div className="SevenDayCalendarComponent">
-                <h3>New Events</h3>
+                <h3>Future Events</h3>
                 <div className="mainCalendar">
                     <div id="frontMainCalendar"></div>
                 </div>

@@ -1,9 +1,10 @@
 import React from 'react' ;
 import SubmitDeckForm from "./SubmitDeckForm/SubmitDeckForm.jsx"
-import SubmitTokenFormContainer from "./SubmitTokenForm/SubmitTokenFormContainer.jsx"
+import SubmitTokenForm from "./SubmitTokenForm/SubmitTokenForm.jsx"
 
 
-class SubmitDeck extends React.Component {
+
+export default class SubmitDeck extends React.Component {
     constructor(){
         super();
         this.state = {
@@ -44,12 +45,10 @@ class SubmitDeck extends React.Component {
                                                              resetAll={this.resetAll.bind(this)}
                     />
                     :
-                    <SubmitTokenFormContainer tokenConfirmed={this.tokenConfirmed.bind(this)}/>}
+                    <SubmitTokenForm tokenConfirmed={this.tokenConfirmed.bind(this)}/>}
             </div>
 
 
         )
     }
 }
-
-export default SubmitDeck;

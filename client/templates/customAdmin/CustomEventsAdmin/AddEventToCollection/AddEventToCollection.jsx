@@ -23,8 +23,10 @@ export default class AddEventToCollection extends React.Component{
                         type="button" style={{backgroundColor : "red"}} className="btn btn-block">getPTEventsAndDecksMethod</button>
                 <button onClick={()=>this.callFunction("getGpEventsAndDecksMethod", {})}
                         type="button" style={{backgroundColor : "red"}} className="btn btn-block">getGpEventsAndDecks</button>
-                <button onClick={()=>this.callFunction("getGPPositionMethod", {Formats_id : this.props.Formats_id, days : 5})}
-                        type="button" style={{backgroundColor : "red"}} className="btn btn-block">getGPPosition</button>
+                <button onClick={()=>this.callFunction("getGpEventsAndDecks2Method", {})}
+                        type="button" style={{backgroundColor : "red"}} className="btn btn-block">getGpEventsAndDecks2</button>
+                {/*<button onClick={()=>this.callFunction("getGPPositionMethod", {Formats_id : this.props.Formats_id, days : 5})}*/}
+                        {/*type="button" style={{backgroundColor : "red"}} className="btn btn-block">getGPPosition</button>*/}
                 <button onClick={()=>this.callFunction("getSCGEventsAndDecksMethod", {Formats_id : this.props.Formats_id})}
                         type="button" style={{backgroundColor : "green"}} className="btn btn-block">getSCGEventsAndDecksMethod</button>
                 <button onClick={()=>this.callFunction("getSCGDecksCardsMethod")} type="button"

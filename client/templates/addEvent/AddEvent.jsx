@@ -1,7 +1,8 @@
 import React from 'react' ;
 import SubmitDeck from './SubmitDeck/SubmitDeck.jsx';
 import CreateEvent from './CreateEvent/CreateEvent.jsx';
-
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.less';
 
 export default class AddEvent extends React.Component{
 
@@ -20,7 +21,6 @@ export default class AddEvent extends React.Component{
         return (
             <div >
                 <SubmitDeck />
-                <CreateEvent LGS={this.props.LGS}/>
             </div>
         )
     }

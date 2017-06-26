@@ -20,12 +20,17 @@ export default class CustomAdmin extends React.Component{
                 <StateList  Method="getEventsStateQty"
                             subscription="EventsQueryProjection"
                             notState={[]}
-                            states={["startProduction", "notFound", "notFoundOld", "exists", "mainHTMLFail", "created", "locked", "published", "HTMLFail", "HTMLMain", "HTMLPartial", "HTML", "decks", "names"]}
+                            states={[
+                                "startProduction", "notFound", "notFoundOld", "exists", "mainHTMLFail",
+                                "created", "locked", "published", "HTMLFail", "HTMLMain", "HTMLPartial",
+                                "HTML", "decks", "names"
+                            ]}
                             Formats_id={this.props.Formats_id}
                 />
                 <FixStandardToOldStandard/>
                 <AddEventToCollection Formats_id={this.props.Formats_id}/>
                 <LGSEventsChecksContainer Formats_id={this.props.Formats_id}/>
+                <button onClick={()=>{Meteor.call("fixDecksStateNamesMethods")}}>fixDecksStateNamesMethods</button>
             </div>
         )
     }

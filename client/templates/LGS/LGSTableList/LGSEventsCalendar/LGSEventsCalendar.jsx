@@ -47,6 +47,7 @@ export default class LGSEventsCalendar extends React.Component {
                 center: 'prev title next',
                 right: ''
             },
+            defaultView : "agendaWeek",
             customButtons: {
                 addEvent: {
                     text: 'Request To Add Event',
@@ -55,6 +56,7 @@ export default class LGSEventsCalendar extends React.Component {
                     }
                 }
             },
+            minTime : "11:00",
             header: {
                 left: 'prev,next today addEvent',
                 center: 'title',
@@ -149,7 +151,7 @@ export default class LGSEventsCalendar extends React.Component {
                 <ModalFirstPage showModal={this.state.showModalAddEvent}
                                 handleHideModal={this.handleHideModalAddEvent.bind(this)}
                                 title="Request To Add Event" >
-                    <FormValidate submitMethod="addLGSEvents">
+                    <FormValidate submitMethod="addLGSEventsMethod">
                         <TextFormInput
                             objectName={"title"}
                             title="Event Title"

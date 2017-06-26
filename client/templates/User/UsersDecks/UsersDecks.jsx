@@ -2,8 +2,11 @@ import React from 'react' ;
 import DecksList from "./DecksList/DecksList.jsx";
 import AddDeck from './AddDeck/AddDeck';
 import DeckEditMethod from './DeckEditMethod/DeckEditMethod';
-
-
+import DeckRecords from "./DeckRecords/DeckRecords.jsx";
+import Select from "react-select";
+import 'react-select/dist/react-select.css';
+import ModalFirstPage from "/client/dumbReact/Modal/ModalFirstPage.jsx";
+import ImportUserDeck from "./ImportUserDeck/ImportUserDeck.jsx";
 
 export default class UsersDecks extends React.Component {
     constructor() {
@@ -16,12 +19,13 @@ export default class UsersDecks extends React.Component {
             formats: formats,
             DecksLists : [],
             UsersDeck_id : "",
-            UsersDeckData : {main : [], sideboard : []},
-            main : {_id : null, qty : 4},
-            sideboard : {_id : null, qty : 4},
+            UsersDeck : {decks : [], main : [], sideboard : []},
+            main : {Cards_id : null, qty : 4},
+            sideboard : {Cards_id : null, qty : 4},
             clear : true,
             changes : false,
             removeState : "Remove",
+            showImportUserDeckModal : false
         }
     }
 
@@ -32,36 +36,21 @@ export default class UsersDecks extends React.Component {
     mainSideboardChangeValue(target, mainSideboard){
         this.state[mainSideboard].qty = parseInt(target.value);
     }
-
-    changeSelectedCard(target){
-        var mainSideboard = target.getAttribute("data-mainSideboard");
-        var mainSideboardObj = Object.assign({}, this.state[mainSideboard]);
-        mainSideboardObj._id = $(target).val();
-        mainSideboardObj.name = $(target).text();
-
-        if(mainSideboard == "main"){
-            this.setState({main : mainSideboardObj})
-        }else{
-            this.setState({main : mainSideboardObj})
-        }
-    }
-
     getSelectedDeck(){
         Meteor.call("getUsersDecksWithCardsInformationMethod", {UsersDecks_id : this.state.UsersDeck_id}, (err, response)=>{
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
-                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i]._id))
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
                 }
 
                 for(var i = 0 ; i < response.sideboard.length ; i++){
-                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i]._id))
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].Cards_id))
                 }
 
-
                 this.setState({
-                    UsersDeckData : response,
-                    main : {_id : null, qty : 4},
-                    sideboard : {_id : null, qty : 4},
+                    UsersDeck : response,
+                    main : {Cards_id : null, qty : 4},
+                    sideboard : {Cards_id : null, qty : 4},
                     clear : true,
                     changes : false,
                 })
@@ -74,10 +63,11 @@ export default class UsersDecks extends React.Component {
         Meteor.call("getUsersDecksFromUser", params, (err, response)=>{
             this.setState({DecksLists : response});
         })
+
     }
 
     setCardSelected({suggestion, mainSideboard}) {
-        this.state[mainSideboard]._id = suggestion;
+        this.state[mainSideboard].Cards_id = suggestion;
     }
 
     formatCheck(index){
@@ -95,51 +85,54 @@ export default class UsersDecks extends React.Component {
         this.getSelectedDeck();
     }
     changeACardQty(target, index, mainSideboard){
-        this.state.UsersDeckData[mainSideboard][index].qty = parseInt(target.value);
+        this.state.UsersDeck[mainSideboard][index].qty = parseInt(target.value);
         this.setState({changes : true});
     }
 
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
-        if(!selectedCard._id){return;};
-        var UsersDeckData = this.state.UsersDeckData;
+        if(!selectedCard.Cards_id){return;};
+        var UsersDeck = Object.assign({}, this.state.UsersDeck)
 
-        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj._id.match(new RegExp(`^${this.state[mainSideboard]._id}$`, "i")));
+        var index = UsersDeck[mainSideboard].findIndex(cardObj=> cardObj.Cards_id.match(new RegExp(`^${this.state[mainSideboard].Cards_id}$`, "i")));
         if(index != -1){return;}
 
-        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, response)=>{
+        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard.Cards_id}, (err, response)=>{
             response.qty = selectedCard.qty;
-
-            UsersDeckData[mainSideboard].push(response);
+            response.Cards_id = response._id;
+            UsersDeck[mainSideboard].push(response);
             if(mainSideboard == "main"){
-                this.setState({UsersDeckData : UsersDeckData, main : {_id : null, qty : 4}, clear : !this.state.clear, changes : true});
+                this.setState({UsersDeck : UsersDeck, main : {Cards_id : null, qty : selectedCard.qty}, clear : !this.state.clear, changes : true});
             }else{
-                this.setState({UsersDeckData : UsersDeckData, sideboard : {_id : null, qty : 4}, clear : !this.state.clear, changes : true});
+                this.setState({UsersDeck : UsersDeck, sideboard : {Cards_id : null, qty : selectedCard.qty}, clear : !this.state.clear, changes : true});
             }
         })
     }
 
     removeCardDeck(index, mainSideboard){
-        var UsersDeckData = Object.assign({}, this.state.UsersDeckData);
-        UsersDeckData[mainSideboard].splice(index, 1);
-        this.setState({UsersDeckData : UsersDeckData, changes : true});
+        var UsersDeck = Object.assign({}, this.state.UsersDeck);
+        UsersDeck[mainSideboard].splice(index, 1);
+        this.setState({UsersDeck : UsersDeck, changes : true});
     }
     getDeckInfo(){
         var main = [];
         var sideboard = [];
-        var UsersDecks_id = this.state.UsersDeckData._id;
-        var name = this.state.UsersDeckData.name;
-        for(var i = 0; i < this.state.UsersDeckData.main.length; i ++){
-            main.push({_id : this.state.UsersDeckData.main[i]._id, qty : this.state.UsersDeckData.main[i].qty})
+        var UsersDecks_id = this.state.UsersDeck._id;
+        var name = this.state.UsersDeck.name;
+        console.log(this.state.UsersDeck);
+        for(var i = 0; i < this.state.UsersDeck.main.length; i ++){
+            main.push({Cards_id : this.state.UsersDeck.main[i].Cards_id, qty : this.state.UsersDeck.main[i].qty})
         }
-        for(var i = 0; i < this.state.UsersDeckData.sideboard.length; i ++){
-            sideboard.push({_id : this.state.UsersDeckData.sideboard[i]._id, qty : this.state.UsersDeckData.sideboard[i].qty})
+
+        for(var i = 0; i < this.state.UsersDeck.sideboard.length; i ++){
+            sideboard.push({Cards_id : this.state.UsersDeck.sideboard[i].Cards_id, qty : this.state.UsersDeck.sideboard[i].qty})
         }
+
         return {main : main, sideboard : sideboard, UsersDecks_id : UsersDecks_id, name : name};
     }
 
     changeName(target){
-        this.state.UsersDeckData.name = target.value;
+        this.state.UsersDeck.name = target.value;
         this.setState({changes : true});
     }
 
@@ -182,9 +175,41 @@ export default class UsersDecks extends React.Component {
         }
     }
 
+    getDeckValue(val){
+        this.selectADeckHandle(val._id)
+    }
+
+    optionRenderer(val, val2){
+        return `${val.name} - ${Formats.findOne({_id : val.Formats_id}).name}`;
+    }
+
+    updateQuantity({name, value}){
+
+    }
+
+    makePublic(checked){
+        console.log(checked);
+
+        Meteor.call("makePublicMethod", {UsersDecks_id : this.state.UsersDeck_id, makePublic : checked}, (err, method)=>{});
+        var UsersDeck = Object.assign( {}, this.state.UsersDeck, {public : checked});
+        this.setState({UsersDeck : UsersDeck});
+    }
+
+    importDeck(){
+        console.log("AAAAAAAAAAA");
+    }
+
+    handlerHideDeckModal(){
+        this.setState({showImportUserDeckModal : false})
+    }
+
+    handlerShowImportUserDeckModal(){
+        this.setState({showImportUserDeckModal : true})
+    }
+
+
     render(){
         var DecksLists = this.filterDecksLists(this.state.DecksLists);
-
         return(
             <div className="UsersDecksComponent">
                 {/*<h3>Yours Decks</h3>*/}
@@ -199,50 +224,68 @@ export default class UsersDecks extends React.Component {
                             </label>
                         })}
                     </div>
-                        <div className="col-xs-3">
-                            <div className="row">
-                                <DecksList  DecksData_id={this.state.DecksData_id}
-                                            selectADeckHandle={this.selectADeckHandle.bind(this)}
-                                            DecksLists={DecksLists}
+                    <div>
+                        <Select
+                            options={DecksLists}
+                            onChange={this.getDeckValue.bind(this)}
+                            labelKey="name"
+                            optionRenderer={this.optionRenderer}
+                        />
+                    </div>
+                        {this.state.UsersDeck_id != "" ? <div className="deckArea">
+                                <div className="btnChangeAndRemoveWrapper">
+                                    <ModalFirstPage
+                                        showModal={this.state.showImportUserDeckModal}
+                                        handleHideModal={this.handlerHideDeckModal.bind(this)}
+                                    >
+                                        <ImportUserDeck UsersDecks_id={this.state.UsersDeck_id}/>
+                                    </ModalFirstPage>
+
+
+                                    <div className="btn-group" role="group" aria-label="Basic example">
+                                        <button disabled={!this.state.changes} className={`btn ${this.state.changes ? "btn-info" : "btn-default"}`}
+                                                onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}
+                                        </button>
+                                        <button onClick={this.handlerShowImportUserDeckModal.bind(this)} className="btn btn-default">{"Import"}</button>
+                                        <button onClick={this.removeDeck.bind(this)} className="btn btn-default">{this.state.removeState}</button>
+                                    </div>
+                                    {/*<div className="btnChange">*/}
+                                        {/*<button disabled={!this.state.changes} className={`btn ${this.state.changes ? "btn-info" : null}`}*/}
+                                                {/*onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}*/}
+                                        {/*</button>*/}
+                                    {/*</div>*/}
+
+                                    <div className="btnRemove">
+                                        <button onClick={this.removeDeck.bind(this)} className="btn">{this.state.removeState}</button>
+                                    </div>
+                                    <div style={{clear: "both"}}></div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="example-text-input" className="col-2 col-form-label">Name</label>
+                                    <div className="col-10">
+                                        <input className="form-control" type="text" onChange={(event)=>this.changeName(event.target)} value={this.state.UsersDeck.name} id="example-text-input"/>
+                                    </div>
+                                </div>
+                                <span className="error">{this.state.submitMessage}</span>
+                                <div className="checkbox">
+                                    <label><input type="checkbox" value={true} onClick={(e)=>{this.makePublic(e.target.checked)}} checked={this.state.UsersDeck.public ? true : false}/>{this.state.UsersDeck.public} Make Public</label>
+                                </div>
+                                <DeckEditMethod UsersDeck={this.state.UsersDeck}
+                                                removeCardDeck={this.removeCardDeck.bind(this)}
+                                                mainSideboardChangeValue={this.mainSideboardChangeValue.bind(this)}
+                                                changeACardQty={this.changeACardQty.bind(this)}
+                                                addCardToDeck={this.addCardToDeck.bind(this)}
+                                                setCardSelected={this.setCardSelected.bind(this)}
+                                                submitDeck={this.submitDeck.bind(this)}
+                                                clear={this.state.clear}
+                                />
+                                <DeckRecords UsersDeck={this.state.UsersDeck}
+                                             updateQuantity={this.updateQuantity}
+                                             getSelectedDeck={this.getSelectedDeck.bind(this)}
                                 />
                             </div>
-                        </div>
-                        <div className="col-xs-9">
-                            <div className="row">
-                                {this.state.UsersDeck_id != "" ? <div className="deckArea">
-                                        <div className="btnChangeAndRemoveWrapper">
-                                            <div className="btnChange">
-                                                <button disabled={!this.state.changes} className={`btn ${this.state.changes ? "btn-info" : null}`}
-                                                        onClick={this.submitDeck.bind(this)}>{this.state.changes ? "Submit Changes" : "No Changes"}
-                                                </button>
-                                            </div>
-                                            <div className="btnRemove">
-                                                <button onClick={this.removeDeck.bind(this)} className="btn">{this.state.removeState}</button>
-                                            </div>
-                                            <div style={{clear: "both"}}></div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="example-text-input" className="col-2 col-form-label">Name</label>
-                                            <div className="col-10">
-                                                <input className="form-control" type="text" onChange={(event)=>this.changeName(event.target)} value={this.state.UsersDeckData.name} id="example-text-input"/>
-                                            </div>
-                                        </div>
-                                        <span className="error">{this.state.submitMessage}</span>
-                                        <DeckEditMethod UsersDeckData={this.state.UsersDeckData}
-                                                        removeCardDeck={this.removeCardDeck.bind(this)}
-                                                        changeSelectedCard={this.changeSelectedCard.bind(this)}
-                                                        mainSideboardChangeValue={this.mainSideboardChangeValue.bind(this)}
-                                                        changeACardQty={this.changeACardQty.bind(this)}
-                                                        addCardToDeck={this.addCardToDeck.bind(this)}
-                                                        setCardSelected={this.setCardSelected.bind(this)}
-                                                        submitDeck={this.submitDeck.bind(this)}
-                                                        clear={this.state.clear}
-                                        />
-                                    </div>
-                                    : null
-                                }
-                            </div>
-                        </div>
+                            : null
+                        }
                     </div>
                 </div>
         );

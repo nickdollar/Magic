@@ -1,6 +1,9 @@
 import React from 'react' ;
 import Moment from "moment";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import Select from "react-select";
+import 'react-select/dist/react-select.css';
+
 
 export default class DecksList extends React.Component {
     constructor(props){
@@ -45,6 +48,8 @@ export default class DecksList extends React.Component {
 
     }
 
+
+
     render(){
         const tableOptions = {
             options : {
@@ -58,8 +63,15 @@ export default class DecksList extends React.Component {
 
         return(
             <div className="DecksNamesDecksDataListComponent">
+                <Select
+                    options={this.props.DecksLists}
+                    onChange={this.getDeckValue}
+                    labelKey="name"
+                    optionRenderer={this.optionRenderer}
+                />
                 <BootstrapTable {...tableOptions}>
                     <TableHeaderColumn isKey dataField="_id" dataFormat={this.deckInfo.bind(this)}>Player</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id" hidden>Player</TableHeaderColumn>
                 </BootstrapTable>
             </div>
         );

@@ -4,6 +4,9 @@ import DecksArchetypesListSubmit from "/client/dumbReact/DecksArchetypesListSubm
 import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx";
 import FoundDeckListArchetypeOption from "./FoundDeckListArchetypeOption/FoundDeckListArchetypeOption.jsx";
 
+
+
+
 export default class DecksWithoutArchetypes extends React.Component{
     constructor(props){
         super();
@@ -28,7 +31,7 @@ export default class DecksWithoutArchetypes extends React.Component{
                         <tr><th>_id</th><th>State</th></tr>
                     </thead>
                     <tbody>
-                    {this.props.DecksList.map((deck, i)=>{
+                    {this. props.DecksList.map((deck, i)=>{
                         return <tr key={deck._id}>
                             <td onClick={this.selectDeck.bind(this, i)}>{deck._id}</td>
                             <td>{deck.state}</td>

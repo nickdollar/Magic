@@ -35,6 +35,8 @@ getSCGEventsAndDecks = function(){
 
 getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
     var url = `http://sales.starcitygames.com/deckdatabase/deckshow.php?&event_ID=${event.id}&start_date=${startDate}&end_date=${endDate}&start_num=${start_num}&limit=100`;
+
+    console.log(url);
     Meteor.http.get(url, {},(err, response)=>{
         if (response.statusCode == 200) {
             var $resDecksPages = cheerio.load(response.content, {decodeEntities : false});

@@ -16,6 +16,9 @@ getFormat_idFromLink = (formatLink)=>{
 }
 
 updateCollectionNumbersFunction = function(){
+
+
+
     var objects = UsersCollection.find({_id : Meteor.userId()}, {limit : 1}).fetch();
 
     var cardsObjects = {};
@@ -107,3 +110,20 @@ replaceDashWithDotForRegex = function(string){
 }
 
 timeoutHandler = null;
+
+decimalFix = (num, size)=> {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
+roundTo = (n, digits)=> {
+    if (digits === undefined) {
+        digits = 0;
+    }
+
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    var test =(Math.round(n) / multiplicator);
+    return +(test.toFixed(2));
+}

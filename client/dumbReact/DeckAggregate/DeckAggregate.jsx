@@ -3,7 +3,7 @@ import React from "react";
 export default class Deck extends React.Component{
     constructor() {
         super();
-        this.state = {DecksData : {main : [], sideboard : []}};
+        this.state = {DecksData : {main : [], sideboard : []}, importedDeck : false};
     }
 
     componentDidUpdate() {
@@ -17,6 +17,7 @@ export default class Deck extends React.Component{
 
 
     componentWillReceiveProps(nextProps){
+        console.log("componentWillReceiveProps");
         if(nextProps.DecksData_id != this.props.DecksData_id){
             this.getDecksDataById(nextProps.DecksData_id);
         }
@@ -128,10 +129,10 @@ export default class Deck extends React.Component{
 
 
         return <div>
-                <div>
-                    <a target='_blank' href={linkAllCards}>Buy At TCGPLAYER.com ${totalValue}</a>
-                </div>
-                {Meteor.user() ? <div><a target='_blank' href={linkMissingCards}>Buy Missing Cards ${totalMissing} </a></div> : null}
+                {/*<div>*/}
+                    {/*<a target='_blank' href={linkAllCards}>Buy At TCGPLAYER.com ${totalValue}</a>*/}
+                {/*</div>*/}
+                {/*{Meteor.user() ? <div><a target='_blank' href={linkMissingCards}>Buy Missing Cards ${totalMissing} </a></div> : null}*/}
                 </div>
     }
 
@@ -144,13 +145,22 @@ export default class Deck extends React.Component{
 
     cardQty(card){
         if(Meteor.userId()){
+            if(card.name.match(/Plain|Forest|Swamp|Island|Mountain/)){
+                return <span>4/4</span>
+            }
             return <span className={card.qty > card.have ? "lessThan" : null}>{`${card.qty}/${card.have}`}</span>
         }
         return card.qty;
     }
 
-    render() {
+    importDeck(){
+        Meteor.call("importDeckMethod", {DecksData_id : this.props.DecksData_id},()=>{
+            this.setState({importedDeck : true});
+        });
+    }
 
+
+    render() {
         this.getCardQty(this.state.DecksData.main);
         var typesSeparated = this.separateCardsByType(this.state.DecksData.main);
         var resultMain = [];
@@ -211,7 +221,12 @@ export default class Deck extends React.Component{
         return (
 
             <div className="DeckAggregateContainer">
-                <div className="buyPlace">{this.createLink(this.state.DecksData)}</div>
+                {/*<div className="buyPlace">{this.createLink(this.state.DecksData)}</div>*/}
+                <div className="btn-group" role="group" aria-label="Basic example">
+                    <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
+                    {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
+                </div>
+                <div></div>
                 <div className="mainSide">Main</div>
                 <div className="deckBlock">
                     <div className="newDeckColumn">

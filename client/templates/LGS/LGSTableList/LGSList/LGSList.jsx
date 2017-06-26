@@ -60,7 +60,7 @@ export default class LGSList extends React.Component {
     render(){
         return(
             <div className="LGSListComponent">
-                <h3>LGS List</h3>
+                <h3>Local Game Store List</h3>
                 <table className="table table-sm">
                     <thead>
                     <tr>

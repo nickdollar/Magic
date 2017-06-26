@@ -14,11 +14,16 @@ import CustomTCGPricesAdmin from './CustomTCGPricesAdmin/CustomTCGPricesAdmin.js
 import CustomUsersCollectionAdmin from './CustomUsersCollectionAdmin/CustomUsersCollectionAdmin.jsx';
 import CustomCardsUniqueAdmin from './CustomCardsUniqueAdmin/CustomCardsUniqueAdmin.jsx';
 import CustomStartUpAdmin from './CustomStartUpAdmin/CustomStartUpAdmin.jsx';
+import CustomMetaLastDaysAdditions from './CustomMetaLastDaysAdditions/CustomMetaLastDaysAdditions.jsx';
+
 
 export default class CustomAdmin extends React.Component{
     constructor(props){
         super();
-        this.state = {Formats_id : "sta"};
+        var formats = Formats.find({}).map((format)=>{
+            return {_id : format._id, name : format.name};
+        })
+        this.state = {Formats_id : "sta", formats : formats};
     }
 
     routes(route){
@@ -52,6 +57,8 @@ export default class CustomAdmin extends React.Component{
             return <CustomCardsUniqueAdmin/>
         }else if (route=="StartUp"){
             return <CustomStartUpAdmin/>
+        }else if (route=="MetaLastDaysAdditions"){
+            return <CustomMetaLastDaysAdditions/>
         }
     }
 
@@ -73,7 +80,7 @@ export default class CustomAdmin extends React.Component{
 
     render(){
         var collections = [ "Cards", "Events", "DecksNames", "DecksArchetypes",
-                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes",
+                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "MetaLastDaysAdditions",
                             "CardsSimple", "MetaNewest", "Sets", "TCGPrices", "UsersCollection", "CardsUnique"];
         collections.sort()
         return (
@@ -88,7 +95,7 @@ export default class CustomAdmin extends React.Component{
                 </div>
                 <div className="col-xs-10">
                     <div className="row">
-                        {Formats.find({}).map(format=>{
+                        {this.state.formats.map(format=>{
                             return <label key={format._id} className="radio-inline"><input onChange={this.formatChange.bind(this, format._id)}
                                                                                     checked={this.defaultRadio(format._id)} type="radio"
                                                                                     value={format._id}/>{format.name}</label>

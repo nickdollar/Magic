@@ -8,6 +8,7 @@
         });
     </script>
     <div class="container">
+
         {{#if subscriptionsReady}}
             <div class="header">
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPBK94PkYjGs7ooqxLGy1gjkJq_tCfeJk&libraries=geometry,places" async defer></script>
@@ -23,8 +24,9 @@
                 </div>
 
             </div>
-            <div class="footer" style="background-color: white">
-                This site is beta development. Magic: the Gathering and its respective properties are copyright of Wizards of the Coast. Crowdmtg have no Affiliation with Wizards of the Coast and no Affiliation with Any Local Game Store.
+            <div class="footer">
+
+                <div class="row">{{>React component=Footer}}</div>
             </div>
         {{/if}}
     </div>
@@ -115,4 +117,17 @@
 
 <template name="Links">
     <div>{{> React component=Links}}</div>
+</template>
+
+<template name="FAQ">
+    <div>{{> React component=FAQ}}</div>
+</template>
+
+<template name="CompanyInformation">
+    <div>{{> React component=CompanyInformation}}</div>
+</template>
+
+
+<template name="UsersDecks">
+    <div>{{> React component=UsersDecks}}</div>
 </template>

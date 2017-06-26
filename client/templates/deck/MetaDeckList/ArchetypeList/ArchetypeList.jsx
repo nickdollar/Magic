@@ -76,10 +76,13 @@ export default class ArchetypeList extends React.Component {
 
     filterNames(decksArchetypes){
         decksArchetypes = decksArchetypes.filter((obj)=>{
-            var foundCards = _.intersection(obj.cards, this.props.cards);
+            if(!obj.mainCards){
+                return false;
+            }
+            var cards = obj.mainCards.map(card => card.name);
+            var foundCards = _.intersection(cards, this.props.cards);
             return foundCards.length == this.props.cards.length;
         });
-
         return decksArchetypes;
     }
 
@@ -126,7 +129,6 @@ export default class ArchetypeList extends React.Component {
                 defaultSortName: 'name',
                 defaultSortOrder: 'asc'
             },
-            height: "595px",
             pagination : true,
             data : goodRows
         }

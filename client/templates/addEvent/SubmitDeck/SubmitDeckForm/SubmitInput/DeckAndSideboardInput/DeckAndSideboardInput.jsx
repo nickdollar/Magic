@@ -1,7 +1,8 @@
 import React from 'react' ;
 import DeckList from "./DeckList/DeckList.jsx";
 import TextDeck from "./TextDeck/TextDeck.jsx";
-import ImportByDeckContainer from './ImportByDeck/ImportByDeck.jsx' ;
+import ImportByDeckContainer from './ImportByArchetype/ImportByArchetype.jsx' ;
+import ImportFromUserDecks from './ImportFromUserDeck/ImportFromUserDeck.jsx';
 
 
 
@@ -21,7 +22,7 @@ export default class DeckAndSideboardInput extends React.Component{
         }
     }
 
-    setDeck(deck){
+    setDeck({deck : deck}){
         this.setDeckFromText(deck);
     }
 
@@ -37,6 +38,7 @@ export default class DeckAndSideboardInput extends React.Component{
 
     setDeckFromText(UsersDeckData){
 
+        var UsersDeckData = Object.assign({}, UsersDeckData);
         var arrayOptions = ["main", "sideboard"];
         for(var i = 0; i < arrayOptions.length; i++){
             UsersDeckData[arrayOptions[i]] = UsersDeckData[arrayOptions[i]].filter((item, pos)=>{
@@ -139,9 +141,9 @@ export default class DeckAndSideboardInput extends React.Component{
         }
 
         Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, response)=>{
-            data.qty = selectedCard.qty;
+            response.qty = selectedCard.qty;
             UsersDeckData[mainSideboard].push(response);
-            if(data._id){
+            if(response._id){
                 this.state.qty[mainSideboard] += selectedCard.qty;
             }
             var msObject = {};
@@ -215,6 +217,9 @@ export default class DeckAndSideboardInput extends React.Component{
             <div className="DeckAndSideboardInputComponent">
                 <ImportByDeckContainer setDeck={this.setDeck.bind(this)}
                                        event={this.props.event}
+                />
+                <ImportFromUserDecks setDeck={this.setDeck.bind(this)}
+                                     event={this.props.event}
                 />
                 <div className="form-group">
                     <div onChange={this.onChangeTextOrList.bind(this)}>

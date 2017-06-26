@@ -14,10 +14,6 @@ export default class CustomDecksDataAdmin extends React.Component{
         }
     }
 
-    componentDidMount(){
-
-    }
-
     render(){
         return (
             <div className="CustomDecksDataAdminContainer">

@@ -1,7 +1,7 @@
 module.exports = {
   servers: {
     one: {
-      host: '104.131.155.67',
+      host: '45.32.162.29',
       username: 'root',
       password: 'MagicSit3!',
     }
@@ -10,14 +10,15 @@ module.exports = {
     name: 'Magic',
     path: 'C:/Magic',
     docker: {
-		image: 'abernix/meteord:base' // (optional)
+		image: 'abernix/meteord:base',
+		imagePort: 80,
     },
     servers: {
       one: {}
     },
-    buildOptions: {
-      serverOnly: true,
-    },
+    //buildOptions: {
+    // serverOnly: true,
+    //},
     env: {
       ROOT_URL: 'https://www.crowdmtg.com', // If you are using ssl, this needs to start with https
       MONGO_URL: 'mongodb://localhost/meteor'
@@ -29,7 +30,7 @@ module.exports = {
         domains: 'crowdmtg.com,www.crowdmtg.com' // comma seperated list of domains
       }
     },
-    deployCheckWaitTime: 60,
+    deployCheckWaitTime: 6000,
     deployCheckPort: 80,
     enableUploadProgressBar: true // default false.
   },

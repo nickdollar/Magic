@@ -18,7 +18,7 @@ export default class LGSAddNewStoreForm extends React.Component{
     render() {
         return (
             <div className="LGSAddNewStoreFormComponent">
-                <FormValidate submitMethod={"addALGSEventMethod"} triggerEvent={this.props.receiveCreatedEventInfo} update={true}>
+                <FormValidate submitMethod={"addALGSEventMethod"} callback={this.props.receiveCreatedEventInfo} update={true}>
                     <Select2
                         objectName={"LGS_id"}
                         title="LGS"
@@ -53,12 +53,6 @@ export default class LGSAddNewStoreForm extends React.Component{
                     <Date
                         errorMessage={true}
                         objectName={"date"}
-                    />
-                    <Password
-                        errorMessage = {"Password is missing or wrong"}
-                        title = {"Password"}
-                        required = {true}
-                        objectName = {"password"}
                     />
                 </FormValidate>
             </div>

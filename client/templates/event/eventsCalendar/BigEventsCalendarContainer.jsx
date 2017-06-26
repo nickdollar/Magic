@@ -4,6 +4,6 @@ import BigEventsCalendar from './BigEventsCalendar.jsx';
 export default BigEventsCalendarContainer = createContainer(({}) => {
     console.log("BigEventsCalendarContainer");
     return {
-        Formats_id : getFormat_idFromLink(FlowRouter.getParam("format"))
+        Formats_id : FlowRouter.getParam("format").substring(0,3).toLowerCase(),
     };
 }, BigEventsCalendar);

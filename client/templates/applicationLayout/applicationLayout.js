@@ -1,4 +1,3 @@
-import AddEvent from "/client/templates/addEvent/AddEventContainer.jsx";
 import AdminEvent from "/client/templates/AdminEvent/AdminEvent.jsx";
 import LGS from "/client/templates/LGS/LGS.jsx";
 import MetaDeckListComponent from "/client/templates/deck/MetaDeckList/MetaDeckListComponent.jsx";
@@ -16,6 +15,8 @@ import FormatsMenu from "/client/templates/menu/formatsMenu/FormatsMenu.jsx";
 import FormsyNamoro from "/client/templates/FormsyNamoro/FormsyNamoro"
 import SevenDayCalendar from "/client/templates/main/SevenDayCalendar/SevenDayCalendar.jsx"
 import LinksT from "/client/templates/Links.jsx";
+import Footer from "/client/templates/Footer/Footer.jsx";
+
 
 Template.ApplicationLayout.onCreated(function(){
     this.subscribe("DecksNamesGlobal");
@@ -66,6 +67,9 @@ Template.ApplicationLayout.helpers({
     FormatsMenu(){
         return FormatsMenu;
     },
+    Footer(){
+        return Footer;
+    }
 });
 
 Template.deckSelected.helpers({
@@ -166,3 +170,16 @@ Template.Links.helpers({
         return LinksT;
     }
 });
+
+import FAQ from "/client/templates/Footer/FAQ/FAQ"
+Template.FAQ.helpers({
+    FAQ(){
+        return FAQ;
+    }
+})
+
+import CompanyInformation from "/client/templates/Footer/CompanyInformation/CompanyInformation"
+Template.FAQ.helpers({CompanyInformation(){ return CompanyInformation; }})
+
+import UsersDecks from "/client/templates/PublicUsersDecks/PublicUsersDecks.jsx";
+Template.UsersDecks.helpers({ UsersDecks(){ return UsersDecks; }})

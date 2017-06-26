@@ -1,5 +1,5 @@
 Meteor.methods({
-    addLGSEvents(data){
+    addLGSEventsMethod(data){
 
         var state;
         if(Roles.userIsInRole(this.userId, ['admin'])){
@@ -14,7 +14,7 @@ Meteor.methods({
         },
             {upsert : true}
         )
-        return true;
+        return {confirm : true};
     },
     stateConfirmLGSEvents(_ids){
         LGSEvents.update({_id : {$in : _ids}},

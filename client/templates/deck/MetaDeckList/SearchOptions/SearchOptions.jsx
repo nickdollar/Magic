@@ -49,7 +49,6 @@ export default class SearchOptions extends React.Component{
                 <AutoComplete removeFromTheListMain={this.props.removeFromTheListMain}
                               autoComplete={this.props.autoComplete}
                               state={this.props.state}
-
                 />
             </div>
         )

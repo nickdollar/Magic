@@ -16,8 +16,13 @@ export default class ImportByDeck extends React.Component{
     }
 
     requestDeck(){
-        Meteor.call("importFromDecksArchetypesMethod", {DecksArchetypes_id : this.refs["input"].value, percentageMain  : this.refs.percentageMain.value, percentageSide  : this.refs.percentageSide.value}, (err, response)=>{
-            this.props.setDeck(response);
+        Meteor.call("importFromDecksArchetypesMethod",
+            {
+                DecksArchetypes_id : this.refs["input"].value,
+                percentageMain  : this.refs.percentageMain.value,
+                percentageSide  : this.refs.percentageSide.value
+            }, (err, response)=>{
+            this.props.setDeck({deck : response});
         });
     }
 
@@ -31,9 +36,9 @@ export default class ImportByDeck extends React.Component{
         })
 
         return (
-            <div className="ImportByDeckComponent">
+            <div className="ImportByArchetypeComponent">
                 <div className="form-group row">
-                    <label htmlFor="example-search-input" className="col-xs-2 col-form-label">Import From Deck</label>
+                    <label htmlFor="example-search-input" className="col-xs-2 col-form-label">Import From Archetype</label>
                     <div className="col-xs-10">
                         <div className="importFromCollectionWrapper">
                             <div className="percent">Main: <input ref={"percentageMain"} type="number" min={0} max={100} defaultValue={70}/></div>

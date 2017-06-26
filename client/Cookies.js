@@ -1,6 +1,5 @@
 import { Cookies } from 'meteor/ostrio:cookies';
 
-
 cookies = new Cookies();
 
 var cookiesArray = [{ name : "distance", default : "25"},

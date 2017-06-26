@@ -57,6 +57,7 @@ createMetaArchetypesDecks = function(){
                     DecksData_id : 1,
                     date : 1,
                     Events_id : 1,
+                    Formats_id : 1,
                     t : {$const : 1}
                 }
             },

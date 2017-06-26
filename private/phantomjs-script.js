@@ -28,15 +28,10 @@ page.onNavigationRequested = function(url, type, willNavigate, main) {
 
 page.open("http://cachedview.com/", function(status){
     if(status==="success"){
-
-        console.log("first page");
-        console.log("loaded jquery");
         page.evaluate(function () {
             document.getElementById("inputUrl").value = "http://shop.tcgplayer.com/price-guide/magic/aether-revolt";
             document.querySelector(".btn-success").click();
         })
-
-
 
         // setTimeout(function() {
         //     // page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js', function(){

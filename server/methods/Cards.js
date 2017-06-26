@@ -1,5 +1,5 @@
 import moment from "moment";
-import csv from "csvtojson";
+import csvtojson from "csvtojson";
 
 Meteor.methods({
     // createCardsCollectionFromGatherer(){

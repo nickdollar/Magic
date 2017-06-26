@@ -14,8 +14,9 @@ export default class AddDeck extends React.Component {
     render(){
         return(
             <div className="AddDeckComponent">
+                <h3>Add Deck to Collection</h3>
                 <FormValidate submitMethod="addNewDeckToUsersDecksMethod"
-                              triggerEvent={this.props.deckAdded}
+                              callback={this.props.deckAdded}
                               extraFields={{main : [], sideboard : []}}>
                     <TextFormInput
                         errorMessage ="Need a Name"
@@ -31,6 +32,7 @@ export default class AddDeck extends React.Component {
                         objectName="Formats_id"
                         opts={getFormatsForForm()}
                     />
+
                 </FormValidate>
          </div>
         );

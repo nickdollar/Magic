@@ -1,7 +1,7 @@
 import React from 'react' ;
 
 
-class AdminEvent extends React.Component {
+export default class AdminEvent extends React.Component {
     constructor(){
         super();
 
@@ -40,4 +40,3 @@ class AdminEvent extends React.Component {
     }
 }
 
-export default AdminEvent;

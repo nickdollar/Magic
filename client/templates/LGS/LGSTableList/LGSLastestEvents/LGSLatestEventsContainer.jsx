@@ -2,6 +2,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import LGSLatestEvents from './LGSLatestEvents.jsx';
 
 export default ListContainer = createContainer(({ LGS }) => {
+    console.log("ListContainer");
     var arraysOfLGS_id = LGS.filter((obj)=>{
         return obj.checked == true && obj.showing == true;
     }).map((obj)=>{

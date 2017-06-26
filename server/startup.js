@@ -20,7 +20,7 @@ Meteor.startup(function () {
     };
 
     DecksDataUniqueWithoutQty._ensureIndex({nonLandMain : 1});
-    CardsUnique._ensureIndex({name : 1});
+    CardsUnique._ensureIndex({name : 1, TCGId : 1});
     DecksData._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});
     ZipCodes._ensureIndex({ZIP : 1});

@@ -18,24 +18,24 @@ class LGSEventsCalendarModal extends TrackerReact(React.Component){
     }
 
     render(){
-        var divs = [];
+        var trs = [];
 
         if(this.props.eventObject.LGS_id){
-            divs.push(<div key="LGS_id">
-                <span className="rightTitle">Store:</span><span className="leftInformation">{LGS.findOne({_id : this.props.eventObject.LGS_id}).name} ({LGS.findOne({_id : this.props.eventObject.LGS_id}).location.city})</span>
-            </div>)
+            trs.push(<tr key="LGS_id">
+                <td className="rightTitle">Store:</td><td className="leftInformation">{LGS.findOne({_id : this.props.eventObject.LGS_id}).name} ({LGS.findOne({_id : this.props.eventObject.LGS_id}).location.city})</td>
+            </tr>)
         };
         
         if(this.props.eventObject.when){
-            divs.push(<div key="when">
-                <span className="rightTitle">When:</span><span className="leftInformation">{this.props.eventObject.when}</span>
-            </div>)
+            trs.push(<tr key="when">
+                <td className="rightTitle">When:</td><td className="leftInformation">{this.props.eventObject.when}</td>
+            </tr>)
         };
 
         if(this.props.eventObject.formats){
-            divs.push(<div key="formats">
-                <span className="rightTitle">Formats:</span><span className="leftInformation">{this.props.eventObject.formats}</span>
-            </div>)
+            trs.push(<tr key="formats">
+                <td className="rightTitle">Formats:</td><td className="leftInformation">{this.props.eventObject.formats}</td>
+            </tr>)
         };
 
         if(this.props.eventObject.price != null){
@@ -45,20 +45,20 @@ class LGSEventsCalendarModal extends TrackerReact(React.Component){
             }else{
                 price = this.props.eventObject.price;
             }
-            divs.push(<div key="price">
-                <span className="rightTitle">Price:</span><span className="leftInformation">{price}</span>
-            </div>)
+            trs.push(<tr key="price">
+                <td className="rightTitle">Price:</td><td className="leftInformation">{price}</td>
+            </tr>)
         };
         if(this.props.eventObject.rounds){
-            divs.push(<div key="rounds">
-                <span className="rightTitle">Rounds:</span><span className="leftInformation">{this.props.eventObject.rounds}</span>
-            </div>)
+            trs.push(<tr key="rounds">
+                <td className="rightTitle">Rounds:</td><td className="leftInformation">{this.props.eventObject.rounds}</td>
+            </tr>)
         };
 
         if(this.props.eventObject.description){
-            divs.push(<div key="description">
-                <span className="rightTitle">Description:</span><span className="leftInformation">{this.props.eventObject.description}</span>
-            </div>)
+            trs.push(<tr key="description">
+                <td className="rightTitle">Description:</td><td className="leftInformation"><div>{this.props.eventObject.description}</div></td>
+            </tr>)
         };
 
 
@@ -73,9 +73,14 @@ class LGSEventsCalendarModal extends TrackerReact(React.Component){
                         </div>
                         <div className="modal-body">
                             <div className="eventCalendarModal">
-                                {divs.map((obj)=>{
-                                    return obj
-                                })}
+                                <table>
+                                    <tbody>
+                                        {trs.map((obj)=>{
+                                            return obj
+                                        })}
+                                    </tbody>
+                                </table>
+
                             </div>
                         </div>
                     </div>

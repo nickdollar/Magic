@@ -23,3 +23,9 @@ export default class FixDecksWithoutNames extends React.Component{
         )
     }
 }
+
+
+/*props
+ handleHideModal --> ()=>
+ showModal --> boolean
+ */

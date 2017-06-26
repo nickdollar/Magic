@@ -5,7 +5,7 @@ const getSuggestionValue = suggestion => suggestion.text;
 
 const renderSuggestion = suggestion =>  <div>{suggestion.text}</div>;
 
-export default class AutoComplete extends React.Component{
+export default class AutoSuggest extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -42,9 +42,9 @@ export default class AutoComplete extends React.Component{
     }
 
     onSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: []
-        });
+        // this.setState({
+        //     suggestions: []
+        // });
     };
 
     shouldRenderSuggestions() {
@@ -62,10 +62,10 @@ export default class AutoComplete extends React.Component{
         };
 
         return (
-            <div className="optionsGroupName">
+            <div className="">
                 <Autosuggest
                     suggestions={suggestions}
-                    theme={theme}
+                    theme={autoSuggestTheme}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
                     onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                     onSuggestionSelected={this.onSuggestionSelected.bind(this)}
@@ -80,12 +80,12 @@ export default class AutoComplete extends React.Component{
 }
 
 
-const theme = {
+const autoSuggestTheme = {
     container: {
         position: 'relative'
     },
     input: {
-        width: "100%",
+        width : "100%",
         height: 30,
         padding: '5px 5px',
         fontFamily: 'Helvetica, sans-serif',
@@ -110,7 +110,7 @@ const theme = {
     suggestionsContainerOpen: {
         display: 'block',
         position: 'absolute',
-        width: 400,
+        width: "100%",
         border: '1px solid #aaa',
         backgroundColor: '#fff',
         fontFamily: 'Helvetica, sans-serif',

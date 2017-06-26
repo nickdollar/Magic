@@ -17,34 +17,38 @@ Meteor.methods({
     getGpEventsAndDecksMethod(){
         getGpEventsAndDecks();
     },
-    getPTEventsAndDecksMethod(){
-        getPTEventsAndDecks();
+    getGpEventsAndDecks2Method(){
+        getGpEventsAndDecks2();
     },
     getGPPositionMethod(){
         getGPPosition();
     },
+    fixDecksStateNamesMethods(){
+        Events.find({EventsTypes_id : {$ne : "LGS"}}).forEach((event)=>{
+            var eventsDeck = DecksData.find({Events_id : event._id}).count();
+            var events = DecksData.find({Events_id : event._id, DecksArchetypes_id : {$exists : true}}).count();
+            if(eventsDeck == events){
+                Events.update({_id : event._id},
+                    {
+                        $set : {state : "names"}
+                    })
+            }
+        })
+    },
     addALGSEventMethod(event){
         var eventQuery = Events.findOne({LGS_id : event.LGS_id, token : event.token});
-        if(eventQuery){
-            return false;
-        }
-        Object.assign(event, {EventsTypes_id : "LGS", state : "created"});
+        if(eventQuery){return {confirm : false, response : "Token Already For Exists For That Store"}}
 
-        var email = event.email;
-        delete event.email;
-        var _id = Events.insert(event);
-        Object.assign(event, {Event_id : _id});
-        if(event.email){
-            Meteor.call("sendConfirmationFromNewEvent", email, event);
-        }
+        Object.assign(event, {EventsTypes_id : "LGS", state : "lgsCreated", Users_id : Meteor.userId()});
 
+        Events.insert(event);
         return {confirm : true, response : event};
     },
     checkIfEventExists(form){
         var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token});
 
         if(eventFound){
-            if(eventFound.state == "locked"){
+            if(eventFound.state == "names"){
                 return "locked";
             }
 
@@ -107,16 +111,16 @@ Meteor.methods({
     },
     eventsSmall({Formats_id, LGS_ids}){
         var eventsTypes_ids = EventsTypes.find({size : 0}).map(type => type._id);
-        return Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]},
+        return Events.find({ Formats_id : Formats_id, state : {$in : ["names"]},
             $or : [
                 {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
                 {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
             ]
         }).fetch();
     },
-    eventsBig({Formats_id, LGS_ids}){
+    eventsBigMethod({Formats_id, LGS_ids}){
         var eventsTypes_ids = EventsTypes.find({size : 1}).map(type => type._id);
-        var events = Events.find({ Formats_id : Formats_id, state : {$in : ["decks", "names", "published"]}, $or : [
+        var events = Events.find({ Formats_id : Formats_id, state : {$in : ["names"]}, $or : [
             {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
             {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
         ]}).fetch();
@@ -124,6 +128,26 @@ Meteor.methods({
     },
     getEventsStateQty({state, Formats_id, page, limit}){
         return DecksData.find({state : state, Formats_id : Formats_id}, {limit : limit, skip : page*limit, fields : {Formats_id : 1, state : 1, colors : 1}}).fetch();
+    },
+    getUsersCreatedEventsMethod(){
+        if(!Meteor.userId()){
+            return [];
+        }
+        return Events.find({Users_id : Meteor.userId()}).fetch();
+    },
+    removeUsersEventsMethod({Events_id}){
+        Events.update({_id : Events_id},
+            {
+                $set : {state : "removed", removedHours : new Date()}
+            })
+    },
+    publishUsersEvent({Events_id, nextState}){
+        console.log(Events_id, nextState);
+        Events.update({_id : Events_id},
+            {
+                $set : {state : nextState},
+
+            })
     }
 })
 

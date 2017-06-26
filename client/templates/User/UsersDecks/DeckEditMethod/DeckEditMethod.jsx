@@ -61,16 +61,16 @@ export default class Deck extends React.Component{
 
     cardRow(card, mainSideboard){
         var selectors = {"data-mainSideboard" : mainSideboard};
-        var cardDataName = {"data-name" : card._id};
-        return  <div className="cardLine" key={card._id} >
+        var cardDataName = {"data-name" : card.Cards_id};
+        return  <div className="cardLine" key={card.Cards_id} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
-                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-danger btn-xs btn-round" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
+                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <div className="js-cardNameInput nameSelectedWrapper"
                      {...cardDataName}
                      {...selectors}
                 >
-                    <div>{card._id}</div>
+                    <div>{card.Cards_id}</div>
                 </div>
                 {card ? <div className="cardInfo">
                         <div className="manaValue">
@@ -114,7 +114,7 @@ export default class Deck extends React.Component{
     }
 
     getMainCards(){
-        var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.UsersDeckData.main);
+        var typesSeparated = this.separateCardsByTypeAddManaCost(this.props.UsersDeck.main);
 
         var resultMain = [];
 
@@ -139,13 +139,13 @@ export default class Deck extends React.Component{
     render() {
         var resultMain = this.getMainCards();
 
-        var resultSideboard = this.props.UsersDeckData.sideboard.map((card, index)=>{
+        var resultSideboard = this.props.UsersDeck.sideboard.map((card, index)=>{
             card.index = index;
             return this.cardRow(card, "sideboard", "change")
         })
 
-        var mainTotal = this.totalCards(this.props.UsersDeckData.main);
-        var sideboardTotal = this.totalCards(this.props.UsersDeckData.sideboard);
+        var mainTotal = this.totalCards(this.props.UsersDeck.main);
+        var sideboardTotal = this.totalCards(this.props.UsersDeck.sideboard);
         return (
             <div className="DeckEditMethodComponent">
                 <h3>Main <span className={mainTotal < 60? "wrongCardNumber": ""}>({mainTotal})</span></h3>
