@@ -40,10 +40,11 @@ export default class DeckAndSideboardInput extends React.Component{
 
         var UsersDeckData = Object.assign({}, UsersDeckData);
         var arrayOptions = ["main", "sideboard"];
+
         for(var i = 0; i < arrayOptions.length; i++){
             UsersDeckData[arrayOptions[i]] = UsersDeckData[arrayOptions[i]].filter((item, pos)=>{
                 var index = UsersDeckData[arrayOptions[i]].findIndex((card)=>{
-                    return item._id == card._id;
+                    return item.Cards_id == card.Cards_id;
                 });
                 return index == pos;
             });
@@ -52,18 +53,19 @@ export default class DeckAndSideboardInput extends React.Component{
         var mainSideTemp = [].concat(UsersDeckData.main, UsersDeckData.sideboard);
 
         var cardsArray = mainSideTemp.map((card)=>{
-           return card.name;
+           return card.Cards_id;
         })
 
         cardsArray = cardsArray.filter((item, pos)=>{
             return cardsArray.indexOf(item) == pos;
         });
+
         Meteor.call("getCardsFromArrayMethod", {cardsArray : cardsArray}, (err, response)=>{
             var qty = {main : 0, sideboard : 0};
             for(var i = 0; i < arrayOptions.length; i++){
                 for(var j = 0; j < UsersDeckData[arrayOptions[i]].length; j++){
                     var foundObj = response.find((card)=>{
-                        var cardRegex = new RegExp(`^${UsersDeckData[arrayOptions[i]][j].name}$`, 'i');
+                        var cardRegex = new RegExp(`^${UsersDeckData[arrayOptions[i]][j].Cards_id}$`, 'i');
                         return card._id.match(cardRegex);
                     });
                     if(foundObj){
@@ -72,7 +74,7 @@ export default class DeckAndSideboardInput extends React.Component{
                     }
                 }
             }
-            this.setState({UsersDeckData : UsersDeckData, qty : qty})
+            this.setState({UsersDeckData : UsersDeckData, qty : qty, changes : true})
         })
     }
 
@@ -89,7 +91,7 @@ export default class DeckAndSideboardInput extends React.Component{
         var options = ["main", "sideboard"];
         for(var i = 0; i < options.length; i++){
             submitDeck[options[i]] = submitDeck[options[i]].map((card)=>{
-                return {name : card._id, qty : card.qty}
+                return {Cards_id : card._id, qty : card.qty}
             })
         }
 

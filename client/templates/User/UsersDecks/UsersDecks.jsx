@@ -38,6 +38,7 @@ export default class UsersDecks extends React.Component {
     }
     getSelectedDeck(){
         Meteor.call("getUsersDecksWithCardsInformationMethod", {UsersDecks_id : this.state.UsersDeck_id}, (err, response)=>{
+            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
                     Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
@@ -188,15 +189,45 @@ export default class UsersDecks extends React.Component {
     }
 
     makePublic(checked){
-        console.log(checked);
 
         Meteor.call("makePublicMethod", {UsersDecks_id : this.state.UsersDeck_id, makePublic : checked}, (err, method)=>{});
         var UsersDeck = Object.assign( {}, this.state.UsersDeck, {public : checked});
         this.setState({UsersDeck : UsersDeck});
     }
 
-    importDeck(){
-        console.log("AAAAAAAAAAA");
+    importDeck({main, sideboard}){
+
+        var cards = main.map(card=>card.Cards_id);
+        cards = cards.concat(sideboard.map(card=>card.Cards_id));
+
+        var uniqueCards = cards.filter(function(item, pos) {
+            return cards.indexOf(item) == pos;
+        })
+
+
+
+
+        Meteor.call("getCardsInfoFromCards_id", {cards : uniqueCards}, (err, response)=>{
+            for(var i = 0 ; i < main.length ; i++){
+                Object.assign(main[i], response.find(cardInfo => cardInfo._id == main[i].Cards_id))
+            }
+
+            for(var i = 0 ; i < sideboard.length ; i++){
+                Object.assign(sideboard[i], response.find(cardInfo => cardInfo._id == sideboard[i].Cards_id))
+            }
+
+
+            var UsersDeck = Object.assign({}, this.state.UsersDeck, {main : main, sideboard : sideboard})
+
+            this.setState({
+                UsersDeck : UsersDeck,
+                main : {Cards_id : null, qty : 4},
+                sideboard : {Cards_id : null, qty : 4},
+                clear : true,
+                changes : true,
+            })
+        })
+
     }
 
     handlerHideDeckModal(){
@@ -238,7 +269,9 @@ export default class UsersDecks extends React.Component {
                                         showModal={this.state.showImportUserDeckModal}
                                         handleHideModal={this.handlerHideDeckModal.bind(this)}
                                     >
-                                        <ImportUserDeck UsersDecks_id={this.state.UsersDeck_id}/>
+                                        <ImportUserDeck UsersDecks_id={this.state.UsersDeck_id}
+                                                        importDeck={this.importDeck.bind(this)}
+                                        />
                                     </ModalFirstPage>
 
 
@@ -267,8 +300,15 @@ export default class UsersDecks extends React.Component {
                                     </div>
                                 </div>
                                 <span className="error">{this.state.submitMessage}</span>
-                                <div className="checkbox">
-                                    <label><input type="checkbox" value={true} onClick={(e)=>{this.makePublic(e.target.checked)}} checked={this.state.UsersDeck.public ? true : false}/>{this.state.UsersDeck.public} Make Public</label>
+                                <div className="publicLinkWrapper">
+                                    <span className="publicCheckbox">
+                                        <label>
+                                            <input type="checkbox" value={true} onClick={(e)=>{this.makePublic(e.target.checked)}} checked={this.state.UsersDeck.public ? true : false}/>{this.state.UsersDeck.public} Make Public
+                                        </label>
+                                    </span>
+                                    <span className="publicLink">
+                                        <a href={`/user/usersdecks/${this.state.UsersDeck_id}`}>Link</a>
+                                    </span>
                                 </div>
                                 <DeckEditMethod UsersDeck={this.state.UsersDeck}
                                                 removeCardDeck={this.removeCardDeck.bind(this)}

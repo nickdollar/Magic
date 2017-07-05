@@ -20,6 +20,9 @@ Meteor.startup(function () {
     };
 
     DecksDataUniqueWithoutQty._ensureIndex({nonLandMain : 1});
+    TCGDailyPrices._ensureIndex({TCGCards_id : 1});
+    Cards._ensureIndex({"printings.multiverseid" : 1});
+    Cards._ensureIndex({"printings.TCGCards_id" : 1});
     CardsUnique._ensureIndex({name : 1, TCGId : 1});
     DecksData._ensureIndex({DecksArchetypes_id : 1});
     ZipCodes._ensureIndex({ZIP : 1});

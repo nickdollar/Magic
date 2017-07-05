@@ -3,7 +3,7 @@ import React from "react";
 export default class Deck extends React.Component{
     constructor() {
         super();
-        this.state = {DeckData : {main : [], sideboard : []}, importedDeck : false};
+        this.state = {importedDeck : false};
     }
 
     componentDidUpdate() {
@@ -11,19 +11,16 @@ export default class Deck extends React.Component{
     }
 
     componentDidMount() {
-        this.getDeckDataById(this.props.DeckData_id);
         cardPopoverNames(".js-imagePopOver", true);
     }
 
 
     componentWillReceiveProps(nextProps){
         console.log("componentWillReceiveProps");
-        if(nextProps.DeckData_id != this.props.DeckData_id){
-            this.getDeckDataById(nextProps.DeckData_id);
-        }
     }
 
     separateCardsByType(main){
+        console.log(main);
         var typesSeparated = {
             passChecks : {array : [], text : "Pass Checks"},
             null : {array : [], text : "Wrong Name"},
@@ -70,21 +67,6 @@ export default class Deck extends React.Component{
         }
     }
 
-    getDeckDataById(DeckData_id){
-        Meteor.call("getDeckDataWithCardsInformation", {DeckData_id : DeckData_id}, (err, response)=>{
-            if(response){
-                for(var i = 0 ; i < response.main.length ; i++){
-                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i]._id))
-                }
-                for(var i = 0 ; i < response.sideboard.length ; i++){
-                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i]._id))
-                }
-
-                this.setState({DeckData : response})
-            }
-        });
-    }
-
     addManaCostToSideboard(cards){
 
         var sideboard = [];
@@ -95,61 +77,60 @@ export default class Deck extends React.Component{
         return sideboard;
     }
 
-    createLink({main, sideboard}){
-
-        var cards = main.concat(sideboard);
-
-        var linkAllCards = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
-        var linkMissingCards = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
-
-        var totalValue = 0;
-        var totalMissing = 0;
-        cards.forEach((card)=>{
-            var qty = card.qty ? card.qty : 0;
-            var cardAvg = card.avgPrice ? card.avgPrice : 0;
-            var have = card.have ? card.have : 0;
-
-            var missQty = qty - have;
-            missQty < 0 ? missQty = 0 : null;
-
-
-            if(qty){
-                linkAllCards += `${qty} ${card._id}||`
-            }
-            if(missQty){
-                linkMissingCards += `${missQty} ${card._id}||`
-            }
-            totalValue += qty * cardAvg;
-            totalMissing += missQty * cardAvg;
-
-        })
-
-        totalValue = totalValue.toLocaleString('en-us', {minimumFractionDigits :2});
-        totalMissing = totalMissing.toLocaleString('en-us', {minimumFractionDigits :2});
-
-
-        return <div>
-            {/*<div>*/}
-            {/*<a target='_blank' href={linkAllCards}>Buy At TCGPLAYER.com ${totalValue}</a>*/}
-            {/*</div>*/}
-            {/*{Meteor.user() ? <div><a target='_blank' href={linkMissingCards}>Buy Missing Cards ${totalMissing} </a></div> : null}*/}
-        </div>
-    }
+    // createLink({main, sideboard}){
+    //
+    //     var cards = main.concat(sideboard);
+    //
+    //     var linkAllCards = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
+    //     var linkMissingCards = `http://store.tcgplayer.com/massentry?partner=Crowd&c=`;
+    //
+    //     var totalValue = 0;
+    //     var totalMissing = 0;
+    //     cards.forEach((card)=>{
+    //         var qty = card.qty ? card.qty : 0;
+    //         var cardAvg = card.avgPrice ? card.avgPrice : 0;
+    //         var have = card.have ? card.have : 0;
+    //
+    //         var missQty = qty - have;
+    //         missQty < 0 ? missQty = 0 : null;
+    //
+    //
+    //         if(qty){
+    //             linkAllCards += `${qty} ${card._id}||`
+    //         }
+    //         if(missQty){
+    //             linkMissingCards += `${missQty} ${card._id}||`
+    //         }
+    //         totalValue += qty * cardAvg;
+    //         totalMissing += missQty * cardAvg;
+    //
+    //     })
+    //
+    //     totalValue = totalValue.toLocaleString('en-us', {minimumFractionDigits :2});
+    //     totalMissing = totalMissing.toLocaleString('en-us', {minimumFractionDigits :2});
+    //
+    //
+    //     return <div>
+    //         {/*<div>*/}
+    //         {/*<a target='_blank' href={linkAllCards}>Buy At TCGPLAYER.com ${totalValue}</a>*/}
+    //         {/*</div>*/}
+    //         {/*{Meteor.user() ? <div><a target='_blank' href={linkMissingCards}>Buy Missing Cards ${totalMissing} </a></div> : null}*/}
+    //     </div>
+    // }
 
     cardPriceLink(card){
         if(!card.avgPrice){
             return ""
         }
-        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card._id}&partner=Crowd`}>{card.avgPrice ? card.avgPrice.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
+        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.Cards_id}&partner=Crowd`}>{card.avgPrice ? card.avgPrice.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
     }
 
     cardQty(card){
-
         if(Meteor.userId()){
-            if(card._id.match(/Plain|Forest|Swamp|Island|Mountain/)){
-                return <span>4/4</span>
+            if(card.Cards_id.match(/Plain|Forest|Swamp|Island|Mountain/)){
+                return <span  className="card-row__quantity">4/4</span>
             }
-            return <span className={card.qty > card.have ? "lessThan" : null}>{`${card.qty}/${card.have}`}</span>
+            return <span className={`card-row__quantity ${card.qty > card.have ? "card-row__quantity--lessThan" : null}`}>{`${card.qty}/${card.have}`}</span>
         }
         return card.qty;
     }
@@ -161,6 +142,26 @@ export default class Deck extends React.Component{
     }
 
 
+    getCardRow(card){
+        return  <div className="deck-block__card-line" key={card.Cards_id}>
+            <div className="card-row" >
+                {this.cardQty(card)}
+                <div className="card-row__name js-imagePopOver" data-Cards_id={card.Cards_id} data-layout={card.layout} data-names={JSON.stringify(card.names)}>{card.Cards_id}</div>
+                <div className="card-row__price">{this.cardPriceLink(card)}</div>
+                <div className="card-row__mana">
+                    {
+                        getHTMLFromArray(card.manaCost).map((mana)=>{
+                            if(mana.mana == "//"){
+                                return <span key={mana.key} className="card-mana-price__mana-division">//</span>
+                            }
+                            return <div key={mana.key} className={"mana " + mana.mana}></div>
+                        })
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
     render() {
         if(isObjectEmpty(this.props.DeckData)){
             return <div></div>
@@ -168,32 +169,15 @@ export default class Deck extends React.Component{
         this.getCardQty(this.props.DeckData.main);
         var typesSeparated = this.separateCardsByType(this.props.DeckData.main);
         var resultMain = [];
+
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
-            resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
+            resultMain.push(<div className="deck-block__type-header" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
                 return a + b.qty;
             },0)})</div>)
             resultMain.push(
                 typesSeparated[type].array.map((card)=>{
-                    return  <div className="cardLine" key={card._id}>
-                        <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card._id} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
-                            <span className="qty">{this.cardQty(card)}</span><span data-name={card._id}>{card._id}</span>
-                        </div>
-                        <div className="cardInfo">
-                            <div className="manaValue">
-                                {
-                                    getHTMLFromArray(card.manaCost).map((mana)=>{
-                                        if(mana.mana == "//"){
-                                            return <span key={mana.key} className="divisionMana">//</span>
-                                        }
-
-                                        return <div key={mana.key} className={"mana " + mana.mana}></div>
-                                    })
-                                }
-                            </div>
-                            <div className="priceValue">{this.cardPriceLink(card)}</div>
-                        </div>
-                    </div>
+                    return this.getCardRow(card);
                 })
             )
         }
@@ -201,48 +185,29 @@ export default class Deck extends React.Component{
         var sideboardCards = this.addManaCostToSideboard(this.props.DeckData.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
-            return <div className="cardLine" key={card._id}>
-                <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card._id} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
-                    <span className="qty">{this.cardQty(card)}</span><span data-name={card._id}>{card._id}</span>
-                </div>
-                <div className="cardInfo">
-                    <div className="manaValue">
-                        {
-                            getHTMLFromArray(card.manaCost).map((mana)=>{
-                                if(mana.mana == "//"){
-                                    return <span key={mana.key} className="divisionMana">//</span>
-                                }
-                                return <div key={mana.key} className={"mana " + mana.mana}></div>
-                            })
-                        }
-                    </div>
-                    <div className="priceValue">{this.cardPriceLink(card)}</div>
-                </div>
-            </div>
+            return this.getCardRow(card);
         })
 
 
         return (
 
-            <div className="DeckAggregateContainer">
-                {/*<div className="buyPlace">{this.createLink(this.props.DeckData)}</div>*/}
+            <div className="DeckAggregateContainer deck-aggregate">
+                {/*<div className="buy-place">{this.createLink(this.state.DecksData)}</div>*/}
                 <div className="btn-group" role="group" aria-label="Basic example">
                     <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
                     {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
                 </div>
-                <div></div>
-                <div className="mainSide">Main</div>
-                <div className="deckBlock">
-                    <div className="newDeckColumn">
+                <div className="deck-aggregate__main-side">Main</div>
+                <div className="deck-block">
+                    <div className="deck-block__columns">
                         {resultMain.map((obj)=>{
                             return obj;
                         })}
                     </div>
                 </div>
-
-                <div className="mainSide">Sideboard</div>
-                <div className="deckBlock" key="sideboard">
-                    <div className="newDeckColumn">
+                <div className="deck-aggregate__main-side">Sideboard</div>
+                <div className="deck-block__columns">
+                    <div className="block__columns">
                         {resultSideboard.map((obj)=>{
                             return obj;
                         })}
@@ -252,4 +217,3 @@ export default class Deck extends React.Component{
         )
     }
 }
-

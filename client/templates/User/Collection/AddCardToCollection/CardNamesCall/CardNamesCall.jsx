@@ -36,7 +36,7 @@ const theme = {
         backgroundColor: '#fff',
         fontFamily: 'Helvetica, sans-serif',
         fontWeight: 300,
-        fontSize: 16,
+        fontSize: 14,
         borderBottomLeftRadius: 4,
         borderBottomRightRadius: 4,
         zIndex: 2,
@@ -50,7 +50,7 @@ const theme = {
     },
     suggestion: {
         cursor: 'pointer',
-        padding: '5px 5px'
+        padding: '2px 2px'
     },
     suggestionHighlighted: {
         backgroundColor: '#ddd'
@@ -61,11 +61,14 @@ const getSuggestionValue = (suggestion) => {
     return `${suggestion.foil ? `F` : ""} ${suggestion.name} - ${suggestion.setCode}`;
 };
 
-const renderSuggestion = suggestion => (
-    <div>
-        {`${suggestion.foil ? `F` : ""} ${suggestion.name}`} - {suggestion.setCode}
+const renderSuggestion = (suggestion) => {
+    return <div className="autoSuggestSuggestion">
+        <div className="autoSuggestfoilOrNot">  {suggestion.foil ? `F` : ""}   </div>
+        <div className="autoSuggestCardName">   {suggestion.name}               </div>
+        <div className="autoSuggestSetCode">    {suggestion.setCode}            </div>
     </div>
-);
+}
+
 
 export default class CardNamesCall extends React.Component {
     constructor() {

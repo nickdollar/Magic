@@ -2,6 +2,24 @@ import csv from "csvtojson";
 import Fuse from "fuse.js";
 
 Meteor.methods({
+    findCardsThatDoesntExistsMethod(){
+        console.log("START: ");
+        Gatherer.find({set : {$nin : ["Prerelease Events", 'Planechase "Planes"']}}).forEach((card)=>{
+            if(!Cards.find({"printings.multiverseid" : card._id}, {limit : 1}).count()){
+                console.log(card._id, card.name, card.set);
+            }
+        })
+        console.log("END: ");
+
+    },
+    fixPTCTHINGSMethod(){
+        Gatherer.find({set : "Prerelease Events"}).forEach((card)=>{
+            Cards.find({_id : card.name, "printings.setCode" : "PRE", },
+                {
+                    $set : {"printings.$.multiverseid" : card._id}
+                })
+        })
+    },
     addSetsToCards(){
         Cards.find({printings: {$elemMatch: {setCode: {$exists: false}}}}).forEach((card) => {
             var printings = card.printings.map((printing) => {
@@ -13,8 +31,6 @@ Meteor.methods({
                 console.log("not found");
 
                 return printing;
-
-
             })
 
             Cards.update({_id: card._id},
@@ -70,6 +86,44 @@ Meteor.methods({
             })
         logFunctionsEnd("giveStarCityCards_id");
     },
+    fixedArchetypes_namesMethod(){
+        console.log("START: fixedArchetypes_namesMethod")
+        DecksArchetypes.find({}).forEach((deckArchetype)=>{
+
+            var mainCards = [];
+            var sideboardCards = [];
+            var CardsDecksData_ids = [];
+
+            if(deckArchetype.mainCards){
+                mainCards = deckArchetype.mainCards.map((card)=>{
+                    return {qty : card.qty, avg : card.avg, totalQty : card.totalQty, Cards_id : card.name}
+                })
+            }
+
+
+
+            if(deckArchetype.sideboardCards){
+                sideboardCards = deckArchetype.sideboardCards.map((card)=>{
+                    return {qty : card.qty, avg : card.avg, totalQty : card.totalQty, Cards_id : card.name}
+                })
+            }
+
+            if(deckArchetype.CardsDecksData_ids){
+                CardsDecksData_ids = deckArchetype.CardsDecksData_ids.map((DecksArchetypesIDS)=>{
+                    return {Cards_id : DecksArchetypesIDS._id, DecksData_ids : DecksArchetypesIDS._ids}
+                })
+            }
+
+
+
+            DecksArchetypes.update({_id : deckArchetype._id}, {
+                $set : {mainCards : mainCards, sideboardCards : sideboardCards, CardsDecksData_ids : CardsDecksData_ids}
+            })
+
+        })
+        console.log("  END: fixedArchetypes_namesMethod")
+    },
+
 })
 
 getTypesRegex = ({card})=>{

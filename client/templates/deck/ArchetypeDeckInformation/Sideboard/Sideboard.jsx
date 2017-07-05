@@ -25,7 +25,7 @@ export default class Sideboard extends React.Component {
         return roundTo(cell, 2);
     }
 
-    cardname(cell, row){
+    Cards_id(cell, row){
         return <span className="js-imagePopOverSideboard" data-names={`["${cell}"]`} data-layout="normal">{cell}</span>;
     }
 
@@ -43,13 +43,11 @@ export default class Sideboard extends React.Component {
             data : this.state.sideboard,
             pagination : true,
         }
-        console.log(this.props);
-
         return(
             <div className="SideboardComponent">
                 <h3>Sideboard Cards</h3>
                 <BootstrapTable {...tableOptions}>
-                    <TableHeaderColumn isKey={true} dataField="name" dataFormat={ this.cardname }>Card Name</TableHeaderColumn>
+                    <TableHeaderColumn isKey={true} dataField="Cards_id" dataFormat={ this.Cards_id }>Card Name</TableHeaderColumn>
                     <TableHeaderColumn dataField="qty">Quantity</TableHeaderColumn>
                     <TableHeaderColumn dataField="avg" dataFormat={ this.percentFix }>Average</TableHeaderColumn>
                 </BootstrapTable>

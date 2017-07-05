@@ -10,7 +10,6 @@ export default class ImportOptions extends React.Component {
     importFromTCG(){
         this.setState({found : [], notFound : [], disableTCGButton : true, message : "loading..."});
         Meteor.call("importCollectionMethod", {URLNumber : this.refs["URLNumber"].value}, (err, response)=>{
-            console.log(response);
             this.setState({found : response.found, notFound : response.notFound, disableTCGButton : false, message : response.responseText});
         });
     }

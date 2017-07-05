@@ -14,7 +14,7 @@ export default class DumbSelect2 extends React.Component{
                 transport : (params, sucess, failure)=>{
                     Meteor.call(this.props.call, {term : params.data.q}, (err, data)=>{
                         sucess(data.map((obj)=>{
-                            return obj.name;
+                            return obj.Cards_id;
                         }));
                     });
                 },

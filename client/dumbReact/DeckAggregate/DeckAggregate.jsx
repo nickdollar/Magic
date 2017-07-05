@@ -17,7 +17,6 @@ export default class Deck extends React.Component{
 
 
     componentWillReceiveProps(nextProps){
-        console.log("componentWillReceiveProps");
         if(nextProps.DecksData_id != this.props.DecksData_id){
             this.getDecksDataById(nextProps.DecksData_id);
         }
@@ -62,7 +61,7 @@ export default class Deck extends React.Component{
 
     getCardQty(cardList){
         for(var i =0; i < cardList.length; i++){
-            var have = Session.get("cards")[cardList[i].name];
+            var have = Session.get("cards")[cardList[i].Cards_id];
             if(!have){
                 have = 0;
             }
@@ -72,12 +71,13 @@ export default class Deck extends React.Component{
 
     getDecksDataById(DecksData_id){
         Meteor.call("getDecksDataWithCardsInformation", {DecksData_id : DecksData_id}, (err, response)=>{
+            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
-                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].name))
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
                 }
                 for(var i = 0 ; i < response.sideboard.length ; i++){
-                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].name))
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].Cards_id))
                 }
 
                 this.setState({DecksData : response})
@@ -114,10 +114,10 @@ export default class Deck extends React.Component{
 
 
             if(qty){
-                linkAllCards += `${qty} ${card.name}||`
+                linkAllCards += `${qty} ${card.Cards_id}||`
             }
             if(missQty){
-                linkMissingCards += `${missQty} ${card.name}||`
+                linkMissingCards += `${missQty} ${card.Cards_id}||`
             }
             totalValue += qty * cardAvg;
             totalMissing += missQty * cardAvg;
@@ -140,15 +140,15 @@ export default class Deck extends React.Component{
         if(!card.avgPrice){
             return ""
         }
-        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.name}&partner=Crowd`}>{card.avgPrice ? card.avgPrice.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
+        return <a  target="_blank" href={`http://shop.tcgplayer.com/magic/product/show?productname=${card.Cards_id}&partner=Crowd`}>{card.avgPrice ? card.avgPrice.toLocaleString('en-us', {minimumFractionDigits :2}) : "NULL"}</a>
     }
 
     cardQty(card){
         if(Meteor.userId()){
-            if(card.name.match(/Plain|Forest|Swamp|Island|Mountain/)){
-                return <span>4/4</span>
+            if(card.Cards_id.match(/Plain|Forest|Swamp|Island|Mountain/)){
+                return <span  className="card-row__quantity">4/4</span>
             }
-            return <span className={card.qty > card.have ? "lessThan" : null}>{`${card.qty}/${card.have}`}</span>
+            return <span className={`card-row__quantity ${card.qty > card.have ? "card-row__quantity--lessThan" : null}`}>{`${card.qty}/${card.have}`}</span>
         }
         return card.qty;
     }
@@ -159,6 +159,26 @@ export default class Deck extends React.Component{
         });
     }
 
+    getCardRow(card){
+        return  <div className="deck-block__card-line" key={card.Cards_id}>
+            <div className="card-row" >
+                {this.cardQty(card)}
+                <div className="card-row__name js-imagePopOver" data-Cards_id={card.Cards_id} data-layout={card.layout} data-names={JSON.stringify(card.names)}>{card.Cards_id}</div>
+                <div className="card-row__price">{this.cardPriceLink(card)}</div>
+                <div className="card-row__mana">
+                    {
+                        getHTMLFromArray(card.manaCost).map((mana)=>{
+                            if(mana.mana == "//"){
+                                return <span key={mana.key} className="card-mana-price__mana-division">//</span>
+                            }
+                            return <div key={mana.key} className={"mana " + mana.mana}></div>
+                        })
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
 
     render() {
         this.getCardQty(this.state.DecksData.main);
@@ -166,30 +186,12 @@ export default class Deck extends React.Component{
         var resultMain = [];
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
-            resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
+            resultMain.push(<div className="deck-block__type-header" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
                 return a + b.qty;
             },0)})</div>)
             resultMain.push(
                 typesSeparated[type].array.map((card)=>{
-                    return  <div className="cardLine" key={card.name}>
-                        <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
-                            <span className="qty">{this.cardQty(card)}</span><span data-name={card.name}>{card.name}</span>
-                        </div>
-                        <div className="cardInfo">
-                            <div className="manaValue">
-                                {
-                                    getHTMLFromArray(card.manaCost).map((mana)=>{
-                                        if(mana.mana == "//"){
-                                            return <span key={mana.key} className="divisionMana">//</span>
-                                        }
-
-                                        return <div key={mana.key} className={"mana " + mana.mana}></div>
-                                    })
-                                }
-                            </div>
-                            <div className="priceValue">{this.cardPriceLink(card)}</div>
-                        </div>
-                    </div>
+                    return this.getCardRow(card);
                 })
             )
         }
@@ -197,48 +199,29 @@ export default class Deck extends React.Component{
         var sideboardCards = this.addManaCostToSideboard(this.state.DecksData.sideboard);
 
         var resultSideboard = sideboardCards.map((card)=>{
-            return <div className="cardLine" key={card.name}>
-                <div className="cardQtyAndNameWrapper js-imagePopOver" data-name={card.name} data-layout={card.layout} data-names={JSON.stringify(card.names)}>
-                    <span className="qty">{this.cardQty(card)}</span><span data-name={card.name}>{card.name}</span>
-                </div>
-                <div className="cardInfo">
-                    <div className="manaValue">
-                        {
-                            getHTMLFromArray(card.manaCost).map((mana)=>{
-                                if(mana.mana == "//"){
-                                    return <span key={mana.key} className="divisionMana">//</span>
-                                }
-                                return <div key={mana.key} className={"mana " + mana.mana}></div>
-                            })
-                        }
-                    </div>
-                    <div className="priceValue">{this.cardPriceLink(card)}</div>
-                </div>
-            </div>
+            return this.getCardRow(card);
         })
 
 
         return (
 
-            <div className="DeckAggregateContainer">
-                {/*<div className="buyPlace">{this.createLink(this.state.DecksData)}</div>*/}
+            <div className="DeckAggregateContainer deck-aggregate">
+                {/*<div className="buy-place">{this.createLink(this.state.DecksData)}</div>*/}
                 <div className="btn-group" role="group" aria-label="Basic example">
                     <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
                     {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
                 </div>
-                <div></div>
-                <div className="mainSide">Main</div>
-                <div className="deckBlock">
-                    <div className="newDeckColumn">
+                <div className="deck-aggregate__main-side">Main</div>
+                <div className="deck-block">
+                    <div className="deck-block__columns">
                         {resultMain.map((obj)=>{
                             return obj;
                         })}
                     </div>
                 </div>
-
-                <div className="mainSide">Sideboard</div>
-                <div className="deckBlock" key="sideboard">
-                    <div className="newDeckColumn">
+                <div className="deck-aggregate__main-side">Sideboard</div>
+                <div className="deck-block__columns">
+                    <div className="block__columns">
                         {resultSideboard.map((obj)=>{
                             return obj;
                         })}

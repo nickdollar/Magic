@@ -51,7 +51,7 @@ export default class MetaCardsValues extends React.Component {
         return(
             <div className="MetaCardsValuesComponent">
                 <BootstrapTable {...options}>
-                    <TableHeaderColumn dataField="_id" isKey dataFormat={this.nameFormat}>Card</TableHeaderColumn>
+                    <TableHeaderColumn dataField="Cards_id" isKey dataFormat={this.nameFormat}>Card</TableHeaderColumn>
                     <TableHeaderColumn width="50" dataField="total" dataFormat={this.avgColumn.bind(this)}>Avg.</TableHeaderColumn>
                     <TableHeaderColumn width="60" dataField="count" dataFormat={this.percentageColumn.bind(this)}>%</TableHeaderColumn>
                 </BootstrapTable>

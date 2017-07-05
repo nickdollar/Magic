@@ -4,6 +4,37 @@ addCron = function(){
     var timer = 5;
     timer -= distanceBetween;
 
+
+    SyncedCron.add({
+        name: "CreateTCGDailyPricesMethod",
+        schedule: function(parser) {
+            return parser.recur().on(3).hour().on(1).minute();
+        },
+        job: function() {
+            CreateTCGDailyPrices();
+        }
+    });
+
+    SyncedCron.add({
+        name: "giveLatestPriceForEachPrintings",
+        schedule: function(parser) {
+            return parser.recur().on(4).hour().on(31).minute();
+        },
+        job: function() {
+            giveLatestPriceForEachPrintings();
+        }
+    });
+
+    SyncedCron.add({
+        name: "giveLatestPriceForEach",
+        schedule: function(parser) {
+            return parser.recur().on(4).hour().on(31).minute();
+        },
+        job: function() {
+            giveLatestPriceForEach();
+        }
+    });
+
     SyncedCron.add({
         name: "getSCGEventsAndDecks",
         schedule: function(parser) {

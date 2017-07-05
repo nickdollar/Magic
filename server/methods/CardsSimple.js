@@ -5,7 +5,6 @@ Meteor.methods({
        logFunctionsEnd("UpdateCardsSimple");
    },
     getCardsBy_idMethod({CardsSimple_id}){
-       console.log(CardsSimple_id);
        var foundCard = CardsSimple.find({_id : new RegExp(`^${CardsSimple_id}$`, "i")}, {limit : 1});
        if(foundCard.count()){
            return foundCard.fetch()[0];
@@ -21,6 +20,9 @@ Meteor.methods({
            arrayRegex.push(new RegExp(`^${card}$`, "i"));
        });
        return CardsSimple.find({_id : {$in : arrayRegex}}).fetch();
+    },
+    UpdateCardsSimplePricesMethod(){
+        UpdateCardsSimplePrices();
     }
 })
 
@@ -46,4 +48,22 @@ UpdateCardsSimple = ()=>{
         }
     })
     logFunctionsEnd("UpdateCardsSimple");
+}
+
+UpdateCardsSimplePrices = ()=>{
+    logFunctionsStart("UpdateCardsSimplePrices");
+    Cards.find({}).forEach((card)=>{
+        var data = {};
+        card.avgPrice ? data.avgPrice = card.avgPrice : null;
+
+        if(!isObjectEmpty(data)){
+            CardsSimple.update({_id : card._id},
+                {
+                    $set : data,
+
+                }
+            )
+        }
+    })
+    logFunctionsEnd("UpdateCardsSimplePrices");
 }

@@ -40,8 +40,8 @@ export default class AdminEventPlayerList extends React.Component {
         this.getDecksInfoFromUserEvent();
     }
 
-    formatRemoveDeck(){
-        return <button className="btn btn-xs">remove</button>
+    formatRemoveDeck(cell, row){
+        return <button onClick={()=>{Meteor.call("removeLGSEventDeckMethod", {DecksData_id : row._id})}} className="btn btn-xs">remove</button>
     }
 
     handleHideDeckAggregate(){
@@ -49,7 +49,6 @@ export default class AdminEventPlayerList extends React.Component {
     }
 
     handleShowModalDeckAggregate({row}){
-
         this.setState({showModalDeckAggregate: true, DecksData_id : row._id});
     }
 
@@ -61,7 +60,8 @@ export default class AdminEventPlayerList extends React.Component {
         const options = {
             data : this.state.Decks
         }
-
+        console.log(this.state);
+        console.log(this.props);
         return(
             <div className="UserCreatedEventInfo">
                 <BootstrapTable {...options}>
@@ -71,7 +71,7 @@ export default class AdminEventPlayerList extends React.Component {
                     <TableHeaderColumn dataField="victory"  dataFormat={(cell, row)=>{return this.position({dataField : "victory", cell : cell, row : row})}}>Victory</TableHeaderColumn>
                     <TableHeaderColumn dataField="loss" dataFormat={(cell, row)=>{return this.position({dataField : "loss", cell : cell, row : row})}}>Losses</TableHeaderColumn>
                     <TableHeaderColumn dataField="draw"    dataFormat={(cell, row)=>{return this.position({dataField : "draw", cell : cell, row : row})}}>Draws</TableHeaderColumn>
-                    <TableHeaderColumn dataField="_id"    dataFormat={this.formatRemoveDeck}>Remove</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id"    dataFormat={this.formatRemoveDeck.bind(this)}>Remove</TableHeaderColumn>
                 </BootstrapTable>
                 <ModalFirstPage showModal={this.state.showModalDeckAggregate}
                                 handleHideModal={this.handleHideDeckAggregate.bind(this)}

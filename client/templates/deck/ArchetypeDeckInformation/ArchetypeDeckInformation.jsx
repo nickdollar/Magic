@@ -16,11 +16,9 @@ export default class ArchetypeDeckInformation extends React.Component {
 
     getCardsList(){
         var DeckArchetype = DecksArchetypes.findOne({Formats_id : this.props.Formats_id, link : this.props.DeckArchetypeLink});
-
-        console.log("ABBBBBBBBBBBBBBBBBBBBBB");
         Meteor.call("DecksArchetypesGetCardsListMethod", {DecksArchetypes_id : DeckArchetype._id}, (err, response)=>{
             var allCards = response.allCards.sort((a, b)=>{
-                return b._ids.length - a._ids.length;
+                return b.DecksData_ids.length - a.DecksData_ids.length;
             }).map((card, index)=> Object.assign(card, {checked : false, index : index}))
             var DecksData_id = "";
             if(response.allDecks.length){
@@ -28,7 +26,6 @@ export default class ArchetypeDeckInformation extends React.Component {
             }
             this.state.intersectedDecksData_id = response.allDecks.map(decks=>decks._id);
             var typesSeparated = this.createList({allCards : allCards});
-
             this.setState({allCards : allCards, allDecks : response.allDecks, DeckArchetype : DeckArchetype, typesSeparated : typesSeparated, DecksData_id : DecksData_id});
         })
     }
@@ -45,7 +42,7 @@ export default class ArchetypeDeckInformation extends React.Component {
         var selectedCardsIntersectionsArray = this.state.allDecks.map(allDecks=>allDecks._id).concat();
         this.state.allCards.forEach((card)=>{
             if(card.checked){
-                selectedCardsIntersectionsArray = _.intersection(selectedCardsIntersectionsArray, card._ids);
+                selectedCardsIntersectionsArray = _.intersection(selectedCardsIntersectionsArray, card.DecksData_ids);
             }
         });
 
@@ -62,7 +59,6 @@ export default class ArchetypeDeckInformation extends React.Component {
 
 
     findCardType(card){
-        console.log(card);
         if(!card.types){return "null"}
         else if (card.types.indexOf("land") != -1)          { return "land"}
         else if (card.types.indexOf("creature") != -1)      { return "creature"}
@@ -77,10 +73,6 @@ export default class ArchetypeDeckInformation extends React.Component {
     }
 
     createList({allCards}){
-
-        console.log("allcards");
-        console.log(allCards);
-        console.log(this.state);
         var typesSeparated = {
             null : {array : [], text : "Wrong Name"},
             creature : {array : [], text : "Creature"},
@@ -93,23 +85,18 @@ export default class ArchetypeDeckInformation extends React.Component {
         };
 
         var max = 0;
-
-        console.log(allCards.length);
         for(var i=0; i < allCards.length; i ++){
-            var intersectionQty = _.intersection(allCards[i]._ids, this.state.intersectedDecksData_id).length;
-            console.log(_.intersection(allCards[i]._ids, this.state.intersectedDecksData_id));
-            console.log(intersectionQty);
+
+            var intersectionQty = _.intersection(allCards[i].DecksData_ids, this.state.intersectedDecksData_id).length;
             if(intersectionQty == 0){
                 continue;
             }
 
-            if(max < allCards[i]._ids.length){
-                max = allCards[i]._ids.length;
+            if(max < allCards[i].DecksData_ids.length){
+                max = allCards[i].DecksData_ids.length;
             }
 
-            console.log(allCards[i]);
-
-            typesSeparated[this.findCardType(allCards[i].info)].array.push( {name : allCards[i]._id, qty : _.intersection(allCards[i]._ids, this.state.intersectedDecksData_id).length, checked : allCards[i].checked, index : allCards[i].index});
+            typesSeparated[this.findCardType(allCards[i].info)].array.push( {Cards_id : allCards[i].Cards_id, qty : _.intersection(allCards[i].DecksData_ids, this.state.intersectedDecksData_id).length, checked : allCards[i].checked, index : allCards[i].index});
         }
 
         for(var key in typesSeparated){
@@ -117,8 +104,6 @@ export default class ArchetypeDeckInformation extends React.Component {
                 delete typesSeparated[key];
             }
         }
-        console.log("Types Separated");
-        console.log(typesSeparated);
         return {maxValue : max, typesSeparated : typesSeparated};
     }
 
@@ -149,8 +134,8 @@ export default class ArchetypeDeckInformation extends React.Component {
                                             checkCard={this.checkCard.bind(this)}
                                             typesSeparated={this.state.typesSeparated}
                     />
-                <div className="listAndDecks">
-                    <div className="playersList">
+                <div className="block-body block-body--deck-archetype-list-and-deck clearfix">
+                    <div className="block-left block-left--decks-data-archetype-list">
                         <DecksDataDecksArchetypesList allDecks={decksLists}
                                                       selectDecksData_id={this.selectDecksData_id.bind(this)}
                                                       DecksData_id={this.state.DecksData_id}
@@ -158,11 +143,14 @@ export default class ArchetypeDeckInformation extends React.Component {
 
                         />
                     </div>
-                    <div className="cardsList">
+                    <div className="block-right block-right--archetype-list-deck-aggregate">
                             {this.state.DecksData_id ? <DeckAggregate DecksData_id={this.state.DecksData_id}/> : null}
                     </div>
                 </div>
-                <Sideboard DecksArchetypes_id={DeckArchetype._id}/>
+                {/*<div className="body-block">*/}
+                    {/*<Sideboard DecksArchetypes_id={DeckArchetype._id}/>    */}
+                {/*</div>*/}
+
             </div>
         );
     }

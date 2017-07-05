@@ -8,10 +8,12 @@ export default class CustomCardsUniquesAdmin extends React.Component {
     render(){
         return(
             <div className="CustomCardsUniquesAdminComponent">
-                <button onClick={()=>Meteor.call("makeCardsUnique")}>makeCardsUnique</button>
-                <button onClick={()=>Meteor.call("cardsUniquesPricesMethod")}>cardsUniquesPricesMethod</button>
-                <button onClick={()=>Meteor.call("organizeAllCardsDatabase")}>organizeAllCardsDatabase</button>
-
+                <div>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("makeCardsUniqueMethod")}>makeCardsUniqueMethod</button>
+                </div>
+                <div>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("cardsUniquesPricesMethod")}>cardsUniquesPricesMethod</button>
+                </div>
             </div>
         );
     }

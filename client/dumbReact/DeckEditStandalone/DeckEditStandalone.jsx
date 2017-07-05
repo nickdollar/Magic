@@ -21,12 +21,12 @@ export default class DeckEditStandalone extends React.Component{
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
                     qty.main += response.main[i].qty;
-                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo.name == response.main[i].name))
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo.Cards_id == response.main[i].Cards_id))
 
                 }
                 for(var i = 0 ; i < response.sideboard.length ; i++){
                     qty.sideboard += response.sideboard[i].qty;
-                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo.name == response.sideboard[i].name))
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo.Cards_id == response.sideboard[i].Cards_id))
                 }
                 this.setState({
                     deck : response,
@@ -71,13 +71,13 @@ export default class DeckEditStandalone extends React.Component{
 
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
-        if(!selectedCard.name){
+        if(!selectedCard.Cards_id){
             return;
         };
 
         var deck = this.state.deck;
 
-        var index = deck[mainSideboard].findIndex(cardObj=> cardObj.name == this.state[mainSideboard].name)
+        var index = deck[mainSideboard].findIndex(cardObj=> cardObj.Cards_id == this.state[mainSideboard].Cards_id)
         if(index != -1){
             return;
         }
@@ -89,14 +89,14 @@ export default class DeckEditStandalone extends React.Component{
                 this.state.qty[mainSideboard] += selectedCard.qty;
             }
             var msObject = {};
-            msObject[mainSideboard] = {name : null, _id : null, qty : 4};
+            msObject[mainSideboard] = {Cards_id : null, _id : null, qty : 4};
             this.setState(Object.assign({deck : deck, clear : !this.state.clear, changes : true}, msObject));
         })
     }
 
     setCardSelected({suggestion, mainSideboard}) {
-        this.state[mainSideboard].name = suggestion.name;
-        this.state[mainSideboard]._id = suggestion._id;
+        this.state[mainSideboard].Cards_id = suggestion.Cards_id;
+        this.state[mainSideboard].Cards_id = suggestion.Cards_id;
     }
 
     submitDeck(){
@@ -104,7 +104,7 @@ export default class DeckEditStandalone extends React.Component{
         var deckData = {main : [], sideboard : []};
         for(var i = 0; i < options.length; i++){
             deckData[options[i]] = this.state.deck[options[i]].map((card)=>{
-                return {name : card.name, qty : card.qty}
+                return {name : card.Cards_id, qty : card.qty}
             })
         }
         Meteor.call("adminUpdateDeck", {DecksData_id : this.state.DecksData_id, deck : deckData}, (err, data)=>{
@@ -164,8 +164,8 @@ export default class DeckEditStandalone extends React.Component{
 
     cardRow(card, mainSideboard){
         var selectors = {"data-mainSideboard" : mainSideboard};
-        var cardDataName = {"data-name" : card.name};
-        return  <div className="cardLine" key={card.name} >
+        var cardDataName = {"data-name" : card.Cards_id};
+        return  <div className="deck-block__card-line" key={card.Cards_id} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
                 <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs " onClick={()=>this.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" onChange={(event)=>this.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
@@ -173,7 +173,7 @@ export default class DeckEditStandalone extends React.Component{
                      {...cardDataName}
                      {...selectors}
                 >
-                    <div>{card.name}</div>
+                    <div>{card.Cards_id}</div>
                 </div>
                 {card ? <div className="cardInfo">
                         <div className="manaValue">
@@ -223,7 +223,7 @@ export default class DeckEditStandalone extends React.Component{
 
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
-            resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
+            resultMain.push(<div className="deck-block__type-header" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
                 return a + b.qty;
             },0)})</div>)
             resultMain.push(
@@ -278,6 +278,7 @@ export default class DeckEditStandalone extends React.Component{
 
         return (
             <div className="DeckEditMethodComponent">
+                hello
                 <span><button className="btn" disabled={this.submitDeckState()} onClick={this.submitDeck.bind(this)}>{this.deckState()}</button></span>
                 <div className="btn-group" role="group" aria-label="Basic example">
                     <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
@@ -285,8 +286,8 @@ export default class DeckEditStandalone extends React.Component{
                 </div>
                 <h3>Main <span className={this.state.qty.main < 60? "wrongCardNumber": ""}>({this.state.qty.main})</span></h3>
                 {this.addRow("main")}
-                <div className="deckBlock">
-                    <div className="newDeckColumn">
+                <div className="deck-block__columns">
+                    <div className="deck-block__card-line">
                         {resultMain.map((obj)=>{
                             return obj;
                         })}

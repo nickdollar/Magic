@@ -51,7 +51,7 @@ export default class DecksDataDecksArchetypesList extends React.Component {
     }
 
     render(){
-
+        // console.log(state);
         const tableOptions = {
             options : {
                 sizePerPage : 8,

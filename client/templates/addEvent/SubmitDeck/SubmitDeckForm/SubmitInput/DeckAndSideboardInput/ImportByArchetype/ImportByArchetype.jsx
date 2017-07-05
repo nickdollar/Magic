@@ -37,27 +37,38 @@ export default class ImportByDeck extends React.Component{
 
         return (
             <div className="ImportByArchetypeComponent">
-                <div className="form-group row">
-                    <label htmlFor="example-search-input" className="col-xs-2 col-form-label">Import From Archetype</label>
-                    <div className="col-xs-10">
-                        <div className="importFromCollectionWrapper">
-                            <div className="percent">Main: <input ref={"percentageMain"} type="number" min={0} max={100} defaultValue={70}/></div>
-                            <div className="percent">Side: <input ref={"percentageSide"} type="number" min={0} max={100} defaultValue={50}/></div>
-                            <div className="deckArchetypesOptions">
-                                <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control decksArchetypes">
-                                    <option></option>
-                                    {sortedArchetypes.map((deckArchetype)=>{
-                                        return <option key={deckArchetype._id} value={deckArchetype._id}>{deckArchetype.name}</option>
-                                    })}
-                                </select>
-                            </div>
-                            <div className="submitButton">
-                                <button onClick={this.requestDeck.bind(this)} className="btn">Request</button>
-                            </div>
-                        </div>
+                <div className="options-list">
+                    <div className="options-list__label">Import From Archetype</div>
+                    <div className="options-list__inputs">
+                         <select ref="input" className="input-options-list">
+                            <option></option>
+                            {sortedArchetypes.map((deckArchetype)=>{
+                                return <option key={deckArchetype._id} value={deckArchetype._id}>{deckArchetype.name}</option>
+                            })}
+                        </select>
+                        <button onClick={this.requestDeck.bind(this)} className="options-list__button">Request</button>
+                        <div className="input-name-number-field"><div className="input-name-number-field__name">Main:</div><input className="input-name-number-field__number" ref={"percentageMain"} type="number" min={0} max={100} defaultValue={70}/></div>
+                        <div className="input-name-number-field"><div className="input-name-number-field__name">Side:</div><input className="input-name-number-field__number" ref={"percentageSide"} type="number" min={0} max={100} defaultValue={50}/></div>
                     </div>
                 </div>
             </div>
         )
     }
 }
+/*
+* <div className="importFromCollectionWrapper">
+ <div className="percent">Main: <input ref={"percentageMain"} type="number" min={0} max={100} defaultValue={70}/></div>
+ <div className="percent">Side: <input ref={"percentageSide"} type="number" min={0} max={100} defaultValue={50}/></div>
+ <div className="deckArchetypesOptions">
+ <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control decksArchetypes">
+ <option></option>
+ {sortedArchetypes.map((deckArchetype)=>{
+ return <option key={deckArchetype._id} value={deckArchetype._id}>{deckArchetype.name}</option>
+ })}
+ </select>
+ </div>
+ <div className="submitButton">
+ <button onClick={this.requestDeck.bind(this)} className="btn">Request</button>
+ </div>
+ </div>
+* */

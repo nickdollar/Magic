@@ -7,10 +7,10 @@ Meteor.publish("CardsFromDeckData_id", function(DecksData_id){
     if(!deck) return null;
     var cards = [];
     cards = cards.concat(deck.main.map((card)=>{
-        return card.name;
+        return card.Cards_id;
     }));
     cards = cards.concat(deck.sideboard.map((card)=>{
-        return card.name;
+        return card.Cards_id;
     }));
 
     return Cards.find({_id : {$in : cards}});
@@ -21,10 +21,10 @@ Meteor.publish("CardsFromDeckData_id_NonReactive", function(DecksData_id){
     if(!deck) return null;
     var cards = [];
     cards = cards.concat(deck.main.map((card)=>{
-        return card.name;
+        return card.Cards_id;
     }));
     cards = cards.concat(deck.sideboard.map((card)=>{
-        return card.name;
+        return card.Cards_id;
     }));
 
     return Cards.find({_id : {$in : cards}});

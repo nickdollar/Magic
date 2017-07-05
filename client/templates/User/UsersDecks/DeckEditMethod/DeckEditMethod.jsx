@@ -62,46 +62,49 @@ export default class Deck extends React.Component{
     cardRow(card, mainSideboard){
         var selectors = {"data-mainSideboard" : mainSideboard};
         var cardDataName = {"data-name" : card.Cards_id};
-        return  <div className="cardLine" key={card.Cards_id} >
-            <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
-                <input type="number" className="qtyInput" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
-                <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
-                <div className="js-cardNameInput nameSelectedWrapper"
+        return  <div className="deck-block__card-line" key={card._id} >
+            <div className="card-row js-imagePopOver" {...cardDataName}>
+                <div className="remove-button-x">
+                    <button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={()=>this.props.removeCardDeck(card.index, mainSideboard)}>
+                        <span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <input type="number" min={0} className="card-row__input-quantity" onChange={(event)=>this.props.changeACardQty(event.target, card.index, mainSideboard)} defaultValue={card.qty}/>
+                <div className="js-cardNameInput card-row__name"
                      {...cardDataName}
                      {...selectors}
                 >
-                    <div>{card.Cards_id}</div>
+                    {card._id}
                 </div>
-                {card ? <div className="cardInfo">
-                        <div className="manaValue">
-                            {
-                                getHTMLFromArray(card.manaCost).map((mana)=>{
-                                    return <div key={mana.key} className={"mana " + mana.mana}></div>
-                                })
-                            }
-                        </div>
-                    </div>: null
+                {card ? <div className="card-row__mana">
+                        {
+                            getHTMLFromArray(card.manaCost).map((mana)=>{
+                                if(mana.mana == "//"){
+                                    return <span key={mana.key} className="card-mana-price__mana-division">//</span>
+                                }
+                                return <div key={mana.key} className={"mana " + mana.mana}></div>
+                            })
+                        }
+                    </div>:
+                    null
                 }
+
             </div>
         </div>
     }
 
     addRow(mainSideboard){
-        return  <div className="addLine" key={mainSideboard}>
-            <div className="cardQtyAndNameWrapper js-imagePopOver">
-                <input type="number" className="qtyInput" data-mainSideboard={mainSideboard} onChange={(event)=>this.props.mainSideboardChangeValue(event.target, mainSideboard)} defaultValue={4}/>
-                <div className="nameSelectedWrapper">
-                    <CardNamesCall
-                        mainSideboard={mainSideboard}
-                        setCardSelected={this.props.setCardSelected}
-                        clear={this.props.clear}
-                    />
+        return  <div className="input-quantity-name-submit" key={mainSideboard}>
+                    <input type="number" className="input-quantity-name-submit__quantity" data-mainSideboard={mainSideboard} onChange={(event)=>this.props.mainSideboardChangeValue(event.target, mainSideboard)} defaultValue={4}/>
+                    <div className="input-quantity-name-submit__decklist-autosuggest">
+                        <CardNamesCall
+                            mainSideboard={mainSideboard}
+                            setCardSelected={this.props.setCardSelected}
+                            clear={this.props.clear}
+                        />
+                    </div>
+                    <button className="input-quantity-name-submit__submit-button" onClick={()=>this.props.addCardToDeck(mainSideboard)}>Add To {mainSideboard.toTitleCase()}</button>
                 </div>
-                <div className="addToMainButtonWrapper">
-                    <button onClick={()=>this.props.addCardToDeck(mainSideboard)}>Add To {mainSideboard.toTitleCase()}</button>
-                </div>
-            </div>
-        </div>
     }
 
     totalCards(cardList){
@@ -120,7 +123,7 @@ export default class Deck extends React.Component{
 
         for(var type in typesSeparated){
             if(typesSeparated[type].array.length == 0) continue;
-            resultMain.push(<div className="typeHeader" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
+            resultMain.push(<div className="deck-block__type-header" key={type} >{typesSeparated[type].text} ({typesSeparated[type].array.reduce((a, b)=>{
                 return a + b.qty;
             },0)})</div>)
             resultMain.push(
@@ -150,8 +153,8 @@ export default class Deck extends React.Component{
             <div className="DeckEditMethodComponent">
                 <h3>Main <span className={mainTotal < 60? "wrongCardNumber": ""}>({mainTotal})</span></h3>
                 {this.addRow("main")}
-                <div className="deckBlock">
-                    <div className="newDeckColumn">
+                <div className="deck-block">
+                    <div className="deck-block__columns">
                         {resultMain.map((obj)=>{
                             return obj;
                         })}
@@ -159,8 +162,8 @@ export default class Deck extends React.Component{
                 </div>
                 <h3>Sideboard <span className={sideboardTotal > 15? "wrongCardNumber": ""}>({sideboardTotal})</span></h3>
                     {this.addRow("sideboard")}
-                    <div className="deckBlock">
-                        <div className="newDeckColumn">
+                    <div className="deck-block">
+                        <div className="deck-block__columns">
                         {resultSideboard.map((obj)=>{
                             return obj;
                         })}

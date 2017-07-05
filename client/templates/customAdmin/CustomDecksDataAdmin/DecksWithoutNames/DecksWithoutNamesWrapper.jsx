@@ -35,7 +35,9 @@ export default class DecksWithoutNamesWrapper extends React.Component{
     }
 
     getDecks(){
+
         Meteor.call("getEventsStateQty", {state : this.state.selectedState, Formats_id : this.props.Formats_id, page : this.state.page, limit : this.state.limit}, (err, response)=>{
+            console.log(response);
             this.setState({DecksList : response})
         });
     }

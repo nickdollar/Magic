@@ -38,8 +38,8 @@ export default class SubmitDeck extends React.Component {
 
     render() {
         return (
-            <div className="SubmitDeckComponent">
-                <h3>Add Deck To Event</h3>
+            <div className="block-with-name SubmitDeckComponent">
+                <div className="block-with-name__title">Add Deck To Event</div>
                 {this.state.isTokenEntered ? <SubmitDeckForm event={this.state.Event}
                                                              deckSubmitted={this.deckSubmitted.bind(this)}
                                                              resetAll={this.resetAll.bind(this)}

@@ -30,15 +30,22 @@ export default class ImportUserDeck extends React.Component {
                 var sideboard = [];
                 var mainText = "";
                 var sideboardText = "";
+                var mainUnique = {};
+                var sideboardUnique = {};
 
                 if(this.state.selectedDeckFormat == "dekMTGO"){
                     var x2js = new X2JS();
                     var document = x2js.xml2js(fileLoadEvent.target.result);
 
                     if(document.Deck){
-                        document.Deck.Cards.forEach((card)=>{
-                            var card = {Cards_id : card._Name, qty : parseInt(card._Quantity)};
-                            card._Sideboard == "true" ? sideboard.push(card) : main.push(card);
+                        document.Deck.Cards.forEach((cardObj)=>{
+                            var card = {Cards_id : cardObj._Name, qty : parseInt(cardObj._Quantity)};
+
+                            if(cardObj._Sideboard == "true"){
+                                sideboardUnique[card.Cards_id] ? sideboardUnique[card.Cards_id] += card.qty : sideboardUnique[card.Cards_id] = card.qty;
+                            }else {
+                                mainUnique[card.Cards_id] ? mainUnique[card.Cards_id] += card.qty : mainUnique[card.Cards_id] = card.qty;
+                            }
                         })
                     }else{
                         message = "Not a MTGO XML File"
@@ -55,7 +62,12 @@ export default class ImportUserDeck extends React.Component {
                         };
 
                         var card = {Cards_id : cardMatch[2], qty : parseInt(cardMatch[1])};
-                        mainSideboard=="main" ? main.push(card) : sideboard.push(card)
+
+                        if(mainSideboard=="sideboard"){
+                            sideboardUnique[card.Cards_id] ? sideboardUnique[card.Cards_id] += card.qty : sideboardUnique[card.Cards_id] = card.qty;
+                        }else {
+                            mainUnique[card.Cards_id] ? mainUnique[card.Cards_id] += card.qty : mainUnique[card.Cards_id] = card.qty;
+                        }
                     }
                 }else if(this.state.selectedDeckFormat == "csvMTGO"){
                     var csvMTGOparsed = papaparse.parse(fileLoadEvent.target.result, {
@@ -71,26 +83,46 @@ export default class ImportUserDeck extends React.Component {
                         var data =  csvMTGOparsed.data;
                         for(var i = 0; i < data.length; i++){
 
-                            var card = {Cards_id : data[i]["Card Name"], qty : data[i].Quantity};
+                            var card = {Cards_id : data[i]["Card Name"], qty : parseInt(data[i].Quantity)};
 
-                            data[i].Sideboarded == "Yes" ? sideboard.push(card) : main.push(card);
+                           if(data[i].Sideboarded == "Yes"){
+                                sideboardUnique[card.Cards_id] ? sideboardUnique[card.Cards_id] += card.qty : sideboardUnique[card.Cards_id] = card.qty;
+                            }else {
+                                mainUnique[card.Cards_id] ? mainUnique[card.Cards_id] += card.qty : mainUnique[card.Cards_id] = card.qty;
+                            }
                         }
                     }
 
                 }else if(this.state.selectedDeckFormat == "dckXMAGE"){
-                    var deckXMAGERegex = new RegExp(/(SB:)? ?(\d) \[.*] (.+)/);
+
+
+                    var deckXMAGERegex = new RegExp(/(SB:)? ?(\d+) \[.*] (.+)/);
                     var layoutRegex = new RegExp(/LAYOUT MAIN/);
                     var lines = fileLoadEvent.target.result.split('\n');
+
                     for(var i = 0; i < lines.length; i++){
                         if(lines[i].match(layoutRegex)){break;}
 
                         var lineMatch = lines[i].match(deckXMAGERegex);
                         var card = {Cards_id : lineMatch[3], qty : parseInt(lineMatch[2])};
-                        lineMatch[1] ? sideboard.push(card) : main.push(card);
+                        if(lineMatch[1]){
+                            sideboardUnique[card.Cards_id] ? sideboardUnique[card.Cards_id] += card.qty : sideboardUnique[card.Cards_id] = card.qty;
+                        }else {
+                            mainUnique[card.Cards_id] ? mainUnique[card.Cards_id] += card.qty : mainUnique[card.Cards_id] = card.qty;
+                        }
                     }
+
                 }
 
+                for(var key in mainUnique){
+                    main.push({Cards_id : key, qty : mainUnique[key]})
+                }
+
+                for(var key in sideboardUnique){
+                    sideboard.push({Cards_id : key, qty : sideboardUnique[key]})
+                }
                 for(var i = 0; i < main.length; i++){
+
                     mainText += `${main[i].qty} ${main[i].Cards_id}\n`
                 }
 
@@ -131,46 +163,48 @@ export default class ImportUserDeck extends React.Component {
 
     importText(){
         var mainArray = this.state.mainText.split("\n");
-        var cardRegex = new RegExp(/(\d+) (.+)/g);
-            console.log(mainArray)
+        var cardRegex = new RegExp(/(\d+) (.+)/);
         var mainCards = [];
         var sideboardCards = [];
 
-        for(var i = 0; mainArray.length; i++){
-            console.log(mainArray[i]);
+        for(var i = 0; i < mainArray.length; i++){
             if(!mainArray[i]){
-                console.log("continue");
-                continue
+                continue;
             }
+            var cardMatch = mainArray[i].match(cardRegex);
 
-            // var cardMatch = mainArray[i].match(cardRegex);
-            // if(cardMatch){
-            //     mainCards.push({Cards_id : cardMatch[2], qty : cardMatch[3]})
-            // }
+            if(cardMatch){
+                mainCards.push({Cards_id : cardMatch[2], qty : parseInt(cardMatch[1])})
+            }
         }
 
-        // var sideboardArray = this.state.sideboardText.split("\n");
-        //
-        // for(var i = 0; sideboardArray.length; i++){
-        //     if(sideboardArray[i]){
-        //         var cardMatch = sideboardArray[i].match(cardRegex);
-        //         if(cardMatch){
-        //             sideboardCards.push({Cards_id : cardMatch[2], qty : cardMatch[3]})
-        //         }
-        //     }else{
-        //         console.log("AAAAAAA")
-        //     }
-        // }
-        // console.log(mainCards);
-        // console.log(sideboardCards);
+        var sideboardArray = this.state.sideboardText.split("\n");
+
+        for(var i = 0; i < sideboardArray.length; i++){
+            if(!sideboardArray[i]){
+                continue;
+            }
+            var cardMatch = sideboardArray[i].match(cardRegex);
+
+            if(cardMatch){
+                sideboardCards.push({Cards_id : cardMatch[2], qty : parseInt(cardMatch[1])})
+            }
+        }
+        this.props.importDeck({main : mainCards, sideboard : sideboardCards})
+
+    }
+
+    importFromList(){
+        this.props.importDeck({main : this.state.main, sideboard : this.state.sideboard})
     }
 
     render(){
+
         return(
             <div className="ImportUserDeckComponent">
                 <h3>Import From File</h3>
                 <div className="input-group"  style={{width : "100%"}}>
-                    <input onChange={(event)=>{console.log(event.target); this.changeTypeOfFile({event : event})}} id="uploadDeck" ref="uploadedFile" type="file" className="filestyle" data-icon="false"/>
+                    <input onChange={(event)=>{this.changeTypeOfFile({event : event})}} id="uploadDeck" ref="uploadedFile" type="file" className="filestyle" data-icon="false"/>
                     <span className="input-group-btn">
                         <button onClick={this.importFromFile.bind(this)} className="btn btn-secondary" type="button" >Add to List Below</button>
                     </span>
@@ -200,11 +234,12 @@ export default class ImportUserDeck extends React.Component {
                         <TabPanel>
                             <div className="row">
                                 <div className="col-xs-6">
+                                    <h4>Main</h4>
                                     <table className="table">
                                         <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Deck</th>
+                                            <th>Quantity</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -219,6 +254,7 @@ export default class ImportUserDeck extends React.Component {
                                     </table>
                                 </div>
                                 <div className="col-xs-6">
+                                    <h4>Sideboard</h4>
                                     <table className="table">
                                         <thead>
                                             <tr>
@@ -238,7 +274,7 @@ export default class ImportUserDeck extends React.Component {
                                     </table>
                                 </div>
                             </div>
-                            <button className="btn">
+                            <button onClick={this.importFromList.bind(this)} className="btn">
                                 Import From This List
                             </button>
                         </TabPanel>

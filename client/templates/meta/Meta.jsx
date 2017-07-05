@@ -23,19 +23,15 @@ export default class Meta extends React.Component {
 
     render(){
         return(
-            <div className="MetaComponent">
-                    <div className="col-xs-8">
-                        <div className="row">
-                            <MetaTable Formats_id={this.props.Formats_id} />
-                        </div>
+            <div className="MetaComponent block-body">
+                    <div className="block-left block-left--meta-archetypes">
+                        <MetaTable Formats_id={this.props.Formats_id} />
                     </div>
-                    <div className="col-xs-4">
-                        <div className="row">
+                    <div className="block-right block-right--cards-meta">
                             <MetaCards Formats_id={this.props.Formats_id} />
-                        </div>
-                        <div className="row">
-                            <MetaNews Formats_id={this.props.Formats_id} />
-                        </div>
+                    </div>
+                    <div className="block-right block-right--overflow block-right--news-meta block-right--not-first">
+                        <MetaNews Formats_id={this.props.Formats_id} />
                     </div>
             </div>
         );

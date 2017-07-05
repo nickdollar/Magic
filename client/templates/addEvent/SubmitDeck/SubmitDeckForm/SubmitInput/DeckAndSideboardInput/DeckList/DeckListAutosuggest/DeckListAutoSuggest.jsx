@@ -13,9 +13,9 @@ const themeDeckEdit = {
         fontWeight: 300,
         fontSize: 16,
         border: '1px solid #aaa',
-        borderTopLeftRadius: 4,
+        // borderTopLeftRadius: 4,
         borderTopRightRadius: 4,
-        borderBottomLeftRadius: 4,
+        // borderBottomLeftRadius: 4,
         borderBottomRightRadius: 4,
     },
     inputFocused: {

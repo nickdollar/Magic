@@ -15,6 +15,8 @@ import CustomUsersCollectionAdmin from './CustomUsersCollectionAdmin/CustomUsers
 import CustomCardsUniqueAdmin from './CustomCardsUniqueAdmin/CustomCardsUniqueAdmin.jsx';
 import CustomStartUpAdmin from './CustomStartUpAdmin/CustomStartUpAdmin.jsx';
 import CustomMetaLastDaysAdditions from './CustomMetaLastDaysAdditions/CustomMetaLastDaysAdditions.jsx';
+import CustomTCGDailyPricesAdmin from './CustomTCGDailyPricesAdmin/CustomTCGDailyPricesAdmin.jsx';
+import CustomGathererAdmin from './CustomGathererAdmin/CustomGathererAdmin.jsx';
 
 
 export default class CustomAdmin extends React.Component{
@@ -59,6 +61,10 @@ export default class CustomAdmin extends React.Component{
             return <CustomStartUpAdmin/>
         }else if (route=="MetaLastDaysAdditions"){
             return <CustomMetaLastDaysAdditions/>
+        }else if (route=="TCGDailyPrices"){
+            return <CustomTCGDailyPricesAdmin/>
+        }else if (route=="Gatherer"){
+            return <CustomGathererAdmin/>
         }
     }
 
@@ -79,9 +85,10 @@ export default class CustomAdmin extends React.Component{
     }
 
     render(){
-        var collections = [ "Cards", "Events", "DecksNames", "DecksArchetypes",
-                            "DecksData", "LGS", "LGSEvents", "EventsCalendar", "ZipCodes", "MetaLastDaysAdditions",
-                            "CardsSimple", "MetaNewest", "Sets", "TCGPrices", "UsersCollection", "CardsUnique"];
+        var collections = [ "Cards", "Events", "DecksNames", "DecksArchetypes", "DecksData", "LGS",
+                            "LGSEvents", "EventsCalendar", "ZipCodes", "MetaLastDaysAdditions",
+                            "CardsSimple", "MetaNewest", "Sets", "TCGPrices", "UsersCollection",
+                            "CardsUnique", "TCGDailyPrices", "Gatherer"];
         collections.sort()
         return (
             <div className="CustomAdminComponent">

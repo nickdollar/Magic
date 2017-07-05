@@ -1,5 +1,4 @@
 import React from 'react' ;
-import NewsMetaOptions from "./MetaNewsOptions/MetaNewsOptions.jsx";
 import NewsMetaValues from "./MetaNewsValues/MetaNewsValues.jsx";
 
 export default class NewsMetaValue extends React.Component {
@@ -15,7 +14,7 @@ export default class NewsMetaValue extends React.Component {
 
     registerOptions(){
         Meteor.call("getMetaLastAddition", {Formats_id : this.props.Formats_id}, (err, response)=>{
-            this.updateValues({data :response})
+            this.setState({data : response})
         });
     }
 
@@ -41,35 +40,33 @@ export default class NewsMetaValue extends React.Component {
             temp[index].selected = true;
         }
 
-        this.updateValues();
+        this.updateValues({options : options});
     }
 
-    updateValues({data}){
-        if(!data){
-            return;
-        }
-        var dataArray = [];
+    filterOptions(){
+
+        var cardsAndArchetypes = [];
         this.state.options.forEach((option)=>{
             if(option.selected){
-                dataArray = dataArray.concat(data[option.value].concat());
+                cardsAndArchetypes.concat(this.state.data[option.value])
             }
-        });
-
-        this.setState({tableData : dataArray});
+        })
+        return cardsAndArchetypes;
     }
 
     render(){
 
+        var arrayOfThings = this.filterOptions();
         return(
-            <div className="NewsMetaComponent">
-                <div className="metaTitle"><h4>Newest 20 Cards/Archetypes to Meta</h4></div>
-                <NewsMetaOptions registerOptions={this.registerOptions.bind(this)}/>
-                {this.state.options.map((option)=>{
-                    return  <label key={option.value} className="checkbox-inline">
-                        <input type="checkbox" onChange={()=>this.optionChanged(option.value).bind(this)} value={option.value} checked={option.selected}/> {option.text}
-                    </label>
-                })}
-                <NewsMetaValues tableData={this.state.tableData}/>
+            <div className="NewsMetaComponent new-cards-archetypes-component">
+
+                <div className="meta-header__title">Newest 20 Cards/Archetypes to Meta</div>
+                <ul className="new-cards-archetypes-list">
+                    {this.state.options.map((option)=>{
+                        return  <li key={option.value} className="new-cards-archetypes-checkboxes__option"> <input type="checkbox" onChange={()=>this.optionChanged(option.value).bind(this)} checked={option.selected}/> {option.text} </li>
+                    })}
+                </ul>
+                <NewsMetaValues tableData={arrayOfThings}/>
             </div>
         );
     }

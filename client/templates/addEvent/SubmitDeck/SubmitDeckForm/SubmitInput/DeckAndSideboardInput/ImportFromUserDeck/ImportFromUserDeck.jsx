@@ -10,7 +10,9 @@ export default class ImportFromUserDeck extends React.Component {
     }
 
     getUserDeckWithInfo(){
+        console.log(":AAAAAAAAA");
         Meteor.call("getUserDeckWithInfoMethod", {UsersDecks_id : this.refs["input"].value}, (err, response)=>{
+            console.log(response);
             this.props.setDeck({deck : response});
         })
     }
@@ -42,26 +44,15 @@ export default class ImportFromUserDeck extends React.Component {
 
         return(
             <div className="ImportFromUserDeckComponent">
-                <label htmlFor="example-search-input" className="col-xs-2 col-form-label">Import From Collection</label>
-                <div className="col-xs-10">
-                    <div style={{width : "567px", display : "inline-block"}}>
-                        <select ref="input" style={{width: 100 +"%"}} className="select2-container form-control decksArchetypes">
-                            <option></option>
-                            {sortedUsersDecksNames.map((deckArchetype)=>{
-                                return <option key={deckArchetype._id} value={deckArchetype._id}>{deckArchetype.name}</option>
-                            })}
-                        </select>
-                        {/*<AutoSuggest*/}
-                            {/*getSuggestionsMethod="getUserDecksMethod"*/}
-                            {/*getSuggestionMethodVariables={{Formats_id : this.props.event.Formats_id}}*/}
-                            {/*AutoCompleteCallBack={this.AutoCompleteCallBack.bind(this)}*/}
-                            {/*text="name"*/}
-                            {/*value="_id"*/}
-                        {/*/>*/}
-                    </div>
-                    <div style={{display : "inline-block"}}>
-                        <button onClick={this.getUserDeckWithInfo.bind(this)} className="btn">Request</button>
-                    </div>
+                <div className="options-list">
+                    <div className="options-list__label">Import From Collection</div>
+                    <select ref="input" className="input-options-list">
+                        <option></option>
+                        {sortedUsersDecksNames.map((deckArchetype)=>{
+                            return <option key={deckArchetype._id} value={deckArchetype._id}>{deckArchetype.name}</option>
+                        })}
+                    </select>
+                    <button onClick={this.getUserDeckWithInfo.bind(this)} className="options-list__button">Request</button>
                 </div>
             </div>
         );

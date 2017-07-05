@@ -56,8 +56,8 @@ export default class AutoComplete extends React.Component{
         };
 
         return (
-            <div className="optionsGroupName">
-                <div className="optionsHeader">Deck Contain</div>
+            <div className="optionsGroupName search-options">
+                <div className="search-options__field-name">Deck Contain</div>
                 <Autosuggest
                     suggestions={suggestions}
                     theme={theme}

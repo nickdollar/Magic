@@ -42,8 +42,8 @@ getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
                 _id : "$DecksData._id",
                 cards : {"$setUnion" :
                     [
-                        {$cond : {if : options.main, then : {$map : {input : "$DecksData.main", as: "el", in : {name : "$$el.name", qty : "$$el.qty", class : {"$const" : "main"}}}}, else : []}},
-                        {$cond : {if : options.sideboard, then : {$map : { input : "$DecksData.sideboard", as: "el", in : { name : "$$el.name", qty : "$$el.qty", class : {"$const" : "sideboard"}}}}, else : []}},
+                        {$cond : {if : options.main, then : {$map : {input : "$DecksData.main", as: "el", in : {Cards_id : "$$el.Cards_id", qty : "$$el.qty", class : {"$const" : "main"}}}}, else : []}},
+                        {$cond : {if : options.sideboard, then : {$map : { input : "$DecksData.sideboard", as: "el", in : { Cards_id : "$$el.Cards_id", qty : "$$el.qty", class : {"$const" : "sideboard"}}}}, else : []}},
                     ]},
                 date : "$DecksData.date",
                 LGS_id : "$DecksData.LGS_id",
@@ -69,8 +69,9 @@ getMetaCardsMainSideboard = function({Formats_id, options, LGS_ids}){
             ]
         }},
         {$unwind : "$cards"},
-        {$group : {"_id": { _id : "$_id", name: "$cards.name" }, qty : {$sum : "$cards.qty"}}},
-        {$group : {	_id : "$_id.name", total: {$sum : "$qty"}, count: {$sum : 1}}},
+        {$group : {"_id": { _id : "$_id", Cards_id: "$cards.Cards_id" }, qty : {$sum : "$cards.qty"}}},
+        {$group : {	_id : "$_id.Cards_id", total: {$sum : "$qty"}, count: {$sum : 1}}},
+        {$project : {Cards_id : "$_id", count :1, total : 1}},
         {$sort : {count : -1}}
     ]);
     return DecksArchetypesMeta;

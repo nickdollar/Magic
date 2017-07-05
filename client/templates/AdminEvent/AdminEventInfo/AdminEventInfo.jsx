@@ -187,8 +187,6 @@ export default class AdminEventInfo extends React.Component {
         })
         console.log("STATE");
 
-        console.log(this.state);
-
         return (
             <div className="AdminEventPlayerListComponent">
                 <div>

@@ -1,25 +1,24 @@
 Meteor.methods({
-    makeCardsUnique(){
-        logFunctionsStart("makeCardsUnique");
-            makeCardsUnique();
-        logFunctionsEnd("makeCardsUnique");
+    makeCardsUniqueMethod(){
+        makeCardsUnique();
     },
     cardsUniquesPricesMethod(){
         cardsUniquesPrices();
-    }
+    },
 })
+
 
 
 cardsUniquesPrices = ()=>{
     logFunctionsStart("cardsUniquesPrices");
-    TCGPrices.find().forEach((tcgprice)=>{
-        if(tcgprice.product){
-            CardsUnique.update({TCGSet : tcgprice.setName, TCGName : tcgprice.cardName},
-                {
-                    $set : {avgprice : tcgprice.product.avgprice, foilavgprice : tcgprice.product.foilavgprice}
-                }
-            );
-        }
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    TCGDailyPrices.find({date: date}).forEach((TCGDailyPrice)=>{
+        var updated = CardsUnique.update({TCGCards_id : TCGDailyPrice.TCGCards_id},
+            {
+                $set : {avgprice : TCGDailyPrice.avg, avgfoilprice : TCGDailyPrice.foil, datePrice : date}
+            }
+        );
     })
     logFunctionsEnd("cardsUniquesPrices");
 }
@@ -41,13 +40,14 @@ makeCardsUnique = ()=>{
                     rarity : "$printings.rarity",
                     foil : "$printings.foil",
                     normal : "$printings.normal",
-                    colorIdentity : "$colorIdentity"
+                    colorIdentity : "$colorIdentity",
+                    TCGCards_id : "$printings.TCGCards_id"
                 }
             }
         ])
 
         for(var i = 0; i < cardsAggregate.length; i++){
-            CardsUnique.update({_id : cardsAggregate[i]._id},
+            var update = CardsUnique.update({_id : cardsAggregate[i]._id},
                 {
                     $set : cardsAggregate[i]
                 },
@@ -55,6 +55,10 @@ makeCardsUnique = ()=>{
                     upsert : true
                 }
             );
+
+            if(update == 0){
+                console.log(cardsAggregate[i]._id);
+            }
         }
     logFunctionsEnd("makeCardsUnique");
 }

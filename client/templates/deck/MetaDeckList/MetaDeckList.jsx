@@ -4,7 +4,7 @@ import ArchetypeList from "./ArchetypeList/ArchetypeList.jsx";
 
 
 
-class MetaDeckList extends React.Component{
+export default class MetaDeckList extends React.Component{
     constructor() {
         super();
         this.state = {
@@ -79,27 +79,22 @@ class MetaDeckList extends React.Component{
 
     render() {
         return (
-            <div className="row  ">
-                <div className="col-xs-3">
-                    <SearchOptions updateTypes={this.updateTypes.bind(this)}
-                                   updateColors={this.updateColors.bind(this)}
-                                   updateContainMatch={this.updateContainMatch.bind(this)}
-                                   removeFromTheListMain={this.removeFromTheListMain.bind(this)}
-                                   autoComplete={this.autoComplete.bind(this)}
-                                   nameFilter={this.nameFilter.bind(this)}
-                                   state={this.state}
+            <div className="clearfix block-body">
+                <SearchOptions updateTypes={this.updateTypes.bind(this)}
+                               updateColors={this.updateColors.bind(this)}
+                               updateContainMatch={this.updateContainMatch.bind(this)}
+                               removeFromTheListMain={this.removeFromTheListMain.bind(this)}
+                               autoComplete={this.autoComplete.bind(this)}
+                               nameFilter={this.nameFilter.bind(this)}
+                               state={this.state}
 
-                    />
-                </div>
-                <div className="col-xs-9">
-                    <ArchetypeList cards={this.state.cards}
-                                   Formats_id={this.props.Formats_id}
-                                   state={this.state}
-                    />
-                </div>
+                />
+                <ArchetypeList cards={this.state.cards}
+                               Formats_id={this.props.Formats_id}
+                               state={this.state}
+                />
             </div>
         )
     }
 }
 
-export default MetaDeckList;

@@ -115,24 +115,18 @@ export default class NewMetaTableOptions extends React.Component {
     render(){
         return(
             <div className="MetaCardsOptionsComponent">
-                <div className="metaHeader">
-                    <div className="optionsHeader">
-                        <div className="buttonsContainer">
-                            <div className="optionButton">
-                                <button onClick={this.openOption.bind(this)}
-                                        className="btn btn-default btn-xs options"
-                                        style={{display: "inline"}}>Options<span className="caret"></span></button>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div className="metaTitle"><h4>Cards Breakdown</h4></div>
+                <div className="meta-header">
+                    <button onClick={this.openOption.bind(this)}
+                            className="btn btn-default btn-xs options meta-header__options-button"
+                            >Options<span className="caret"></span>
+                    </button>
+                    <div className="meta-header__title">Cards Breakdown</div>
                 </div>
-                <div className="content" ref="content">
+                <div className="content" ref="content"  style={{display : "none"}}>
                     {this.state.venues.map((venue, index1)=>{
-                        return <div key={venue.venue} className="custom-column">
-                            <div>{venue.text}</div>
-                            <ul className="list-unstyled optionsList">
+                        return <div key={venue.venue} className="meta-checkboxes">
+                            <div className="meta-checkboxes__option-list-name">{venue.text}</div>
+                            <ul className="meta-checkboxes__option-list">
                                 {venue.EventsTypes_ids.map((type, index2)=>{
                                     return  <li key={type.EventsTypes_id}>
                                         <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(index1, index2)} checked={type.selected}/>{type.text}
@@ -141,8 +135,8 @@ export default class NewMetaTableOptions extends React.Component {
                             </ul>
                         </div>
                     })}
-                    <div className="custom-column">
-                        <div className="optionListName">Deck Date</div>
+                    <div className="meta-checkboxes">
+                        <div className="meta-checkboxes__option-list-name">Deck Date</div>
                         <div className="inputDiv">
                             <label>
                                 <input type="date" onChange={(event)=>this.dateSelectedHandle(event, "startDate")} value={Moment(this.state.startDate).format("YYYY-MM-DD")}/> Start
@@ -153,7 +147,7 @@ export default class NewMetaTableOptions extends React.Component {
                                 <input type="date"  onChange={(event)=>this.dateSelectedHandle(event, "endDate")}  value={Moment(this.state.endDate).format("YYYY-MM-DD")}/> End
                             </label>
                         </div>
-                        <div className="optionListName">Positions</div>
+                        <div className="meta-checkboxes__option-list-name">Positions</div>
                         <div className="inputDiv">
                             <label>
                                 <input type="number" min="1" onChange={(event)=>this.positionSelectedHandle(event, "startPosition")} value={this.state.startPosition}/> Start
@@ -165,8 +159,8 @@ export default class NewMetaTableOptions extends React.Component {
                             </label>
                         </div>
                     </div>
-                    <div className="custom-column">
-                        <div className="optionListName">Main or Side</div>
+                    <div className="meta-checkboxes">
+                        <div className="meta-checkboxes__option-list-name">Main or Side</div>
                         {this.state.mainSide.map((mainSide, index)=>{
                             return  <div key={mainSide.value} className="checkbox">
                                         <label>

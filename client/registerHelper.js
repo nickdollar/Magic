@@ -16,9 +16,6 @@ getFormat_idFromLink = (formatLink)=>{
 }
 
 updateCollectionNumbersFunction = function(){
-
-
-
     var objects = UsersCollection.find({_id : Meteor.userId()}, {limit : 1}).fetch();
 
     var cardsObjects = {};

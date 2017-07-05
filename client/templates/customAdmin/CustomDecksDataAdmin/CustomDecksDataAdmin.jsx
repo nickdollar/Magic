@@ -26,6 +26,7 @@ export default class CustomDecksDataAdmin extends React.Component{
                 {/*<DecksDataMethodsButtons Formats_id={this.props.Formats_id} />*/}
                 <DecksWithoutNamesWrapper Formats_id={this.props.Formats_id}/>
                 {/*<DecksWithWrongCardsContainer Formats_id={this.props.Formats_id}/>*/}
+                <button onClick={()=>{Meteor.call("fixNamesToCards_idMethod")}}>fixNamesToCards_idMethod</button>
             </div>
         )
     }

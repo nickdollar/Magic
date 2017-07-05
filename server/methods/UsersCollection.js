@@ -115,7 +115,7 @@ Meteor.methods({
                         fQty : 1,
                         colorIdentity : "$card.colorIdentity",
                         avgprice : "$card.avgprice",
-                        foilavgprice : "$card.foilavgprice",
+                        avgfoilprice : "$card.avgfoilprice",
                     }
                 },
                 {
@@ -226,7 +226,7 @@ Meteor.methods({
               // Stage 6
               {
                   $project: {
-                      name : "$card.name",
+                      name : "$card.Cards_id",
                       setCode : "$card.setCode",
                       nQty : { $cond: { if: "$cards.nQty", then: "$cards.nQty", else: 0 } },
                       fQty : { $cond: { if: "$cards.fQty", then: "$cards.fQty", else: 0 } },

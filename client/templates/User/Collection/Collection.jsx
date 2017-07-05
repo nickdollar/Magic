@@ -161,7 +161,28 @@ export default class Collection extends React.Component {
     downloadFile(){
         Meteor.call("exportCollectionMethod", {}, (err, response)=>{
             var cardsCSV = `${response.keys.toString()}\r\n`;
-            cardsCSV += ConvertToCSV(response.cardsAggregate);
+
+            for(var i = 0; i < response.cardsAggregate.length; i++){
+                for (var key in response.cardsAggregate[i]) {
+                    if(key == "name"){
+                        cardsCSV += `"${response.cardsAggregate[i]["name"]}",`;
+                    }
+
+                    if(key == "setCode"){
+                        cardsCSV += `${response.cardsAggregate[i]["setCode"]},`;
+                    }
+
+                    if(key == "nQty"){
+                        cardsCSV += `${response.cardsAggregate[i]["nQty"]},`;
+                    }
+
+                    if(key == "fQty"){
+                        cardsCSV += `${response.cardsAggregate[i]["fQty"]}`;
+                    }
+                }
+                cardsCSV += "\r\n"
+            }
+
             var a         = document.createElement('a');
             a.href        = 'data:attachment/csv,' +  encodeURIComponent(cardsCSV);
             a.target      = '_blank';
@@ -174,20 +195,24 @@ export default class Collection extends React.Component {
     render(){
         return(
             <div className="CollectionComponent">
-                {/*<h3>Your Collection</h3>*/}
-                    <div className="content-wrapper">
-                    <h3>Export/Import</h3>
-                    <div className="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" className="btn btn-default" onClick={this.downloadFile}>Export</button>
-                        <button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>
+                <div className="block-body">
+                    <div className="block-body__title">Your Collection</div>
+                    <div className="row-wrapper row-wrapper--first">
+                        <div className="row-wrapper__title">Export/Import</div>
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-default" onClick={this.downloadFile}>Export</button>
+                            <button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>
+                        </div>
                     </div>
-                    <h3>Add Card To Collection</h3>
-                    <ModalFirstPage handleHideModal={this.handlerHideImportCollectionModal.bind(this)}
-                                showModal={this.state.showOptionsModal}
-                    >
-                            <ImportOptions/>
-                    </ModalFirstPage>
-                    <AddCardToCollection getCollectionCards={this.getCollectionCards.bind(this)}/>
+                    <div className="row-wrapper">
+                        <div className="row-wrapper__title">Add Card To Collection</div>
+                            <ModalFirstPage handleHideModal={this.handlerHideImportCollectionModal.bind(this)}
+                                        showModal={this.state.showOptionsModal}
+                            >
+                                <ImportOptions/>
+                            </ModalFirstPage>
+                        <AddCardToCollection getCollectionCards={this.getCollectionCards.bind(this)}/>
+                    </div>
                     <CollectionFilter filter={this.state.filter}
                                       updateColors={this.updateColors.bind(this)}
                                       submitFilter={this.submitFilter.bind(this)}

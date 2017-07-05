@@ -45,18 +45,12 @@ Meteor.methods({
             insertObject.name = `${foundArchetype.name} - ${foundDeck.player} ${moment(foundDeck.date).format("MM-DD")}`;
         }
 
-        var name = "name";
-        if(UsersDeck){
-            name = "_id";
-        }
-
         insertObject.main = foundDeck.main.map((card)=>{
-            return {_id : card[name], qty : card.qty}
+            return {Cards_id : card.Cards_id, qty : card.qty}
         });
         insertObject.sideboard = foundDeck.sideboard.map((card)=>{
-            return {_id : card[name], qty : card.qty}
+            return {Cards_id : card.Cards_id, qty : card.qty}
         });
-
         UsersDecks.insert(insertObject);
         return true;
     },
@@ -64,32 +58,7 @@ Meteor.methods({
         return UsersDecks.find({Users_id : Meteor.userId(), Formats_id : Formats_id}, {fields : {_id : 1, name : 1}}).fetch();
     },
     getUserDeckWithInfoMethod({UsersDecks_id}){
-
-        var deckAggregate = UsersDecks.aggregate(
-            [
-                {$match : {_id : UsersDecks_id}},
-                {
-                    $project: {
-                        main: {
-                            $map: {
-                                input: "$main",
-                                as: "element",
-                                in: {name: "$$element._id", qty: "$$element.qty"}
-                            }
-                        },
-
-                        sideboard: {
-                            $map: {
-                                input: "$sideboard",
-                                as: "element",
-                                in: {name: "$$element._id", qty: "$$element.qty"}
-                            }
-                        }
-                    },
-                }
-            ]
-        )
-        return deckAggregate[0];
+        return UsersDecks.find({_id : UsersDecks_id}, {limit : 1}).fetch()[0];
     },
     getUsersDecksWithCardsInformationMethod({UsersDecks_id}){
         var UsersDeck = UsersDecks.find({_id : UsersDecks_id}, {limit : 1}).fetch()[0];
@@ -154,8 +123,8 @@ Meteor.methods({
                         cards : {
                             $setUnion :
                                 [
-                                    {$map : {input : "$main", as : "main", in : "$$main._id"}},
-                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard._id"}}
+                                    {$map : {input : "$main", as : "main", in : "$$main.Cards_id"}},
+                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.Cards_id"}}
                                 ]
                         }
                     }
@@ -191,10 +160,10 @@ Meteor.methods({
         return UsersDeck;
     },
     removeDeckMethod({name, UsersDecks_id}){
-        console.log(UsersDecks.update({_id : UsersDecks_id, Users_id : Meteor.userId()},
+        UsersDecks.update({_id : UsersDecks_id, Users_id : Meteor.userId()},
             {
                 $pull : {decks : {name : name}}
-            }))
+            })
     },
     updateUsersDecksVictoriesLosses({UsersDecks_id, value, name, valueQty}){
 

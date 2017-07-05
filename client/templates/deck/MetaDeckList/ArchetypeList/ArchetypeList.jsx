@@ -79,7 +79,7 @@ export default class ArchetypeList extends React.Component {
             if(!obj.mainCards){
                 return false;
             }
-            var cards = obj.mainCards.map(card => card.name);
+            var cards = obj.mainCards.map(card => card.Cards_id);
             var foundCards = _.intersection(cards, this.props.cards);
             return foundCards.length == this.props.cards.length;
         });
@@ -87,7 +87,11 @@ export default class ArchetypeList extends React.Component {
     }
 
     render(){
-        var goodRows = this.state.DecksArchetypes;
+
+
+        var goodRows = this.state.DecksArchetypes.filter((archetype)=>{
+            return archetype.decksQty > 0;
+        });
 
         var types = this.props.state.types.filter((type)=>{
             if(type.checked){
@@ -134,7 +138,7 @@ export default class ArchetypeList extends React.Component {
         }
 
         return(
-            <div className="ArchetypeListComponent">
+            <div className="ArchetypeListComponent block-right block-right--archetype-list-component">
                 <BootstrapTable {...tableOptions}>
                     <TableHeaderColumn isKey dataField="name" dataFormat={this.nameFormat.bind(this)}>Name</TableHeaderColumn>
                     <TableHeaderColumn dataField="_id" dataFormat={this.colorsFormat}>Colors</TableHeaderColumn>

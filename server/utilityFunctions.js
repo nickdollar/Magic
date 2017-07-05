@@ -7,7 +7,7 @@ setUpColorForDeckName = function(main){
                     "R/W" : 0, "U/B" : 0, "U/R" : 0, "W/B" : 0, "W/U" : 0,
                     "B/P" : 0, "G/P" : 0, "R/P" : 0, "U/P" : 0, "W/P" : 0};
     main.forEach(function(card){
-        var cardQuery = Cards.find({_id : card.name}, {limit : 1}).fetch()[0];
+        var cardQuery = Cards.find({_id : card.Cards_id}, {limit : 1}).fetch()[0];
         if(cardQuery){
             var mana = cardQuery.manaCost;
             var result;

@@ -102,18 +102,18 @@ export default class Deck extends React.Component{
     }
     getCardsSideboard() {
         var sideboard = this.props.deck.sideboard.map((card)=>{
-            return card.name;
+            return card.Cards_id;
         });
         var cardsExists = Cards.find({_id : {$in : sideboard}}).fetch();
 
         var cardsComplete = cardsExists.filter((card)=>{
             return this.props.deck.sideboard.find((queryCard)=>{
-                return card.name == queryCard.name;
+                return card.Cards_id == queryCard.Cards_id;
             })
         })
             .map((card)=>{
                     var temp = this.props.deck.sideboard.find((queryCard)=>{
-                        return card.name == queryCard.name;
+                        return card.Cards_id == queryCard.Cards_id;
                     })
                     return Object.assign(card, temp);
                 }
@@ -132,7 +132,7 @@ export default class Deck extends React.Component{
         };
         var tempMain = main.concat();
         tempMain.forEach((card)=>{
-            var cardQuery = Cards.findOne({_id : card.name});
+            var cardQuery = Cards.findOne({_id : card.Cards_id});
             var cardComplete;
 
             if(cardQuery){
@@ -157,7 +157,7 @@ export default class Deck extends React.Component{
         var sideboard = [];
         var cardsTemp = cards.concat();
         cardsTemp.forEach((card)=>{
-            var cardQuery = Cards.findOne({_id : card.name});
+            var cardQuery = Cards.findOne({_id : card.Cards_id});
             var cardComplete;
             if(cardQuery){
                 cardComplete = Object.assign(card, {manaCost : cardQuery.manaCost});
@@ -177,10 +177,10 @@ export default class Deck extends React.Component{
             "data-mainSideboard" : mainSideboard
         };
 
-        var cardDataName = {"data-name" : card.name};
+        var cardDataName = {"data-name" : card.Cards_id};
         var cardQty = {value : card.qty};
 
-        return  <div className="cardLine" key={card.name} >
+        return  <div className="cardLine" key={card.Cards_id} >
             <div className="cardQtyAndNameWrapper js-imagePopOver" {...cardDataName}>
                 <div className="removeCardButtonWrapper"><button type="button" {...selectors} {...cardDataName} className="btn btn-xs" onClick={this.props.removeCardDeck}><span {...selectors} {...cardDataName} className="glyphicon glyphicon-remove"></span></button></div>
                 <input type="number" className="qtyInput" {...cardDataName} data-mainSideboard={mainSideboard} onChange={this.props.updateQty.bind(this)} {...cardQty}/>
@@ -193,7 +193,7 @@ export default class Deck extends React.Component{
                             {...cardDataName}
                             {...selectors}
                     >
-                        <option>{card.name}</option>
+                        <option>{card.Cards_id}</option>
                     </select>
                 </div>
                 {card ? <div className="cardInfo">

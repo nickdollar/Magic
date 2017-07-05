@@ -43,6 +43,54 @@ Meteor.methods({
                 })
         });
     },
+    AddNewCardsFromGathererMethod(){
+        console.log("START: AddNewCardsFromGathererMethod");
+        Gatherer.find({}).forEach((card)=>{
+            if(!Cards.find({_id : new RegExp(`^${card.name}`, "i")}, {limit : 1}).count()){
+                console.log(card.name, card.id, card.set);
+            }
+        })
+        console.log("   END: AddNewCardsFromGathererMethod");
+    },
+    AddNewCardsPrintingsFromGathererMethod(){
+        console.log("START: AddNewCardsPrintingsFromGathererMethod");
+            Gatherer.find({set : {$nin : ["Prerelease Events", 'Planechase "Planes"']}}).forEach((card)=>{
+                if(!Cards.find({"printings.multiverseid" : card._id}, {limit : 1}).count()){
+                    console.log(card.name, card.id, card.set);
+                    var foundSet = Sets.findOne({gatherer : card.set});
+                    console.log(Cards.update({_id : card.name, "printings.multiverseid" : {$ne : card._id}},
+                        {
+                            $push : {printings : {multiverseid : card._id, set : card.set, TCGSet : foundSet.TCG, setCode : foundSet._id}}
+                        }
+                    ))
+                }
+            })
+        console.log("   END: AddNewCardsPrintingsFromGathererMethod ");
+    },
+    addNumbersToCardsPrintingsMethod(){
+        logFunctionsStart("addNumbersToCardsPrintingsMethod");
+            Gatherer.find({}).forEach((card)=>{
+                Cards.update({printings : {$elemMatch : {multiverseid : card._id, number : null}}},
+                    {
+                        $set : {"printings.$.number" : parseInt(card.number)}
+                    })
+            })
+        logFunctionsEnd("addNumbersToCardsPrintingsMethod");
+    },
+    AddTCGCardsMethod(){
+        console.log("START: AddStarcityGamesCardsMethod");
+        TCGCards.find().forEach((card)=>{
+            if(Cards.find({_id : card.TCGName, printings : {$elemMatch : {TCGSet : card.TCGSet, TCGName : {$exists : false}}}}, {limit : 1}).count()){
+                console.log(card.TCGName, card.TCGSet);
+                console.log(Cards.update({_id : card.TCGName, printings : {$elemMatch : {TCGSet : card.TCGSet, TCGName : null}}},
+                    {
+                        $set : {"printings.$.TCGName" : card.TCGName, "printings.$.tcg_id" : card._id}
+                    }
+                ))
+            }
+        })
+        console.log("   END: AddStarcityGamesCardsMethod");
+    },
     giveNamesFromNormalMethod(){
         logFunctionsStart("giveNamesFromNormalMethod");
         Cards.find({layout : {$in : ["scheme","leveler", "plane", "phenomenon", "token"]}}).forEach((card)=>{
@@ -53,42 +101,46 @@ Meteor.methods({
         });
         logFunctionsEnd("giveNamesFromNormalMethod");
     },
-    giveLatestPriceForEach(){
-        logFunctionsStart("giveLatestPriceForEach");
-        var cardsPrices = TCGPrices.aggregate(
+    giveNamesToLandsMethod(){
+        logFunctionsStart("giveNamesToLandsMethod");
+        Cards.find({_id : {$in : ["Island", "Forest", "Plains", "Mountain", "Swamp"]}}).forEach((card)=>{
+            for(var i = 0; i < card.printings.length; i++){
+                if(card.printings[i].set){
+                    var foundSet = Sets.findOne({gatherer : card.printings[i].set});
+                    var foundLand = TCGCards.findOne({TCGSet : foundSet.TCG, TCGName : `${card._id} (${card.printings[i].number})`});
+                    if(foundLand){
+                        Cards.update({_id : card._id, "printings.multiverseid" : card.printings[i].multiverseid},
+                            {
+                                $set : {"printings.$.TCGName" : foundLand.TCGName, "printings.$.TCGSet" : foundLand.TCGSet, "printings.$.tcg_id" : foundLand._id }
+                            });
+                    }
+                }
+            }
+        });
+        logFunctionsEnd("giveNamesFromNormalMethod");
+    },
+    getCardsInfoFromCards_id({cards}){
+        console.log("getCardsInfoFromCards_id");
+        var cardsRegex = cards.map((card)=>{
+            return new RegExp(`^${card}$`);
+        })
 
-            [{$project: {
-                        Cards_id : 1,
-                        prices : [{$ifNull : ["$product.avgprice",0]}, {$ifNull : ["$product.foilavgprice",0]}]
-                    }},
+        var cardsInfo = CardsSimple.aggregate(
+            [
                 {
-                    $unwind: {
-                        path : "$prices"
-                    }
-                },
-                {
-                    $match: {
-                        prices : {$ne : 0}
-                    }
-                },
-                {
-                    $group: {
-                        _id : "$Cards_id",
-                        avgPrice : {$min : "$prices"},
-
-                    }
+                  $match : {
+                      _id : {$in : cardsRegex}
+                  }
                 },
             ]
         );
-
-        for(var i=0; i < cardsPrices.length; i++){
-
-            Cards.update({_id : cardsPrices[i]._id},
-                {
-                    $set : {avgPrice : cardsPrices[i].avgPrice}
-                })
-        }
-        logFunctionsEnd("giveLatestPriceForEach");
+        return cardsInfo;
+    },
+    giveLatestPriceForEachPrintingsMethod(){
+        giveLatestPriceForEachPrintings();
+    },
+    giveLatestPriceForEachMethod(){
+            giveLatestPriceForEach();
     },
     // addFoilOrNormal(){
     //       TCGPrices.find({}).forEach((card)=>{
@@ -106,6 +158,21 @@ Meteor.methods({
     // },
     getCardsListMethod({value}){
         return Cards.find({_id : new RegExp(`^${value}`, 'i')}, {limit : 5, fields : {printings : 1}}).fetch();
+    },
+    giveTCGCards_id(){
+        logFunctionsStart("giveTCGCards_id");
+          TCGCards.find({}).forEach((card)=>{
+              var result =Cards.update({printings : {$elemMatch : {TCGName : card.TCGName, TCGSet : card.TCGSet}}},
+                  {
+                      $set : {"printings.$.TCGCards_id" : card._id},
+                      $unset : {"printings.$.tcg_id" : ""}
+                  })
+
+              if(result == 0){
+                  console.log(card.TCGName, card.TCGSet);
+              }
+          })
+        logFunctionsEnd("giveTCGCards_id");
     },
     addSetCodeToCards(){
         Sets.find({}).forEach((set)=>{
@@ -205,40 +272,98 @@ getColorIdentity = ({card})=>{
     return colorIdentities;
 }
 
+giveLatestPriceForEachPrintings = ()=>{
+    logFunctionsStart("giveLatestPriceForEach");
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    console.log(date);
+    TCGDailyPrices.find({date : date}).forEach((card)=>{
+        Cards.update({"printings.TCGCards_id" : card.TCGCards_id},
+            {
+                $set : {"printings.$.priceDate" : date, "printings.$.avgprice" : card.avg},
+            })
+    });
+    logFunctionsEnd("giveLatestPriceForEach");
+}
 
 giveLatestPriceForEach = ()=>{
     logFunctionsStart("giveLatestPriceForEach");
-    var cardsPrices = TCGPrices.aggregate(
-
-        [{$project: {
-            Cards_id : 1,
-            prices : [{$ifNull : ["$product.avgprice",0]}, {$ifNull : ["$product.foilavgprice",0]}]
-        }},
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    var cardsPrices = TCGDailyPrices.aggregate(
+        [
             {
-                $unwind: {
-                    path : "$prices"
+                $match: {
+                    date : date
                 }
             },
+            {
+                $lookup: {
+                    "from" : "TCGCards",
+                    "localField" : "TCGCards_id",
+                    "foreignField" : "_id",
+                    "as" : "info"
+                }
+            },
+            {
+                $unwind: {
+                    path : "$info",
+                }
+            },
+            {
+                $project: {
+                    _id : "$TCGCards_id",
+                    avg : 1,
+                    foil : 1,
+                }
+            },
+            {
+                $lookup: {
+                    "from" : "Cards",
+                    "localField" : "_id",
+                    "foreignField" : "printings.TCGCards_id",
+                    "as" : "card"
+                }
+            },
+            {
+                $unwind: {
+                    path : "$card",
+                }
+            },
+
+            {
+                $project: {
+                    prices : [{$ifNull : ["$avg",0]}, {$ifNull : ["$foil",0]}],
+                    Cards_id : "$card._id"
+                }
+            },
+
+            {
+                $unwind: {
+                    path : "$prices",
+                }
+            },
+
             {
                 $match: {
                     prices : {$ne : 0}
                 }
             },
+
             {
                 $group: {
                     _id : "$Cards_id",
-                    avgPrice : {$min : "$prices"},
-
+                    avg : {$min : "$prices"}
                 }
             },
-        ]
+        ],
     );
 
-    for(var i=0; i < cardsPrices.length; i++){
 
+    for(var i = 0; i < cardsPrices.length; i++){
         Cards.update({_id : cardsPrices[i]._id},
             {
-                $set : {avgPrice : cardsPrices[i].avgPrice}
+                $set : {avgPrice : cardsPrices[i].avg}
             })
     }
     logFunctionsEnd("giveLatestPriceForEach");

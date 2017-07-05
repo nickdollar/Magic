@@ -4,7 +4,7 @@ Meteor.publish('DecksArchetypesGlobal', function() {
         Formats_id : 1,
         type : 1,
         colors : 1,
-        "mainCards.name" : 1,
+        "mainCards.Cards_id" : 1,
         link : 1,
         decksQty : 1
     }});

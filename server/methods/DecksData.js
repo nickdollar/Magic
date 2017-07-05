@@ -20,7 +20,7 @@ Meteor.methods({
                         Events_id : submitDeck._id,
                         LGS_id : submitDeck.LGS_id,
                         Formats_id : submitDeck.Formats_id,
-                        EventsType_id : "lgs",
+                        EventsTypes_id : "LGS",
                         main : submitDeck.main,
                         player : submitDeck.player,
                         sideboard : submitDeck.sideboard,
@@ -35,10 +35,10 @@ Meteor.methods({
     },
     updateALGSDecksData: function (deck) {
         deck.main = deck.main.map((card)=>{
-            return {name : card.name, qty : card.qty }
+            return {name : card.Cards_id, qty : card.qty }
         })
         deck.sideboard = deck.sideboard.map((card)=>{
-            return {name : card.name, qty : card.qty }
+            return {name : card.Cards_id, qty : card.qty }
         })
 
         if(Events.findOne({_id : deck.Events_id})){
@@ -57,7 +57,7 @@ Meteor.methods({
     updateMainSide: function (mainSide, DecksData_id) {
 
         var main = mainSide.main.map((card)=>{
-            var cardQuery = Cards.findOne({_id : card.name});
+            var cardQuery = Cards.findOne({_id : card.Cards_id});
 
             var cardResult = {name : card._id, qty : card.qty}
             if(!cardQuery){
@@ -67,7 +67,7 @@ Meteor.methods({
         })
 
         var sideboard = mainSide.sideboard.map((card)=>{
-            var cardQuery = Cards.findOne({_id : card.name});
+            var cardQuery = Cards.findOne({_id : card.Cards_id});
 
             var cardResult = {name : card._id, qty : card.qty}
             if(!cardQuery){
@@ -153,7 +153,7 @@ Meteor.methods({
             },
             {
                 $group : {
-                    _id : "$cards.name"
+                    _id : "$cards.Cards_id"
                 }
             }
         ])
@@ -195,30 +195,34 @@ Meteor.methods({
     logFunctionsEnd("recheckDeckWithWrongCardName");
     },
     addDecksArchetypesToDecksDataMethod({DecksArchetypes_id, DecksData_id}){
-
-        console.log(DecksArchetypes_id, DecksData_id);
-        // addToDecksUniqueWithName({DecksData_id : DecksData_id, DecksArchetypes_id : DecksArchetypes_id});
+        console.log(DecksArchetypes_id)
         var foundDeck = DecksData.findOne({_id : DecksData_id});
+
+        var oldDecksArchetypes = foundDeck.DecksArchetypes_id;
         DecksData.update({_id : DecksData_id},
             {
                 $set : {state : "manual", DecksArchetypes_id : DecksArchetypes_id}
             },
             {multi : true}
         )
-
-
         var count = DecksData.find({Events_id : foundDeck.Events_id}).count();
         var countDecksArchetypes = DecksData.find({Events_id : foundDeck.Events_id, DecksArchetypes_id : {$exists : true}}).count();
-
         if(count == countDecksArchetypes){
             Events.update({_id : foundDeck.Events_id},
                 {
                     $set : {state : "names"}
                 })
         }
-        createDecksArchetypesMainCards({DecksArchetypes_id});
-        createDecksArchetypesSideboardCards({DecksArchetypes_id});
-        createCardsDecksData_ids({DecksArchetypes_id});
+        createArchetypesDecksQty({DecksArchetypes_id : DecksArchetypes_id})
+        createDecksArchetypesMainCards({DecksArchetypes_id : DecksArchetypes_id});
+        createDecksArchetypesSideboardCards({DecksArchetypes_id : DecksArchetypes_id});
+        createCardsDecksData_ids({DecksArchetypes_id : DecksArchetypes_id});
+        if(oldDecksArchetypes) {
+            createArchetypesDecksQty({DecksArchetypes_id : oldDecksArchetypes});
+            createDecksArchetypesMainCards({DecksArchetypes_id : oldDecksArchetypes});
+            createDecksArchetypesSideboardCards({DecksArchetypes_id : oldDecksArchetypes});
+            createCardsDecksData_ids({DecksArchetypes_id : oldDecksArchetypes});
+        }
     },
     createMainSideboardsMethod(){
     logFunctionsStart("createMainSideboardsMethod");
@@ -397,8 +401,8 @@ Meteor.methods({
                             cards : {
                                 $setUnion :
                                     [
-                                        {$map : {input : "$main", as : "main", in : "$$main.name"}},
-                                        {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.name"}}
+                                        {$map : {input : "$main", as : "main", in : "$$main.Cards_id"}},
+                                        {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.Cards_id"}}
                                     ]
                             }
                         }
@@ -478,8 +482,8 @@ Meteor.methods({
                         cards : {
                             $setUnion :
                                 [
-                                    {$map : {input : "$main", as : "main", in : "$$main.name"}},
-                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.name"}}
+                                    {$map : {input : "$main", as : "main", in : "$$main.Cards_id"}},
+                                    {$map : {input : "$sideboard", as : "sideboard", in : "$$sideboard.Cards_id"}}
                                 ]
                         }
                     }
@@ -524,179 +528,6 @@ Meteor.methods({
         }
         return false;
     },
-    getBestMatchMethod({DecksData_id}){
-
-        var deckData = DecksData.findOne({_id: DecksData_id});
-
-        var decksArchetypes = [];
-        var allDecksArchetypes = DecksArchetypes.aggregate(
-            [
-                {
-                    $match: {Formats_id: deckData.Formats_id}
-                },
-                {
-                    $lookup: {
-                        "from": "DecksData",
-                        "localField": "_id",
-                        "foreignField": "DecksArchetypes_id",
-                        "as": "DecksData"
-                    }
-                },
-                {
-                    $unwind: "$DecksData"
-                },
-                {
-                    $match: {
-                        "DecksData.state": "manual"
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$_id",
-                        DecksData: {$push: "$DecksData"},
-                        qty: {$sum: 1}
-                    }
-                },
-                {
-                    $unwind: "$DecksData"
-                },
-                {
-                    $project: {
-                        main: "$DecksData.main"
-                    }
-                },
-                {
-                    $unwind: "$main"
-                },
-                {
-                    $lookup: {
-                        "from": "CardsSimple",
-                        "localField": "main.name",
-                        "foreignField": "_id",
-                        "as": "info"
-                    }
-                },
-
-                // Stage 10
-                {
-                    $match: {
-                        "info.types": {$ne: "land"}
-                    }
-                },
-
-                // Stage 11
-                {
-                    $group: {
-                        _id: {_id: "$_id", "name": "$main.name"},
-                        qty: {$sum: 1}
-                    }
-                },
-                {
-                    $match: {
-                        qty: {$gte: 4},
-                    }
-                },
-                // Stage 12
-                {
-                    $sort: {
-                        qty: -1
-                    }
-                },
-
-                // Stage 13
-                {
-                    $group: {
-                        _id: "$_id._id",
-                        cards: {$push: {name: "$_id.name", qty: "$qty"}}
-                    }
-                },
-
-            ]
-        );
-
-
-        var foundArchetypes = [];
-        allDecksArchetypes.forEach((aggregate) => {
-            var cards = [];
-            var cardsTest = [];
-
-            var top = aggregate.cards[0].qty;
-            for (var i = 0; i < aggregate.cards.length; i++) {
-                if (cards.length > 5) {
-                    if (aggregate.cards[i].qty != aggregate.cards[i - 1].qty) {
-                        break;
-                    }
-                }
-                cards.push(aggregate.cards[i].name);
-                cardsTest.push(aggregate.cards[i]);
-
-            }
-            var foundDecks = DecksData.findOne({_id: DecksData_id, "main.name": {$all: cards}});
-            if (foundDecks) {
-                foundArchetypes.push(aggregate._id);
-            }
-
-
-        })
-
-        if (foundArchetypes.length == 2) {
-            var cardsWithoutLands = DecksData.aggregate([
-                    {$match: {_id: deckData._id}},
-                    {$project: {main: 1}},
-                    {$unwind: {path: "$main"}},
-                    {
-                        $lookup: {
-                            "from": "CardsSimple",
-                            "localField": "main.name",
-                            "foreignField": "_id",
-                            "as": "info"
-                        }
-                    },
-                    {
-                        $unwind: "$info"
-                    },
-                    {
-                        $match: {
-                            "info.types": {$ne: "land"}
-                        }
-                    },
-                    {
-                        $group: {
-                            _id : "$main.name",
-                        }
-                    },
-                ]
-            );
-
-            var results = [];
-
-            for (var i = 0; i < foundArchetypes.length; i++) {
-                var foundArchetypeTest = DecksArchetypes.findOne({_id: foundArchetypes[i], mainCards : {$exists : true}});
-                if(!foundArchetypeTest){
-                    continue;
-                }
-
-                var foundCards = {found : [], notFound : []};
-                cardsWithoutLands.forEach((deckDataCard) => {
-                    var threashold = foundArchetypeTest.mainCards[0].qty/2;
-                    var index = foundArchetypeTest.mainCards.findIndex((archetypesCard) =>{
-                        if(archetypesCard.qty < threashold){
-                            return false;
-                        }
-                        return archetypesCard.name == deckDataCard._id;
-                    })
-                    index != -1 ? foundCards.found.push(deckDataCard._id) : foundCards.notFound.push(deckDataCard._id);
-                })
-
-                results.push({_id : foundArchetypes[i], cards : foundCards});
-            }
-            results = results.sort((a, b)=>{
-                return b.cards.found.length - a.cards.found.length;
-            })
-            return results.map(result => result._id);
-        }
-        return foundArchetypes;
-    },
     getDecksInfoFromUserEventMethod({Events_id}){
         return DecksData.find({Events_id : Events_id}).fetch();
     },
@@ -718,5 +549,111 @@ Meteor.methods({
             )
         }
 
+    },
+    findDecksArchetypesRankingsMethod({DecksData_id}){
+        var foundDeck = DecksData.findOne({_id : DecksData_id});
+        var foundDeckMain = foundDeck.main.filter((card)=>{
+            if(Cards.find({_id : card.Cards_id, types : {$ne : "land"}}, {limit : 1}).count()){
+                return true;
+            }else{
+                return false;
+            }
+        });
+
+
+        if(!foundDeck){
+            return [];
+        }
+
+
+        var foundArchetypes = DecksArchetypes.find({Formats_id : foundDeck.Formats_id}).fetch();
+
+        var results = [];
+        foundArchetypes.forEach((archetype)=>{
+            if(archetype.mainCards){
+                var mainCards = archetype.mainCards.sort((a, b)=>{return b.qty - a.qty})
+
+                var mainCards = mainCards.filter((card)=>{
+                    if(Cards.find({_id : card.Cards_id, types : {$ne : "land"}}, {limit : 1}).count()){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+
+                if(!mainCards.length){
+                    return;
+                }
+
+                var maxValue = mainCards[0].qty;
+                var total = 0;
+                var max = 0;
+                var missing = 0;
+                var cards = [];
+                for(var i = 0; i < foundDeckMain.length; i++){
+                    var index = mainCards.findIndex((card)=>{
+
+                        return card.Cards_id == foundDeckMain[i].Cards_id;
+                    })
+
+                    if(index == -1){
+                        missing++;
+                        continue;
+                    }
+
+                    if(mainCards[index].qty/maxValue < 0.5){
+                        continue;
+                    }
+                    total += (mainCards[index].qty/maxValue)*100;
+                    cards.push({Cards_id : mainCards[index].Cards_id,  value : 100*mainCards[index].qty/maxValue})
+                    max++;
+
+                }
+                results.push({DecksArchetypes_id : archetype._id, decksQty : archetype.decksQty, missing : total + max*100 - missing*100, double : total + max*100,cards : cards, max : max*100, archetypeName : archetype.name, total : total})
+            }
+
+            results = results.sort((a, b)=>{
+                return b.double - a.double;
+            })
+
+        })
+        return results;
+    },
+    fixNamesToCards_idMethod(){
+        logFunctionsStart("fixNamesToCards_idMethod");
+
+        DecksData.find({"main.name" : {$exists : true}}).forEach((deck)=>{
+            console.log(deck._id);
+            var main = deck.main.map((card)=>{
+                if(card.name){
+                    return {Cards_id : card.name, qty : card.qty}
+                }
+                return card;
+            })
+
+            var sideboard = deck.sideboard.map((card)=>{
+                if(card.name){
+                    return {Cards_id : card.name, qty : card.qty}
+                }
+                return card;
+            })
+
+            DecksData.update({_id : deck._id},{
+                $set : {main : main, sideboard : sideboard}
+            })
+        })
+
+        logFunctionsEnd("fixNamesToCards_idMethod");
+    },
+    removeLGSEventDeckMethod({DecksData_id}){
+        var foundDeck = DecksData.findOne({_id : DecksData_id});
+        var foundEvent = Events.findOne({_id : foundDeck.Events_id, Users_id : Meteor.userId()});
+
+        if(foundEvent){
+            DecksData.remove({_id : DecksData_id});
+        }
+
+
     }
+
 });

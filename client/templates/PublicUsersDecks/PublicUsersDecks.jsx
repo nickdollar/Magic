@@ -11,12 +11,13 @@ export default class UsersDecks extends React.Component {
 
     getDeckData(){
         Meteor.call("getAUsersDecksWithCardsInformationMethod", {UsersDecks_id : FlowRouter.getParam("UsersDecks_id")}, (err, response)=>{
+            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
-                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i]._id))
+                    Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
                 }
                 for(var i = 0 ; i < response.sideboard.length ; i++){
-                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i]._id))
+                    Object.assign(response.sideboard[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.sideboard[i].Cards_id))
                 }
 
                 this.setState({DeckData : response})
@@ -32,6 +33,9 @@ export default class UsersDecks extends React.Component {
     render(){
         return(
             <div className="PublicUsersDecksComponent">
+                <div className="usersDeckName">
+                    <h2>{this.state.DeckData.name}</h2>
+                </div>
                 <DeckProps
                     DeckData={this.state.DeckData}
                 />

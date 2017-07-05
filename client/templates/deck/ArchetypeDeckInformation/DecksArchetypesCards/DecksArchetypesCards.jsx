@@ -17,8 +17,8 @@ export default class DecksArchetypesCards extends React.Component {
             result.push(<ul className="list-group" style={{width : `${percent}%`}} key={key} >
                     <li className="list-group-item">{this.props.typesSeparated.typesSeparated[key].text}</li>
                     {this.props.typesSeparated.typesSeparated[key].array.map((card, index)=>{
-                        return  <li onClick={()=>this.props.checkCard(card.index)} className={`list-group-item ${card.checked ? "checked" : ""}`} key={card.name}>
-                            {card.qty} {card.name}
+                        return  <li onClick={()=>this.props.checkCard(card.index)} className={`list-group-item ${card.checked ? "checked" : ""}`} key={card.Cards_id}>
+                            {card.qty} {card.Cards_id}
                         </li>
                     })}
                 </ul>
