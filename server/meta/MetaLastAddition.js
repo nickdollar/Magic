@@ -20,9 +20,19 @@ createMetaLastAddition = ()=>{
                 {upsert : true}
             );
         });
-
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date : date},
+        {
+            $push : {date : date, createMetaLastAddition : true}
+        },
+        {
+            upsert : 1
+        })
     logFunctionsEnd("createMetaNewThingsDaysAllFormats");
 }
+
+
 
 metaLastAdditionArchetypes = function({Formats_id}){
 

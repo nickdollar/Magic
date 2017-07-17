@@ -38,6 +38,8 @@ export default class CardsTables extends React.Component {
 
     render(){
         const header = [{text : "Card", value : "name"}, {text :"Set", value : "setCode"}, {text : "Normal", value : "nQty"}, {text : "Foil", value : "fQty"},{text : "", value : "remove"}];
+
+        console.log(this.props);
         return(
             <div className="CardsTablesComponent">
                 <div className="row-wrapper">

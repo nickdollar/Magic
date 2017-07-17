@@ -75,7 +75,7 @@ export default class LGSList extends React.Component {
                     {this.props.LGS.map((lgs)=>{
                         return <tr key={lgs._id}>
                             <td><input type="checkbox" checked={this.props.checkedOrNotChecked(lgs._id)} onChange={()=>this.props.checkEvent(lgs._id)}/></td>
-                            <td>{lgs.name} {lgs.location.city ? `(${lgs.location.city})` : ""}</td>
+                            <td><a href={FlowRouter.path("LGSPage", {LGS_id : lgs._id})}> {lgs.name} {lgs.location.city ? `(${lgs.location.city})` : ""}</a></td>
                             <td>{lgs.location.formatedAddress}</td>
                             {this.checkDistanceType(lgs)}
                         </tr>

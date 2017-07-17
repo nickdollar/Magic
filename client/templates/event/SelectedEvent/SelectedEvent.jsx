@@ -65,23 +65,19 @@ export default class LGSAddNewStore extends React.Component {
 
     render(){
         return(
-            <div className="SelectedEventComponent">
+            <div className="SelectedEventComponent block-body">
                 <SelectedEventHeader DecksData={this.state.DecksData}
                                      Event={this.state.Event}
                 />
-                <div className="col-xs-3">
-                    <div className="row">
-                        <SelectedEventPlayerList Events_id={this.props.Events_id}
-                                                 DecksData_id={this.state.DecksData_id}
-                                                 DecksList={this.state.DecksList}
-                                                 Event={this.state.Event}
-                       />
-                    </div>
+                <div className="block-left block-left--event-player block-right--overflow">
+                    <SelectedEventPlayerList Events_id={this.props.Events_id}
+                                             DecksData_id={this.state.DecksData_id}
+                                             DecksList={this.state.DecksList}
+                                             Event={this.state.Event}
+                   />
                 </div>
-                <div className="col-xs-9">
-                    <div className="row">
+                <div className="block-right block-right--event-deck-selected block-left--overflow">
                         <DeckAggregate DecksData_id={this.state.DecksData_id}/>
-                    </div>
                 </div>
 
             </div>

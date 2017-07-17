@@ -47,6 +47,7 @@ export default class LatestDecks extends React.Component {
     }
 
     dateFormat(cell, row){
+        console.log(cell);
         return Moment(cell).format("MM/DD")
     }
 
@@ -118,14 +119,14 @@ export default class LatestDecks extends React.Component {
                             <TableHeaderColumn dataField="_id" isKey dataFormat={this.formatFormat}>Format</TableHeaderColumn>
                             <TableHeaderColumn dataField="t" dataFormat={this.typeFormat}>Type</TableHeaderColumn>
                             <TableHeaderColumn dataField="_id" dataFormat={this.nameFormat}>Name</TableHeaderColumn>
-                            <TableHeaderColumn width="65" dataField="data" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
+                            <TableHeaderColumn width="65" dataField="date" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
                         </BootstrapTable>
                     </div>
                     <div className="col-xs-6">
                             <BootstrapTable {...tableCards}>
                                 <TableHeaderColumn width="75" dataField="_id" isKey dataFormat={this.formatFormat}>Format</TableHeaderColumn>
                                 <TableHeaderColumn dataField="_id" dataFormat={this.nameFormat}>Name</TableHeaderColumn>
-                                <TableHeaderColumn width="65" dataField="data" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
+                                <TableHeaderColumn width="65" dataField="date" dataFormat={this.dateFormat}>Added</TableHeaderColumn>
                             </BootstrapTable>
                     </div>
                 </div>

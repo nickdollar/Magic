@@ -21,14 +21,15 @@ export default class Workbench extends React.Component {
                 {/*<button onClick={()=>Meteor.call("createMetaLastAdditionMethod")}>createMetaLastAdditionMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("fixArchetypes")}>fixArchetypes</button>*/}
                 {/*<button onClick={()=>Meteor.call("giveStarCityCards_idMethod")}>giveStarCityCards_idMethod</button>*/}
-                {/*<button onClick={()=>Meteor.call("CreateTCGDailyPricesMethod")}>CreateTCGDailyPricesMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("CreateDatabaseFromCSVMethod")}>CreateDatabaseFromCSVMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("findDecksArchetypesRankingsMethod")}>findDecksArchetypesRankingsMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("fixedArchetypes_namesMethod")}>fixedArchetypes_namesMethod</button>*/}
-                <button onClick={()=>Meteor.call("findCardsThatDoesntExistsMethod")}>findCardsThatDoesntExistsMethod</button>
+                {/*<button onClick={()=>Meteor.call("findCardsThatDoesntExistsMethod")}>findCardsThatDoesntExistsMethod</button>*/}
                 {/*<button  className="btn btn-default" onClick={()=>Meteor.call("fixPTCTHINGSMethod")}>fixPTCTHINGSMethod</button>*/}
-
-
+                {/*<button onClick={()=>Meteor.call("RemoveRemovedEventsMethod")}>RemoveRemovedEventsMethod</button>*/}
+                <button onClick={()=>Meteor.call("getESTTimeZoneHoursMethod")}>getESTTimeZoneHoursMethod</button>
+                <button onClick={()=>Meteor.call("getMyTimeZoneMethod")}>getMyTimeZoneMethod</button>
+                <button onClick={()=>Meteor.call("RemoveRemovedEventsMethod")}>RemoveRemovedEventsMethod</button>
             </div>
         );
     }

@@ -2,6 +2,7 @@ import React from "react";
 import LGSNameFieldContainer from "./SubmitInput/LGSNameField/LGSNameFieldContainer.jsx";
 import TokenField from "./SubmitInput/TokenField/TokenField.jsx";
 import PlayerNameInput from "./SubmitInput/PlayerNameInput/PlayerNameInput.jsx";
+import DCINumberField from "./SubmitInput/DCINumberField/DCINumberField.jsx";
 
 
 
@@ -63,6 +64,9 @@ class SubmitTokenForm extends React.Component{
     }
 
     render() {
+
+
+
         return (
             <div className="SubmitTokenFormComponent">
                 <form noValidate onSubmit={this.handleSubmit.bind(this)}>
@@ -77,7 +81,15 @@ class SubmitTokenForm extends React.Component{
                     <PlayerNameInput onComponentMounted={this.register.bind(this)}
                                 objectName={"player"}
                                 title={"Player Name"}
-                                errorMessage="Type Player Name."/>
+                                errorMessage="Type Player Name."
+                                preferredName={UsersProfile.findOne() ? UsersProfile.findOne().preferredName : ""}
+                    />
+                    <DCINumberField onComponentMounted={this.register.bind(this)}
+                                     objectName={"DCINumber"}
+                                     title={"DCINumber (optional)"}
+                                     errorMessage="SSSSSSSSSSSSSSS"
+                                     DCINumber={UsersProfile.findOne() ? UsersProfile.findOne().DCINumber : ""}
+                    />
                     <button type="submit" className="btn btn-default">Submit</button>
                     <span className="error" ref="serverMessage"></span>
                 </form>

@@ -30,7 +30,21 @@ getSCGEventsAndDecks = function(){
     for(var i = 0; i < eventsArray.length; i++) {
         webScrapingQueue.add({func : getSCGEventsAndDecksHTTPRequest, args :{endDate : endDate, startDate: startDate, event : eventsArray[i], start_num : 0}, wait : httpRequestTime});
     }
+    webScrapingQueue.add({func : getSCGEventsAndDecksConfirmation, args : {}, wait : 0});
+
     logFunctionsEnd("getSCGEventsAndDecks");
+}
+
+getSCGEventsAndDecksConfirmation = ()=>{
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {getSCGEventsAndDecks : true}
+        },
+        {
+            upsert : 1
+        })
 }
 
 getSCGEventsAndDecksHTTPRequest = ({endDate, startDate, event, start_num})=>{
@@ -103,8 +117,20 @@ getSCGDecksCards = ()=>{
     for(var i = 0 ; i < DecksDataQuery.length; i++){
         webScrapingQueue.add({func : getSCGDecksCardsHTTPRequest, args : {deckData : DecksDataQuery[i]}, wait : httpRequestTime });
     }
-    webScrapingQueue.add({func : getSCGDecksQTY, args : {}, wait : httpRequestTime });
+    webScrapingQueue.add({func : getSCGDecksCardsConfirmation, args : {}, wait : httpRequestTime });
     logFunctionsEnd("decksDownloadDecks");
+}
+
+getSCGDecksCardsConfirmation = ()=>{
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date},
+        {
+            $set : {getSCGDecksCards : true}
+        },
+        {
+            upsert : 1
+        })
 }
 
 getSCGDecksCardsHTTPRequest = ({deckData})=>{

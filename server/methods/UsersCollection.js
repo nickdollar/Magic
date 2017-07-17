@@ -343,7 +343,6 @@ importCollection = ({URLNumber})=>{
     logFunctionsStart("importCollection");
         // var URL = `http://store.tcgplayer.com/collection/view/${URLNumber}`
         var URL = `http://store.tcgplayer.com/collection/view/142729`
-        console.log(URL);
         Meteor.http.get(URL, (err, response)=>{
             console.log(response.content)
         })

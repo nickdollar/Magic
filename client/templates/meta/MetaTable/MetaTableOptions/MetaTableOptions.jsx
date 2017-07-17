@@ -11,11 +11,13 @@ export default class NewMetaTableOptions extends React.Component {
         for(var i = 0; i< eventsTypes.length; i++){
             var index = venues.findIndex(venue => eventsTypes[i].venue == venue.venue);
             if(index == -1){
-                venues.push({venue : eventsTypes[i].venue, text : eventsTypes[i].venue, EventsTypes_ids : [{EventsTypes_id : eventsTypes[i]._id, text : eventsTypes[i].short, selected : true}]})
+                venues.push({venue : eventsTypes[i].venue, selected : true, text : eventsTypes[i].venue, EventsTypes_ids : [{EventsTypes_id : eventsTypes[i]._id, text : eventsTypes[i].short, selected : true}]})
             }else{
                 venues[index].EventsTypes_ids.push({EventsTypes_id : eventsTypes[i]._id, text : eventsTypes[i].short, selected : true});
             }
         }
+
+        console.log(venues);
 
         this.state = {
             startDate : new Date(new Date().setDate(new Date().getDate() - 60)),
@@ -105,59 +107,74 @@ export default class NewMetaTableOptions extends React.Component {
         this.setState({LGS : objTemp});
     }
 
+    handleVenueChecked({venueIndex}){
+        var venues = this.state.venues.concat([]);
+
+        venues[venueIndex].selected = !venues[venueIndex].selected;
+
+        for(var i = 0; i < venues[venueIndex].EventsTypes_ids.length; i++){
+            venues[venueIndex].EventsTypes_ids[i].selected = venues[venueIndex].selected;
+        }
+        this.setState({venues : venues});
+    }
+
     render(){
         return(
             <div className="MetaTableOptionsComponent">
                 <div className="meta-header">
-                        <button type="submit"
-                                onClick={this.openOption.bind(this)}
-                                className="btn btn-default btn-xs options meta-header__options-button"
-                                style={{display: "inline"}}>Options<span className="caret"></span>
-                        </button>
-                    <div className="meta-header__title">Meta Breakdown</div>
+
+                    <button type="submit"
+                            onClick={this.openOption.bind(this)}
+                            className="btn btn-default btn-xs options meta-header__options-button"
+                            style={{display: "inline"}}>Options<span className="caret"></span>
+                    </button>
+                    <div className="clearfix"></div>
                 </div>
-                <div className="content" ref="content" style={{display : "none"}}>
-                    {this.state.venues.map((venue, index1)=>{
-                        return <div key={venue.venue} className="meta-checkboxes">
-                                    <div className="meta-checkboxes__option-list-name">{venue.text}</div>
-                                    <ul className="meta-checkboxes__option-list">
-                                        {venue.EventsTypes_ids.map((type, index2)=>{
-                                            return  <li key={type.EventsTypes_id}>
-                                                <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(index1, index2)} checked={type.selected}/>{type.text}
-                                            </li>
-                                        })}
-                                    </ul>
-                                </div>
-                    })}
-                    <div className="meta-checkboxes">
-                        <div className="meta-checkboxes__option-list-name">Deck Date</div>
-                        <div className="inputDiv">
-                            <label>
-                                <input type="date" onChange={(event)=>this.dateSelectedHandle(event, "startDate")} value={Moment(this.state.startDate).format("YYYY-MM-DD")}/> Start
-                            </label>
-                        </div>
-                        <div className="inputDiv">
-                            <label>
-                                <input type="date"  onChange={(event)=>this.dateSelectedHandle(event, "endDate")}  value={Moment(this.state.endDate).format("YYYY-MM-DD")}/> End
-                            </label>
-                        </div>
-                        <div className="optionListName">Positions</div>
-                        <div className="inputDiv">
-                            <label>
-                                <input type="number" min="1" onChange={(event)=>this.positionSelectedHandle(event, "startPosition")} value={this.state.startPosition}/> Start
-                            </label>
-                        </div>
-                        <div className="inputDiv">
-                            <label>
-                                <input type="number" min="2" onChange={(event)=>this.positionSelectedHandle(event, "endPosition")} value={this.state.endPosition}/> end
-                            </label>
-                        </div>
-                        <div >
-                            <button className="btn btn-xs" onClick={this.updateOptions.bind(this)} >Request Changes</button>
+                <div className="row-wrapper">
+                    <div className="content" ref="content" style={{display : "none"}}>
+                        {this.state.venues.map((venue, venueIndex)=>{
+                            return <div key={venue.venue} className="meta-checkboxes">
+                                <ul className="meta-checkboxes__option-list">
+                                    <li>
+                                        <input type="checkbox" onChange={()=>this.handleVenueChecked({venueIndex : venueIndex})} checked={venue.selected}/><span className="meta-checkboxes__option-list-name">{venue.text}</span>
+                                    </li>
+                                    {venue.EventsTypes_ids.map((type, index2)=>{
+                                        return  <li key={type.EventsTypes_id}>
+                                                    <input type="checkbox" onChange={(event)=> this.typeSelectedHandle(venueIndex, index2)} checked={type.selected}/>{type.text}
+                                                </li>
+                                    })}
+                                </ul>
+                            </div>
+                        })}
+                        <div className="meta-checkboxes">
+                            <div className="meta-checkboxes__option-list-name">Deck Date</div>
+                            <div className="inputDiv">
+                                <label>
+                                    <input type="date" onChange={(event)=>this.dateSelectedHandle(event, "startDate")} value={Moment(this.state.startDate).format("YYYY-MM-DD")}/> Start
+                                </label>
+                            </div>
+                            <div className="inputDiv">
+                                <label>
+                                    <input type="date"  onChange={(event)=>this.dateSelectedHandle(event, "endDate")}  value={Moment(this.state.endDate).format("YYYY-MM-DD")}/> End
+                                </label>
+                            </div>
+                            <div className="optionListName">Positions</div>
+                            <div className="inputDiv">
+                                <label>
+                                    <input type="number" min="1" onChange={(event)=>this.positionSelectedHandle(event, "startPosition")} value={this.state.startPosition}/> Start
+                                </label>
+                            </div>
+                            <div className="inputDiv">
+                                <label>
+                                    <input type="number" min="2" onChange={(event)=>this.positionSelectedHandle(event, "endPosition")} value={this.state.endPosition}/> end
+                                </label>
+                            </div>
+                            <div >
+                                <button className="btn btn-xs" onClick={this.updateOptions.bind(this)} >Request Changes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }

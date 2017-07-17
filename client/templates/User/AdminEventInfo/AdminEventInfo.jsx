@@ -4,7 +4,8 @@ import Moment from "moment";
 import AddEvent from "./AddEvent/AddEvent.jsx";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import UserCreatedEventInfo from "./UserCreatedEventInfo/UserCreatedEventInfo.jsx";
-
+import AddEventContainer from "./AddEvent/AddEventContainer.jsx";
+import ModalFirstPage from "/client/dumbReact/Modal/ModalFirstPage.jsx"
 
 export default class AdminEventInfo extends React.Component {
     constructor(props){
@@ -27,7 +28,9 @@ export default class AdminEventInfo extends React.Component {
     }
 
     expandComponent(row){
-        return <UserCreatedEventInfo Events_id={row._id}/>;
+        return <UserCreatedEventInfo Events_id={row._id}
+                                     EventsState={row.state}
+        />;
     }
 
     isExpandableRow (row){
@@ -79,10 +82,11 @@ export default class AdminEventInfo extends React.Component {
     }
 
     remove(cell, row){
-        if(row.state=="names"){
-            return <button className={`btn btn-xs ${row.remove ? "btn-danger": "btn-warning"}`} disabled={row.state=="names" ? true : false} onClick={(e)=>{e.stopPropagation(); this.deleteEvent ({e:e, row : row})}}>{row.remove ? "confirm" : "remove"}</button>
-        }
-        return null;
+
+        // if(!row.state=="names"){
+            return <button className={`btn btn-xs ${row.remove ? "btn-danger": "btn-warning"}`} disabled={row.state=="names" || row.state=="removed"  ? true : false} onClick={(e)=>{e.stopPropagation(); this.deleteEvent ({e:e, row : row})}}>{row.remove ? "confirm" : "remove"}</button>
+        // }
+        // return null;
      }
 
     expand(row){
@@ -125,13 +129,12 @@ export default class AdminEventInfo extends React.Component {
                     <div>States: lgsCreated->pending->published->names</div>
                     <div>lgsCreated: New deck can be added.</div>
                     <div>pending: No new decks can be added after this point, waiting admin approval.</div>
-                    <div>published: Accepted by admin.</div>
-                    <div>names: Decks have names and is part of the Crowdmtg.com.</div>
-                    <div>Removes: Will be deleted after 48 hours</div>
-
+                    <div>published: Accepted by admin. Appears on the LGS Page</div>
+                    <div>names: Decks have names and is part of the Crowdmtg.com and the Meta. Can't be removed</div>
+                    <div>Removed: Will be deleted over night.</div>
                 </div>
                 <BootstrapTable {...options}>
-                    <TableHeaderColumn dataField="_id"                             dataFormat={this.formatExpand.bind(this)}>+</TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id"          dataFormat={this.formatExpand.bind(this)}>+</TableHeaderColumn>
                     <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.formatLink} isKey >_id</TableHeaderColumn>
                     <TableHeaderColumn dataField="name"         expandable={false}>name</TableHeaderColumn>
                     <TableHeaderColumn dataField="date"         expandable={false} dataFormat={this.formatDate}>Date</TableHeaderColumn>
@@ -141,7 +144,7 @@ export default class AdminEventInfo extends React.Component {
                     <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.formatPublishEvent.bind(this)} >Publish</TableHeaderColumn>
                     <TableHeaderColumn dataField="_id"          expandable={false} dataFormat={this.remove.bind(this)} >Remove</TableHeaderColumn>
                 </BootstrapTable>
-            <AddEvent getUsersCreatedEvent={this.getUsersCreatedEvent.bind(this)}/>
+            <AddEventContainer getUsersCreatedEvent={this.getUsersCreatedEvent.bind(this)}/>
             </div>
         )
     }

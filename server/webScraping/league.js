@@ -42,6 +42,18 @@ getLeagueEventsAndDecks = function({Formats_id, days, dateType}){
         }
         webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequest, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
     }
+    webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequestConfirm, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
+
+}
+
+getLeagueEventsAndDecksHTTPRequestConfirm = ({date})=>{
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {date : date, getLeagueEventsAndDecksHTTPRequest : true}
+        },
+        {
+            upsert : 1
+        })
 }
 
 getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{

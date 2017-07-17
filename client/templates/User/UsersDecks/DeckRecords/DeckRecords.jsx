@@ -203,7 +203,9 @@ export default class DeckRecords extends React.Component {
                 </div>
                 <div className="resultsTable">
                     <BootstrapTable {...options}>
-                        <TableHeaderColumn isKey dataField="name" width={"200px"} expandable={false}>Name</TableHeaderColumn>
+                        <TableHeaderColumn isKey dataField="name" width={"150px"} expandable={false}>Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" width={"150px"} expandable={false}>Side on play</TableHeaderColumn>
+                        <TableHeaderColumn dataField="name" width={"150px"} expandable={false}>Side on Draw</TableHeaderColumn>
                         <TableHeaderColumn dataField="win" dataFormat={this.wins} expandable={false}>Wins</TableHeaderColumn>
                         <TableHeaderColumn dataField="lose" dataFormat={this.loses} expandable={false}>Loses</TableHeaderColumn>
                         <TableHeaderColumn dataField="draw" dataFormat={this.draws} expandable={false}>Draws</TableHeaderColumn>
@@ -211,6 +213,7 @@ export default class DeckRecords extends React.Component {
                         <TableHeaderColumn dataField="name" dataFormat={this.formatRemove.bind(this)} expandable={false}>Remove</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
+
             </div>
         );
     }

@@ -20,7 +20,6 @@ export default class Deck extends React.Component{
     }
 
     separateCardsByType(main){
-        console.log(main);
         var typesSeparated = {
             passChecks : {array : [], text : "Pass Checks"},
             null : {array : [], text : "Wrong Name"},
@@ -132,7 +131,7 @@ export default class Deck extends React.Component{
             }
             return <span className={`card-row__quantity ${card.qty > card.have ? "card-row__quantity--lessThan" : null}`}>{`${card.qty}/${card.have}`}</span>
         }
-        return card.qty;
+        return <span  className="card-row__quantity">{card.qty}</span>;
     }
 
     importDeck(){
@@ -194,7 +193,7 @@ export default class Deck extends React.Component{
             <div className="DeckAggregateContainer deck-aggregate">
                 {/*<div className="buy-place">{this.createLink(this.state.DecksData)}</div>*/}
                 <div className="btn-group" role="group" aria-label="Basic example">
-                    <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
+                    <button className="btn btn-default" disabled={this.state.importedDeck || !Meteor.userId()} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
                     {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
                 </div>
                 <div className="deck-aggregate__main-side">Main</div>

@@ -5,6 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "array-sort": "^0.1.2",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-runtime": "^6.20.0",
     "browserify": "^14.4.0",
@@ -22,6 +23,7 @@
     "handlebars": "^4.0.6",
     "javascript-state-machine": "^2.4.0",
     "jquery": "^1.12.4",
+    "jsonlint": "^1.6.2",
     "jstz": "^1.0.8",
     "less": "^2.7.2",
     "meteor-node-stubs": "~0.2.0",
@@ -45,7 +47,8 @@
     "react-themeable": "^1.1.0",
     "request": "^2.81.0",
     "websocket-driver": "^0.6.5",
-    "x2js": "^3.1.0"
+    "x2js": "^3.1.0",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "eslint": "^3.16.1",

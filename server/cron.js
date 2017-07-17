@@ -118,6 +118,17 @@ addCron = function(){
             createMetaLastDaysAdditions();
         }
     });
+
+    SyncedCron.add({
+        name: "RemoveRemovedEventsMethod",
+        schedule: function(parser) {
+            timer += distanceBetween;
+            return parser.recur().on(1).hour().on(timer).minute()
+        },
+        job: function() {
+            RemoveRemovedEvents();
+        }
+    });
 }
 
 Meteor.startup(function() {

@@ -599,38 +599,27 @@ Meteor.methods({
         })
     },
     importFromDecksArchetypesMethod({DecksArchetypes_id, percentageMain, percentageSide}){
-
-
         var foundArchetype = DecksArchetypes.findOne({_id : DecksArchetypes_id});
-
-
-        var main = foundArchetype.mainCards.sort((a, b)=>{
+        var mainCards = foundArchetype.mainCards.sort((a, b)=>{
             return b.qty - a.qty;
         })
 
-        var sideboard = foundArchetype.sideboardCards.sort((a, b)=>{
+        var sideboardCards = foundArchetype.sideboardCards.sort((a, b)=>{
             return b.qty - a.qty;
         })
 
         var response = {main : [], sideboard : []};
-
-        console.log(main);
-        console.log(sideboard);
-
-        for(var i = 0; i < main.length; i++){
-            if(main[i].qty/main[0].qty > percentageMain/100){
-                response.main.push({Cards_id : main[i].Cards_id, qty : main[i].avg});
+        for(var i = 0; i < mainCards.length; i++){
+            if(mainCards[i].qty/mainCards[0].qty > percentageMain/100){
+                response.main.push({Cards_id : mainCards[i].Cards_id, qty : Math.round(mainCards[i].avg)});
             }
         }
 
-        for(var i = 0; i < sideboard.length; i++){
-            if(sideboard[i].qty/sideboard[0].qty > percentageSide/100){
-                response.sideboard.push({Cards_id : sideboard[i].Cards_id, qty : sideboard[i].avg});
+        for(var i = 0; i < sideboardCards.length; i++){
+            if(sideboardCards[i].qty/sideboardCards[0].qty > percentageSide/100){
+                response.sideboard.push({Cards_id : sideboardCards[i].Cards_id, qty : Math.round(sideboardCards[i].avg)});
             }
         }
-
-        console.log(response.main);
-        console.log(response.sideboard);
         return response;
     }
 

@@ -28,7 +28,9 @@ export default class CustomCardsAdmin extends React.Component {
         return(
             <div className="CustomCardsAdminComponent">
                 <button onClick={()=>Meteor.call("giveLatestPriceForEach")}>giveLatestPriceForEach</button>
-                {/*<button onClick={()=>Meteor.call("organizeAllCardsDatabaseMethod")}>organizeAllCardsDatabaseMethod</button>*/}
+                <div>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("organizeAllCardsDatabaseMethod")}>organizeAllCardsDatabaseMethod</button>
+                </div>
                 <div>
                     <button className="btn btn-default" onClick={()=>Meteor.call("AddNewCardsPrintingsFromGathererMethod")}>AddNewCardsPrintingsFromGathererMethod</button>
                 </div>
@@ -52,6 +54,9 @@ export default class CustomCardsAdmin extends React.Component {
                 </div>
                 <div>
                     <button className="btn btn-default" onClick={()=>Meteor.call("giveLatestPriceForEachMethod")}>giveLatestPriceForEachMethod</button>
+                </div>
+                <div>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("cardsRemoveNaN")}>cardsRemoveNaN</button>
                 </div>
                 <div className="input-group">
                     <select onChange={(event)=>{this.selectedComponent(event.target.value)}}>

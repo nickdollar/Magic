@@ -60,7 +60,6 @@ UpdateCardsSimplePrices = ()=>{
             CardsSimple.update({_id : card._id},
                 {
                     $set : data,
-
                 }
             )
         }

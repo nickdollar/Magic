@@ -147,9 +147,9 @@ export default class ArchetypeDeckInformation extends React.Component {
                             {this.state.DecksData_id ? <DeckAggregate DecksData_id={this.state.DecksData_id}/> : null}
                     </div>
                 </div>
-                {/*<div className="body-block">*/}
-                    {/*<Sideboard DecksArchetypes_id={DeckArchetype._id}/>    */}
-                {/*</div>*/}
+                <div className="body-block">
+                    <Sideboard DecksArchetypes_id={DeckArchetype._id}/>
+                </div>
 
             </div>
         );

@@ -123,7 +123,7 @@ Meteor.methods({
     getCardsInfoFromCards_id({cards}){
         console.log("getCardsInfoFromCards_id");
         var cardsRegex = cards.map((card)=>{
-            return new RegExp(`^${card}$`);
+            return new RegExp(`^${card}$`, "i");
         })
 
         var cardsInfo = CardsSimple.aggregate(
@@ -203,7 +203,20 @@ Meteor.methods({
 
     },
     cardsRemoveNaN(){
-        Cards.find({}).
+        logFunctionsStart("cardsRemoveNaN");
+        Cards.find({}, {limit : 5000}).forEach((card)=>{
+            var printings = card.printings.map((printing)=>{
+                console.log(printing);
+                delete printing.number;
+                console.log(printing);
+                return printing;
+            })
+
+            Cards.update({_id : card._id},
+                {$set : {printings : printings}}
+            )
+        })
+        logFunctionsEnd("cardsRemoveNaN");
     }
 });
 
@@ -283,13 +296,20 @@ giveLatestPriceForEachPrintings = ()=>{
     logFunctionsStart("giveLatestPriceForEach");
     var date = new Date();
     date.setHours(0, 0, 0, 0);
-    console.log(date);
     TCGDailyPrices.find({date : date}).forEach((card)=>{
         Cards.update({"printings.TCGCards_id" : card.TCGCards_id},
             {
                 $set : {"printings.$.priceDate" : date, "printings.$.avgprice" : card.avg},
             })
     });
+
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {giveLatestPriceForEachPrintings : true}
+        },
+        {
+            upsert : 1
+        })
     logFunctionsEnd("giveLatestPriceForEach");
 }
 
@@ -373,5 +393,16 @@ giveLatestPriceForEach = ()=>{
                 $set : {avgPrice : cardsPrices[i].avg}
             })
     }
+
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {date : date, giveLatestPriceForEach : true}
+        },
+        {
+            upsert : 1
+        })
+
     logFunctionsEnd("giveLatestPriceForEach");
 }

@@ -71,7 +71,6 @@ export default class Deck extends React.Component{
 
     getDecksDataById(DecksData_id){
         Meteor.call("getDecksDataWithCardsInformation", {DecksData_id : DecksData_id}, (err, response)=>{
-            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
                     Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
@@ -150,7 +149,7 @@ export default class Deck extends React.Component{
             }
             return <span className={`card-row__quantity ${card.qty > card.have ? "card-row__quantity--lessThan" : null}`}>{`${card.qty}/${card.have}`}</span>
         }
-        return card.qty;
+        return <span  className="card-row__quantity">{card.qty}</span>;
     }
 
     importDeck(){
@@ -208,7 +207,7 @@ export default class Deck extends React.Component{
             <div className="DeckAggregateContainer deck-aggregate">
                 {/*<div className="buy-place">{this.createLink(this.state.DecksData)}</div>*/}
                 <div className="btn-group" role="group" aria-label="Basic example">
-                    <button className="btn btn-default" disabled={this.state.importedDeck} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
+                    <button className="btn btn-default" disabled={this.state.importedDeck || !Meteor.userId()} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
                     {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
                 </div>
                 <div className="deck-aggregate__main-side">Main</div>

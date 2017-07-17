@@ -1,13 +1,12 @@
 import React from 'react' ;
 import ModalFirstPage  from '/client/dumbReact/Modal/ModalFirstPage.jsx'
 import DeckAggregate from '/client/dumbReact/DeckAggregate/DeckAggregate.jsx';
-
-
+import PositionFromFile from './PositionFromFile/PositionFromFile.jsx';
 
 export default class AdminEventPlayerList extends React.Component {
     constructor(){
         super();
-        this.state = {Decks : [], DecksData_id : "", showModalDeckAggregate: false}
+        this.state = {Decks : [], DecksData_id : "", showModalDeckAggregate: false, PositionFromFile : false}
     }
 
     getDecksInfoFromUserEvent(){
@@ -28,6 +27,10 @@ export default class AdminEventPlayerList extends React.Component {
             options.push(i);
         }
 
+        if(this.props.EventsState == "names"){
+            return "";
+        }
+
         return <select defaultValue={cell} onChange={(e)=>this.selectChange({target : e.target, dataField : dataField, DecksData_id : row._id})}>
                 <option value={"clear"}>Clear</option>;
                 {options.map((number)=>{
@@ -41,15 +44,30 @@ export default class AdminEventPlayerList extends React.Component {
     }
 
     formatRemoveDeck(cell, row){
-        return <button onClick={()=>{Meteor.call("removeLGSEventDeckMethod", {DecksData_id : row._id})}} className="btn btn-xs">remove</button>
+        if(this.props.EventsState != "names"){
+            return <button onClick={()=>{Meteor.call("removeLGSEventDeckMethod", {DecksData_id : row._id})}} className="btn btn-xs">remove</button>
+        }
+        return "";
+
     }
 
+
+    //Deck Aggregate
     handleHideDeckAggregate(){
         this.setState({showModalDeckAggregate: false})
     }
-
     handleShowModalDeckAggregate({row}){
         this.setState({showModalDeckAggregate: true, DecksData_id : row._id});
+    }
+
+
+    //PositionFromFile
+    handleHidePositionFromFile(){
+        this.setState({PositionFromFile: false})
+    }
+
+    handleShowModalPositionFromFile({row}){
+        this.setState({PositionFromFile: true});
     }
 
     formatDeck(cell, row){
@@ -60,12 +78,14 @@ export default class AdminEventPlayerList extends React.Component {
         const options = {
             data : this.state.Decks
         }
-        console.log(this.state);
-        console.log(this.props);
+
+        var that = this;
         return(
             <div className="UserCreatedEventInfo">
+                {this.props.EventsState == "names" ? "" : <button   onClick={this.handleShowModalPositionFromFile.bind(this)}>Import Results</button>}
                 <BootstrapTable {...options}>
                     <TableHeaderColumn dataField="_id" dataFormat={this.formatDeck.bind(this)}>Deck</TableHeaderColumn>
+                    <TableHeaderColumn dataField="DCINumber">DCINumber</TableHeaderColumn>
                     <TableHeaderColumn isKey dataField="player" >Player</TableHeaderColumn>
                     <TableHeaderColumn dataField="position" dataFormat={(cell, row)=>{return this.position({dataField : "position", cell : cell, row : row})}}>Position</TableHeaderColumn>
                     <TableHeaderColumn dataField="victory"  dataFormat={(cell, row)=>{return this.position({dataField : "victory", cell : cell, row : row})}}>Victory</TableHeaderColumn>
@@ -77,6 +97,15 @@ export default class AdminEventPlayerList extends React.Component {
                                 handleHideModal={this.handleHideDeckAggregate.bind(this)}
                                 title="" >
                     <DeckAggregate DecksData_id={this.state.DecksData_id}
+                    />
+                </ModalFirstPage>
+                <ModalFirstPage showModal={this.state.PositionFromFile}
+                                handleHideModal={this.handleHidePositionFromFile.bind(this)}
+                                title="Import From XML"
+                >
+                    <PositionFromFile
+                        Decks={this.state.Decks}
+                        getDecksInfoFromUserEvent={this.getDecksInfoFromUserEvent.bind(that)}
                     />
                 </ModalFirstPage>
             </div>

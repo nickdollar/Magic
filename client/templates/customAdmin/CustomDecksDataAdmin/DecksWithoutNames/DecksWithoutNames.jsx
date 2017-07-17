@@ -2,7 +2,6 @@ import React from 'react' ;
 import ModalFirstPage from '/client/dumbReact/Modal/ModalFirstPage.jsx';
 import DecksArchetypesListSubmit from "/client/dumbReact/DecksArchetypesListSubmit/DecksArchetypesListSubmit.jsx";
 import DeckAggregate from "/client/dumbReact/DeckAggregate/DeckAggregate.jsx";
-import FoundDeckListArchetypeOption from "./FoundDeckListArchetypeOption/FoundDeckListArchetypeOption.jsx";
 import DecksRankings from "./DecksRankings/DecksRankings.jsx";
 
 
@@ -23,7 +22,6 @@ export default class DecksWithoutArchetypes extends React.Component{
     }
 
     render(){
-        console.log(this.state);
         return (
             <div>
                 <table className="table">
@@ -47,10 +45,6 @@ export default class DecksWithoutArchetypes extends React.Component{
                                                Formats_id={this.props.Formats_id}
                                                getDecks={this.props.getDecks}
                     />
-                    {/*<FoundDeckListArchetypeOption DecksData_id={this.state.DecksData_id}*/}
-                                                  {/*getDecks={this.props.getDecks}*/}
-                    {/*/>*/}
-
                     <DeckAggregate DecksData_id={this.state.DecksData_id} />
 
                     <DecksRankings

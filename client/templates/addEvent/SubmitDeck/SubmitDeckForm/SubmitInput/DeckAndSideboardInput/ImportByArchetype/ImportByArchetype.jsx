@@ -27,7 +27,7 @@ export default class ImportByDeck extends React.Component{
     }
 
     render(){
-        var sortedArchetypes = DecksArchetypes.find({Formats_id : this.props.event.Formats_id}).fetch().sort((a, b)=>{
+        var sortedArchetypes = DecksArchetypes.find({Formats_id : this.props.event.Formats_id, decksQty : {$gte : 1}}).fetch().sort((a, b)=>{
             var name1 = a.name.toLowerCase();
             var name2 = b.name.toLowerCase();
             if(name1 < name2) {return -1};

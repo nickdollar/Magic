@@ -3,6 +3,7 @@ import Collection from './Collection/Collection';
 import UsersDecks from './UsersDecks/UsersDecks';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import AdminEventInfo from "./AdminEventInfo/AdminEventInfo.jsx";
+import PlayerInfo from "./PlayerInfo/PlayerInfo.jsx";
 
 import 'react-tabs/style/react-tabs.less';
 
@@ -27,6 +28,7 @@ export default class User extends React.Component {
                         <Tab><h4>Collection</h4></Tab>
                         <Tab><h4>Decks</h4></Tab>
                         <Tab><h4>Events</h4></Tab>
+                        <Tab><h4>Info</h4></Tab>
                     </TabList>
                 <TabPanel>
                     <Collection/>
@@ -37,6 +39,9 @@ export default class User extends React.Component {
                 <TabPanel>
                     <AdminEventInfo/>
                 </TabPanel>
+                    <TabPanel>
+                        <PlayerInfo/>
+                    </TabPanel>
                 </Tabs>
             </div>
         );

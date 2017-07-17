@@ -69,28 +69,32 @@ export default class LGSLocation extends React.Component {
     }
 
     changeDistance(e){
+
         if(e.target.value.length == 0){
-            cookies.set("distance", "0");
+            var date = new Date();
+            date.setYear(3000);
+            cookies.set("distance", "0", {expires : cookiesDate});
             this.setState({distance : ""});
         }
         else if(!isNaN(parseInt(e.target.value))){
-            cookies.set("distance", e.target.value);
+            cookies.set("distance", e.target.value, {expires : cookiesDate});
             this.setState({distance : e.target.value});
         }else{
-            cookies.set("distance", 0);
+            cookies.set("distance", 0, {expires : cookiesDate});
             this.setState({distance : 0});
         }
     }
 
     changedOption(e){
-        cookies.set("positionOption", e.target.value);
+
+        cookies.set("positionOption", e.target.value, {expires : cookiesDate});
         Session.set("positionOption", e.target.value);
 
         this.setState({positionOption : e.target.value});
     }
 
     stateChange(e){
-        cookies.set("state", e.target.value);
+        cookies.set("state", e.target.value, {expires : cookiesDate});
         Session.set("state", e.target.value);
         this.setState({state : e.target.value});
 
@@ -125,14 +129,16 @@ export default class LGSLocation extends React.Component {
           }
         if(ZIP.length == 5){
             Meteor.call("checkIfZipExists", ZIP, (err, ZIPQuery)=>{
+                var date = new Date();
+                date.setYear(3000);
                 if(ZIPQuery){
                     Session.set("ZIP", ZIP);
                     Session.set("ZIPPosition", [ZIPQuery.LNG, ZIPQuery.LAT]);
-                    cookies.set("ZIP", ZIP);
+                    cookies.set("ZIP", ZIP, {expires : cookiesDate});
                     this.setState({"ZIP" : ZIP});
 
                 }else{
-                    cookies.set("ZIP", "")
+                    cookies.set("ZIP", "", {expires : cookiesDate})
                     Session.set("ZIPPosition", []);
                     this.setState({"ZIP" : ""});
                 }

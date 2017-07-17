@@ -22,7 +22,7 @@ export default class DeckAndSideboardInput extends React.Component{
         }
     }
 
-    setDeck({deck : deck}){
+    setDeck({deck}){
         this.setDeckFromText(deck);
     }
 
@@ -107,6 +107,7 @@ export default class DeckAndSideboardInput extends React.Component{
             this.state.qty[mainSideboard] -= UsersDeckData[mainSideboard][index].qty;
         }
         UsersDeckData[mainSideboard].splice(index, 1);
+
         this.setState({UsersDeckData : UsersDeckData, changes : true});
     }
 
@@ -202,7 +203,6 @@ export default class DeckAndSideboardInput extends React.Component{
                             <span><button className="btn" disabled={this.submitDeckState()} onClick={this.submitDeck.bind(this)}>{this.deckState()}</button></span>
                             <span>{this.state.submitMessage}</span>
                         </div>
-
                             <DeckList    UsersDeckData={this.state.UsersDeckData}
                                          qty={this.state.qty}
                                          submitted={this.state.submitted}

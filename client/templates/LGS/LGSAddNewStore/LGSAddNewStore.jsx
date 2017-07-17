@@ -44,7 +44,7 @@ export default class LGSAddNewStore extends React.Component {
                         />
                         <URLTextInput
                             objectName={"url"}
-                            title="LGS URL with its calendar, (Need to add events to calendar)"
+                            title="LGS URL with its calendar (Needed to add events to calendar)."
                             errorMessage="URL is not in right format."
                         />
                         <GoogleAddressAutoComplete objectName="location"/>

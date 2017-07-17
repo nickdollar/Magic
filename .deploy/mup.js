@@ -3,7 +3,7 @@ module.exports = {
     one: {
       host: '45.32.162.29',
       username: 'root',
-      password: 'MagicSit3!',
+      password: '5wQ=a#))(Xvp5)(X',
     }
   },
   meteor: {

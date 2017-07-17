@@ -41,6 +41,20 @@ getMTGOPTQEventsAndDecks = function({Formats_id, days, dateType}){
         }
         webScrapingQueue.add({func : getMTGOPTQEventsAndDecksHTTP, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
     }
+    webScrapingQueue.add({func : getMTGOPTQEventsAndDecksConfirmation, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
+
+}
+
+getMTGOPTQEventsAndDecksConfirmation = ({})=> {
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {date : date, getMTGOPTQEventsAndDecks : true}
+        },
+        {
+            upsert : 1
+        })
 }
 
 getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{

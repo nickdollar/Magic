@@ -38,7 +38,6 @@ export default class UsersDecks extends React.Component {
     }
     getSelectedDeck(){
         Meteor.call("getUsersDecksWithCardsInformationMethod", {UsersDecks_id : this.state.UsersDeck_id}, (err, response)=>{
-            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
                     Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
@@ -209,13 +208,12 @@ export default class UsersDecks extends React.Component {
 
         Meteor.call("getCardsInfoFromCards_id", {cards : uniqueCards}, (err, response)=>{
             for(var i = 0 ; i < main.length ; i++){
-                Object.assign(main[i], response.find(cardInfo => cardInfo._id == main[i].Cards_id))
+                Object.assign(main[i], response.find(cardInfo => cardInfo._id.match(new RegExp(`^${main[i].Cards_id}$`, "i"))))
             }
 
             for(var i = 0 ; i < sideboard.length ; i++){
-                Object.assign(sideboard[i], response.find(cardInfo => cardInfo._id == sideboard[i].Cards_id))
+                Object.assign(sideboard[i], response.find(cardInfo => cardInfo._id.match(new RegExp(`^${sideboard[i].Cards_id}$`, "i"))))
             }
-
 
             var UsersDeck = Object.assign({}, this.state.UsersDeck, {main : main, sideboard : sideboard})
 

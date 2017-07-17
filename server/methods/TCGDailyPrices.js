@@ -3,7 +3,7 @@ import X2JS from "x2js";
 Meteor.methods({
     CreateTCGDailyPricesMethod(){
         console.log("CreateTCGDailyPrices");
-            CreateTCGDailyPrices();
+        CreateTCGDailyPrices();
     }
 })
 
@@ -18,6 +18,8 @@ CreateTCGDailyPrices = ()=>{
             webScrapingQueue.add({func : getTCGDailyPricesFullDataFromResponse, args : {card : TCGCardsAllCards[i], date : date}, wait : 80});
         }
     }
+    webScrapingQueue.add({func : CreateTCGDailyPricesConfirmation, args : {date : date}});
+
     console.log("END");
 }
 
@@ -73,4 +75,17 @@ getTCGDailyPricesFullDataFromResponse = ({card, date})=>{
             }
         )
     });
+}
+
+CreateTCGDailyPricesConfirmation = ({date})=>{
+    var TCGDailyCount = TCGDailyPrices.find({date : date}).count();
+
+    var TCGCardsCount = TCGCards.find({}).count();
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {CreateTCGDailyPrices :{TCGDailyCount : TCGDailyCount, TCGCardsCount : TCGCardsCount}}
+        },
+        {
+            upsert : 1
+        })
 }

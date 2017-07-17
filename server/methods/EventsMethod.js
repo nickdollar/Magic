@@ -157,6 +157,9 @@ Meteor.methods({
                 $set : {state : "published"}
             })
         }
+    },
+    RemoveRemovedEventsMethod(){
+        RemoveRemovedEvents();
     }
 })
 
@@ -169,7 +172,14 @@ Meteor.methods({
     },
 });
 
+RemoveRemovedEvents = ()=>{
+    var removeDate = new Date();
+    removeDate = removeDate.addDays(2);
 
+    Events.find({state : "removed", removedHours : {$lte : removeDate}}).forEach((removeEvent)=>{
+        DecksData.remove({Events_id : removeEvent._id})
+    })
+}
 
 
 fixEventsStandard = function(){

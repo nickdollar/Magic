@@ -9,7 +9,7 @@ export default class CustomTCGPricesAdmin extends React.Component {
     render(){
         return(
             <div className="CustomTCGPricesAdminComponent">
-                <button onClick={Meteor.call("getAllPrices")}>getAllPrices</button>
+                <button onClick={()=>Meteor.call("getAllPrices")}>getAllPrices</button>
             </div>
         );
     }

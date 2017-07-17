@@ -1,5 +1,5 @@
 import React from 'react' ;
-import AutoSuggest from '/client/dumbReact/AutoSuggest/AutoSuggest';
+import AutoSuggest from '/client/dumbReact/AutoSuggest/AutoSuggest.jsx';
 
 
 export default class ImportFromUserDeck extends React.Component {
@@ -10,9 +10,7 @@ export default class ImportFromUserDeck extends React.Component {
     }
 
     getUserDeckWithInfo(){
-        console.log(":AAAAAAAAA");
         Meteor.call("getUserDeckWithInfoMethod", {UsersDecks_id : this.refs["input"].value}, (err, response)=>{
-            console.log(response);
             this.props.setDeck({deck : response});
         })
     }

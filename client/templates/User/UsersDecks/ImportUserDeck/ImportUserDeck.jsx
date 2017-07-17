@@ -173,11 +173,12 @@ export default class ImportUserDeck extends React.Component {
             }
             var cardMatch = mainArray[i].match(cardRegex);
 
+
+
             if(cardMatch){
-                mainCards.push({Cards_id : cardMatch[2], qty : parseInt(cardMatch[1])})
+                mainCards.push({Cards_id : cardMatch[2].toTitleCase(), qty : parseInt(cardMatch[1])})
             }
         }
-
         var sideboardArray = this.state.sideboardText.split("\n");
 
         for(var i = 0; i < sideboardArray.length; i++){
@@ -187,7 +188,7 @@ export default class ImportUserDeck extends React.Component {
             var cardMatch = sideboardArray[i].match(cardRegex);
 
             if(cardMatch){
-                sideboardCards.push({Cards_id : cardMatch[2], qty : parseInt(cardMatch[1])})
+                sideboardCards.push({Cards_id : cardMatch[2].toTitleCase(), qty : parseInt(cardMatch[1])})
             }
         }
         this.props.importDeck({main : mainCards, sideboard : sideboardCards})
@@ -287,7 +288,7 @@ export default class ImportUserDeck extends React.Component {
                                     <Textarea style={{width : "100%"}}
                                               value={this.state.mainText}
                                               minRows={3}
-                                              onChange={e => this.setState({value: e.target.value, mainSideboard : "main"})}
+                                              onChange={e => this.setState({mainText: e.target.value, mainSideboard : "main"})}
                                     />
                                 </div>
                                 <div className="col-xs-6">
@@ -298,7 +299,7 @@ export default class ImportUserDeck extends React.Component {
                                         style={{width : "100%"}}
                                         value={this.state.sideboardText}
                                         minRows={3}
-                                        onChange={e => this.setState({value: e.target.value, mainSideboard : "sideboard"})}
+                                        onChange={e => this.setState({sideboardText: e.target.value, mainSideboard : "sideboard"})}
                                     />
                                 </div>
                             </div>

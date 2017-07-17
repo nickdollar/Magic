@@ -16,13 +16,21 @@ createMetaLastDaysAdditions = function(){
             {$set : metaLastDaysAdditions},
             {upsert : true}
         )
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    DailyProcessConfirmation.update({date : date},
+        {
+            $set : {date : date, createMetaLastDaysAdditions : true}
+        },
+        {
+            upsert : 1
+        })
     logFunctionsEnd("createMetaLastDaysAdditions");
 }
 
 createMetaArchetypesDecks = function(){
     var date = new Date();
     date = date.addDays(-14);
-
     var newestArchetypes = DecksData.aggregate(
         [
             {

@@ -8,7 +8,7 @@ export default class CustomDailyPrices extends React.Component {
     render(){
         return(
             <div className="CustomDailyPricesComponent">
-                <button onClick={()=>Meteor.call("CreateTCGDailyPricesMethod")}>CreateTCGDailyPricesMethod</button>
+                <button onClick={()=>{Meteor.call("CreateTCGDailyPricesMethod")}}>CreateTCGDailyPricesMethod</button>
             </div>
         );
     }

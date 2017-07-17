@@ -98,3 +98,4 @@ ostrio:cookies
 force-ssl@1.0.14
 
 dynamic-import
+nimble:restivus

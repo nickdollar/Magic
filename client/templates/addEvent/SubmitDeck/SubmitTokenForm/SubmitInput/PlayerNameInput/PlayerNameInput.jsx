@@ -1,10 +1,11 @@
 import React from "react";
 
 class PlayerNameInput extends React.Component{
-    constructor() {
+    constructor(props) {
         super();
+
         this.state = {
-            inputValue : ""
+            inputValue : props.preferredName ? props.preferredName : ""
         }
     }
 
