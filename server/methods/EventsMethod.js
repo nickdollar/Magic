@@ -142,12 +142,21 @@ Meteor.methods({
             })
     },
     publishUsersEvent({Events_id, nextState}){
-        console.log(Events_id, nextState);
         Events.update({_id : Events_id},
             {
                 $set : {state : nextState},
 
             })
+    },
+    getEventsToConfirmMethod(){
+        return Events.find({state : {$in : ["pending", "lgsCreated"]}}).fetch();
+    },
+    confirmLGSPrePublishMethod({Events_id : Events_id}){
+        if(Roles.userIsInRole(Meteor.user(), 'admin')){
+            Events.update({_id : Events_id}, {
+                $set : {state : "published"}
+            })
+        }
     }
 })
 
@@ -158,14 +167,10 @@ Meteor.methods({
         }
         return false;
     },
-    confirmLGSPrePublish(Events_id){
-        if(Roles.userIsInRole(Meteor.user(), 'admin')){
-            Events.update({_id : Events_id}, {
-                $set : {state : "published"}
-            })
-        }
-    }
-})
+});
+
+
+
 
 fixEventsStandard = function(){
     logFunctionsStart("fixEventsStandard");

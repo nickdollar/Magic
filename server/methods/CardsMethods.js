@@ -1,5 +1,6 @@
 import moment from "moment";
 import csvtojson from "csvtojson";
+import jsonlint from "jsonlint";
 
 Meteor.methods({
     // createCardsCollectionFromGatherer(){
@@ -191,19 +192,25 @@ Meteor.methods({
     },
     organizeAllCardsDatabaseMethod(){
         logFunctionsStart("organizeAllCardsDatabase");
-        createCardsCollection();
-        giveLatestPriceForEach();
-        UpdateCardsSimple();
-        makeCardsUnique();
-        cardsUniquesPrices();
+            createCardsCollection();
+            giveLatestPriceForEachPrintings();
+            UpdateCardsSimple();
+            makeCardsUnique();
+            cardsUniquesPrices();
         logFunctionsEnd("organizeAllCardsDatabase");
+    },
+    updateCardsSimpleAndCardsUniqueCollections(){
+
+    },
+    cardsRemoveNaN(){
+        Cards.find({}).
     }
 });
 
 
 createCardsCollection = ()=>{
     logFunctionsStart("createCardsDatabase");
-    var cards = JSON.parse(Assets.getText("CardsArray.json"));
+    var cards = jsonlint.parse(Assets.getText("CardsArray2.json"));
     for(var i = 0; i < cards.length; i++){
         var object = Object.assign({}, cards[i]);
         delete object._id;
