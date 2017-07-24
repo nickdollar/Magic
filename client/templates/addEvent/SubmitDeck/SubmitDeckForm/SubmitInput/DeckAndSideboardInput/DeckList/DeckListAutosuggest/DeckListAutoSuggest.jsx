@@ -83,6 +83,7 @@ export default class CardNamesCall extends React.Component {
     };
 
     onSuggestionsFetchRequested = ({ value }) => {
+        this.props.setCardSelected({suggestion : value, mainSideboard : this.props.mainSideboard})
         Meteor.call("getListByRegex", {value : value}, (err, data)=>{
             this.setState({
                 suggestions: data.length === 0 ? [] : data
@@ -91,7 +92,7 @@ export default class CardNamesCall extends React.Component {
     };
 
     onSuggestionSelected(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }){
-        this.props.setCardSelected({suggestion : suggestion, mainSideboard : this.props.mainSideboard})
+        this.props.setCardSelected({suggestion : suggestion._id, mainSideboard : this.props.mainSideboard})
     }
 
     onSuggestionsClearRequested = () => {

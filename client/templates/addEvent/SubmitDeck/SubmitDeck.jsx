@@ -49,8 +49,6 @@ export default class SubmitDeck extends React.Component {
                             <SubmitTokenForm tokenConfirmed={this.tokenConfirmed.bind(this)}/>}
                     </div>
             </div>
-
-
         )
     }
 }

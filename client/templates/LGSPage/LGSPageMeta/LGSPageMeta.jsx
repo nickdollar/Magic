@@ -10,7 +10,7 @@ export default class LGSPageMeta extends React.Component {
     }
 
     updateValues(){
-        Meteor.call("getLGSMetaAllArchetypesMethod", {Formats_id : this.state.Formats_id, options : this.state.options, LGS_ids : [this.props.LGS_id]}, (err, response)=>{
+        Meteor.call("getLGSMetaAllArchetypesMethod", {Formats_id : this.state.Formats_id, options : this.state.options, LGS_id : this.props.LGS_id}, (err, response)=>{
             var totalDecks = response.reduce((a, b)=>{
                 return  a + b.qty;
             },0);

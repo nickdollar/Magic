@@ -10,7 +10,7 @@ export default class EventsTables extends React.Component {
 
     getEventsSmall(Formats_id){
         var LGS_ids = LGS.find({}).map(lgs => lgs._id);
-        Meteor.call("eventsSmall", {Formats_id : Formats_id, LGS_ids : LGS_ids}, (err, response)=>{
+        Meteor.call("eventsSmallMethod", {Formats_id : Formats_id, LGS_ids : LGS_ids}, (err, response)=>{
             this.setState({eventsSmall : response});
         })
     }

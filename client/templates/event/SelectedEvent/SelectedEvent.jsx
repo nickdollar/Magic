@@ -43,7 +43,7 @@ export default class LGSAddNewStore extends React.Component {
 
 
     getDecksListEvents_id(Events_id){
-        Meteor.call("getDecksListEvents_id", Events_id, (err, response)=>{
+        Meteor.call("getDecksListEvents_idMethod", Events_id, (err, response)=>{
             if(response.DecksData.length!=0){
                 response.DecksData.sort(this.sortFunc);
             }
@@ -53,7 +53,6 @@ export default class LGSAddNewStore extends React.Component {
             if(!DecksData_id){
                 response.DecksData[0] ? DecksData_id = response.DecksData[0]._id : DecksData_id = "";
                 response.DecksData[0] ? DecksData = response.DecksData[0] : DecksData_id = {};
-
             }else{
                 DecksData = response.DecksData.find((deck)=>{
                     return deck._id == DecksData_id

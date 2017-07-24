@@ -3,6 +3,9 @@ import Pagination from "react-js-pagination";
 
 var foilTimes = {};
 var normalTimes = {};
+var normalTimesWant = {};
+var foiltTimesWant = {};
+
 
 export default class CardsTables extends React.Component {
     constructor(){
@@ -17,18 +20,40 @@ export default class CardsTables extends React.Component {
 
 
     changeValue({CardsUniques_id, upDown, foilNormal}){
-        var value = parseInt($(this.refs[CardsUniques_id]).find(`.${foilNormal}`).text());
+
+        var value = parseInt($(this.refs[CardsUniques_id]).find(`.js-${foilNormal}`).text());
         upDown == "down" ? value += -1 : value += 1;
+
+
+
         if(value != -1){
-            $(this.refs[CardsUniques_id]).find(`.${foilNormal}`).text(value);
+
+
+            $(this.refs[CardsUniques_id]).find(`.js-${foilNormal}`).text(value);
+
+            if(foilNormal == "nQtyW" || foilNormal == "fQtyW"){
+                $(this.refs[CardsUniques_id]).find(`.js-${foilNormal}`).show()
+                $(this.refs[CardsUniques_id]).find(`.js-${foilNormal}B`).show()
+            }
+
             if(foilNormal == "nQty"){
                 window.clearTimeout(foilTimes[CardsUniques_id]);
                 foilTimes[CardsUniques_id] = window.setTimeout(()=>{
                     Meteor.call("updateCollectionCardQty", {CardsUniques_id : CardsUniques_id, foilNormal : foilNormal, value})
                 }, 3000)
 
-            }else{
+            }else if(foilNormal == "fQty"){
                 window.clearTimeout(normalTimes[CardsUniques_id]);
+                normalTimes[CardsUniques_id] = window.setTimeout(()=>{
+                    Meteor.call("updateCollectionCardQty", {CardsUniques_id : CardsUniques_id, foilNormal : foilNormal, value})
+                }, 3000)
+            }else if(foilNormal == "nQtyW"){
+                window.clearTimeout(normalTimesWant[CardsUniques_id]);
+                normalTimes[CardsUniques_id] = window.setTimeout(()=>{
+                    Meteor.call("updateCollectionCardQty", {CardsUniques_id : CardsUniques_id, foilNormal : foilNormal, value})
+                }, 3000)
+            }else if(foilNormal == "fQtyW"){
+                window.clearTimeout(foiltTimesWant[CardsUniques_id]);
                 normalTimes[CardsUniques_id] = window.setTimeout(()=>{
                     Meteor.call("updateCollectionCardQty", {CardsUniques_id : CardsUniques_id, foilNormal : foilNormal, value})
                 }, 3000)
@@ -37,9 +62,8 @@ export default class CardsTables extends React.Component {
     }
 
     render(){
-        const header = [{text : "Card", value : "name"}, {text :"Set", value : "setCode"}, {text : "Normal", value : "nQty"}, {text : "Foil", value : "fQty"},{text : "", value : "remove"}];
+        const header = [{text : "Card", value : "name"}, {text :"Set", value : "setCode"}, {text : "Normal", value : "nQty"}, {text : "Foil", value : "fQty"}, {text : "", value : "remove"}];
 
-        console.log(this.props);
         return(
             <div className="CardsTablesComponent">
                 <div className="row-wrapper">
@@ -65,7 +89,12 @@ export default class CardsTables extends React.Component {
                                             <td>
                                                 <div className="topLevel">
                                                     <div className="quantity">
-                                                        <span className="nQty">{card.nQty ? card.nQty : 0}</span> ({card.avgprice})
+                                                        {/*<span className="nQty">{card.nQty ? `${card.nQty}${card.nQtyW ? `/${card.nQtyW}` : "" }` : 0}</span> ({card.avgprice})*/}
+                                                        <span className="js-nQty">{card.nQty  ? card.nQty : 0}</span><span className="js-nQtyWB" style={{display : `${card.nQtyW ? "" : "none"}`}}>/</span><span className="js-nQtyW" style={{display : `${card.nQtyW ? "" : "none"}`}}>{card.nQtyW ? card.nQtyW : 0}</span>({card.avgprice})
+                                                    </div>
+                                                    <div className="changeButtons">
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "up", foilNormal : "nQtyW", index : index})}} className="arrow-up"></div>
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "down", foilNormal : "nQtyW", index : index})}} className="arrow-down"></div>
                                                     </div>
                                                     <div className="changeButtons">
                                                         <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "up", foilNormal : "nQty", index : index})}} className="arrow-up"></div>
@@ -76,12 +105,17 @@ export default class CardsTables extends React.Component {
                                             <td>
                                                 <div className="topLevel">
                                                     <div className="quantity">
-                                                        <span className="fQty">{card.fQty ? card.fQty : 0}</span> ({card.avgfoilprice})
+                                                        <span className="js-fQty">{card.fQty  ? card.fQty : 0}</span><span className="js-fQtyWB" style={{display : `${card.fQtyW ? "" : "none"}`}}>/</span><span className="js-fQtyW" style={{display : `${card.fQtyW ? "" : "none"}`}}>{card.fQtyW ? card.fQtyW : 0}</span>({card.avgprice})
                                                     </div>
                                                     <div className="changeButtons">
-                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "up", foilNormal : "fQty",  qty : card.fQty, index : index})}} className="arrow-up"></div>
-                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "down", foilNormal : "fQty", qty : card.fQty, index : index})}} className="arrow-down"></div>
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "up", foilNormal : "fQtyW", index : index})}} className="arrow-up"></div>
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "down", foilNormal : "fQtyW", index : index})}} className="arrow-down"></div>
                                                     </div>
+                                                    <div className="changeButtons">
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "up", foilNormal : "fQty", index : index})}} className="arrow-up"></div>
+                                                        <div onClick={()=>{this.changeValue({CardsUniques_id : card._id, upDown : "down", foilNormal : "fQty", index : index})}} className="arrow-down"></div>
+                                                    </div>
+
                                                 </div>
                                             </td>
                                             <td><span onClick={()=>this.props.removeCard({CardsUnique_id : card._id}, index)} className="glyphicon glyphicon-remove"></span></td>

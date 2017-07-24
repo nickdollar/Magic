@@ -18,12 +18,10 @@ Meteor.methods({
                         });
             }))
             .on('done',(error)=>{
-                console.log("done")
+                console.log("END: updateGathererMethod");
             }).on('error',(err)=>{
             console.log(err)
         })
-        console.log("END: updateGathererMethod");
-
     },
     getGathererSetsMethod(){
         var gatheredSets = Gatherer.aggregate(
@@ -36,8 +34,19 @@ Meteor.methods({
                 }
             ]
         );
-
         return gatheredSets;
-
+    },
+    getGathererSetsMethod(){
+        var gatheredSets = Gatherer.aggregate(
+            [
+                {
+                    $group: {_id : "$set"}
+                },
+                {
+                    $sort : {_id : 1}
+                }
+            ]
+        );
+        return gatheredSets;
     }
 })

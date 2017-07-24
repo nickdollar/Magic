@@ -40,5 +40,8 @@ Meteor.methods({
             ]
         );
         return LGSEventsAggregate;
+    },
+    getLGSEventsFromId_({LGS_id}){
+        return LGSEvents.find({LGS_id : LGS_id, state : "confirmed"}).fetch();
     }
 })

@@ -140,7 +140,7 @@ export default class Deck extends React.Component{
         })
 
         return (
-            <div className="DeckEditMethodComponent">
+            <div className="DeckListComponent">
                 <h3>Main <span className={this.props.qty.main < 60? "wrongCardNumber": ""}>({this.props.qty.main})</span></h3>
                 {this.addRow("main")}
                 <div className="deck-block">

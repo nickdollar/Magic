@@ -14,6 +14,7 @@ Meteor.methods({
         logFunctionsEnd("fixArchetypesColorsAbbreviation");
 
     },
+
     DecksArchetypesSideboardMethod({DecksArchetypes_id}) {
         logFunctionsStart("DecksArchetypesSideboard");
 

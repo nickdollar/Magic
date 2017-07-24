@@ -10,6 +10,7 @@ export default class LatestDecks extends React.Component {
 
     getLastTwoWeeks(){
         Meteor.call("getMetaLastDaysAdditionMethod",(err, response)=>{
+            console.log(response);
             if(!response){
                 this.setState({List : {newestCards : [], newestArchetypes : []}})
             }else{
@@ -40,14 +41,13 @@ export default class LatestDecks extends React.Component {
         }else if(row.t == 2){
 
             return  <a href={FlowRouter.path("selectedEvent", {format : getLinkFormat(row._id.Formats_id), Events_id : row.Events_id, DecksData_id : row.DecksData_id})}>
-                        <div className="js-imagePopOver" data-name={row._id.name}>{row._id.name}</div>
+                        <div className="js-imagePopOver" data-name={row._id.Cards_id}>{row._id.Cards_id}</div>
                     </a>
         }
         return cell.name.toTitleCase();
     }
 
     dateFormat(cell, row){
-        console.log(cell);
         return Moment(cell).format("MM/DD")
     }
 
@@ -67,7 +67,6 @@ export default class LatestDecks extends React.Component {
     componentDidUpdate() {
         cardPopover('.js-imagePopOver', true);
     }
-
 
     render(){
         var newestCards = [];
@@ -110,7 +109,7 @@ export default class LatestDecks extends React.Component {
             <div className="LatestDecksComponent">
                 <div className="sectionHeader">
                     <div className="sectionName">
-                        <h2>Last 2 Weeks Meta Addition</h2>
+                        <h2>Last Month Weeks Meta Addition</h2>
                     </div>
                 </div>
                 <div className="row">

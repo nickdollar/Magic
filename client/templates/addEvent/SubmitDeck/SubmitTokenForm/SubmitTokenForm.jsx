@@ -3,10 +3,11 @@ import LGSNameFieldContainer from "./SubmitInput/LGSNameField/LGSNameFieldContai
 import TokenField from "./SubmitInput/TokenField/TokenField.jsx";
 import PlayerNameInput from "./SubmitInput/PlayerNameInput/PlayerNameInput.jsx";
 import DCINumberField from "./SubmitInput/DCINumberField/DCINumberField.jsx";
+import PreferredNameInput from "./SubmitInput/PreferredNameInput/PreferredNameInput.jsx";
 
 
 
-class SubmitTokenForm extends React.Component{
+export default class SubmitTokenForm extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -64,25 +65,30 @@ class SubmitTokenForm extends React.Component{
     }
 
     render() {
-
-
-
         return (
             <div className="SubmitTokenFormComponent">
                 <form noValidate onSubmit={this.handleSubmit.bind(this)}>
                     <LGSNameFieldContainer onComponentMounted={this.register.bind(this)}
                                            objectName={"LGS_id"}
                                            title={"LGS"}
-                                           errorMessage="Select A Store."/>
+                                           errorMessage="Select A Store."
+                    />
                     <TokenField onComponentMounted={this.register.bind(this)}
                                 objectName={"token"}
                                 title={"Token"}
-                                errorMessage="Type Token."/>
+                                errorMessage="Type Token."
+                    />
                     <PlayerNameInput onComponentMounted={this.register.bind(this)}
-                                objectName={"player"}
-                                title={"Player Name"}
-                                errorMessage="Type Player Name."
-                                preferredName={UsersProfile.findOne() ? UsersProfile.findOne().preferredName : ""}
+                                     objectName={"player"}
+                                     title={"Player Name"}
+                                     errorMessage="Type Player Name."
+                                     preferredName={UsersProfile.findOne() ? UsersProfile.findOne().name : ""}
+                    />
+                    <PreferredNameInput onComponentMounted={this.register.bind(this)}
+                                     objectName={"preferredName"}
+                                     title={"Preferred Name (Optional, will be name showed on the event page)"}
+                                     errorMessage="Type Player Name."
+                                     preferredName={UsersProfile.findOne() ? UsersProfile.findOne().preferredName : ""}
                     />
                     <DCINumberField onComponentMounted={this.register.bind(this)}
                                      objectName={"DCINumber"}
@@ -98,4 +104,3 @@ class SubmitTokenForm extends React.Component{
     }
 }
 
-export default SubmitTokenForm;

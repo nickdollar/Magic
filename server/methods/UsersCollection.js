@@ -32,6 +32,34 @@ Meteor.methods({
             }
         )
     },
+    addCardToWantedMethod: function ({request}) {
+        if(!Meteor.userId()){
+            logFunctionsEnd("Login Doesn't Exists");
+            return;
+        }
+        UsersCollection.update({_id : Meteor.userId()},
+            {
+                $setOnInsert : {cards : [{CardsUnique_id : request.CardsUnique_id, name : request.name}]}
+            },
+            {
+                upsert : true
+            }
+        )
+
+        UsersCollection.update({_id : Meteor.userId(), "cards.CardsUnique_id" : {$ne : request.CardsUnique_id}},
+            {
+                $push : {cards : {CardsUnique_id : request.CardsUnique_id, name : request.name}},
+            }
+        )
+
+        var inc = {};
+        request.fQty ? inc['cards.$.fQtyW'] = request.fQty : inc['cards.$.nQtyW'] = request.nQty;
+        UsersCollection.update({_id : Meteor.userId(), "cards.CardsUnique_id" : request.CardsUnique_id},
+            {
+                $inc : inc
+            }
+        )
+    },
     updateCollectionCardQty({CardsUniques_id, foilNormal, value}){
         if(!Meteor.userId()){
             logFunctionsEnd("Login Doesn't Exists");
@@ -93,6 +121,8 @@ Meteor.methods({
                          _id : "$cards.CardsUnique_id",
                         fQty : "$cards.fQty",
                         nQty : "$cards.nQty",
+                        fQtyW : "$cards.fQtyW",
+                        nQtyW : "$cards.nQtyW",
                  }},
                 {
                     $lookup: {
@@ -113,6 +143,8 @@ Meteor.methods({
                         foil : 1,
                         nQty : 1,
                         fQty : 1,
+                        fQtyW : 1,
+                        nQtyW : 1,
                         colorIdentity : "$card.colorIdentity",
                         avgprice : "$card.avgprice",
                         avgfoilprice : "$card.avgfoilprice",

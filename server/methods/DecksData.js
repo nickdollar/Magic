@@ -2,6 +2,9 @@ import Fuse from "fuse.js";
 
 Meteor.methods({
     addALGSDecksData: function ({submitDeck}) {
+
+        console.log(submitDeck);
+
         if(Events.findOne({_id : submitDeck._id})){
             var decksData = DecksData.findOne({_id : submitDeck.DecksData_id});
             if(decksData){
@@ -15,20 +18,23 @@ Meteor.methods({
                 )
                 return {DecksData_id : submitDeck.DecksData_id, message : "Deck Updated"};
             }else{
-                var DecksData_id = DecksData.insert(
-                    {
-                        Events_id : submitDeck._id,
-                        LGS_id : submitDeck.LGS_id,
-                        Formats_id : submitDeck.Formats_id,
-                        EventsTypes_id : "LGS",
-                        main : submitDeck.main,
-                        player : submitDeck.player,
-                        sideboard : submitDeck.sideboard,
-                        date : submitDeck.date,
-                        position : 1,
-                        state : "lgs",
-                    }
-                )
+
+                var data = {};
+
+                data.Events_id = submitDeck._id;
+                data.LGS_id = submitDeck.LGS_id;
+                data.Formats_id = submitDeck.Formats_id;
+                data.EventsTypes_id = "LGS";
+                data.DCINumber = submitDeck.DCINumber;
+                data.main = submitDeck.main;
+                data.player = submitDeck.player;
+                data.preferredName = submitDeck.preferredName;
+                data.sideboard = submitDeck.sideboard;
+                data.date = submitDeck.date;
+                data.position = 1;
+                data.state = "lgs";
+
+                var DecksData_id = DecksData.insert(data)
                 return {DecksData_id : DecksData_id, message : "Deck Submitted"};
             }
         }
@@ -171,7 +177,7 @@ Meteor.methods({
 
         cardsWithWrongName.forEach((card, index)=>{
             var rightName = fuse.search(escapeRegExp(card._id))[0];
-              DecksData.update  (  {"main.name" : card._id},
+              DecksData.update  (  {"main.Cards_id" : card._id},
                                    {
                                     $unset : { "main.$.wrongName" : ""},
                                     $set : { "main.$.name" : rightName},
@@ -181,7 +187,7 @@ Meteor.methods({
                                     }
                                 )
 
-                DecksData.update  (  {"sideboard.name" : card._id},
+                DecksData.update  (  {"sideboard.Cards_id" : card._id},
                     {
                         $unset : { "sideboard.$.wrongName" : ""},
                         $set : { "sideboard.$.name" : rightName},
@@ -195,7 +201,6 @@ Meteor.methods({
     logFunctionsEnd("recheckDeckWithWrongCardName");
     },
     addDecksArchetypesToDecksDataMethod({DecksArchetypes_id, DecksData_id}){
-        console.log(DecksArchetypes_id)
         var foundDeck = DecksData.findOne({_id : DecksData_id});
 
         var oldDecksArchetypes = foundDeck.DecksArchetypes_id;
@@ -234,9 +239,12 @@ Meteor.methods({
     logFunctionsEnd("createMainSideboardsMethod");
     },
 
-    getDecksListEvents_id(Events_id){
+    getDecksListEvents_idMethod(Events_id){
         var EventQuery = Events.findOne({_id : Events_id});
-        var DecksDataQuery = DecksData.find({Events_id : Events_id}, {fields : {
+        var DecksDataQuery = DecksData.find({
+            Events_id : Events_id},
+        {
+            fields : {
             format : 0,
             totalMain : 0,
             main : 0,
@@ -258,8 +266,8 @@ Meteor.methods({
             DecksData.update(
                     {Formats_id : Formats_id, $or :
                         [
-                            {"main.name" : {$in : format.banned}},
-                            {"sideboard.name" : {$in :  format.banned}}
+                            {"main.Cards_id" : {$in : format.banned}},
+                            {"sideboard.Cards_id" : {$in :  format.banned}}
                         ]
                     },
                 {$set : {format : `${Formats_id}Banned`}},
@@ -290,7 +298,7 @@ Meteor.methods({
         );
 
         if(selectedCards.length){
-            return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_ids}, "main.name" : {$all : selectedCards}}, {fields : {
+            return DecksData.find({DecksNames_id : {$in : aggregation[0].DecksNames_ids}, "main.Cards_id" : {$all : selectedCards}}, {fields : {
                 Formats_id : 0,
                 totalMain : 0,
                 main : 0,
@@ -330,7 +338,7 @@ Meteor.methods({
                         "as" : "DecksData"
                     }},
                     {$unwind: {path : "$DecksData"}},
-                    {$match : {"DecksData.main.name" : {$all : selectedCards}}},
+                    {$match : {"DecksData.main.Cards_id" : {$all : selectedCards}}},
                     {$project: {_id : "$DecksData._id",name : {$map : {input : "$DecksData.main", as : "el", in : "$$el.name"}}}},
                     {$unwind: {path : "$name"}},
                     {$group: {_id : "$name", count : {$sum : 1}}},
@@ -622,8 +630,7 @@ Meteor.methods({
     fixNamesToCards_idMethod(){
         logFunctionsStart("fixNamesToCards_idMethod");
 
-        DecksData.find({"main.name" : {$exists : true}}).forEach((deck)=>{
-            console.log(deck._id);
+        DecksData.find({"main.Cards_id" : {$exists : true}}).forEach((deck)=>{
             var main = deck.main.map((card)=>{
                 if(card.name){
                     return {Cards_id : card.name, qty : card.qty}
@@ -653,7 +660,24 @@ Meteor.methods({
             DecksData.remove({_id : DecksData_id});
         }
 
+        return "removed";
 
+    },
+    updateMultipleLGSDecks({Players}){
+        Players.forEach((player) => {
+            console.log(player);
+            var data = {};
+            data.victory = player.wins;
+            data.loss = player.losses;
+            data.draw = player.draws;
+            data.position = player.position;
+            data.DCINumber = player.id;
+
+            DecksData.update({_id : player.DecksData_id},
+                {
+                    $set : data
+                })
+        })
     }
 
 });

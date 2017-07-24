@@ -59,7 +59,6 @@ export default class AdminEventInfo extends React.Component {
     }
 
     formatPublishEvent(cell, row){
-
         if(row.state == "names"){
             return "locked";
         }
@@ -82,11 +81,7 @@ export default class AdminEventInfo extends React.Component {
     }
 
     remove(cell, row){
-
-        // if(!row.state=="names"){
             return <button className={`btn btn-xs ${row.remove ? "btn-danger": "btn-warning"}`} disabled={row.state=="names" || row.state=="removed"  ? true : false} onClick={(e)=>{e.stopPropagation(); this.deleteEvent ({e:e, row : row})}}>{row.remove ? "confirm" : "remove"}</button>
-        // }
-        // return null;
      }
 
     expand(row){
@@ -110,8 +105,6 @@ export default class AdminEventInfo extends React.Component {
     formatDate(cell, row){
         return Moment(cell).format("MM-DD");
     }
-
-
 
     render() {
         const options = {

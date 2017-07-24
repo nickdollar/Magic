@@ -30,17 +30,17 @@ createMetaLastDaysAdditions = function(){
 
 createMetaArchetypesDecks = function(){
     var date = new Date();
-    date = date.addDays(-14);
+    date = date.addDays(-30);
     var newestArchetypes = DecksData.aggregate(
         [
             {
                 $match: {
-                    DecksArchetypes_id : {$exists : true}
+                    DecksArchetypes_id : {$exists : true},
+                    EventsTypes_id : {$ne : "LGS"}
                 }
             },
             {
                 $project: {
-
                     DecksArchetypes_id : 1,
                     Events_id : 1,
                     date : 1,
@@ -82,12 +82,13 @@ createMetaArchetypesDecks = function(){
 
 createMetaNewCards = function(){
     var date = new Date();
-    date = date.addDays(-14);
+    date = date.addDays(-30);
     var newestCards = DecksData.aggregate(
         [
             {
                 $match: {
-                    DecksArchetypes_id : {$exists : true}
+                    DecksArchetypes_id : {$exists : true},
+                    EventsTypes_id : {$ne : "LGS"}
                 }
             },
             {
@@ -108,7 +109,7 @@ createMetaNewCards = function(){
             },
             {
                 $group: {
-                    _id : {name : "$main.name", Formats_id : "$Formats_id"},
+                    _id : {Cards_id : "$main.Cards_id", Formats_id : "$Formats_id"},
                     DecksData_id : {$first : "$_id"},
                     date : {$first : "$date"},
                     Events_id : {$first : "$Events_id"},
@@ -130,6 +131,5 @@ createMetaNewCards = function(){
             }
         ]
     );
-
     return newestCards;
 }

@@ -8,9 +8,6 @@ export default class LGSPageCalendar extends React.Component {
 
     getLGSEvents(){
         Meteor.call("getLGSEventsFromId_", {LGS_id : this.props.LGS_id}, (err, response)=>{
-
-            console.log(response);
-
             var calendar = this.refs["LGSCalendar"];
             $(calendar).fullCalendar("removeEvents");
             var events = response.map((event)=>{

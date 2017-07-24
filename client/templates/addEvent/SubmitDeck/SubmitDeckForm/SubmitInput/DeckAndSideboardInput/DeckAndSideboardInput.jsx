@@ -15,10 +15,12 @@ export default class DeckAndSideboardInput extends React.Component{
             UsersDeckData : props.UsersDeckData,
             event : props.event,
             submitMessage : "",
-            main : {_id : null, qty : 4},
-            sideboard : {_id : null, qty : 4},
+            main : {Cards_id : null, qty : 4},
+            sideboard : {Cards_id : null, qty : 4},
             qty : {main : 0, sideboard : 0},
-            changes : false
+            changes : false,
+            clear : false
+
         }
     }
 
@@ -91,7 +93,7 @@ export default class DeckAndSideboardInput extends React.Component{
         var options = ["main", "sideboard"];
         for(var i = 0; i < options.length; i++){
             submitDeck[options[i]] = submitDeck[options[i]].map((card)=>{
-                return {Cards_id : card._id, qty : card.qty}
+                return {Cards_id : card.Cards_id, qty : card.qty}
             })
         }
 
@@ -132,31 +134,37 @@ export default class DeckAndSideboardInput extends React.Component{
 
     addCardToDeck(mainSideboard){
         var selectedCard = this.state[mainSideboard];
-        if(!selectedCard._id){
+        console.log(this.state.UsersDeckData[mainSideboard]);
+        console.log(selectedCard);
+        if(!selectedCard.Cards_id){
             return;
         };
 
         var UsersDeckData = this.state.UsersDeckData;
 
-        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj._id == this.state[mainSideboard]._id)
+        var index = UsersDeckData[mainSideboard].findIndex(cardObj=> cardObj.Cards_id == this.state[mainSideboard].Cards_id)
+        console.log(index);
+
         if(index != -1){
             return;
         }
 
-        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard._id}, (err, response)=>{
+        console.log(selectedCard)
+
+        Meteor.call("getCardsBy_idMethod", {CardsSimple_id : selectedCard.Cards_id}, (err, response)=>{
             response.qty = selectedCard.qty;
             UsersDeckData[mainSideboard].push(response);
             if(response._id){
                 this.state.qty[mainSideboard] += selectedCard.qty;
             }
             var msObject = {};
-            msObject[mainSideboard] = {_id : null, qty : 4};
+            msObject[mainSideboard] = {_id : null, qty : selectedCard.qty};
             this.setState(Object.assign({UsersDeckData : UsersDeckData, clear : !this.state.clear, changes : true}, msObject));
         })
     }
 
     setCardSelected({suggestion, mainSideboard}) {
-        this.state[mainSideboard]._id = suggestion._id;
+        this.state[mainSideboard].Cards_id = suggestion;
     }
 
     deckState(){
@@ -205,6 +213,7 @@ export default class DeckAndSideboardInput extends React.Component{
                         </div>
                             <DeckList    UsersDeckData={this.state.UsersDeckData}
                                          qty={this.state.qty}
+                                         clear={this.state.clear}
                                          submitted={this.state.submitted}
                                          removeCardDeck={this.removeCardDeck.bind(this)}
                                          mainSideboardChangeValue={this.mainSideboardChangeValue.bind(this)}

@@ -9,9 +9,12 @@ export default class PlayerList extends React.Component {
 
     positionVictory(deck){
         var position = "";
-        if(deck.position){
-            position += prettifyPosition(deck.position)
+        if(deck.victory == null){
+            if(deck.position){
+                position += `${prettifyPosition(deck.position)}`;
+            }
         }
+
         if(deck.victory != null){
             position += `(${deck.victory}${deck.loss ? `-${deck.loss}` : "-0"}${deck.draw ? `-${deck.draw}`: ""})`;
         }
@@ -36,6 +39,8 @@ export default class PlayerList extends React.Component {
                     deckName = DecksArchetypes.findOne({_id : row.DecksArchetypes_id}).name;
                 }
             }
+            var name = "";
+            row.preferredName ? name = row.preferredName : name = row.player;
             return  <div  className="tablePlayerInfo">
                            <div className="deckNameManaWrapper">
                                <div className="deckNamePosition">
@@ -45,7 +50,7 @@ export default class PlayerList extends React.Component {
                                     {getHTMLColorsFromSubtypesReact({DecksArchetypes_id : row.DecksArchetypes_id})}
                                </div>
                            </div>
-                        <div>{row.player ? row.player : "Missing Name"}</div>
+                        <div>{name ? name : "Missing Name"}</div>
                     </div>
     }
 

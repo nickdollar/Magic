@@ -116,7 +116,7 @@ metaLastAdditionCards = function(){
             },
             {
                 $group: {
-                    _id : "$main.name",
+                    _id : "$main.Cards_id",
                     date : {$first : "$date"},
                     DecksData_id : {$first : "$_id"},
                     Events_id : {$first : "$Events_id"},

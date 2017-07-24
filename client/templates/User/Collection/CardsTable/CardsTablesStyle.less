@@ -1,10 +1,20 @@
 .CardsTablesComponent{
   .topLevel {
-    position:relative;
-    width: 80px;
+    //position:relative;
+    width: 120px;
     height: 25px;
 
-    .arrow-down {
+    .quantity{
+      display: inline-block;
+    }
+
+    .changeButtons {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 100%;
+      float: right;
+      .arrow-down {
         width: 0;
         height: 0;
         border-left: 5px solid transparent;
@@ -15,8 +25,7 @@
         position: absolute;
       }
 
-
-    .arrow-up {
+      .arrow-up {
         width: 0;
         height: 0;
         border-left: 5px solid transparent;
@@ -27,5 +36,6 @@
         right: 0;
         position: absolute;
       }
+    }
   }
 }

@@ -12,7 +12,7 @@ export default class TCGCards extends React.Component {
                 <div>
                     <button className="btn btn-default" onClick={()=>Meteor.call("CreateLatestCardsMethod")}>CreateLatestCardsMethod</button>
                     <button className="btn btn-default" onClick={()=>Meteor.call("CreateDatabaseFromCSVMethod")}>CreateDatabaseFromCSVMethod</button>
-                    <button className="btn btn-default" onClick={()=>Meteor.call("CreateLatestCardsMethod")}>CreateLatestCardsMethod</button>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("CreateLatestTCGCardsMethod")}>CreateLatestTCGCardsMethod</button>
                 </div>
             </div>
         );

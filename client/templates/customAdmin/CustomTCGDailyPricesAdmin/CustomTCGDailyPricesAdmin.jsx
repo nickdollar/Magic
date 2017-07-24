@@ -13,3 +13,4 @@ export default class CustomDailyPrices extends React.Component {
         );
     }
 }
+

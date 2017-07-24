@@ -45,12 +45,14 @@ export default class AdminEventPlayerList extends React.Component {
 
     formatRemoveDeck(cell, row){
         if(this.props.EventsState != "names"){
-            return <button onClick={()=>{Meteor.call("removeLGSEventDeckMethod", {DecksData_id : row._id})}} className="btn btn-xs">remove</button>
+            return <button onClick={()=>{Meteor.call("removeLGSEventDeckMethod", {DecksData_id : row._id}, (err, response)=>{
+                this.getDecksInfoFromUserEvent();
+                {/*this.props.getUsersCreatedEvent();*/}
+            })}} className="btn btn-xs">remove</button>
         }
         return "";
 
     }
-
 
     //Deck Aggregate
     handleHideDeckAggregate(){
@@ -59,7 +61,6 @@ export default class AdminEventPlayerList extends React.Component {
     handleShowModalDeckAggregate({row}){
         this.setState({showModalDeckAggregate: true, DecksData_id : row._id});
     }
-
 
     //PositionFromFile
     handleHidePositionFromFile(){

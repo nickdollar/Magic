@@ -29,7 +29,7 @@ Meteor.methods({
         }
         logFunctionsEnd("CreateDatabaseFromCSVMethod");
     },
-    CreateLatestCardsMethod(){
+    CreateLatestTCGCardsMethod(){
         logFunctionsStart("CreateDatabaseFromCSVMethod");
         const dataCSV = Assets.getText('TCGCardLatest.csv');
 
@@ -46,10 +46,22 @@ Meteor.methods({
             isNaN(number) ? null : cardData.number = number;
             cardData.TCGName =  entities.decodeHTML(TCGCSVparsed.data[i]["TCGName"]);
             cardData.TCGSet =  entities.decodeHTML(TCGCSVparsed.data[i]["﻿TCGSet"]);
-            if(TCGCards.find({_id : _id})){
+            cardData.rarity =  entities.decodeHTML(TCGCSVparsed.data[i]["rarity"]);
+
+
+            console.log(cardData);
+
+            if(TCGCards.find({_id : _id}).count()){
                 console.log("FOUND")
             }else{
                 console.log("NOT FOUND")
+                TCGCards.update({_id : _id},
+                    {
+                        $set : cardData
+                    },
+                    {
+                        upsert : true
+                    })
             }
         }
         logFunctionsEnd("CreateDatabaseFromCSVMethod");

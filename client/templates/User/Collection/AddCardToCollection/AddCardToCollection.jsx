@@ -36,6 +36,30 @@ export default class Collection extends React.Component {
         }
     }
 
+    sendCardToWanted(){
+        if(this.state.suggestion.CardsUnique_id){
+            var request = {};
+            if(!isNaN(parseInt(this.qty.value))){
+                if(this.state.suggestion.foil){
+                    request.fQty = parseInt(this.qty.value);
+                }else{
+                    request.nQty = parseInt(this.qty.value);
+                }
+            }
+            request.CardsUnique_id = this.state.suggestion.CardsUnique_id;
+            request.name = this.state.suggestion.name;
+
+            Meteor.call("addCardToWantedMethod", {request : request},(err, reponse)=>{
+                this.props.getCollectionCards();
+                window.clearTimeout(timeoutHandler);
+                this.setState({added : !this.state.added, suggestion : {}});
+                timeoutHandler = window.setTimeout(()=>{
+                    updateCollectionNumbersFunction();
+                }, 15000);
+            });
+        }
+    }
+
     render(){
         return(
             <div className="CollectionComponent">
@@ -47,6 +71,7 @@ export default class Collection extends React.Component {
                         />
                     </div>
                     <div className="addToCollectionButton"><button disabled={this.state.suggestion.CardsUnique_id ? false : true} className="btn btn-default" onClick={this.sendCardToCollection.bind(this)}>Add To Collection</button></div>
+                    <div className="addToCollectionButton"><button disabled={this.state.suggestion.CardsUnique_id ? false : true} className="btn btn-default" onClick={this.sendCardToWanted.bind(this)}>Add To Wanted List</button></div>
                 </div>
             </div>
         );

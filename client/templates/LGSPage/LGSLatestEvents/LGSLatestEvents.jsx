@@ -9,6 +9,7 @@ export default class LGSLatestEvents extends React.Component {
 
     getEventsByLGS_id(){
         Meteor.call("getEventsByLGS_idMethod", {LGS_id : this.props.LGS_id}, (err, response)=>{
+            console.log(response);
             this.setState({events : response});
         })
     }

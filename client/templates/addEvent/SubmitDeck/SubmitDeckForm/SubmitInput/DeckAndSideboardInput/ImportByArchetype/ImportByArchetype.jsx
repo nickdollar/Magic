@@ -16,14 +16,16 @@ export default class ImportByDeck extends React.Component{
     }
 
     requestDeck(){
-        Meteor.call("importFromDecksArchetypesMethod",
-            {
-                DecksArchetypes_id : this.refs["input"].value,
-                percentageMain  : this.refs.percentageMain.value,
-                percentageSide  : this.refs.percentageSide.value
-            }, (err, response)=>{
-            this.props.setDeck({deck : response});
-        });
+        if(this.refs.input.value){
+            Meteor.call("importFromDecksArchetypesMethod",
+                {
+                    DecksArchetypes_id : this.refs["input"].value,
+                    percentageMain  : this.refs.percentageMain.value,
+                    percentageSide  : this.refs.percentageSide.value
+                }, (err, response)=>{
+                this.props.setDeck({deck : response});
+            });
+        }
     }
 
     render(){
@@ -47,8 +49,8 @@ export default class ImportByDeck extends React.Component{
                             })}
                         </select>
                         <button onClick={this.requestDeck.bind(this)} className="options-list__button">Request</button>
-                        <div className="input-name-number-field"><div className="input-name-number-field__name">Main:</div><input className="input-name-number-field__number" ref={"percentageMain"} type="number" min={0} max={100} defaultValue={70}/></div>
-                        <div className="input-name-number-field"><div className="input-name-number-field__name">Side:</div><input className="input-name-number-field__number" ref={"percentageSide"} type="number" min={0} max={100} defaultValue={50}/></div>
+                        <div className="input-name-number-field"><div className="input-name-number-field__name">Main:</div><input className="input-name-number-field__number" ref={"percentageMain"} type="number" min={0} max={100} defaultValue={40}/></div>
+                        <div className="input-name-number-field"><div className="input-name-number-field__name">Side:</div><input className="input-name-number-field__number" ref={"percentageSide"} type="number" min={0} max={100} defaultValue={25}/></div>
                     </div>
                 </div>
             </div>

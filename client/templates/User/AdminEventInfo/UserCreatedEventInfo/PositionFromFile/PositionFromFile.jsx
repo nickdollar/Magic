@@ -190,7 +190,7 @@ export default class PositionFromFile extends React.Component {
                                             </button>
                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu1" style={{position : "relative"}}>
                                                 {this.props.Decks.map((deck)=>{
-                                                    return <li key={deck.player}><a href="#" onClick={()=>this.giveNameToDeck({deck : deck, playerIndex : index})}>{deck.player}</a></li>
+                                                    return <li key={deck.player}><a href="#" onClick={()=>this.giveNameToDeck({deck : deck, playerIndex : index})}>{deck.player} - {deck.DCINumber}</a></li>
                                                 })}
                                             </ul>
                                         </div>

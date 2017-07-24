@@ -20,6 +20,15 @@ Meteor.methods({
                 })
         })
     },
+
+    yoyoyoyoMethod(){
+        console.log("fixPTCTHINGSMethod");
+        console.log(Meteor.user());
+        console.log(services);
+        console.log(services.resume);
+        console.log(services.resume.loginTokens);
+        console.log(services.resume.loginTokens.hashedToken);
+    },
     addSetsToCards(){
         Cards.find({printings: {$elemMatch: {setCode: {$exists: false}}}}).forEach((card) => {
             var printings = card.printings.map((printing) => {

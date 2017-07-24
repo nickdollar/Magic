@@ -1,6 +1,7 @@
 import moment from "moment";
 import csvtojson from "csvtojson";
 import jsonlint from "jsonlint";
+import papaparse from "papaparse";
 
 Meteor.methods({
     // createCardsCollectionFromGatherer(){
@@ -45,27 +46,45 @@ Meteor.methods({
         });
     },
     AddNewCardsFromGathererMethod(){
-        console.log("START: AddNewCardsFromGathererMethod");
+        logFunctionsStart("AddNewCardsFromGathererMethod");
         Gatherer.find({}).forEach((card)=>{
-            if(!Cards.find({_id : new RegExp(`^${card.name}`, "i")}, {limit : 1}).count()){
-                console.log(card.name, card.id, card.set);
+
+            if(!Cards.find({_id : new RegExp(`^${escapeRegExp(card.name)}$`, "i")}, {limit : 1}).count()){
+
+                var data = {};
+                var Cards_id = card.name.toTitleCase();
+
+                card.type ?                 data.types = arrayLowercaseSorted(getTypesRegex({card : card})) : null;
+                card.manacost ?             data.manaCost = arrayLowercase(setCardManaCost({manaCost : card.manacost})) : null;
+                card.color_identity ?       data.colorIdentity = arrayLowercaseSorted(getColorIdentity({card : card})) : null;
+
+                Cards.update({_id : Cards_id},
+                    {
+                        $set : data
+                    },
+                    {
+                        upsert : true
+                    }
+                )
             }
         })
-        console.log("   END: AddNewCardsFromGathererMethod");
+        logFunctionsEnd("AddNewCardsFromGathererMethod");
     },
+
     AddNewCardsPrintingsFromGathererMethod(){
         console.log("START: AddNewCardsPrintingsFromGathererMethod");
-            Gatherer.find({set : {$nin : ["Prerelease Events", 'Planechase "Planes"']}}).forEach((card)=>{
-                if(!Cards.find({"printings.multiverseid" : card._id}, {limit : 1}).count()){
-                    console.log(card.name, card.id, card.set);
-                    var foundSet = Sets.findOne({gatherer : card.set});
-                    console.log(Cards.update({_id : card.name, "printings.multiverseid" : {$ne : card._id}},
-                        {
-                            $push : {printings : {multiverseid : card._id, set : card.set, TCGSet : foundSet.TCG, setCode : foundSet._id}}
-                        }
-                    ))
-                }
-            })
+        Gatherer.find({set : {$nin : ["Prerelease Events", 'Planechase "Planes"']}}).forEach((card)=>{
+            var cardName = card.name.toTitleCase();
+            if(!Cards.find({_id : cardName, "printings.set" : card.set}, {limit : 1}).count()){
+
+                var foundSet = Sets.findOne({gatherer : card.set});
+                console.log(Cards.update({_id : cardName, "printings.set" : {$ne : card.set}},
+                    {
+                        $push : {printings : {multiverseid : card._id, set : card.set, setCode : foundSet._id}}
+                    }
+                ))
+            }
+        })
         console.log("   END: AddNewCardsPrintingsFromGathererMethod ");
     },
     addNumbersToCardsPrintingsMethod(){
@@ -79,18 +98,88 @@ Meteor.methods({
         logFunctionsEnd("addNumbersToCardsPrintingsMethod");
     },
     AddTCGCardsMethod(){
-        console.log("START: AddStarcityGamesCardsMethod");
-        TCGCards.find().forEach((card)=>{
-            if(Cards.find({_id : card.TCGName, printings : {$elemMatch : {TCGSet : card.TCGSet, TCGName : {$exists : false}}}}, {limit : 1}).count()){
-                console.log(card.TCGName, card.TCGSet);
-                console.log(Cards.update({_id : card.TCGName, printings : {$elemMatch : {TCGSet : card.TCGSet, TCGName : null}}},
-                    {
-                        $set : {"printings.$.TCGName" : card.TCGName, "printings.$.tcg_id" : card._id}
+        console.log("START: AddTCGCardsMethod");
+        TCGCards.find({
+            $and : [
+                {TCGName : {$not : / Token/i}},
+                {TCGName : {$not : / Emblem/i}},
+                {TCGName : {$not : /Emblem -/i}},
+                {TCGName : {$not : /Checklist/i}},
+                {TCGName : {$not : /Japonese/i}},
+
+            ],
+            TCGSet : {$nin :
+            [
+             "Fourth Edition (Foreign Black Border)",
+            "Fourth Edition (Foreign White Border)",
+             "Revised Edition (Foreign Black Border)",
+            "Revised Edition (Foreign White Border)",
+            "Collector's Edition",
+            "International Edition",
+            "Oversize Cards",
+            "European Lands",
+            "Apac Lands",
+            "Magic Premiere Shop",
+            "Vanguard",
+            "Astral",
+            "APAC Lands",
+            "Hero's Path Promos"
+            ]}}).forEach((card)=>{
+            if(!Cards.find({"printings.TCGCards_id" : card._id}, {limit : 1}).count()){
+                console.log("++++++++++++++++++++++++++");
+                var foundSet = Sets.findOne({TCG : card.TCGSet});
+                console.log(card.TCGName, card._id);
+                console.log(card.TCGSet);
+
+                // console.log(foundSet);
+                var nameRegex  = card.TCGName.replace(/ \(.+\)/, "");
+                nameRegex  = nameRegex.replace(/ - Full Art/, "");
+                nameRegex  = nameRegex.replace(/ - Guru/, "")
+                nameRegex  = nameRegex.replace(/ - Unglued/, "")
+
+                nameRegex = nameRegex.toTitleCase();
+                console.log(nameRegex);
+                if(foundSet){
+                    console.log("Found Set");
+                    var check = Cards.update({_id : nameRegex, "printings.set" : foundSet.gatherer},
+                        {
+                            $set : {"printings.$.TCGName" : card.TCGName, "printings.$.TCGSet" : card.TCGSet, "printings.$.TCGCards_id" : card._id}
+                        }
+                    )
+
+                    var foundCheckCount = Cards.find({printings : {$elemMatch : {TCGName : card.TCGName, TCGSet : card.TCGSet, TCGCards_id : card._id}}}, {limit : 1}).count();
+
+
+
+                    if(!foundCheckCount){
+                        console.log("foundCheckCount")
+                        console.log(Cards.update({_id : nameRegex},
+                            {
+                                $push : {printings : { TCGName : card.TCGName, TCGSet : card.TCGSet, TCGCards_id : card._id}}
+                            }
+                        ))
                     }
-                ))
+
+
+                    if(!check){
+                        console.log("CHECK")
+                        console.log(Cards.update({_id : nameRegex},
+                            {
+                                $push : {printings : { TCGName : card.TCGName, TCGSet : card.TCGSet, TCGCards_id : card._id}}
+                            }
+                        ))
+                    }
+                }else{
+                    console.log("not found Found");
+                    console.log(Cards.update({_id : nameRegex},
+                        {
+                            $push : {printings : { TCGName : card.TCGName, TCGSet : card.TCGSet, TCGCards_id : card._id}}
+                        }
+                    ))
+                }
             }
         })
-        console.log("   END: AddStarcityGamesCardsMethod");
+        console.log("   END: AddTCGCardsMethod");
     },
     giveNamesFromNormalMethod(){
         logFunctionsStart("giveNamesFromNormalMethod");
@@ -162,7 +251,26 @@ Meteor.methods({
     },
     giveTCGCards_id(){
         logFunctionsStart("giveTCGCards_id");
-          TCGCards.find({}).forEach((card)=>{
+          TCGCards.find({
+              TCGName : {$not : / Token/},
+              TCGSet : {$nin :
+                  [
+                      "Fourth Edition (Foreign Black Border)",
+                      "Fourth Edition (Foreign White Border)",
+                      "Revised Edition (Foreign Black Border)",
+                      "Revised Edition (Foreign White Border)",
+                      "Collector's Edition",
+                      "International Edition",
+                      "Oversize Cards",
+                      "European Lands",
+                      "Apac Lands",
+                      "Magic Premiere Shop",
+                      "Vanguard",
+                      "Astral",
+                      "APAC Lands",
+                      "Hero's Path Promos"
+                  ]}}
+          ).forEach((card)=>{
               var result =Cards.update({printings : {$elemMatch : {TCGName : card.TCGName, TCGSet : card.TCGSet}}},
                   {
                       $set : {"printings.$.TCGCards_id" : card._id},

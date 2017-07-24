@@ -20,6 +20,9 @@ export default class FormatsMenu extends React.Component {
         Session.set("selectedMenuFormat", format.name);
     }
     render(){
+
+        console.log(FlowRouter.getRouteName());
+
         return(
             <div className="FormatsMenuComponent">
                 <div className="typeMenu">
@@ -27,7 +30,9 @@ export default class FormatsMenu extends React.Component {
                         <div className="collapse navbar-collapse navbar-inner">
                             <ul className="nav navbar-nav selected">
                                 {Formats.find({active : 1}).map(format =>{
-                                return <li className={this.state.selectedFormat == format._id ? "active" : ""} key={format._id}><a onClick={()=>this.selectedFormat(format)} href={FlowRouter.path(FlowRouter.getRouteName(), {format : format.name})}>{format.name}</a></li>
+                                return <li className={this.state.selectedFormat == format._id ? "active" : ""} key={format._id}>
+                                    <a onClick={()=>this.selectedFormat(format)} href={FlowRouter.getRouteName() != "LGSPage" ? FlowRouter.path(FlowRouter.getRouteName(), {format : format.name}) : null}>{format.name}</a>
+                                </li>
                             })}
                             </ul>
                         </div>

@@ -35,6 +35,13 @@ Template.ApplicationLayout.onCreated(function(){
         });
     })
 
+    this.autorun(()=>{
+        this.subscribe("UserProfilePublish", {
+            onReady(){
+                updateCollectionNumbersFunction();
+            },
+        });
+    })
 
 });
 
@@ -183,3 +190,6 @@ Template.FAQ.helpers({CompanyInformation(){ return CompanyInformation; }})
 
 import UsersDecks from "/client/templates/PublicUsersDecks/PublicUsersDecks.jsx";
 Template.UsersDecks.helpers({ UsersDecks(){ return UsersDecks; }})
+
+import LGSPage from "/client/templates/LGSPage/LGSPage.jsx";
+Template.LGSPage.helpers({ LGSPage(){ return LGSPage; }})

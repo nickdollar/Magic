@@ -58,6 +58,9 @@ export default class CustomCardsAdmin extends React.Component {
                 <div>
                     <button className="btn btn-default" onClick={()=>Meteor.call("cardsRemoveNaN")}>cardsRemoveNaN</button>
                 </div>
+                <div>
+                    <button className="btn btn-default" onClick={()=>Meteor.call("CreateLatestCardsMethod")}>CreateLatestCardsMethod</button>
+                </div>
                 <div className="input-group">
                     <select onChange={(event)=>{this.selectedComponent(event.target.value)}}>
                         <option></option>

@@ -20,6 +20,9 @@ Meteor.methods({
     getGpEventsAndDecks2Method(){
         getGpEventsAndDecks2();
     },
+    getEventsByLGS_idMethod({LGS_id}){
+        return Events.find({LGS_id : LGS_id, state : {$in : ["decks", "names", "published"]}}, {sort : {date : -1}}).fetch()
+    },
     getGPPositionMethod(){
         getGPPosition();
     },
@@ -45,7 +48,7 @@ Meteor.methods({
         return {confirm : true, response : event};
     },
     checkIfEventExists(form){
-        var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token});
+        var eventFound = Events.findOne({LGS_id : form.LGS_id, token : form.token, });
 
         if(eventFound){
             if(eventFound.state == "names"){
@@ -109,21 +112,22 @@ Meteor.methods({
 
         })
     },
-    eventsSmall({Formats_id, LGS_ids}){
-        var eventsTypes_ids = EventsTypes.find({size : 0}).map(type => type._id);
+    eventsSmallMethod({Formats_id, LGS_ids}){
+        var eventsTypes_ids = EventsTypes.find({size : {$in : [0, 2]}}).map(type => type._id);
         return Events.find({ Formats_id : Formats_id, state : {$in : ["names"]},
             $or : [
-                {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
+                {EventsTypes_id : {$in : eventsTypes_ids}},
                 {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
             ]
         }).fetch();
     },
     eventsBigMethod({Formats_id, LGS_ids}){
+
+        console.log(Formats_id, LGS_ids);
         var eventsTypes_ids = EventsTypes.find({size : 1}).map(type => type._id);
-        var events = Events.find({ Formats_id : Formats_id, state : {$in : ["names"]}, $or : [
-            {EventsTypes_id : {$in : eventsTypes_ids, $ne : "LGS"}},
-            {EventsTypes_id : "LGS", LGS_id : {$in : LGS_ids}},
-        ]}).fetch();
+        console.log(eventsTypes_ids);
+        var events = Events.find({ Formats_id : Formats_id, state : "names", EventsTypes_id : {$in : eventsTypes_ids}}).fetch();
+        console.log(events);
         return events
     },
     getEventsStateQty({state, Formats_id, page, limit}){
@@ -152,9 +156,14 @@ Meteor.methods({
         return Events.find({state : {$in : ["pending", "lgsCreated"]}}).fetch();
     },
     confirmLGSPrePublishMethod({Events_id : Events_id}){
+
+
         if(Roles.userIsInRole(Meteor.user(), 'admin')){
+            var decksQty = DecksData.find({Events_id : Events_id}).count();
+
             Events.update({_id : Events_id}, {
-                $set : {state : "published"}
+                $set : {state : "published", decksQty : decksQty},
+                $unset : {token : ""}
             })
         }
     },
@@ -173,10 +182,7 @@ Meteor.methods({
 });
 
 RemoveRemovedEvents = ()=>{
-    var removeDate = new Date();
-    removeDate = removeDate.addDays(2);
-
-    Events.find({state : "removed", removedHours : {$lte : removeDate}}).forEach((removeEvent)=>{
+    Events.find({state : "removed"}).forEach((removeEvent)=>{
         DecksData.remove({Events_id : removeEvent._id})
     })
 }
