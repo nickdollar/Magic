@@ -1,6 +1,8 @@
 import React from "react";
+import DecksArchetypesListSubmit from "/client/dumbReact/DecksArchetypesListSubmit/DecksArchetypesListSubmit.jsx";
 
-export default class Deck extends React.Component{
+
+export default class DeckAggregate extends React.Component{
     constructor() {
         super();
         this.state = {DecksData : {main : [], sideboard : []}, importedDeck : false};
@@ -70,7 +72,10 @@ export default class Deck extends React.Component{
     }
 
     getDecksDataById(DecksData_id){
+
+
         Meteor.call("getDecksDataWithCardsInformation", {DecksData_id : DecksData_id}, (err, response)=>{
+            console.log(response);
             if(response){
                 for(var i = 0 ; i < response.main.length ; i++){
                     Object.assign(response.main[i], response.cardsInfo.find(cardInfo => cardInfo._id == response.main[i].Cards_id))
@@ -178,8 +183,14 @@ export default class Deck extends React.Component{
         </div>
     }
 
+    changeArchetype({DecksArchetypes_id}){
+        Meteor.call("addDecksArchetypesToDecksDataMethod", {DecksArchetypes_id : DecksArchetypes_id, DecksData_id : this.props.DecksData_id})
+    }
+
 
     render() {
+
+
         this.getCardQty(this.state.DecksData.main);
         var typesSeparated = this.separateCardsByType(this.state.DecksData.main);
         var resultMain = [];
@@ -201,7 +212,6 @@ export default class Deck extends React.Component{
             return this.getCardRow(card);
         })
 
-
         return (
 
             <div className="DeckAggregateContainer deck-aggregate">
@@ -209,13 +219,19 @@ export default class Deck extends React.Component{
                 <div className="btn-group" role="group" aria-label="Basic example">
                     <button className="btn btn-default" disabled={this.state.importedDeck || !Meteor.userId()} onClick={this.importDeck.bind(this)}>{this.state.importedDeck ? "Imported" : "Import To Collection"}</button>
                     {/*<button type="button" className="btn btn-default" onClick={this.openModal.bind(this)}>Import</button>*/}
+                    { Roles.userIsInRole(Meteor.userId(), "admin")
+                        ? <DecksArchetypesListSubmit
+                            DecksData_id={this.props.DecksData_id}
+                            Formats_id={this.state.DecksData.Formats_id}
+                        /> : null
+                    }
                 </div>
                 <div className="deck-aggregate__main-side">Main</div>
                 <div className="deck-block">
                     <div className="deck-block__columns">
                         {resultMain.map((obj)=>{
                             return obj;
-                        })}
+                        })}nmutjk86
                     </div>
                 </div>
                 <div className="deck-aggregate__main-side">Sideboard</div>

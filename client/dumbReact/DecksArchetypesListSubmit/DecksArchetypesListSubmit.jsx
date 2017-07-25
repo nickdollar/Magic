@@ -13,9 +13,10 @@ export default class DecksArchetypesListSubmit extends React.Component{
 
     submitDeckName(){
         Meteor.call("addDecksArchetypesToDecksDataMethod", {DecksArchetypes_id : this.state.selectedDeckArchetypes._id, DecksData_id : this.props.DecksData_id}, ()=>{
-            this.props.getDecks();
-        }
-);
+            if(this.props.getDecks){
+                this.props.getDecks();
+            }
+        });
     }
 
     render(){

@@ -9,6 +9,7 @@ export default class DecksDataStates extends React.Component{
 
      getCollectionByState(Formats_id){
         Meteor.call(this.props.Method, {Formats_id : Formats_id}, (err, response)=>{
+            console.log(response);
             this.setState({states : response});
          })
      }

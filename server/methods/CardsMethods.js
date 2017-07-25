@@ -106,7 +106,6 @@ Meteor.methods({
                 {TCGName : {$not : /Emblem -/i}},
                 {TCGName : {$not : /Checklist/i}},
                 {TCGName : {$not : /Japonese/i}},
-
             ],
             TCGSet : {$nin :
             [

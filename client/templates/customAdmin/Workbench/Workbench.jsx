@@ -27,11 +27,11 @@ export default class Workbench extends React.Component {
                 {/*<button onClick={()=>Meteor.call("findCardsThatDoesntExistsMethod")}>findCardsThatDoesntExistsMethod</button>*/}
                 {/*<button  className="btn btn-default" onClick={()=>Meteor.call("fixPTCTHINGSMethod")}>fixPTCTHINGSMethod</button>*/}
                 {/*<button onClick={()=>Meteor.call("RemoveRemovedEventsMethod")}>RemoveRemovedEventsMethod</button>*/}
-                <button onClick={()=>Meteor.call("getESTTimeZoneHoursMethod")}>getESTTimeZoneHoursMethod</button>
-                <button onClick={()=>Meteor.call("getMyTimeZoneMethod")}>getMyTimeZoneMethod</button>
-                <button onClick={()=>Meteor.call("RemoveRemovedEventsMethod")}>RemoveRemovedEventsMethod</button>
-                <button onClick={()=>Meteor.call("yoyoyoyoMethod")}>yoyoyoyoMethod</button>
-
+                {/*<button onClick={()=>Meteor.call("getESTTimeZoneHoursMethod")}>getESTTimeZoneHoursMethod</button>*/}
+                {/*<button onClick={()=>Meteor.call("getMyTimeZoneMethod")}>getMyTimeZoneMethod</button>*/}
+                {/*<button onClick={()=>Meteor.call("RemoveRemovedEventsMethod")}>RemoveRemovedEventsMethod</button>*/}
+                {/*<button onClick={()=>Meteor.call("yoyoyoyoMethod")}>yoyoyoyoMethod</button>*/}
+                <button onClick={()=>Meteor.call("fixHOUNamesMethod")}>fixHOUNamesMethod</button>
             </div>
         );
     }

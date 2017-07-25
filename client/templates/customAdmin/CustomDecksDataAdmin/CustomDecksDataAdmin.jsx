@@ -18,16 +18,15 @@ export default class CustomDecksDataAdmin extends React.Component{
     render(){
         return (
             <div className="CustomDecksDataAdminContainer">
-                <StateList  Method="getDecksDataStateQty"
+                <StateList  Method="getDecksDataStateQtyMethod"
                             collection="DecksData"
-                            states={["lgs", "scraped", "match", "perfect", "manual", "nameRemoved", "shell"]}
                             Formats_id={this.props.Formats_id}
                 />
-                {/*<FixBannedDecksdata Formats_id={this.props.Formats_id}/>*/}
+                <FixBannedDecksdata Formats_id={this.props.Formats_id}/>
                 {/*<DecksDataMethodsButtons Formats_id={this.props.Formats_id} />*/}
                 <DecksWithoutNamesWrapper Formats_id={this.props.Formats_id}/>
                 {/*<DecksWithWrongCardsContainer Formats_id={this.props.Formats_id}/>*/}
-                <DecksDataByDecksArchetypes_id Formats_id={this.props.Formats_id}/>
+                {/*<DecksDataByDecksArchetypes_id Formats_id={this.props.Formats_id}/>*/}
                 <button onClick={()=>{Meteor.call("fixNamesToCards_idMethod")}}>fixNamesToCards_idMethod</button>
             </div>
         )

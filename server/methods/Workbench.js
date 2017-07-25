@@ -132,6 +132,15 @@ Meteor.methods({
         })
         console.log("  END: fixedArchetypes_namesMethod")
     },
+    fixHOUNamesMethod(){
+        Cards.find({"printings.set" : "Hour of Devastation", "layout" : "normal"}).forEach((card)=>{
+            console.log(card);
+            Cards.update({_id : card._id},
+                {
+                    $set : {names : [card._id]}
+                })
+        })
+    }
 
 })
 

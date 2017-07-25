@@ -22,37 +22,39 @@ export default class DecksWithoutArchetypes extends React.Component{
     }
 
     render(){
+
+        console.log(this.state);
         return (
-            <div>
+            <div className="DecksWithoutNamesComponent">
                 <table className="table">
                     <thead>
                         <tr><th>_id</th><th>State</th></tr>
                     </thead>
                     <tbody>
-                    {this.props.DecksList.map((deck, i)=>{
-                        return <tr key={deck._id}>
-                            <td onClick={this.selectDeck.bind(this, i)}>{deck._id}</td>
-                            <td>{deck.state}</td>
-                        </tr>
-                    })}
-
+                        {this.props.DecksList.map((deck, i)=>{
+                            return <tr key={deck._id}>
+                                <td onClick={this.selectDeck.bind(this, i)}>{deck._id}</td>
+                                <td>{deck.state}</td>
+                            </tr>
+                        })}
                     </tbody>
                 </table>
-                <ModalFirstPage showModal={this.state.showModal}
-                                handleHideModal={this.handleHideModal.bind(this)}
-                >
-                    <DecksArchetypesListSubmit DecksData_id={this.state.DecksData_id}
-                                               Formats_id={this.props.Formats_id}
-                                               getDecks={this.props.getDecks}
-                    />
-                    <DeckAggregate DecksData_id={this.state.DecksData_id} />
-
-                    <DecksRankings
-                        DecksData_id={this.state.DecksData_id}
-                        getDecks={this.props.getDecks}
-                    />
-                </ModalFirstPage>
             </div>
         )
     }
 }
+
+{/*<ModalFirstPage showModal={this.state.showModal}*/}
+                {/*handleHideModal={this.handleHideModal.bind(this)}*/}
+{/*>*/}
+    {/*<DecksArchetypesListSubmit DecksData_id={this.state.DecksData_id}*/}
+                               {/*Formats_id={this.props.Formats_id}*/}
+                               {/*getDecks={this.props.getDecks}*/}
+    {/*/>*/}
+    {/*<DeckAggregate DecksData_id={this.state.DecksData_id} />*/}
+
+    {/*<DecksRankings*/}
+        {/*DecksData_id={this.state.DecksData_id}*/}
+        {/*getDecks={this.props.getDecks}*/}
+    {/*/>*/}
+{/*</ModalFirstPage>*/}

@@ -139,9 +139,9 @@ getGPDecksHTTPRequest2 = ({event, link})=>{
                     var cardsFixed = [];
                     for(var k = 0; k < cardsExtracted.length; k++){
                         var qty = parseInt($DecksPages(cardsExtracted[k]).find('.card-count').text());
-                        var name = $DecksPages(cardsExtracted[k]).find('.card-name').text();
-                        name = fixCards(name);
-                        cardsFixed.push({name : name, qty : qty });
+                        var Cards_id = $DecksPages(cardsExtracted[k]).find('.card-name').text();
+                        Cards_id = fixCards(Cards_id);
+                        cardsFixed.push({Cards_id : Cards_id, qty : qty });
                     }
                     data[fieldOptions[j].key] = cardsFixed;
                 }

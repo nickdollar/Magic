@@ -18,14 +18,7 @@ export default class CustomAdmin extends React.Component{
     render(){
         return (
             <div className="CustomEventsAdminComponent">
-                <StateList  Method="getEventsStateQty"
-                            subscription="EventsQueryProjection"
-                            notState={[]}
-                            states={[
-                                "startProduction", "notFound", "notFoundOld", "exists", "mainHTMLFail",
-                                "created", "locked", "published", "HTMLFail", "HTMLMain", "HTMLPartial",
-                                "HTML", "decks", "names"
-                            ]}
+                <StateList  Method="getEventsStateQtyMethods"
                             Formats_id={this.props.Formats_id}
                 />
                 <FixStandardToOldStandard/>

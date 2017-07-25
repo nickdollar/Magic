@@ -65,6 +65,9 @@ cardPopoverNames = function(jsClassName){
         trigger: 'hover',
         placement : "auto right",
         content: function () {
+
+
+            console.log("AAAAAAAAAAAAAAAAAA");
             var html = "";
             var element = $(this).get()[0];
             var layout = element.getAttribute("data-layout");

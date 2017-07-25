@@ -124,8 +124,8 @@ export default class ArchetypeDeckInformation extends React.Component {
         })
 
 
-        var DeckArchetype = DecksArchetypes.findOne({link : this.props.DeckArchetypeLink});
 
+        var DeckArchetype = DecksArchetypes.findOne({link : this.props.DeckArchetypeLink});
 
         return(
             <div className="ArchetypeDeckInformationComponent">
@@ -150,6 +150,8 @@ export default class ArchetypeDeckInformation extends React.Component {
                 <div className="body-block">
                     <Sideboard DecksArchetypes_id={DeckArchetype._id}/>
                 </div>
+
+
 
             </div>
         );

@@ -37,7 +37,7 @@ getLeagueEventsAndDecks = function({Formats_id, days, dateType}){
         var month = pad(actualDay.getMonth()+1);
         var year = actualDay.getYear() + 1900;
         var url = "http://magic.wizards.com/en/articles/archive/mtgo-standings/" + leagueTypes[Formats_id] + "-" + year + "-" + month + "-" + day;
-        if(Events.find({EventsTypes_id : eventType._id, date : actualDay, Formats_id : Formats_id}, {limit : 1}).count()){
+        if(Events.find({EventsTypes_id : eventType._id, date : actualDay, Formats_id : Formats_id, state : {$ne : "starting"}}, {limit : 1}).count()){
             continue;
         }
         webScrapingQueue.add({func : getLeagueEventsAndDecksHTTPRequest, args : {date : actualDay, Formats_id : Formats_id, url : url, eventType : eventType}, wait : httpRequestTime});
@@ -101,11 +101,11 @@ getLeagueEventsAndDecksHTTPRequest = ({date, Formats_id, url, eventType})=>{
                         var cardsFixed = [];
                         for(var k = 0; k < cardsExtracted.length; k++){
                             var qty = parseInt($(cardsExtracted[k]).find('.card-count').text());
-                            var name = $(cardsExtracted[k]).find('.card-name').text();
-                            name = fixCards(name);
+                            var Cards_id = $(cardsExtracted[k]).find('.card-name').text();
+                            Cards_id = fixCards(Cards_id);
                             cardsFixed.push(
                                 {
-                                    name : name,
+                                    Cards_id : Cards_id,
                                     qty : qty
                                 }
                             );

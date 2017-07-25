@@ -11,7 +11,7 @@ createFormats = ()=>{
                 name : "Standard",
                 names : ["sta", "standard"],
                 banned :["Emrakul, the Promised End", "Reflector Mage", "Smuggler’s Copter", "Felidar Guardian", "Aetherworks Marvel"],
-                sets : ["BFZ", "OGW", "SOI", "EMN", "KLD", "AER", "AKH"],
+                sets : ["BFZ", "OGW", "SOI", "EMN", "KLD", "AER", "AKH", "HOU"],
                 types : [
                     {
                         name : "main",

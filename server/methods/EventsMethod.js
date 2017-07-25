@@ -5,9 +5,6 @@ Meteor.methods({
     getSCGDecksCardsMethod(){
         getSCGDecksCards();
     },
-    fixEventsStandard(){
-        fixEventsStandard();
-    },
     getLeagueEventsAndDecksMethod({Formats_id, dateType}){
         getLeagueEventsAndDecks({days : 5, Formats_id : Formats_id, dateType : dateType})
     },
@@ -25,6 +22,9 @@ Meteor.methods({
     },
     getGPPositionMethod(){
         getGPPosition();
+    },
+    fixEventsTransitionStandardMethod(){
+        return fixEventsTransitionStandard();
     },
     fixDecksStateNamesMethods(){
         Events.find({EventsTypes_id : {$ne : "LGS"}}).forEach((event)=>{
@@ -63,6 +63,10 @@ Meteor.methods({
             return "token";
         }
     },
+    fixEventsStandardMethod(){
+      fixEventsStandard();
+    },
+
     checkIfEventPasswordIsRight(data){
         var result;
         if(Events.find({password : data.password, _id : data._id}, {limit : 1}).count()){
@@ -130,8 +134,29 @@ Meteor.methods({
         console.log(events);
         return events
     },
-    getEventsStateQty({state, Formats_id, page, limit}){
-        return DecksData.find({state : state, Formats_id : Formats_id}, {limit : limit, skip : page*limit, fields : {Formats_id : 1, state : 1, colors : 1}}).fetch();
+    getEventsStateQtyMethods({Formats_id}){
+
+        return Events.aggregate(
+
+            // Pipeline
+            [
+                // Stage 1
+                {
+                    $match: {
+                        Formats_id : Formats_id
+                    }
+                },
+
+                // Stage 2
+                {
+                    $group: {
+                        _id : "$state",
+                        qty : {$sum : 1}
+                    }
+                },
+
+            ]
+        );
     },
     getUsersCreatedEventsMethod(){
         if(!Meteor.userId()){
@@ -188,13 +213,11 @@ RemoveRemovedEvents = ()=>{
 }
 
 
-fixEventsStandard = function(){
-    logFunctionsStart("fixEventsStandard");
+fixEventsBanned = function(){
+    logFunctionsStart("fixEventsBanned");
 
     Formats.find().forEach((format)=> {
-
         var currentSets = {};
-
         if (format.sets) {
             currentSets["sets"] = {$nin: format.sets}
         } else {
@@ -274,6 +297,49 @@ fixEventsStandard = function(){
             ]
         );
 
+        var banned_ids = bannedEvents.map(event => event._id);
+
+        if(banned_ids.length){
+
+        }
+        console.log(banned_ids);
+
+        // for (var i = 0; i < banned_ids.length; i++) {
+        //     var foundEvent = Events.findOne({_id: banned_ids[i]});
+        //     console.log(foundEvent);
+        //     OldBannedEvents.update({_id: foundEvent._id},
+        //         {
+        //             $setOnInsert: foundEvent
+        //         },
+        //         {
+        //             upsert: true
+        //         })
+        //     Events.remove({_id: foundEvent._id});
+        //
+        //     var foundDecksData = DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
+        //         OldBannedDecksData.update({_id: deckData._id},
+        //             {
+        //                 $setOnInsert: deckData
+        //             },
+        //             {
+        //                 upsert: true
+        //             })
+        //
+        //         DecksData.remove({_id: deckData._id});
+        //     });
+        // }
+    })
+    createAllInfoForAllDecksArchetypes();
+    logFunctionsEnd("fixEventsBanned");
+}
+
+
+
+fixEventsStandard = function(){
+    logFunctionsStart("fixEventsStandard");
+
+        var currentsSets = Formats.findOne({_id : "sta"});
+
         var oldFormats = Events.aggregate(
             [
                 {
@@ -323,7 +389,7 @@ fixEventsStandard = function(){
                         sets: {$addToSet: "$sets.setCode"}
                     }
                 },
-                {$match: currentSets},
+                {$match: currentsSets},
                 {
                     $group: {
                         _id: "$_id.Events_id",
@@ -340,67 +406,147 @@ fixEventsStandard = function(){
         );
 
 
-        var banned_ids = bannedEvents.map(event => event._id);
         var old_ids = oldFormats.map(event => event._id);
 
-        for (var i = 0; i < banned_ids.length; i++) {
-            var foundEvent = Events.findOne({_id: banned_ids[i]});
-            console.log(foundEvent);
-            OldBannedEvents.update({_id: foundEvent._id},
-                {
-                    $setOnInsert: foundEvent
-                },
-                {
-                    upsert: true
-                })
-            Events.remove({_id: foundEvent._id});
-            var foundDecksData = DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
-                OldBannedDecksData.update({_id: deckData._id},
+        if(old_ids.length){
+            for (var i = 0; i < old_ids.length; i++) {
+                var foundEvent = Events.findOne({_id: old_ids[i]});
+                OldBannedEvents.update({_id: foundEvent._id},
                     {
-                        $setOnInsert: deckData
+                        $setOnInsert: foundEvent
                     },
                     {
                         upsert: true
                     })
-
-                DecksData.remove({_id: deckData._id});
-            });
+                Events.remove({_id: foundEvent._id});
+                DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
+                    OldBannedDecksData.update({_id: deckData._id},
+                        {
+                            $setOnInsert: deckData
+                        },
+                        {
+                            upsert: true
+                        })
+                    DecksData.remove({_id: deckData._id});
+                });
+            }
+            createAllInfoForAllDecksArchetypes();
         }
-
-
-        for (var i = 0; i < old_ids.length; i++) {
-            var foundEvent = Events.findOne({_id: old_ids[i]});
-            OldBannedEvents.update({_id: foundEvent._id},
-                {
-                    $setOnInsert: foundEvent
-                },
-                {
-                    upsert: true
-                })
-            Events.remove({_id: foundEvent._id});
-            DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
-                OldBannedDecksData.update({_id: deckData._id},
-                    {
-                        $setOnInsert: deckData
-                    },
-                    {
-                        upsert: true
-                    })
-
-                DecksData.remove({_id: deckData._id});
-            });
-        }
-    })
-    createAllInfoForAllDecksArchetypes();
     logFunctionsEnd("fixEventsStandard");
+
 }
 
-standardSets =
-    [   {name : "BFZ", release : new Date(2015, 9, 2)},
-        {name : "OGW", release : new Date(2016, 0, 22), end : true},
-        {name : "SOI", release : new Date(2016, 3, 8)},
-        {name : "EMN", release : new Date(2016, 6, 22), end : true},
-        {name : "KLD", release : new Date(2016, 8, 30)},
-        {name : "AER", release : new Date(2017, 0, 20), end : true},
-        {name : "AKH", release : new Date(2017, 3, 28)},
-    ]
+fixEventsTransitionStandard = function(){
+    logFunctionsStart("fixEventsStandard");
+
+    var currentsSets = Formats.findOne({_id : "sta"});
+
+    var standAllFormats = Events.aggregate(
+        [
+            {
+                $match: {Formats_id: "sta"}
+            },
+            {
+                $lookup: {
+                    "from": "DecksData",
+                    "localField": "_id",
+                    "foreignField": "Events_id",
+                    "as": "DecksData"
+                }
+            },
+            {
+                $unwind: "$DecksData"
+            },
+            {
+                $project: {
+                    _id: "$_id", cards: {
+                        $setUnion: [
+                            {$map: {input: "$DecksData.main", as: "el", in: "$$el.Cards_id"}},
+                            {$map: {input: "$DecksData.sideboard", as: "el", in: "$$el.Cards_id"}}
+                        ]
+                    }
+                }
+            },
+            {$unwind: "$cards"},
+
+            {$group: {_id: "$_id", cards: {$addToSet: "$cards"}}},
+            {$unwind: {path: "$cards",}},
+            {
+                $lookup: {
+                    "from": "CardsUnique",
+                    "localField": "cards",
+                    "foreignField": "name",
+                    "as": "sets"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$sets",
+                }
+            },
+            {
+                $group: {
+                    _id: {Events_id: "$_id", name: "$cards"},
+                    sets: {$addToSet: "$sets.setCode"}
+                }
+            },
+            {
+              $unwind : "$sets"
+            },
+            {$match: {sets : "HOU"}},
+            {
+                $group: {
+                    _id: "$_id.Events_id",
+                    qty: {$sum: 1},
+                    names: {$addToSet: "$_id.name"}
+                }
+            },
+            {
+                $sort : {
+                    date : 1
+                }
+            }
+        ]
+    );
+
+    // console.log(oldFormats);
+
+
+    var standAllFormats_ids = standAllFormats.map(event => event._id);
+
+    var badEvents = Events.find({_id : {$nin : standAllFormats_ids}}).map((event)=>{
+        return event._id;
+    })
+    // Formats.remove({Formats_id : "sta", _id : {$nin : standAllFormats_ids}});
+
+    console.log(badEvents);
+
+    // if(standAllFormats_ids.length){
+    //     for (var i = 0; i < standAllFormats_ids.length; i++) {
+    //         var foundEvent = Events.findOne({_id: standAllFormats_ids[i]});
+    //         standAllFormats_ids.update({_id: foundEvent._id},
+    //             {
+    //                 $setOnInsert: foundEvent
+    //             },
+    //             {
+    //                 upsert: true
+    //             })
+    //         Events.remove({_id: foundEvent._id});
+    //         DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
+    //             OldBannedDecksData.update({_id: deckData._id},
+    //                 {
+    //                     $setOnInsert: deckData
+    //                 },
+    //                 {
+    //                     upsert: true
+    //                 })
+    //             DecksData.remove({_id: deckData._id});
+    //         });
+    //     }
+    //     createAllInfoForAllDecksArchetypes();
+    // }
+    logFunctionsEnd("fixEventsStandard");
+
+
+
+}

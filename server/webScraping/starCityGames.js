@@ -151,8 +151,8 @@ getSCGDecksCardsHTTPRequest = ({deckData})=>{
                 for(var j = 0; j < cardsExtracted.length; j++){
                         var regexResult = $decksBlocks(cardsExtracted[j]).text().match(cardPattern);
                         var qty = parseInt(regexResult[1]);
-                        var cardName = fixCards(regexResult[2]);
-                        cardsFixed.push({ name : cardName, qty : qty });
+                        var Cards_id = fixCards(regexResult[2]);
+                        cardsFixed.push({ Cards_id : Cards_id, qty : qty });
                 }
                 data[fieldOptions[i].key] = cardsFixed;
             }

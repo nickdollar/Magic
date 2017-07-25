@@ -122,11 +122,11 @@ getMTGOPTQEventsAndDecksHTTP = ({date, Formats_id, url, eventType})=>{
                     var sideboard = [];
                     for(j = 0; j < sideboardCards.length; j++){
                         var qty = parseInt($(sideboardCards[j]).find('.card-count').text());
-                        var name = $(sideboardCards[j]).find('.card-name').text();
-                        name = fixCards(name);
+                        var Cards_id = $(sideboardCards[j]).find('.card-name').text();
+                        Cards_id = fixCards(name);
                         sideboard.push(
                             {
-                                name : name,
+                                Cards_id : Cards_id,
                                 qty : qty
                             }
                         );

@@ -201,32 +201,34 @@ Meteor.methods({
     logFunctionsEnd("recheckDeckWithWrongCardName");
     },
     addDecksArchetypesToDecksDataMethod({DecksArchetypes_id, DecksData_id}){
-        var foundDeck = DecksData.findOne({_id : DecksData_id});
+        if(Roles.userIsInRole(Meteor.userId(), "admin")){
+            var foundDeck = DecksData.findOne({_id : DecksData_id});
 
-        var oldDecksArchetypes = foundDeck.DecksArchetypes_id;
-        DecksData.update({_id : DecksData_id},
-            {
-                $set : {state : "manual", DecksArchetypes_id : DecksArchetypes_id}
-            },
-            {multi : true}
-        )
-        var count = DecksData.find({Events_id : foundDeck.Events_id}).count();
-        var countDecksArchetypes = DecksData.find({Events_id : foundDeck.Events_id, DecksArchetypes_id : {$exists : true}}).count();
-        if(count == countDecksArchetypes){
-            Events.update({_id : foundDeck.Events_id},
+            var oldDecksArchetypes = foundDeck.DecksArchetypes_id;
+            DecksData.update({_id : DecksData_id},
                 {
-                    $set : {state : "names"}
-                })
-        }
-        createArchetypesDecksQty({DecksArchetypes_id : DecksArchetypes_id})
-        createDecksArchetypesMainCards({DecksArchetypes_id : DecksArchetypes_id});
-        createDecksArchetypesSideboardCards({DecksArchetypes_id : DecksArchetypes_id});
-        createCardsDecksData_ids({DecksArchetypes_id : DecksArchetypes_id});
-        if(oldDecksArchetypes) {
-            createArchetypesDecksQty({DecksArchetypes_id : oldDecksArchetypes});
-            createDecksArchetypesMainCards({DecksArchetypes_id : oldDecksArchetypes});
-            createDecksArchetypesSideboardCards({DecksArchetypes_id : oldDecksArchetypes});
-            createCardsDecksData_ids({DecksArchetypes_id : oldDecksArchetypes});
+                    $set : {state : "manual", DecksArchetypes_id : DecksArchetypes_id}
+                },
+                {multi : true}
+            )
+            var count = DecksData.find({Events_id : foundDeck.Events_id}).count();
+            var countDecksArchetypes = DecksData.find({Events_id : foundDeck.Events_id, DecksArchetypes_id : {$exists : true}}).count();
+            if(count == countDecksArchetypes){
+                Events.update({_id : foundDeck.Events_id},
+                    {
+                        $set : {state : "names"}
+                    })
+            }
+            createArchetypesDecksQty({DecksArchetypes_id : DecksArchetypes_id})
+            createDecksArchetypesMainCards({DecksArchetypes_id : DecksArchetypes_id});
+            createDecksArchetypesSideboardCards({DecksArchetypes_id : DecksArchetypes_id});
+            createCardsDecksData_ids({DecksArchetypes_id : DecksArchetypes_id});
+            if(oldDecksArchetypes) {
+                createArchetypesDecksQty({DecksArchetypes_id : oldDecksArchetypes});
+                createDecksArchetypesMainCards({DecksArchetypes_id : oldDecksArchetypes});
+                createDecksArchetypesSideboardCards({DecksArchetypes_id : oldDecksArchetypes});
+                createCardsDecksData_ids({DecksArchetypes_id : oldDecksArchetypes});
+            }
         }
     },
     createMainSideboardsMethod(){
@@ -406,6 +408,7 @@ Meteor.methods({
                             DecksNames_id : 1,
                             main : 1,
                             sideboard : 1,
+                            Formats_id : 1,
                             cards : {
                                 $setUnion :
                                     [
@@ -439,6 +442,7 @@ Meteor.methods({
                             main : {$first : "$main"},
                             avgPrice : {$first : "$avgPrice"},
                             sideboard : {$first : "$sideboard"},
+                            Formats_id : {$first : "$Formats_id"},
                             DecksNames_id : {$first : "$DecksNames_id"},
                             cardsInfo : {$push : {$arrayElemAt : ["$cardsInfo", 0]}},
                         }
@@ -449,7 +453,7 @@ Meteor.methods({
 
         return deck[0];
     },
-    getDecksDataStateQty({Formats_id}){
+    getDecksDataStateQtyMethod({Formats_id}){
         var decksDataAggregate = DecksData.aggregate(
             [
                 {$match: {Formats_id : Formats_id}},
@@ -458,14 +462,8 @@ Meteor.methods({
         );
         return decksDataAggregate;
     },
-    getDecksDataByState({state, Formats_id, limit, page}){
-        var decksDataAggregate = DecksData.aggregate(
-            [
-                {$match: {Formats_id : Formats_id}},
-                {$group: {_id : "$state", qty : {$sum : 1}}},
-            ]
-        );
-        return decksDataAggregate;
+    getDecksDataByStateMethod({state, Formats_id, limit, page}){
+        return DecksData.find({state : state, Formats_id : Formats_id}, {skip : page*limit, limit : limit}).fetch();
     },
     adminUpdateDeck({DecksData_id, deck}){
         DecksData.update({_id : DecksData_id},
