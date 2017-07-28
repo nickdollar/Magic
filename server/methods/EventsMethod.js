@@ -509,42 +509,36 @@ fixEventsTransitionStandard = function(){
         ]
     );
 
-    // console.log(oldFormats);
-
-
     var standAllFormats_ids = standAllFormats.map(event => event._id);
 
     var badEvents = Events.find({_id : {$nin : standAllFormats_ids}}).map((event)=>{
         return event._id;
     })
-    // Formats.remove({Formats_id : "sta", _id : {$nin : standAllFormats_ids}});
 
-    console.log(badEvents);
-
-    // if(standAllFormats_ids.length){
-    //     for (var i = 0; i < standAllFormats_ids.length; i++) {
-    //         var foundEvent = Events.findOne({_id: standAllFormats_ids[i]});
-    //         standAllFormats_ids.update({_id: foundEvent._id},
-    //             {
-    //                 $setOnInsert: foundEvent
-    //             },
-    //             {
-    //                 upsert: true
-    //             })
-    //         Events.remove({_id: foundEvent._id});
-    //         DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
-    //             OldBannedDecksData.update({_id: deckData._id},
-    //                 {
-    //                     $setOnInsert: deckData
-    //                 },
-    //                 {
-    //                     upsert: true
-    //                 })
-    //             DecksData.remove({_id: deckData._id});
-    //         });
-    //     }
-    //     createAllInfoForAllDecksArchetypes();
-    // }
+    if(badEvents.length){
+        for (var i = 0; i < badEvents.length; i++) {
+            var foundEvent = Events.findOne({_id: badEvents[i]});
+            OldBannedEvents.update({_id: foundEvent._id},
+                {
+                    $setOnInsert: foundEvent
+                },
+                {
+                    upsert: true
+                })
+            Events.remove({_id: foundEvent._id});
+            DecksData.find({Events_id: foundEvent._id}).forEach((deckData) => {
+                OldBannedDecksData.update({_id: deckData._id},
+                    {
+                        $setOnInsert: deckData
+                    },
+                    {
+                        upsert: true
+                    })
+                DecksData.remove({_id: deckData._id});
+            });
+        }
+        createAllInfoForAllDecksArchetypes();
+    }
     logFunctionsEnd("fixEventsStandard");
 
 
